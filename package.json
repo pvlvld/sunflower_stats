@@ -1,0 +1,36 @@
+{
+  "name": "sunflower_stats",
+  "version": "1.0.0",
+  "description": "",
+  "main": "build/index.js",
+  "scripts": {
+    "start": "export NODE_ENV='production' && npx forever start -c 'node --expose-gc' build/index.js",
+    "build": "npm run clean && npm run make-build-directory && npm run copy-UI-resources && npm run copy-trie-data && npm run compile",
+    "clean": "rm -rf build",
+    "make-build-directory": "mkdir -p build/{UI/{img,menus/gif},commands,trie,handlers,helpers,middlewares,utils}",
+    "copy-UI-resources": "rsync -avq --exclude '*.ts' src/UI/ build/UI/",
+    "copy-trie-data": "rsync -avq src/trie/ build/trie/",
+    "compile": "tsc",
+    "dev": "DEV=true npx nodemon src/index.ts"
+  },
+  "author": {
+    "name": "Vlad Pavlenko",
+    "url": "https://github.com/pvlvld/"
+  },
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@grammyjs/auto-retry": "^1.1.1",
+    "@grammyjs/menu": "^1.2.1",
+    "grammy": "^1.20.3",
+    "node-cache": "^5.1.2"
+  },
+  "devDependencies": {
+    "@grammyjs/types": "^3.4.6",
+    "@types/dotenv": "^8.2.0",
+    "@types/node": "^20.11.7",
+    "nodemon": "^3.0.3",
+    "prisma": "^5.8.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
