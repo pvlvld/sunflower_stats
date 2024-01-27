@@ -4,14 +4,14 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "start": "export NODE_ENV='production' && npx forever start -c 'node --expose-gc' build/index.js",
+    "start": "export NODE_ENV='production' && npx forever start -c 'node --env-file=production.env --expose-gc' build/index.js",
     "build": "npm run clean && npm run make-build-directory && npm run copy-UI-resources && npm run copy-trie-data && npm run compile",
     "clean": "rm -rf build",
     "make-build-directory": "mkdir -p build/{UI/{img,menus/gif},commands,trie,handlers,helpers,middlewares,utils}",
     "copy-UI-resources": "rsync -avq --exclude '*.ts' src/UI/ build/UI/",
     "copy-trie-data": "rsync -avq src/trie/ build/trie/",
     "compile": "tsc",
-    "dev": "DEV=true npx nodemon src/index.ts"
+    "dev": "DEV=true npx nodemon --env-file=dev.env src/index.ts"
   },
   "author": {
     "name": "Vlad Pavlenko",
