@@ -30,10 +30,10 @@ bot.use(
 bot.api.config.use(async (prev, method, payload, signal) => {
   if (
     [
-      'getChat',
-      'getChatMemberCount',
-      'deleteMessage',
-      'answerCallbackQuery',
+      "getChat",
+      "getChatMemberCount",
+      "deleteMessage",
+      "answerCallbackQuery",
     ].includes(method)
   ) {
     return autoRetryTransformer(prev, method, payload, signal);
@@ -42,7 +42,7 @@ bot.api.config.use(async (prev, method, payload, signal) => {
   return prev(method, payload, signal);
 });
 
-bot.drop(matchFilter('message:is_automatic_forward'));
+bot.drop(matchFilter("message:is_automatic_forward"));
 
 // MIDDLEWARES
 
@@ -52,7 +52,7 @@ bot.use(autoThread());
 
 // COMMANDS
 
-const pm = bot.chatType('private');
-const gm = bot.chatType(['group', 'supergroup']);
+const pm = bot.chatType("private");
+const gm = bot.chatType(["group", "supergroup"]);
 
 export { bot };
