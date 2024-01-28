@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Node 21",
+
+  "compileOnSave": true,
+  "compilerOptions": {
+    "lib": ["ES2023", "ESNext", "DOM"],
+    "module": "NodeNext",
+    "target": "ES2022",
+
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "removeComments": true,
+    "alwaysStrict": true,
+    "strict": true,
+    "noUncheckedIndexedAccess": false,
+    "noImplicitAny": true,
+    "rootDir": "src",
+    "outDir": "build",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "nodenext",
+    "skipDefaultLibCheck": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
+}
