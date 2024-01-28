@@ -1,8 +1,11 @@
-import { Bot, matchFilter, session } from 'grammy';
-import { autoRetry } from '@grammyjs/auto-retry';
+import { Bot, matchFilter, session } from "grammy";
+import { autoRetry } from "@grammyjs/auto-retry";
+import { MyContext } from "./types/context";
+import { ignoreOldMessages } from "./middlewares/ignoreOldMessages";
+import { addFullNameField } from "./middlewares/addFullNameField";
+import { autoThread } from "./middlewares/autoThreads";
 
-
-if (!process.env.BOT_TOKEN) throw new Error('Token required');
+if (!process.env.BOT_TOKEN) throw new Error("Token required");
 
 const bot = new Bot<MyContext>(process.env.BOT_TOKEN);
 
