@@ -1,20 +1,18 @@
+import { IStatsMessageTypes } from "../types/stats";
 import YAMLWrapper from "./YAMLWrapper";
 
-// TODO: add all fields to the type
 interface IStats {
   [chat_id: string]:
     | {
         [user_id: string]:
-          | {
+          | ({
               name: string;
               username: string;
-              text: number;
-              image: number;
               day: number;
               week: number;
               month: number;
               all: number;
-            }
+            } & IStatsMessageTypes)
           | undefined;
       }
     | undefined;
