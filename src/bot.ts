@@ -17,13 +17,13 @@ const autoRetryTransformer = autoRetry({
 
 // PLUGINS
 // Install the session plugin.
-bot.use(
-  session({
-    initial() {
-      return {};
-    },
-  })
-);
+// bot.use(
+//   session({
+//     initial() {
+//       return {};
+//     },
+//   })
+// );
 
 // API TRANSFORMERS
 
