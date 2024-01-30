@@ -13,7 +13,7 @@ interface IActive {
     | undefined;
 }
 
-const Active = new YAMLWrapper<IActive>("active", "data/active");
+const Active = new YAMLWrapper<IActive>(() => "active", "data/active");
 
 Active.load();
 
