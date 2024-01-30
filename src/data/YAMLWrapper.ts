@@ -53,6 +53,11 @@ class YAMLWrapper<T> {
     }
     console.log(`${this.filename} saved.`);
   }
+
+  clear() {
+    this.data = {} as T;
+    if (global.gc) global.gc();
+  }
 }
 
 export default YAMLWrapper;
