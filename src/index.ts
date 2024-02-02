@@ -1,7 +1,10 @@
-import { bot } from './bot';
-import { GrammyError, webhookCallback, HttpError } from 'grammy';
-import * as http from 'http';
-import process from 'node:process';
+import "dotenv/config";
+import bot from "./bot";
+import { GrammyError, webhookCallback, HttpError } from "grammy";
+import * as http from "http";
+import process from "node:process";
+import Stats from "./data/stats";
+import Active from "./data/active";
 // import { getPublicIP } from './utils/getPublicIP';
 // import { startStatsCollecting } from './utils/statsCollector';
 
@@ -9,6 +12,11 @@ process.on('uncaughtException', function (err) {
   console.error(err);
   console.log('Node NOT Exiting...');
 });
+
+function loadData() {
+  Stats.load();
+  Active.load();
+}
 
 function getDate() {
   return new Date().toLocaleString('uk', {
