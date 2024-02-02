@@ -7,6 +7,4 @@ const Stats = new YAMLWrapper<IStats>(
   "data/db"
 );
 
-Stats.load();
-
 export default Stats;

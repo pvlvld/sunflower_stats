@@ -15,6 +15,4 @@ interface IActive {
 
 const Active = new YAMLWrapper<IActive>(() => "active", "data/active");
 
-Active.load();
-
 export default Active;
