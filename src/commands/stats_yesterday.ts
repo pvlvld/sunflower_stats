@@ -12,6 +12,7 @@ async function stats_yestarday(
 
   if (!isDbResNotEmpty(stats)) {
     ctx.reply("Статистика за вчора відсутня.");
+    return;
   }
 
   let reply = "📊 Статистика чату за вчора:\n\n";
