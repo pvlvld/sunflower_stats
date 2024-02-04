@@ -1,6 +1,6 @@
 export const yyyy_mm_dd_date = () => new Date().toISOString().slice(0, 10);
 
-class DynamicDateRange {
+export class DynamicDateRange {
   // Is today method worth it??
   private get today(): Date {
     return new Date();
