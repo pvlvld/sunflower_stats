@@ -50,9 +50,4 @@ bot.use(ignoreOldMessages);
 bot.use(addFullNameField);
 bot.use(autoThread());
 
-// COMMANDS
-
-const pm = bot.chatType("private");
-const gm = bot.chatType(["group", "supergroup"]);
-
-export { bot };
+export default bot;
