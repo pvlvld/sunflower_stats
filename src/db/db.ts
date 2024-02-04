@@ -10,39 +10,35 @@ if (
   throw new Error("Provide database env credentials.");
 }
 
-class MySql {
+class MySQLPoolManager {
   private config: mysql.ConnectionOptions;
-  private connection!: mysql.Connection;
+  private pool!: mysql.Pool;
 
   constructor(config: mysql.ConnectionOptions) {
     this.config = config;
   }
 
-  async createConnection() {
-    if (this.connection) return;
-    this.connection = await mysql.createConnection(this.config);
-    await this.connection.query("SELECT 1");
+  async createPool() {
+    if (this.pool) return;
+    this.pool = mysql.createPool(this.config);
+    await this.pool.query("SELECT 1");
   }
 
   get getConnection() {
-    if (!this.connection) {
-      throw new Error("Connection was not created.");
+    if (!this.pool) {
+      throw new Error("Pool was not created.");
     }
-    return this.connection;
+    return this.pool;
   }
 }
 
-const config = {
+const DBPoolManager = new MySQLPoolManager({
+  connectionLimit: 10,
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
   charset: process.env.DB_CHARSET,
-  connectionLimit: 10,
-};
+});
 
-export type IMySQL = typeof MySql;
-
-const MySQLConnector = new MySql(config);
-
-export default MySQLConnector;
+export default DBPoolManager;
