@@ -41,7 +41,10 @@ class DbChatStats {
       ];
     } catch (error) {
       console.error(error);
-      return undefined;
+      //@ts-ignore
+      return [] as [
+        { user_id: number; count: number; name: string; username: string }
+      ];
     }
   }
 }
