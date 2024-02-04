@@ -4,7 +4,7 @@
 
   "compileOnSave": true,
   "compilerOptions": {
-    "lib": ["ES2023", "ESNext", "DOM"],
+    "lib": ["ES2023", "ESNext"],
     "module": "NodeNext",
     "target": "ES2022",
 
