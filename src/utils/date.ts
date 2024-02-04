@@ -10,6 +10,11 @@ export class DynamicDateRange {
     return [start.toISOString().slice(0, 10), end.toISOString().slice(0, 10)];
   }
 
+  get yesterdayDate(): string {
+    const yesterday = new Date(this.today.getTime() - 24 * 60 * 60 * 1000);
+    return yesterday.toISOString().slice(0, 10);
+  }
+
   get weekRange(): [monday: string, sunday: string] {
     const monday = new Date(
       this.today.getFullYear(),
