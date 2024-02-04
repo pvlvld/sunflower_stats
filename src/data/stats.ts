@@ -1,10 +1,22 @@
 import { IStats } from "../types/stats";
-import { yyyy_mm_dd_date } from "../utils/date";
+import formattedDate from "../utils/date";
 import YAMLWrapper from "./YAMLWrapper";
 
-const Stats = new YAMLWrapper<IStats>(
-  () => `database${yyyy_mm_dd_date()}`, // databaseYYYY-MM-DD.yaml
-  "data/db"
+class YAMLStats extends YAMLWrapper<IStats> {
+  db: any;
+
+  constructor(filename: () => string, dirrectory: string, db: any) {
+    super(filename, dirrectory);
+    this.db = db;
+  }
+
+  writeStatsToDB() {}
+}
+
+const Stats = new YAMLStats(
+  () => `database${formattedDate.today}`, // databaseYYYY-MM-DD.yaml
+  "data/db",
+  undefined
 );
 
 export default Stats;
