@@ -1,12 +1,12 @@
 import mysql from "mysql2/promise";
-import { DynamicDateRange } from "../utils/date";
+import { FormattedDate } from "../utils/date";
 
 class DbStats {
   public chat;
   public user;
   public bot;
 
-  constructor(dbPool: mysql.Pool, dateRange: DynamicDateRange) {
+  constructor(dbPool: mysql.Pool, dateRange: FormattedDate) {
     this.chat = new DbChatStats(dbPool, dateRange);
     this.user = new DbUserStats(dbPool);
     this.bot = new DbBotStats(dbPool);
@@ -23,9 +23,9 @@ class DbUserStats {
 
 class DbChatStats {
   private dbPool: mysql.Pool;
-  private dateRange: DynamicDateRange;
+  private dateRange: FormattedDate;
 
-  constructor(dbPool: mysql.Pool, dateRange: DynamicDateRange) {
+  constructor(dbPool: mysql.Pool, dateRange: FormattedDate) {
     this.dbPool = dbPool;
     this.dateRange = dateRange;
   }
@@ -34,7 +34,7 @@ class DbChatStats {
     try {
       return (
         await this.dbPool.query(
-          `SELECT user_id, count, name, username FROM stats_day_statistics WHERE date = "${this.dateRange.yesterdayDate}" AND chat_id = ${chat_id} ORDER BY count DESC`
+          `SELECT user_id, count, name, username FROM stats_day_statistics WHERE date = "${this.dateRange.yesterday}" AND chat_id = ${chat_id} ORDER BY count DESC`
         )
       )[0] as [
         { user_id: number; count: number; name: string; username: string }
