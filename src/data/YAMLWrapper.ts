@@ -20,7 +20,7 @@ class YAMLWrapper<T> {
     }
     this.filename = filename;
     this.dirrectory = dirrectory;
-    this.filepath = () => path.join(this.dirrectory, this.filename());
+    this.filepath = () => path.join(this.dirrectory, `${this.filename()}.yaml`);
     this.data = {} as T;
   }
 
@@ -35,7 +35,7 @@ class YAMLWrapper<T> {
         throw e;
       }
     }
-    console.log(`${this.filename} loaded.`);
+    console.log(`${this.filename()}.yaml loaded.`);
   }
 
   save() {
