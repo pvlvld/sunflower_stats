@@ -2,7 +2,7 @@ import { IStats } from "../types/stats";
 import formattedDate from "../utils/date";
 import YAMLWrapper from "./YAMLWrapper";
 
-class YAMLStats extends YAMLWrapper<IStats> {
+export class YAMLStats extends YAMLWrapper<IStats> {
   db: any;
 
   constructor(filename: () => string, dirrectory: string, db: any) {
