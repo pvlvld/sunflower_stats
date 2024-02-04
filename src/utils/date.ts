@@ -1,37 +1,31 @@
-export const yyyy_mm_dd_date = () => new Date().toISOString().slice(0, 10);
+import moment from "moment";
+
+export const yyyy_mm_dd_date = () => {
+  return moment().format("YYYY-MM-DD");
+};
 
 export class DynamicDateRange {
-  // Is today method worth it??
-  private get today(): Date {
-    return new Date();
-  }
-
-  private getFormattedDateRange(start: Date, end: Date): [string, string] {
-    return [start.toISOString().slice(0, 10), end.toISOString().slice(0, 10)];
+  private getFormattedDateRange(
+    start: moment.Moment,
+    end: moment.Moment
+  ): [string, string] {
+    return [start.format("YYYY-MM-DD"), end.format("YYYY-MM-DD")];
   }
 
   get yesterdayDate(): string {
-    const yesterday = new Date(this.today.getTime() - 24 * 60 * 60 * 1000);
-    return yesterday.toISOString().slice(0, 10);
+    return moment().subtract(1, "days").format("YYYY-MM-DD");
   }
 
   get weekRange(): [monday: string, sunday: string] {
-    const monday = new Date(
-      this.today.getFullYear(),
-      this.today.getMonth(),
-      this.today.getDate() - this.today.getDay()
-    );
-    const sunday = new Date(monday.getTime() + 6 * 24 * 60 * 60 * 1000);
+    const monday = moment().startOf("week");
+    const sunday = moment().endOf("week");
 
     return this.getFormattedDateRange(monday, sunday);
   }
 
   get monthRange(): [firstDayOfTheMonth: string, lastDayOfTheMonth: string] {
-    const year = this.today.getFullYear();
-    const month = this.today.getMonth();
-
-    const firstDay = new Date(year, month, 2);
-    const lastDay = new Date(year, month + 1, 1);
+    const firstDay = moment().startOf("month");
+    const lastDay = moment().endOf("month");
 
     return this.getFormattedDateRange(firstDay, lastDay);
   }
