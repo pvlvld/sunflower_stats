@@ -24,7 +24,7 @@ class MySQLPoolManager {
     await this.pool.query("SELECT 1");
   }
 
-  get getConnection() {
+  get getPool() {
     if (!this.pool) {
       throw new Error("Pool was not created.");
     }
