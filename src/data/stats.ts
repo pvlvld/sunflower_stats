@@ -13,10 +13,10 @@ class YAMLStats extends YAMLWrapper<IStats> {
   writeStatsToDB() {}
 }
 
-const Stats = new YAMLStats(
+const yamlStats = new YAMLStats(
   () => `database${formattedDate.today}`, // databaseYYYY-MM-DD.yaml
   "data/db",
   undefined
 );
 
-export default Stats;
+export default yamlStats;
