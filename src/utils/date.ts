@@ -1,11 +1,11 @@
 import moment from "moment";
 
-export const yyyy_mm_dd_date = () => {
-  return moment().format("YYYY-MM-DD");
-};
-
-export class DynamicDateRange {
-  get yesterdayDate(): string {
+/** Dates in "YYY-MM-DD" format.*/
+export class FormattedDate {
+  get today(): string {
+    return moment().format("YYYY-MM-DD");
+  }
+  get yesterday(): string {
     return moment().subtract(1, "days").format("YYYY-MM-DD");
   }
 
@@ -24,6 +24,6 @@ export class DynamicDateRange {
   }
 }
 
-const DateRange = new DynamicDateRange();
+const formattedDate = new FormattedDate();
 
-export default DateRange;
+export default formattedDate;
