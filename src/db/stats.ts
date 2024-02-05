@@ -34,7 +34,7 @@ class DbChatStats {
     try {
       return (
         await this.dbPool.query(
-          `SELECT user_id, count, name, username FROM stats_day_statistics WHERE date = "${this.dateRange.yesterday}" AND chat_id = ${chat_id} ORDER BY count DESC`
+          `SELECT user_id, count, name, username FROM stats_day_statistics WHERE chat_id = ${chat_id} AND date = "${this.dateRange.yesterday}" ORDER BY count DESC`
         )
       )[0] as [
         { user_id: number; count: number; name: string; username: string }
