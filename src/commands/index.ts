@@ -31,6 +31,12 @@ function regCommands(dbStats: DbStats) {
     .hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
       stats_week(ctx, dbStats);
     });
+
+  bot
+    .chatType(["group", "supergroup"])
+    .hears(/^(статистика|стата) місяць$/i, async (ctx) => {
+      stats_month(ctx, dbStats);
+    });
 }
 
 export default regCommands;
