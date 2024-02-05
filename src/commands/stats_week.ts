@@ -9,7 +9,7 @@ async function stats_week(
   dbStats: DbStats
 ) {
   const stats = await dbStats.chat.week(ctx.chat.id);
-
+  // TODO: adding today stats from yaml
   if (!isDbResNotEmpty(stats)) {
     ctx.reply("Щось пішло не так.");
     return;

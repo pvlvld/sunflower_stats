@@ -9,7 +9,7 @@ async function stats_month(
   dbStats: DbStats
 ) {
   const stats = await dbStats.chat.month(ctx.chat.id);
-
+// TODO: adding today stats from yaml
   if (!isDbResNotEmpty(stats)) {
     ctx.reply("Щось пішло не так.");
     return;
