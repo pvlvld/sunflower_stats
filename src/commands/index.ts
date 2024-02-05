@@ -3,6 +3,8 @@ import DbStats from "../db/stats";
 import botTest_cmd from "./botTets";
 import help_cmd from "./help";
 import start_cmd from "./start";
+import stats_all from "./stats_all";
+import stats_month from "./stats_month";
 import stats_today from "./stats_today";
 import stats_week from "./stats_week";
 import stats_yestarday from "./stats_yesterday";
