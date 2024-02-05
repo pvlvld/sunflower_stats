@@ -4,6 +4,7 @@ import botTest_cmd from "./botTets";
 import help_cmd from "./help";
 import start_cmd from "./start";
 import stats_today from "./stats_today";
+import stats_week from "./stats_week";
 import stats_yestarday from "./stats_yesterday";
 
 function regCommands(dbStats: DbStats) {
@@ -23,6 +24,12 @@ function regCommands(dbStats: DbStats) {
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата)\s*(сьогодні|день)?$/i, async (ctx) => {
       stats_today(ctx);
+    });
+
+  bot
+    .chatType(["group", "supergroup"])
+    .hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
+      stats_week(ctx, dbStats);
     });
 }
 
