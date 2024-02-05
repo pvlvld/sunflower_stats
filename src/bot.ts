@@ -4,6 +4,8 @@ import { MyContext } from "./types/context";
 import { ignoreOldMessages } from "./middlewares/ignoreOldMessages";
 import { addFullNameField } from "./middlewares/addFullNameField";
 import { autoThread } from "./middlewares/autoThreads";
+import start_menu from "./ui/menus/start";
+import help_menu from "./ui/menus/help";
 
 if (!process.env.BOT_TOKEN) throw new Error("Token required");
 
@@ -45,9 +47,12 @@ bot.api.config.use(async (prev, method, payload, signal) => {
 bot.drop(matchFilter("message:is_automatic_forward"));
 
 // MIDDLEWARES
-
 bot.use(ignoreOldMessages);
 bot.use(addFullNameField);
 bot.use(autoThread());
+
+// MENUS
+bot.use(start_menu);
+bot.use(help_menu);
 
 export default bot;
