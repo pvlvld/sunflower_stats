@@ -32,11 +32,16 @@ class DbChatStats {
 
   async yesterday(chat_id: number) {
     try {
-      return (
-        await this.dbPool.query(
-          `SELECT user_id, count, name, username FROM stats_day_statistics WHERE chat_id = ${chat_id} AND date = "${this.dateRange.yesterday}" ORDER BY count DESC`
-        )
-      )[0] as [
+      const query = `
+      SELECT user_id, SUM(count) AS count,
+        MAX(name) AS name,
+        MAX(username) AS username
+      FROM stats_day_statistics
+      WHERE chat_id = ${chat_id} AND date = "${this.dateRange.yesterday}"
+      GROUP BY user_id
+      ORDER BY count DESC;
+        `;
+      return (await this.dbPool.query(query))[0] as [
         { user_id: number; count: number; name: string; username: string }
       ];
     } catch (error) {
@@ -49,13 +54,17 @@ class DbChatStats {
   }
 
   async week(chat_id: number) {
+    const query = `
+    SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
+       MAX(name) AS name,
+       MAX(username) AS username
+    FROM stats_day_statistics
+    WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange.weekRange[0]}" AND "${this.dateRange.weekRange[1]}"
+    GROUP BY user_id
+    ORDER BY count DESC;
+      `;
     try {
-      return (
-        await this.dbPool.query(
-          `SELECT user_id, CAST(SUM(count) as UNSIGNED) as count, name, username FROM stats_day_statistics WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange.weekRange[0]}" AND "${this.dateRange.weekRange[1]}" GROUP BY user_id, name, username`
-          // SELECT user_id, SUM(count), name, username FROM stats_day_statistics WHERE chat_id = %s AND date BETWEEN %s AND %s GROUP BY user_id
-        )
-      )[0] as [
+      return (await this.dbPool.query(query))[0] as [
         { user_id: number; count: number; name: string; username: string }
       ];
     } catch (error) {
@@ -68,13 +77,17 @@ class DbChatStats {
   }
 
   async month(chat_id: number) {
+    const query = `
+    SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
+       MAX(name) AS name,
+       MAX(username) AS username
+    FROM stats_day_statistics
+    WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange.monthRange[0]}" AND "${this.dateRange.monthRange[1]}"
+    GROUP BY user_id
+    ORDER BY count DESC;
+      `;
     try {
-      return (
-        await this.dbPool.query(
-          `SELECT user_id, CAST(SUM(count) as UNSIGNED) as count, name, username FROM stats_day_statistics WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange.monthRange[0]}" AND "${this.dateRange.monthRange[1]}" GROUP BY user_id, name, username`
-          // SELECT user_id, SUM(count), name, username FROM stats_day_statistics WHERE chat_id = %s AND date BETWEEN %s AND %s GROUP BY user_id
-        )
-      )[0] as [
+      return (await this.dbPool.query(query))[0] as [
         { user_id: number; count: number; name: string; username: string }
       ];
     } catch (error) {
