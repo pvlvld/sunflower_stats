@@ -1,13 +1,13 @@
 import { IStats } from "../types/stats";
 import formattedDate from "../utils/date";
 import YAMLWrapper from "./YAMLWrapper";
+import mysql2 from "mysql2/promise";
 
 export class YAMLStats extends YAMLWrapper<IStats> {
-  db: any;
-
-  constructor(filename: () => string, dirrectory: string, db: any) {
+  dbPool: mysql2.Pool;
+  constructor(filename: () => string, dirrectory: string, dbPool: mysql2.Pool) {
     super(filename, dirrectory);
-    this.db = db;
+    this.dbPool = dbPool;
   }
 
   writeStatsToDB() {}
