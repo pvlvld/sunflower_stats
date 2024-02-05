@@ -21,7 +21,7 @@ function regCommands(dbStats: DbStats) {
 
   bot
     .chatType(["group", "supergroup"])
-    .hears(/^(статистика|стата)\s*(сьогодні)?$/i, async (ctx) => {
+    .hears(/^(статистика|стата)\s*(сьогодні|день)?$/i, async (ctx) => {
       stats_today(ctx);
     });
 }
