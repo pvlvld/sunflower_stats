@@ -1,7 +1,11 @@
 import escapeMarkdownV2 from "./escapeMarkdownV2";
 
 const getUserNameLink = {
-  markdown: (name: string, username: string | undefined, user_id: number) => {
+  markdown: (
+    name: string,
+    username: string | undefined,
+    user_id: number | string
+  ) => {
     return `[${escapeMarkdownV2(name)}](${
       username && username !== "null"
         ? `https://${username}.t.me`
