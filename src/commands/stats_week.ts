@@ -24,10 +24,6 @@ async function stats_week(
     stats_s.push({ ...stats[b], user_id: b });
   }
 
-  stats_s = stats_s.sort((a, b) => {
-    return a.count < b.count ? 1 : -1;
-  });
-
   for (let i = 0; i < Math.min(50, stats_s.length); i++) {
     reply += `${i + 1}\\. ${getUserNameLink.markdown(
       stats_s[i].name,
