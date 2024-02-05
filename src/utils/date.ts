@@ -11,8 +11,8 @@ export class FormattedDate {
 
   get weekRange(): [monday: string, sunday: string] {
     return [
-      moment().startOf("week").format("YYYY-MM-DD"),
-      moment().endOf("week").format("YYYY-MM-DD"),
+      moment().startOf("isoWeek").format("YYYY-MM-DD"),
+      moment().endOf("isoWeek").format("YYYY-MM-DD"),
     ];
   }
 
