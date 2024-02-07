@@ -22,6 +22,13 @@ export class FormattedDate {
       moment().endOf("month").format("YYYY-MM-DD"),
     ];
   }
+
+  get yearRange(): [firstDayOfYear: string, lastDayOfYear: string] {
+    const startOfYear = moment().startOf("year").format("YYYY-MM-DD");
+    const endOfYear = moment().endOf("year").format("YYYY-MM-DD");
+
+    return [startOfYear, endOfYear];
+  }
 }
 
 const formattedDate = new FormattedDate();
