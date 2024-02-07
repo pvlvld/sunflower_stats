@@ -41,15 +41,21 @@ class DbChatStats {
       GROUP BY user_id
       ORDER BY count DESC;
         `;
-      return (await this.dbPool.query(query))[0] as [
-        { user_id: number; count: number; name: string; username: string }
-      ];
+      return (await this.dbPool.query(query))[0] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
     } catch (error) {
       console.error(error);
       //@ts-ignore
-      return [] as [
-        { user_id: number; count: number; name: string; username: string }
-      ];
+      return [] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
     }
   }
 
@@ -64,15 +70,21 @@ class DbChatStats {
     ORDER BY count DESC;
       `;
     try {
-      return (await this.dbPool.query(query))[0] as [
-        { user_id: number; count: number; name: string; username: string }
-      ];
+      return (await this.dbPool.query(query))[0] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
     } catch (error) {
       console.error(error);
       //@ts-ignore
-      return [] as [
-        { user_id: number; count: number; name: string; username: string }
-      ];
+      return [] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
     }
   }
 
@@ -87,15 +99,21 @@ class DbChatStats {
     ORDER BY count DESC;
       `;
     try {
-      return (await this.dbPool.query(query))[0] as [
-        { user_id: number; count: number; name: string; username: string }
-      ];
+      return (await this.dbPool.query(query))[0] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
     } catch (error) {
       console.error(error);
       //@ts-ignore
-      return [] as [
-        { user_id: number; count: number; name: string; username: string }
-      ];
+      return [] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
     }
   }
 
@@ -109,15 +127,21 @@ class DbChatStats {
     GROUP BY user_id
     ORDER BY count DESC;`;
     try {
-      return (await this.dbPool.query(query))[0] as [
-        { user_id: number; count: number; name: string; username: string }
-      ];
+      return (await this.dbPool.query(query))[0] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
     } catch (error) {
       console.error(error);
       //@ts-ignore
-      return [] as [
-        { user_id: number; count: number; name: string; username: string }
-      ];
+      return [] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
     }
   }
 }
