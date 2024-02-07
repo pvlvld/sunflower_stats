@@ -1,4 +1,7 @@
 import bot from "../bot";
+import YAMLWrapper from "../data/YAMLWrapper";
+import { IActive } from "../data/active";
+import YAMLStats from "../data/stats";
 import DbStats from "../db/stats";
 import botTest_cmd from "./botTets";
 import help_cmd from "./help";
@@ -9,7 +12,11 @@ import stats_today from "./stats_today";
 import stats_week from "./stats_week";
 import stats_yestarday from "./stats_yesterday";
 
-function regCommands(dbStats: DbStats) {
+function regCommands(
+  dbStats: DbStats,
+  active: YAMLWrapper<IActive>,
+  yamlStats: YAMLStats
+) {
   bot.hears(/^бот?$/i, async (ctx) => botTest_cmd(ctx));
 
   bot.command("help", async (ctx) => help_cmd(ctx));

@@ -45,7 +45,8 @@ async function main() {
   const dbStats = new DbStats(DBPoolManager.getPool, DateRange);
   bot.use(ActiveCollectorWrapper(Active, formattedDate));
   bot.use(StatsCollectorWrapper(yamlStats));
-  regCommands(dbStats);
+  regCommands(dbStats, Active, yamlStats);
+
   // const [test, str] = await DBPoolManager.getPool.query(
   //   "SELECT user_id, count, name, username FROM stats_day_statistics WHERE date = '2024-02-02' AND chat_id = -1001898242958 ORDER BY count DESC"
   // );
