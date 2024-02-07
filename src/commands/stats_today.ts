@@ -12,16 +12,11 @@ async function stats_today(
 
   let reply = "📊 Статистика чату за сьогодні:\n\n";
   let totlal_messages = 0;
-  let stats_s = [] as any[],
-    b;
 
-  for (b in stats) {
-    stats_s.push({ ...stats[b], user_id: b });
-  }
-
-  stats_s = stats_s.sort((a, b) => {
-    return a.day < b.day ? 1 : -1;
-  });
+  const stats_s = Object.values(stats).sort((a, b) => {
+    //@ts-ignore
+    return a.messages < b.messages ? 1 : -1;
+  }) as any;
 
   for (let i = 0; i < Math.min(50, stats_s.length); i++) {
     reply += `${i + 1}\\. ${getUserNameLink.markdown(
@@ -30,7 +25,7 @@ async function stats_today(
       stats_s[i].user_id
     )} — ${stats_s[i].messages || 0}\n`;
 
-    totlal_messages += stats_s[i].day || 0;
+    totlal_messages += stats_s[i].messages || 0;
   }
 
   reply += `\nЗагальна кількість повідомлень: ${totlal_messages}`;
