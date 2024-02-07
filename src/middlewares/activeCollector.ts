@@ -3,7 +3,7 @@ import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
 import { FormattedDate } from "../utils/date";
 
-export function ActiveCollectorWrapper(
+function ActiveCollectorWrapper(
   active: YAMLWrapper<IActive>,
   formattedDate: FormattedDate
 ) {
