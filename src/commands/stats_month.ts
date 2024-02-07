@@ -1,5 +1,5 @@
 import type { MyContext } from "../types/context";
-import type { ChatTypeContext } from "grammy";
+import { type ChatTypeContext, type HearsContext } from "grammy";
 import DbStats from "../db/stats";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import getUserNameLink from "../utils/getUserNameLink";
@@ -12,7 +12,6 @@ async function stats_month(
   yamlStats: YAMLStats
 ) {
   const stats = await dbStats.chat.month(ctx.chat.id);
-// TODO: adding today stats from yaml
   if (!isDbResNotEmpty(stats)) {
     ctx.reply("Щось пішло не так.");
     return;
@@ -20,24 +19,18 @@ async function stats_month(
 
   let reply = "📊 Статистика чату за цей місяць:\n\n";
   let totlal_messages = 0;
-  let stats_s = [] as any[],
-    b;
 
-  for (b in stats) {
-    stats_s.push({ ...stats[b], user_id: b });
-  }
-
-  for (let i = 0; i < Math.min(50, stats_s.length); i++) {
+  for (let i = 0; i < Math.min(50, stats.length); i++) {
     const totalUserMessages = addTodayUserMessages(
       ctx.chat.id,
       ctx.from.id,
-      stats_s[i].count || 0,
+      stats[i].count || 0,
       yamlStats
     );
     reply += `${i + 1}\\. ${getUserNameLink.markdown(
-      stats_s[i].name,
-      stats_s[i].username,
-      stats_s[i].user_id
+      stats[i].name,
+      stats[i].username,
+      stats[i].user_id
     )} — ${totalUserMessages}\n`;
 
     totlal_messages += totalUserMessages;

@@ -17,21 +17,15 @@ async function stats_week(
 
   let reply = "📊 Статистика чату за цей тиждень:\n\n";
   let totlal_messages = 0;
-  let stats_s = [] as any[],
-    b;
 
-  for (b in stats) {
-    stats_s.push({ ...stats[b], user_id: b });
-  }
-
-  for (let i = 0; i < Math.min(50, stats_s.length); i++) {
+  for (let i = 0; i < Math.min(50, stats.length); i++) {
     reply += `${i + 1}\\. ${getUserNameLink.markdown(
-      stats_s[i].name,
-      stats_s[i].username,
-      stats_s[i].user_id
-    )} — ${stats_s[i].count || 0}\n`;
+      stats[i].name,
+      stats[i].username,
+      stats[i].user_id
+    )} — ${stats[i].count || 0}\n`;
 
-    totlal_messages += stats_s[i].count || 0;
+    totlal_messages += stats[i].count || 0;
   }
 
   reply += `\nЗагальна кількість повідомлень: ${totlal_messages}`;
