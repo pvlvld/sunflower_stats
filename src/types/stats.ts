@@ -22,3 +22,10 @@ export interface IStats {
       }
     | undefined;
 }
+
+export interface IUserDbStats {
+  total: number;
+  year: number;
+  month: string;
+  week: string;
+}
