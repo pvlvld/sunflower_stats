@@ -39,7 +39,7 @@ function regCommands(
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
-      stats_week(ctx, dbStats);
+      stats_week(ctx, dbStats, yamlStats);
     });
 
   bot
@@ -51,7 +51,7 @@ function regCommands(
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) вся$/i, async (ctx) => {
-      stats_all(ctx, dbStats);
+      stats_all(ctx, dbStats, yamlStats);
     });
 
   bot.hears("merge active", (ctx) => {
