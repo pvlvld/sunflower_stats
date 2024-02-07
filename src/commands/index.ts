@@ -45,7 +45,7 @@ function regCommands(
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) місяць$/i, async (ctx) => {
-      stats_month(ctx, dbStats);
+      stats_month(ctx, dbStats, yamlStats);
     });
 
   bot
