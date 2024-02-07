@@ -32,7 +32,7 @@ function regCommands(
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата)\s*(сьогодні|день)?$/i, async (ctx) => {
-      stats_today(ctx);
+      stats_today(ctx, yamlStats);
     });
 
   bot

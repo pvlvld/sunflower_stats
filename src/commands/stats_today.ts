@@ -1,12 +1,13 @@
 import type { MyContext } from "../types/context";
 import type { ChatTypeContext } from "grammy";
 import getUserNameLink from "../utils/getUserNameLink";
-import yamlStats from "../data/stats";
+import YAMLStats from "../data/stats";
 
 async function stats_today(
-  ctx: ChatTypeContext<MyContext, "supergroup" | "group">
+  ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
+  yamlStats: YAMLStats
 ) {
-  let stats = yamlStats.data?.[ctx.chat.id];
+  let stats = yamlStats.data[ctx.chat.id];
   if (!stats || stats === undefined) return;
 
   let reply = "📊 Статистика чату за сьогодні:\n\n";
@@ -27,7 +28,7 @@ async function stats_today(
       stats_s[i].name,
       stats_s[i].username,
       stats_s[i].user_id
-    )} — ${stats_s[i].day || 0}\n`;
+    )} — ${stats_s[i].messages || 0}\n`;
 
     totlal_messages += stats_s[i].day || 0;
   }
