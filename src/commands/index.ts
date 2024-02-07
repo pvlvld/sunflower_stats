@@ -11,6 +11,7 @@ import stats_all from "./stats_all";
 import stats_month from "./stats_month";
 import stats_today from "./stats_today";
 import stats_week from "./stats_week";
+import stats_year from "./stats_year";
 import stats_yestarday from "./stats_yesterday";
 
 function regCommands(
@@ -46,6 +47,12 @@ function regCommands(
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) місяць$/i, async (ctx) => {
       stats_month(ctx, dbStats, yamlStats);
+    });
+
+  bot
+    .chatType(["group", "supergroup"])
+    .hears(/^(статистика|стата) рік$/i, async (ctx) => {
+      stats_year(ctx, dbStats, yamlStats);
     });
 
   bot
