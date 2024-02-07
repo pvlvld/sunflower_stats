@@ -3,10 +3,13 @@ import type { ChatTypeContext } from "grammy";
 import DbStats from "../db/stats";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import getUserNameLink from "../utils/getUserNameLink";
+import YAMLStats from "../data/stats";
+import addTodayUserMessages from "../utils/addTodayUserMessages";
 
 async function stats_month(
-  ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
-  dbStats: DbStats
+  ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
+  dbStats: DbStats,
+  yamlStats: YAMLStats
 ) {
   const stats = await dbStats.chat.month(ctx.chat.id);
 // TODO: adding today stats from yaml
@@ -25,13 +28,19 @@ async function stats_month(
   }
 
   for (let i = 0; i < Math.min(50, stats_s.length); i++) {
+    const totalUserMessages = addTodayUserMessages(
+      ctx.chat.id,
+      ctx.from.id,
+      stats_s[i].count || 0,
+      yamlStats
+    );
     reply += `${i + 1}\\. ${getUserNameLink.markdown(
       stats_s[i].name,
       stats_s[i].username,
       stats_s[i].user_id
-    )} — ${stats_s[i].count || 0}\n`;
+    )} — ${totalUserMessages}\n`;
 
-    totlal_messages += stats_s[i].count || 0;
+    totlal_messages += totalUserMessages;
   }
 
   reply += `\nЗагальна кількість повідомлень: ${totlal_messages}`;
