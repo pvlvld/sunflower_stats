@@ -5,8 +5,8 @@ export interface IActive {
     | {
         [user_id: string]:
           | {
-              last_time: string;
-              first_time: string;
+              active_last: string;
+              active_first: string;
               name: string;
             }
           | undefined;
