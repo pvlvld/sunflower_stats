@@ -117,6 +117,39 @@ class DbChatStats {
     }
   }
 
+  async year(chat_id: number) {
+    const startOfYear = this.dateRange.yearRange[0];
+    const endOfYear = this.dateRange.monthRange[1];
+
+    const query = `
+      SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
+         MAX(name) AS name,
+         MAX(username) AS username
+      FROM stats_day_statistics
+      WHERE chat_id = ${chat_id} AND date BETWEEN "${startOfYear}" AND "${endOfYear}"
+      GROUP BY user_id
+      ORDER BY count DESC;
+    `;
+
+    try {
+      return (await this.dbPool.query(query))[0] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
+    } catch (error) {
+      console.error(error);
+      //@ts-ignore
+      return [] as {
+        user_id: number;
+        count: number;
+        name: string;
+        username: string;
+      }[];
+    }
+  }
+
   async all(chat_id: number) {
     const query = `
     SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
