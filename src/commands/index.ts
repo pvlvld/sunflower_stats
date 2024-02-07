@@ -5,6 +5,7 @@ import YAMLStats from "../data/stats";
 import DbStats from "../db/stats";
 import botTest_cmd from "./botTets";
 import help_cmd from "./help";
+import mergeActive_cmd from "./mergeActive";
 import start_cmd from "./start";
 import stats_all from "./stats_all";
 import stats_month from "./stats_month";
@@ -52,6 +53,10 @@ function regCommands(
     .hears(/^(статистика|стата) вся$/i, async (ctx) => {
       stats_all(ctx, dbStats);
     });
+
+  bot.hears("merge active", (ctx) => {
+    if (ctx.from?.id === 6102695950) mergeActive_cmd(active, ctx);
+  });
 }
 
 export default regCommands;
