@@ -1,5 +1,6 @@
 import mysql from "mysql2/promise";
 import { FormattedDate } from "../utils/date";
+import { IUserDbStats } from "../types/stats";
 
 class DbStats {
   public chat;
@@ -8,16 +9,38 @@ class DbStats {
 
   constructor(dbPool: mysql.Pool, dateRange: FormattedDate) {
     this.chat = new DbChatStats(dbPool, dateRange);
-    this.user = new DbUserStats(dbPool);
+    this.user = new DbUserStats(dbPool, dateRange);
     this.bot = new DbBotStats(dbPool);
   }
 }
 
 class DbUserStats {
   private dbPool: mysql.Pool;
+  private dateRange: FormattedDate;
 
-  constructor(dbPool: mysql.Pool) {
+  constructor(dbPool: mysql.Pool, dateRange: FormattedDate) {
     this.dbPool = dbPool;
+    this.dateRange = dateRange;
+  }
+
+  async all(chat_id: number, user_id: number): Promise<IUserDbStats> {
+    const query = `
+    SELECT
+    CAST(SUM(count) AS UNSIGNED) AS total,
+    CAST(SUM(CASE WHEN date BETWEEN "${this.dateRange.yearRange[0]}" AND "${this.dateRange.yearRange[1]}" THEN count ELSE 0 END)  AS UNSIGNED) AS year,
+    CAST(SUM(CASE WHEN date BETWEEN "${this.dateRange.monthRange[0]}" AND "${this.dateRange.monthRange[1]}" THEN count ELSE 0 END)  AS UNSIGNED) AS month,
+    CAST(SUM(CASE WHEN date BETWEEN "${this.dateRange.weekRange[0]}" AND "${this.dateRange.weekRange[1]}" THEN count ELSE 0 END)  AS UNSIGNED) AS week
+    FROM stats_day_statistics
+    WHERE chat_id = ${chat_id} AND user_id = ${user_id};
+    `;
+
+    try {
+      //@ts-expect-error
+      return (await this.dbPool.query(query))[0][0] as IUserDbStats;
+    } catch (error) {
+      console.error(error);
+      return {} as IUserDbStats;
+    }
   }
 }
 
