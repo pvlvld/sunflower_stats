@@ -9,6 +9,9 @@ import DBPoolManager from "./db/db";
 import DbStats from "./db/stats";
 import regCommands from "./commands";
 import DateRange from "./utils/date";
+import formattedDate from "./utils/date";
+import ActiveCollectorWrapper from "./middlewares/activeCollector";
+import StatsCollectorWrapper from "./middlewares/statsCollector";
 // import { getPublicIP } from './utils/getPublicIP';
 // import { startStatsCollecting } from './utils/statsCollector';
 
@@ -40,6 +43,8 @@ async function main() {
   loadData();
   await DBPoolManager.createPool();
   const dbStats = new DbStats(DBPoolManager.getPool, DateRange);
+  bot.use(ActiveCollectorWrapper(Active, formattedDate));
+  bot.use(StatsCollectorWrapper(yamlStats));
   regCommands(dbStats);
   // const [test, str] = await DBPoolManager.getPool.query(
   //   "SELECT user_id, count, name, username FROM stats_day_statistics WHERE date = '2024-02-02' AND chat_id = -1001898242958 ORDER BY count DESC"
