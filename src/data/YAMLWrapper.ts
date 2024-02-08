@@ -51,7 +51,8 @@ class YAMLWrapper<T> {
         throw new Error(e);
       }
     }
-    console.log(`${this.filename} saved.`);
+    console.log(`${this.filename()} saved.`);
+    bot.api.sendMessage("-1001898242958", `${this.filename()} saved.`);
   }
 
   clear() {
