@@ -95,6 +95,9 @@ async function main() {
       });
     }
 
+    active.save();
+    yamlStats.save();
+
     console.log("Done.");
     process.exit();
   }
