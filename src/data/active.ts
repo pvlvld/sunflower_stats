@@ -14,6 +14,4 @@ export interface IActive {
     | undefined;
 }
 
-const Active = new YAMLWrapper<IActive>(() => "active", "data/active");
-
-export default Active;
+export default IActive;
