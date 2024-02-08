@@ -16,15 +16,15 @@ function ActiveCollectorWrapper(
       }
 
       if (!active.data[ctx.chat.id]?.[ctx.from.id]) {
-        //@ts-ignore
+        //@ts-expect-error
         active.data[ctx.chat.id][ctx.from.id] = {
-          last_time: formattedDate.today,
-          first_time: formattedDate.today,
+          active_last: formattedDate.today,
+          active_first: formattedDate.today,
           name: ctx.from.first_name,
         };
       } else {
-        //@ts-ignore
-        active.data[ctx.chat.id][ctx.from.id].last_time = formattedDate.today;
+        //@ts-expect-error
+        active.data[ctx.chat.id][ctx.from.id].active_last = formattedDate.today;
       }
     }
 
