@@ -4,7 +4,6 @@ import { isNodeError } from "../types/typeGuards";
 import path from "path";
 import bot from "../bot";
 
-//TODO: test case when clear insnantly after save & write instantly after load and verify wtired data in saved file
 class YAMLWrapper<T> {
   readonly filename: () => string;
   readonly filepath: () => string;
@@ -40,7 +39,6 @@ class YAMLWrapper<T> {
     console.log(`${this.filename()}.yaml loaded.`);
   }
 
-  // Custom filepath to save, if not set then undefined
   save(custom_filepath?: string) {
     try {
       fs.writeFileSync(
