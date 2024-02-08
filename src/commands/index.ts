@@ -9,6 +9,8 @@ import mergeActive_cmd from "./mergeActive";
 import start_cmd from "./start";
 import stats_all from "./stats_all";
 import stats_month from "./stats_month";
+import stats_my from "./stats_my";
+import stats_their from "./stats_their";
 import stats_today from "./stats_today";
 import stats_week from "./stats_week";
 import stats_year from "./stats_year";
@@ -63,6 +65,14 @@ function regCommands(
 
   bot.hears("merge active", (ctx) => {
     if (ctx.from?.id === 6102695950) mergeActive_cmd(active, ctx);
+  });
+
+  bot.chatType(["group", "supergroup"]).hears(/^(!я|!йа)$/i, async (ctx) => {
+    stats_my(ctx, dbStats, yamlStats, active);
+  });
+
+  bot.chatType(["group", "supergroup"]).hears(/^(!ти)$/i, async (ctx) => {
+    stats_their(ctx, dbStats, yamlStats, active);
   });
 }
 
