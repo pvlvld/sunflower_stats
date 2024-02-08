@@ -44,7 +44,7 @@ bot.api.config.use(async (prev, method, payload, signal) => {
   return prev(method, payload, signal);
 });
 
-bot.drop(matchFilter("message:is_automatic_forward"));
+bot.drop(matchFilter(":is_automatic_forward"));
 
 // MIDDLEWARES
 bot.use(ignoreOldMessages);
