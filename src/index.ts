@@ -1,6 +1,6 @@
 import "dotenv/config";
 import bot from "./bot";
-import { GrammyError, webhookCallback, HttpError } from "grammy";
+import { GrammyError, HttpError } from "grammy";
 import * as http from "http";
 import process from "node:process";
 import { YAMLStats } from "./data/stats";
@@ -14,8 +14,6 @@ import ActiveCollectorWrapper from "./middlewares/activeCollector";
 import StatsCollectorWrapper from "./middlewares/statsCollector";
 import createScheduler from "./utils/scheduler";
 import YAMLWrapper from "./data/YAMLWrapper";
-// import { getPublicIP } from './utils/getPublicIP';
-// import { startStatsCollecting } from './utils/statsCollector';
 
 process.on("uncaughtException", function (err) {
   console.error(err);
