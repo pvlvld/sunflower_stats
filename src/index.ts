@@ -67,6 +67,11 @@ async function main() {
     });
 
     console.log("Bot is started.");
+    bot.api.sendAnimation(
+      "-1001898242958",
+      "CgACAgIAAxkBAAIbKWWxO4FNC2yLM4-zkmnhLNEPcYy-AALUQAACLPtwSUWUvK8qKPSqNAQ",
+      { caption: "Бота запущено!" }
+    );
   });
 
   process.on("SIGINT", async () => await shutdown());
