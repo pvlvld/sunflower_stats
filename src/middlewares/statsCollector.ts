@@ -6,21 +6,11 @@ export function StatsCollectorWrapper(yamlStats: YAMLStats) {
     if (!ctx.from || !ctx.chat || ctx.from.is_bot) {
       return await next();
     } else {
-      if (!yamlStats.data[ctx.chat.id]) {
-        yamlStats.data[ctx.chat.id] = {};
-      }
-
-      if (!yamlStats.data[ctx.chat.id]?.[ctx.from.id]) {
-        //@ts-ignore
-        yamlStats.data[ctx.chat.id][ctx.from.id] = {
-          name: ctx.from.first_name,
-          username: ctx.from.username,
-          messages: 1,
-        };
-      } else {
-        //@ts-ignore
-        yamlStats.data[ctx.chat.id][ctx.from.id].messages += 1;
-      }
+      yamlStats.data[ctx.chat.id] ??= {};
+      //@ts-expect-error
+      yamlStats.data[ctx.chat.id][ctx.from.id] ??= 1;
+      //@ts-expect-error
+      yamlStats.data[ctx.chat.id][ctx.from.id] += 1;
     }
 
     return await next();
