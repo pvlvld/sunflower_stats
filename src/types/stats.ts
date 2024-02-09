@@ -24,10 +24,9 @@ export interface IDbChatUserStatsPeriods {
   week: string;
 }
 
-export interface IDbChatUsersStats {
+export interface IDbChatUserStats {
   user_id: number;
   count: number;
   name: string;
   username: string;
 }
-[];

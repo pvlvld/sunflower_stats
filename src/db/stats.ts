@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 import { FormattedDate } from "../utils/date";
-import { IDbChatUserStatsPeriods, IDbChatUsersStats } from "../types/stats";
+import { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
 
 class DbStats {
   public chat;
@@ -56,7 +56,7 @@ class DbChatStats {
     this.dateRange = dateRange;
   }
 
-  async yesterday(chat_id: number) {
+  async yesterday(chat_id: number): Promise<IDbChatUserStats[]> {
     try {
       const query = `
       SELECT user_id, SUM(count) AS count,
@@ -67,16 +67,14 @@ class DbChatStats {
       GROUP BY user_id
       ORDER BY count DESC;
         `;
-      //@ts-expect-error
-      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
+      return (await this.dbPool.query(query))[0] as IDbChatUserStats[];
     } catch (error) {
       console.error(error);
-      //@ts-expect-error
-      return [] as IDbChatUsersStats;
+      return [] as IDbChatUserStats[];
     }
   }
 
-  async week(chat_id: number) {
+  async week(chat_id: number): Promise<IDbChatUserStats[]> {
     const query = `
     SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
        MAX(name) AS name,
@@ -87,16 +85,14 @@ class DbChatStats {
     ORDER BY count DESC;
       `;
     try {
-      //@ts-expect-error
-      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
+      return (await this.dbPool.query(query))[0] as IDbChatUserStats[];
     } catch (error) {
       console.error(error);
-      //@ts-expect-error
-      return [] as IDbChatUsersStats;
+      return [] as IDbChatUserStats[];
     }
   }
 
-  async month(chat_id: number) {
+  async month(chat_id: number): Promise<IDbChatUserStats[]> {
     const query = `
     SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
        MAX(name) AS name,
@@ -107,16 +103,14 @@ class DbChatStats {
     ORDER BY count DESC;
       `;
     try {
-      //@ts-expect-error
-      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
+      return (await this.dbPool.query(query))[0] as IDbChatUserStats[];
     } catch (error) {
       console.error(error);
-      //@ts-expect-error
-      return [] as IDbChatUsersStats;
+      return [] as IDbChatUserStats[];
     }
   }
 
-  async year(chat_id: number) {
+  async year(chat_id: number): Promise<IDbChatUserStats[]> {
     const startOfYear = this.dateRange.yearRange[0];
     const endOfYear = this.dateRange.monthRange[1];
 
@@ -131,16 +125,14 @@ class DbChatStats {
     `;
 
     try {
-      //@ts-expect-error
-      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
+      return (await this.dbPool.query(query))[0] as IDbChatUserStats[];
     } catch (error) {
       console.error(error);
-      //@ts-expect-error
-      return [] as IDbChatUsersStats;
+      return [] as IDbChatUserStats[];
     }
   }
 
-  async all(chat_id: number): Promise<IDbChatUsersStats> {
+  async all(chat_id: number): Promise<IDbChatUserStats[]> {
     const query = `
     SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
         MAX(name) AS name,
@@ -150,12 +142,10 @@ class DbChatStats {
     GROUP BY user_id
     ORDER BY count DESC;`;
     try {
-      //@ts-expect-error
-      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
+      return (await this.dbPool.query(query))[0] as IDbChatUserStats[];
     } catch (error) {
       console.error(error);
-      //@ts-expect-error
-      return [] as IDbChatUsersStats;
+      return [] as IDbChatUserStats[];
     }
   }
 }

@@ -1,4 +1,5 @@
 import YAMLStats from "../data/stats";
+import { IDbChatUserStats, IStats } from "../types/stats";
 import addTodayUserMessages from "./addTodayUserMessages";
 import getUserNameLink from "./getUserNameLink";
 
@@ -23,7 +24,7 @@ export function getStatsRating(stats: any) {
 
 // Separate function to reduce ticks due to infrequent use of db stats without adding today stats
 export function getStatsRatingPlusToday(
-  stats: any,
+  stats: IDbChatUserStats[],
   chat_id: number,
   user_id: number,
   yamlStats: YAMLStats
