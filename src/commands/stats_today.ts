@@ -2,30 +2,34 @@ import type { MyContext } from "../types/context";
 import type { ChatTypeContext } from "grammy";
 import getUserNameLink from "../utils/getUserNameLink";
 import YAMLStats from "../data/stats";
+import IActive from "../data/active";
+import YAMLWrapper from "../data/YAMLWrapper";
 
 async function stats_today(
   ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
-  yamlStats: YAMLStats
+  yamlStats: YAMLStats,
+  active: YAMLWrapper<IActive>
 ) {
-  let stats = yamlStats.data[ctx.chat.id];
+  const stats = yamlStats.data[ctx.chat.id];
   if (!stats || stats === undefined) return;
 
   let reply = "📊 Статистика чату за сьогодні:\n\n";
   let totlal_messages = 0;
 
-  const stats_s = Object.values(stats).sort((a, b) => {
-    //@ts-ignore
-    return a.messages < b.messages ? 1 : -1;
-  }) as any;
+  const usersId_sorted = Object.keys(stats).sort((u1, u2) => {
+    //@ts-expect-error
+    return stats[u1] < stats[u2] ? 1 : -1;
+  });
 
-  for (let i = 0; i < Math.min(50, stats_s.length); i++) {
+  for (let i = 0; i < Math.min(50, usersId_sorted.length); i++) {
+    const user_id = usersId_sorted[i];
     reply += `${i + 1}\\. ${getUserNameLink.markdown(
-      stats_s[i].name,
-      stats_s[i].username,
-      stats_s[i].user_id
-    )} — ${stats_s[i].messages || 0}\n`;
+      active.data[ctx.chat.id]?.[user_id]?.name || "Невідомо",
+      active.data[ctx.chat.id]?.[user_id]?.username,
+      user_id
+    )} — ${stats[user_id] || 0}\n`;
 
-    totlal_messages += stats_s[i].messages || 0;
+    totlal_messages += stats[user_id] || 0;
   }
 
   reply += `\nЗагальна кількість повідомлень: ${totlal_messages}`;
