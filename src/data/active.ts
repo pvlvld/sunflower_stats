@@ -1,13 +1,12 @@
-import YAMLWrapper from "./YAMLWrapper";
-
 export interface IActive {
   [chat_id: string]:
     | {
         [user_id: string]:
           | {
+              name: string | undefined;
+              username: string | undefined;
               active_last: string;
               active_first: string;
-              name: string;
             }
           | undefined;
       }
