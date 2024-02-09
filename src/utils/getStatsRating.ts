@@ -26,7 +26,6 @@ export function getStatsRating(stats: any) {
 export function getStatsRatingPlusToday(
   stats: IDbChatUserStats[],
   chat_id: number,
-  user_id: number,
   yamlStats: YAMLStats
 ) {
   let reply = "";
@@ -35,7 +34,7 @@ export function getStatsRatingPlusToday(
   for (let i = 0; i < Math.min(50, stats.length); i++) {
     const totalUserMessages = addTodayUserMessages(
       chat_id,
-      user_id,
+      stats[i].user_id,
       stats[i].count || 0,
       yamlStats
     );
