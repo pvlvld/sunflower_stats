@@ -18,7 +18,7 @@ async function stats_year(
 
   ctx.reply(
     "📊 Статистика чату за цей рік:\n\n" +
-      getStatsRatingPlusToday(stats, ctx.chat.id, ctx.from.id, yamlStats),
+      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats),
     {
       parse_mode: "MarkdownV2",
       disable_notification: true,

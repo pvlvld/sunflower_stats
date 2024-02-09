@@ -18,7 +18,7 @@ async function stats_month(
 
   ctx.reply(
     "📊 Статистика чату за цей місяць:\n\n" +
-      getStatsRatingPlusToday(stats, ctx.chat.id, ctx.from.id, yamlStats),
+      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats),
     {
       parse_mode: "MarkdownV2",
       disable_notification: true,
