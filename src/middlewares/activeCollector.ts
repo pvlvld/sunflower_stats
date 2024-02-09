@@ -21,6 +21,7 @@ function ActiveCollectorWrapper(
           active_last: formattedDate.today,
           active_first: formattedDate.today,
           name: ctx.from.first_name,
+          username: ctx.from.username,
         };
       } else {
         //@ts-expect-error
