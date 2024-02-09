@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 import { FormattedDate } from "../utils/date";
-import { IUserDbStats } from "../types/stats";
+import { IDbChatUserStatsPeriods } from "../types/stats";
 
 class DbStats {
   public chat;
@@ -23,7 +23,10 @@ class DbUserStats {
     this.dateRange = dateRange;
   }
 
-  async all(chat_id: number, user_id: number): Promise<IUserDbStats> {
+  async all(
+    chat_id: number,
+    user_id: number
+  ): Promise<IDbChatUserStatsPeriods> {
     const query = `
     SELECT
     CAST(SUM(count) AS UNSIGNED) AS total,
@@ -36,10 +39,10 @@ class DbUserStats {
 
     try {
       //@ts-expect-error
-      return (await this.dbPool.query(query))[0][0] as IUserDbStats;
+      return (await this.dbPool.query(query))[0][0] as IDbChatUserStatsPeriods;
     } catch (error) {
       console.error(error);
-      return {} as IUserDbStats;
+      return {} as IDbChatUserStatsPeriods;
     }
   }
 }

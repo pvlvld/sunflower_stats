@@ -3,12 +3,12 @@ import YAMLStats from "../data/stats";
 import escapeMarkdownV2 from "./escapeMarkdownV2";
 import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
-import { IUserDbStats } from "../types/stats";
+import { IDbChatUserStatsPeriods } from "../types/stats";
 
 function getUserStatsMessage(
   chat_id: number,
   user: User,
-  dbStats: IUserDbStats,
+  dbStats: IDbChatUserStatsPeriods,
   yamlStats: YAMLStats,
   active: YAMLWrapper<IActive>
 ) {

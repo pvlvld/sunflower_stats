@@ -17,7 +17,7 @@ export interface IStats {
     | undefined;
 }
 
-export interface IUserDbStats {
+export interface IDbChatUserStatsPeriods {
   total: number;
   year: number;
   month: string;
