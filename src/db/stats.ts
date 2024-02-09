@@ -1,6 +1,6 @@
 import mysql from "mysql2/promise";
 import { FormattedDate } from "../utils/date";
-import { IDbChatUserStatsPeriods } from "../types/stats";
+import { IDbChatUserStatsPeriods, IDbChatUsersStats } from "../types/stats";
 
 class DbStats {
   public chat;
@@ -67,21 +67,12 @@ class DbChatStats {
       GROUP BY user_id
       ORDER BY count DESC;
         `;
-      return (await this.dbPool.query(query))[0] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
     } catch (error) {
       console.error(error);
-      //@ts-ignore
-      return [] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return [] as IDbChatUsersStats;
     }
   }
 
@@ -96,21 +87,12 @@ class DbChatStats {
     ORDER BY count DESC;
       `;
     try {
-      return (await this.dbPool.query(query))[0] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
     } catch (error) {
       console.error(error);
-      //@ts-ignore
-      return [] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return [] as IDbChatUsersStats;
     }
   }
 
@@ -125,21 +107,12 @@ class DbChatStats {
     ORDER BY count DESC;
       `;
     try {
-      return (await this.dbPool.query(query))[0] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
     } catch (error) {
       console.error(error);
-      //@ts-ignore
-      return [] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return [] as IDbChatUsersStats;
     }
   }
 
@@ -158,25 +131,16 @@ class DbChatStats {
     `;
 
     try {
-      return (await this.dbPool.query(query))[0] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
     } catch (error) {
       console.error(error);
-      //@ts-ignore
-      return [] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return [] as IDbChatUsersStats;
     }
   }
 
-  async all(chat_id: number) {
+  async all(chat_id: number): Promise<IDbChatUsersStats> {
     const query = `
     SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
         MAX(name) AS name,
@@ -186,21 +150,12 @@ class DbChatStats {
     GROUP BY user_id
     ORDER BY count DESC;`;
     try {
-      return (await this.dbPool.query(query))[0] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return (await this.dbPool.query(query))[0] as IDbChatUsersStats;
     } catch (error) {
       console.error(error);
-      //@ts-ignore
-      return [] as {
-        user_id: number;
-        count: number;
-        name: string;
-        username: string;
-      }[];
+      //@ts-expect-error
+      return [] as IDbChatUsersStats;
     }
   }
 }
