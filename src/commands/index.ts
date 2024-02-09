@@ -5,7 +5,7 @@ import YAMLStats from "../data/stats";
 import DbStats from "../db/stats";
 import botTest_cmd from "./botTets";
 import help_cmd from "./help";
-import mergeActive_cmd from "./mergeActive";
+import migrateData from "./migrateData";
 import start_cmd from "./start";
 import stats_all from "./stats_all";
 import stats_month from "./stats_month";
@@ -63,8 +63,8 @@ function regCommands(
       stats_all(ctx, dbStats, yamlStats);
     });
 
-  bot.hears("merge active", (ctx) => {
-    if (ctx.from?.id === 6102695950) mergeActive_cmd(active, ctx);
+  bot.hears("migrate data", (ctx) => {
+    if (ctx.from?.id === 6102695950) migrateData(ctx);
   });
 
   bot.chatType(["group", "supergroup"]).hears(/^(!я|!йа)$/i, async (ctx) => {
