@@ -3,8 +3,8 @@ export interface IActive {
     | {
         [user_id: string]:
           | {
-              name: string | undefined;
-              username: string | undefined;
+              name?: string;
+              username?: string;
               active_last: string;
               active_first: string;
             }
