@@ -38,8 +38,8 @@ async function main() {
   await DBPoolManager.createPool();
 
   const yamlStats = new YAMLStats(
-    () => `database${formattedDate.today}`, // databaseYYYY-MM-DD.yaml
-    "data/db",
+    () => `stats${formattedDate.today}`, // statsYYYY-MM-DD.yaml
+    "data/stats",
     DBPoolManager.getPool
   );
   const active = new YAMLWrapper<IActive>(() => "active", "data/active");

@@ -12,7 +12,7 @@ function getUserStatsMessage(
   yamlStats: YAMLStats,
   active: YAMLWrapper<IActive>
 ) {
-  const stats_today = yamlStats.data[chat_id]?.[user.id]?.messages || 0;
+  const stats_today = yamlStats.data[chat_id]?.[user.id] || 0;
 
   return escapeMarkdownV2(`
 ❄️ Статистика ${user.first_name}
