@@ -1,6 +1,5 @@
 import YAMLStats from "../data/stats";
 import { IDbChatUserStats, IStats } from "../types/stats";
-import addTodayUserMessages from "./addTodayUserMessages";
 import getUserNameLink from "./getUserNameLink";
 
 export function getStatsRatingPlusToday(
@@ -12,12 +11,9 @@ export function getStatsRatingPlusToday(
   let totalChatMessages = 0;
 
   for (let i = 0; i < Math.min(50, stats.length); i++) {
-    const totalUserMessages = addTodayUserMessages(
-      chat_id,
-      stats[i].user_id,
-      stats[i].count || 0,
-      yamlStats
-    );
+    const totalUserMessages =
+      (stats[i].count || 0) +
+      (yamlStats.data[chat_id]?.[stats[i].user_id] || 0);
 
     reply += `${i + 1}\\. ${getUserNameLink.markdown(
       stats[i].name,
