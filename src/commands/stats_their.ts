@@ -4,7 +4,6 @@ import DbStats from "../db/stats";
 import YAMLStats from "../data/stats";
 import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
-import escapeMarkdownV2 from "../utils/escapeMarkdownV2";
 import getUserStatsMessage from "../utils/getUserStatsMessage";
 
 async function stats_their(

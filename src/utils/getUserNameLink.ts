@@ -1,4 +1,4 @@
-import escapeMarkdownV2 from "./escapeMarkdownV2";
+import Escape from "./escape";
 
 const getUserNameLink = {
   markdown: (
@@ -6,7 +6,7 @@ const getUserNameLink = {
     username: string | undefined,
     user_id: number | string
   ) => {
-    return `[${escapeMarkdownV2(name)}](${
+    return `[${Escape.markdownV1(name)}](${
       username && username !== "null"
         ? `https://${username}.t.me`
         : `tg://user?id=${user_id}`

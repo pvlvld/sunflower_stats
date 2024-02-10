@@ -20,7 +20,7 @@ async function stats_year(
     "📊 Статистика чату за цей рік:\n\n" +
       getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats),
     {
-      parse_mode: "MarkdownV2",
+      parse_mode: "Markdown",
       disable_notification: true,
       link_preview_options: { is_disabled: true },
     }

@@ -1,9 +1,9 @@
 import { User } from "@grammyjs/types";
 import YAMLStats from "../data/stats";
-import escapeMarkdownV2 from "./escapeMarkdownV2";
 import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
 import { IDbChatUserStatsPeriods } from "../types/stats";
+import Escape from "./escape";
 
 function getUserStatsMessage(
   chat_id: number,
@@ -14,7 +14,7 @@ function getUserStatsMessage(
 ) {
   const stats_today = yamlStats.data[chat_id]?.[user.id] || 0;
 
-  return escapeMarkdownV2(`
+  return Escape.markdownV1(`
 ❄️ Статистика ${user.first_name}
     
 📊 Актив: 
