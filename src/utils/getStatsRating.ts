@@ -15,7 +15,7 @@ export function getStatsRatingPlusToday(
       (stats[i].count || 0) +
       (yamlStats.data[chat_id]?.[stats[i].user_id] || 0);
 
-    reply += `${i + 1}\\. ${getUserNameLink.markdown(
+    reply += `${i + 1}. ${getUserNameLink.markdown(
       stats[i].name,
       stats[i].username,
       stats[i].user_id
