@@ -42,25 +42,25 @@ function regCommands(
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
-      stats_week(ctx, dbStats, yamlStats);
+      stats_week(ctx, dbStats, yamlStats, active);
     });
 
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) місяць$/i, async (ctx) => {
-      stats_month(ctx, dbStats, yamlStats);
+      stats_month(ctx, dbStats, yamlStats, active);
     });
 
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) рік$/i, async (ctx) => {
-      stats_year(ctx, dbStats, yamlStats);
+      stats_year(ctx, dbStats, yamlStats, active);
     });
 
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) вся$/i, async (ctx) => {
-      stats_all(ctx, dbStats, yamlStats);
+      stats_all(ctx, dbStats, yamlStats, active);
     });
 
   bot.hears("migrate data", (ctx) => {

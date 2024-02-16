@@ -4,11 +4,14 @@ import DbStats from "../db/stats";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import YAMLStats from "../data/stats";
+import YAMLWrapper from "../data/YAMLWrapper";
+import IActive from "../data/active";
 
 async function stats_week(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
   dbStats: DbStats,
-  yamlStats: YAMLStats
+  yamlStats: YAMLStats,
+  active: YAMLWrapper<IActive>
 ) {
   const stats = await dbStats.chat.week(ctx.chat.id);
   if (!isDbResNotEmpty(stats)) {
@@ -18,7 +21,7 @@ async function stats_week(
 
   ctx.reply(
     "📊 Статистика чату за цей тиждень:\n\n" +
-      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats),
+      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats, active),
     {
       parse_mode: "MarkdownV2",
       disable_notification: true,

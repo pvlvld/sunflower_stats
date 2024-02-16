@@ -4,11 +4,14 @@ import DbStats from "../db/stats";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import YAMLStats from "../data/stats";
+import IActive from "../data/active";
+import YAMLWrapper from "../data/YAMLWrapper";
 
 async function stats_all(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
   dbStats: DbStats,
-  yamlStats: YAMLStats
+  yamlStats: YAMLStats,
+  active: YAMLWrapper<IActive>
 ) {
   const stats = await dbStats.chat.all(ctx.chat.id);
   if (!isDbResNotEmpty(stats)) {
@@ -18,9 +21,9 @@ async function stats_all(
 
   ctx.reply(
     "📊 Статистика чату за весь час:\n\n" +
-      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats),
+      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats, active),
     {
-      parse_mode: "MarkdownV2",
+      parse_mode: "Markdown",
       disable_notification: true,
       link_preview_options: { is_disabled: true },
     }

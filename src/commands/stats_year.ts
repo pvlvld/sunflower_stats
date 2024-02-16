@@ -4,11 +4,14 @@ import DbStats from "../db/stats";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import YAMLStats from "../data/stats";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
+import YAMLWrapper from "../data/YAMLWrapper";
+import IActive from "../data/active";
 
 async function stats_year(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
   dbStats: DbStats,
-  yamlStats: YAMLStats
+  yamlStats: YAMLStats,
+  active: YAMLWrapper<IActive>
 ) {
   const stats = await dbStats.chat.year(ctx.chat.id);
   if (!isDbResNotEmpty(stats)) {
@@ -18,7 +21,7 @@ async function stats_year(
 
   ctx.reply(
     "📊 Статистика чату за цей рік:\n\n" +
-      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats),
+      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats, active),
     {
       parse_mode: "Markdown",
       disable_notification: true,
