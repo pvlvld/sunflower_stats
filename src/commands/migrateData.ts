@@ -41,7 +41,7 @@ function mergeActive(ctx: MyContext) {
 
   const old_active = new YAMLWrapper<any>(() => "active", "data");
   old_active.load();
-  console.log("Loaded old_active.json");
+  console.log("Loaded active.json");
 
   let mergedActive = {} as IActive;
 
