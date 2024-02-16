@@ -12,7 +12,8 @@ function ActiveCollectorWrapper(
       !ctx.from ||
       !ctx.chat ||
       ctx.from.is_bot ||
-      ctx.chat.id === ctx.from.id
+      ctx.chat.id === ctx.from.id ||
+      !!ctx.msg?.reply_to_message?.is_automatic_forward
     ) {
       return await next();
     } else {

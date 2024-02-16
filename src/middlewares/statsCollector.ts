@@ -3,7 +3,12 @@ import YAMLStats from "../data/stats";
 
 export function StatsCollectorWrapper(yamlStats: YAMLStats) {
   return async function statsCollector(ctx: Context, next: NextFunction) {
-    if (!ctx.chat || ctx.from?.is_bot || ctx.chat.id === ctx.from?.id) {
+    if (
+      !ctx.chat ||
+      ctx.from?.is_bot ||
+      ctx.chat.id === ctx.from?.id ||
+      !!ctx.msg?.reply_to_message?.is_automatic_forward
+    ) {
       return await next();
     } else {
       yamlStats.data[ctx.chat.id] ??= {};
