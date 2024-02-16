@@ -4,6 +4,7 @@ import { IActive } from "../data/active";
 import YAMLStats from "../data/stats";
 import DbStats from "../db/stats";
 import botTest_cmd from "./botTets";
+import chatInactive_cmd from "./chat_inactive";
 import help_cmd from "./help";
 import migrateData from "./migrateData";
 import start_cmd from "./start";
@@ -73,6 +74,11 @@ function regCommands(
 
   bot.chatType(["group", "supergroup"]).hears(/^(!ти)$/i, async (ctx) => {
     stats_their(ctx, dbStats, yamlStats, active);
+  });
+
+  bot.chatType(["group", "supergroup"]).hears(/^(!інактив)/i, async (ctx) => {
+    //@ts-expect-error
+    chatInactive_cmd(ctx, active);
   });
 }
 
