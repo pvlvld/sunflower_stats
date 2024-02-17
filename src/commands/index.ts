@@ -78,7 +78,7 @@ function regCommands(
   });
   bot
     .chatType(["group", "supergroup"])
-    .hears(/^((\+нік|\+нікнейм) .*)$/i, async (ctx) => {
+    .hears(/^(\+нік|\+нікнейм)/i, async (ctx) => {
       set_nickname(ctx, active);
     });
   bot.chatType(["group", "supergroup"]).hears(/^(!інактив)/i, async (ctx) => {
