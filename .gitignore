@@ -2,3 +2,6 @@ node_modules
 production.env
 test.*
 .env
+build
+data
+*.yaml
