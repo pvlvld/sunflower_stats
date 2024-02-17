@@ -26,7 +26,9 @@ export function getStatsRatingPlusToday(
     }
     user_count++;
     reply += `${user_count}. ${getUserNameLink.markdown(
-      active.data[chat_id]?.[stats[i].user_id]?.nickname || stats[i].name,
+      active.data[chat_id]?.[stats[i].user_id]?.nickname ||
+        active.data[chat_id]?.[stats[i].user_id]?.name ||
+        stats[i].name,
       stats[i].username,
       stats[i].user_id
     )} — ${totalUserMessages.toLocaleString("fr-FR")}\n`;
