@@ -9,6 +9,13 @@ async function set_nickname(
   active: YAMLWrapper<IActive>
 ) {
   const nickname = parseCmdArgs(ctx.msg.text as string).join(" ");
+  if (nickname.length === 0) {
+    ctx.reply(
+      "+нік Х, +нікнейм Х — замість х бажаний нікнейм. Відображається замість імені у всіх командах"
+    );
+    return;
+  }
+
   if (nickname.length > 20) {
     ctx.reply("Максимальна довжина нікнейму 20 символів.");
     return;
