@@ -33,7 +33,7 @@ function getInactivePageMessage(
   return inactiveUsers
     .map(
       (user, i) =>
-        `${i + 1 + (page - 1) * PAGE_LENGTH}\\. ${genUserPageRecord(
+        `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(
           chat_id,
           user,
           active
