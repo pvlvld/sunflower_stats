@@ -10,9 +10,9 @@
 // };
 
 export interface IStats {
-  [chat_id: string]:
+  [chat_id: string | number]:
     | {
-        [user_id: string]: number | undefined;
+        [user_id: string | number]: number | undefined;
       }
     | undefined;
 }
