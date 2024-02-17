@@ -16,6 +16,7 @@ import createScheduler from "./utils/scheduler";
 import YAMLWrapper from "./data/YAMLWrapper";
 import regHandlers from "./handlers";
 import { autoQuote } from "@roziscoding/grammy-autoquote";
+import { autoThread } from "./middlewares/autoThreads";
 
 process.on("uncaughtException", function (err) {
   console.error(err);
@@ -53,6 +54,7 @@ async function main() {
   bot.use(ActiveCollectorWrapper(active, formattedDate));
   bot.use(StatsCollectorWrapper(yamlStats));
   bot.use(autoQuote);
+  bot.use(autoThread());
   regHandlers(active, yamlStats);
   regCommands(dbStats, active, yamlStats);
 
