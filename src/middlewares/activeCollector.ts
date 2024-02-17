@@ -31,7 +31,9 @@ function ActiveCollectorWrapper(
         //@ts-expect-error
         active.data[ctx.chat.id][ctx.from.id].active_last = formattedDate.today;
         //@ts-expect-error
-        active.data[ctx.chat.id][ctx.from.id].name = ctx.from.first_name;
+        active.data[ctx.chat.id][ctx.from.id].name = ctx.from.first_name
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
         //@ts-expect-error
         active.data[ctx.chat.id][ctx.from.id].username = ctx.from.username;
       }

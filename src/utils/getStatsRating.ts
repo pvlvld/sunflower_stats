@@ -25,10 +25,6 @@ export function getStatsRatingPlusToday(
       continue;
     }
     user_count++;
-
-    console.log(stats[i]);
-     
-  
     reply += `${user_count}. ${getUserNameLink.markdown(
       active.data[chat_id]?.[stats[i].user_id]?.nickname || stats[i].name,
       stats[i].username,

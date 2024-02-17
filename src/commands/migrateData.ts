@@ -48,6 +48,7 @@ function mergeActive(ctx: MyContext) {
   for (const chat in old_first_seen) {
     for (const user in old_first_seen[chat]) {
       if (chat == user) continue;
+      if (!old_active.data[chat]?.[user]?.name) continue;
       const active_last =
         (old_active.data[chat]?.[user]?.date as string | undefined) ||
         formattedDate.today;
@@ -59,6 +60,8 @@ function mergeActive(ctx: MyContext) {
         name:
           old_active.data[chat]?.[user]?.name !== undefined
             ? replaceUnicodeCodes(String(old_active.data[chat]?.[user]?.name))
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
             : undefined,
         active_last,
         active_first: old_first_seen[chat]?.[user] || formattedDate.today,

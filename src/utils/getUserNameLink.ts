@@ -12,7 +12,17 @@ const getUserNameLink = {
         : `tg://user?id=${user_id}`
     })`;
   },
-  html: () => {},
+  html: (
+    name: string,
+    username: string | undefined,
+    user_id: number | string
+  ) => {
+    return `<a href="${
+      username && username !== "null"
+        ? `https://${username}.t.me`
+        : `tg://user?id=${user_id}`
+    }">${name}</a>`;
+  },
 };
 
 export default getUserNameLink;

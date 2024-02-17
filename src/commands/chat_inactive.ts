@@ -2,6 +2,7 @@ import YAMLWrapper from "../data/YAMLWrapper";
 import IActive from "../data/active";
 import { type MyContext } from "../types/context";
 import Escape from "../utils/escape";
+import getUserNameLink from "../utils/getUserNameLink";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import { type ChatTypeContext, type HearsContext, type Filter } from "grammy";
 
@@ -18,7 +19,7 @@ function chatInactive_cmd(
   if (!page) return ctx.reply("Введіть номер сторінки.\n!неактив 1");
 
   ctx.reply(getInactivePageMessage(ctx.chat.id, Math.abs(page), active), {
-    parse_mode: "Markdown",
+    parse_mode: "HTML",
   });
 }
 
@@ -33,7 +34,7 @@ function getInactivePageMessage(
   return inactiveUsers
     .map(
       (user, i) =>
-        `${i + 1 + (page - 1) * PAGE_LENGTH}\\. ${genUserPageRecord(
+        `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(
           chat_id,
           user,
           active
@@ -47,11 +48,11 @@ function genUserPageRecord(
   user: string,
   active: YAMLWrapper<IActive>
 ) {
-  return `**${Escape.markdownV1(
-    active.data[chat_id]?.[user]?.name || "невідомо"
-  )}** — ${Escape.markdownV1(
-    active.data[chat_id]?.[user]?.active_last || "невідомо"
-  )}`;
+  return `<b>${getUserNameLink.html(
+    active.data[chat_id]?.[user]?.name || "невідомо",
+    active.data[chat_id]?.[user]?.username,
+    user
+  )}</b> — ${active.data[chat_id]?.[user]?.active_last || "невідомо"}`;
 }
 
 function getInactivePage(
