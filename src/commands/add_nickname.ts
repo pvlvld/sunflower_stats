@@ -4,7 +4,7 @@ import YAMLWrapper from "../data/YAMLWrapper";
 import IActive from "../data/active";
 import parseCmdArgs from "../utils/parseCmdArgs";
 
-async function add_nickname(
+async function set_nickname(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
   active: YAMLWrapper<IActive>
 ) {
@@ -21,4 +21,4 @@ async function add_nickname(
     link_preview_options: { is_disabled: true },
   });
 }
-export default add_nickname;
+export default set_nickname;

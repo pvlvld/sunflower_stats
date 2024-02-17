@@ -16,7 +16,7 @@ import stats_today from "./stats_today";
 import stats_week from "./stats_week";
 import stats_year from "./stats_year";
 import stats_yestarday from "./stats_yesterday";
-import add_nickname from "./add_nickname";
+import set_nickname from "./set_nickname";
 
 function regCommands(
   dbStats: DbStats,
@@ -76,9 +76,11 @@ function regCommands(
   bot.chatType(["group", "supergroup"]).hears(/^(!ти)$/i, async (ctx) => {
     stats_their(ctx, dbStats, yamlStats, active);
   });
-  bot.chatType(["group", "supergroup"]).hears(/^((\+нік|\+нікнейм) .*)$/i, async (ctx) => {
-    add_nickname(ctx, active);
-  });
+  bot
+    .chatType(["group", "supergroup"])
+    .hears(/^((\+нік|\+нікнейм) .*)$/i, async (ctx) => {
+      set_nickname(ctx, active);
+    });
   bot.chatType(["group", "supergroup"]).hears(/^(!інактив)/i, async (ctx) => {
     //@ts-expect-error
     chatInactive_cmd(ctx, active);
