@@ -14,8 +14,12 @@ function getUserStatsMessage(
 ) {
   const stats_today = yamlStats.data[chat_id]?.[user.id] || 0;
 
-  return Escape.markdownV1(`
-❄️ Статистика ${user.first_name}
+  const nickname = active.data[chat_id]?.[user.id]?.nickname;
+
+  return Escape.html(`
+❄️ Статистика ${
+    nickname ? `${nickname} (${user.first_name})` : `${user.first_name}`
+  }
     
 📊 Актив: 
 
