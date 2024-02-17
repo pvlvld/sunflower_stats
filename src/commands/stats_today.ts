@@ -23,7 +23,7 @@ async function stats_today(
 
   for (let i = 0; i < Math.min(50, usersId_sorted.length); i++) {
     const user_id = usersId_sorted[i];
-    reply += `${i + 1}\\. ${getUserNameLink.markdown(
+    reply += `${i + 1}. ${getUserNameLink.html(
       active.data[ctx.chat.id]?.[user_id]?.name || "Невідомо",
       active.data[ctx.chat.id]?.[user_id]?.username,
       user_id
