@@ -60,6 +60,8 @@ function mergeActive(ctx: MyContext) {
         name:
           old_active.data[chat]?.[user]?.name !== undefined
             ? replaceUnicodeCodes(String(old_active.data[chat]?.[user]?.name))
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
             : undefined,
         active_last,
         active_first: old_first_seen[chat]?.[user] || formattedDate.today,

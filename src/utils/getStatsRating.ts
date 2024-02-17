@@ -26,7 +26,7 @@ export function getStatsRatingPlusToday(
     }
     user_count++;
 
-    reply += `${user_count}. ${getUserNameLink.markdown(
+    reply += `${user_count}. ${getUserNameLink.html(
       active.data[chat_id]?.[stats[i].user_id]?.name || "Невідомо",
       stats[i].username,
       stats[i].user_id

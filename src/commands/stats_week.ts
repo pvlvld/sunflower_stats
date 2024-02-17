@@ -23,7 +23,7 @@ async function stats_week(
     "📊 Статистика чату за цей тиждень:\n\n" +
       getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats, active),
     {
-      parse_mode: "MarkdownV2",
+      parse_mode: "HTML",
       disable_notification: true,
       link_preview_options: { is_disabled: true },
     }
