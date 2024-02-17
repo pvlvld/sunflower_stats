@@ -82,11 +82,11 @@ async function main() {
   process.on("SIGINT", async () => await shutdown());
   process.on("SIGTERM", async () => await shutdown());
 
-  let shutdownCounter = 0;
+  let isShuttingDown = false;
 
   async function shutdown() {
-    if (shutdownCounter) return;
-    shutdownCounter++;
+    if (isShuttingDown) return;
+    isShuttingDown = true;
 
     console.log("Shutting down.");
     await bot.api.deleteWebhook().then(() => {
