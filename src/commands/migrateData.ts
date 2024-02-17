@@ -48,6 +48,7 @@ function mergeActive(ctx: MyContext) {
   for (const chat in old_first_seen) {
     for (const user in old_first_seen[chat]) {
       if (chat == user) continue;
+      if (!old_active.data[chat]?.[user]?.name) continue;
       const active_last =
         (old_active.data[chat]?.[user]?.date as string | undefined) ||
         formattedDate.today;
