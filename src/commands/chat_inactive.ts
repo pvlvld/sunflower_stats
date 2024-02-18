@@ -49,7 +49,9 @@ function genUserPageRecord(
   active: YAMLWrapper<IActive>
 ) {
   return `<b>${getUserNameLink.html(
-    active.data[chat_id]?.[user]?.name || "невідомо",
+    active.data[chat_id]?.[user]?.nickname ||
+      active.data[chat_id]?.[user]?.name ||
+      "невідомо",
     active.data[chat_id]?.[user]?.username,
     user
   )}</b> — ${active.data[chat_id]?.[user]?.active_last || "невідомо"}`;
