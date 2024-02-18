@@ -5,13 +5,18 @@ import { MyContext } from "../types/context";
 import formattedDate from "../utils/date";
 import YAML from "yaml";
 import { IStats } from "../types/stats";
+import TodayStats from "../data/stats";
 
-function migrateData(ctx: MyContext) {
-  mergeActive(ctx);
-  clearActive(ctx);
+function migrateData(
+  ctx: MyContext,
+  todayStats: TodayStats,
+  active: YAMLWrapper<IActive>
+) {
+  mergeActive(ctx, active);
+  clearActive(ctx, todayStats);
 }
 
-function clearActive(ctx: MyContext) {
+function clearActive(ctx: MyContext, todayStats: TodayStats) {
   const old_stats = new YAMLWrapper<any>(() => "database", "data");
   old_stats.load();
   console.log("Loaded database.yaml");
@@ -28,7 +33,7 @@ function clearActive(ctx: MyContext) {
     }
   }
   old_stats.clear();
-
+  todayStats.data = new_stats;
   fs.writeFileSync("data/stats/stats.yaml", YAML.stringify(new_stats));
 
   console.log("Stats Done");
@@ -36,7 +41,7 @@ function clearActive(ctx: MyContext) {
 }
 
 /** Merge active.yaml with first_active.json, fix unicode and save to active.yaml */
-function mergeActive(ctx: MyContext) {
+function mergeActive(ctx: MyContext, active: YAMLWrapper<IActive>) {
   let old_first_seen = JSON.parse(fs.readFileSync("data/ggg.json").toString());
 
   const old_active = new YAMLWrapper<any>(() => "active", "data");
@@ -68,7 +73,7 @@ function mergeActive(ctx: MyContext) {
       };
     }
   }
-
+  active.data = mergedActive;
   fs.writeFileSync("data/active/active.yaml", YAML.stringify(mergedActive));
 
   console.log("Aсtive Done");

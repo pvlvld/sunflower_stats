@@ -120,7 +120,8 @@ function regCommands(
   });
 
   bot.hears("migrate data", (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) migrateData(ctx);
+    if (ADMINS.includes(ctx.from?.id || -1))
+      migrateData(ctx, todayStats, active);
   });
 
   bot.hears("reset stats", (ctx) => {
