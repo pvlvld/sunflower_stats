@@ -118,6 +118,14 @@ function regCommands(
   bot.hears("migrate data", (ctx) => {
     if (ctx.from?.id === 6102695950) migrateData(ctx);
   });
+
+  bot.hears("reset stats", (ctx) => {
+    if (ctx.from?.id === 6102695950) botStatsManager.resetAll();
+  });
+
+  bot.hears("reset msg", (ctx) => {
+    if (ctx.from?.id === 6102695950) botStatsManager.resetMessages();
+  });
 }
 
 export default regCommands;
