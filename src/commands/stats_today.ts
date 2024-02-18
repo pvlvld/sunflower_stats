@@ -37,7 +37,6 @@ async function stats_today(
   reply += `\nЗагальна кількість повідомлень: ${totlal_messages}`;
 
   ctx.reply(reply, {
-    parse_mode: "HTML",
     disable_notification: true,
     link_preview_options: { is_disabled: true },
   });

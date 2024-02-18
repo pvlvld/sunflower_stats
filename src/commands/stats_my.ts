@@ -21,7 +21,6 @@ async function stats_my(
       active
     ),
     {
-      parse_mode: "HTML",
       disable_notification: true,
       link_preview_options: { is_disabled: true },
     }

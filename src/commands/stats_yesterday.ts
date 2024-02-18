@@ -36,7 +36,6 @@ async function stats_yestarday(
   reply += `\nЗагальна кількість повідомлень: ${total_messages}`;
 
   ctx.reply(reply, {
-    parse_mode: "HTML",
     disable_notification: true,
     link_preview_options: { is_disabled: true },
   });

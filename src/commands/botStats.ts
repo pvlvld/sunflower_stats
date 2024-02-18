@@ -35,7 +35,7 @@ function bot_stats_cmd(ctx: MyContext) {
     statsMsg += `${cmd} - ${BOT_STATS.commands[cmd]}\n`;
   }
 
-  ctx.reply(statsMsg);
+  ctx.reply(statsMsg, { link_preview_options: { is_disabled: true } });
 }
 
 export const botStatsManager = {

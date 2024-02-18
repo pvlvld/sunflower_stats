@@ -19,7 +19,7 @@ function chatInactive_cmd(
   if (!page) return ctx.reply("Введіть номер сторінки.\n!неактив 1");
 
   ctx.reply(getInactivePageMessage(ctx.chat.id, Math.abs(page), active), {
-    parse_mode: "HTML",
+    link_preview_options: { is_disabled: true },
   });
 }
 

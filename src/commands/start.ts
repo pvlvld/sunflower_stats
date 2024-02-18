@@ -13,7 +13,7 @@ function start_cmd(ctx: MyContext) {
 
 Бот? — просто команда, на яку я маю зреагувати. Якщо цього не відбувається, то, скоріш за все, я пішов спати 😴
 `,
-    { reply_markup: start_menu }
+    { reply_markup: start_menu, link_preview_options: { is_disabled: true } }
   );
 }
 
