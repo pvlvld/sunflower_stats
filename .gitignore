@@ -3,5 +3,5 @@ production.env
 test.*
 .env
 build
-data
+./data
 *.yaml
