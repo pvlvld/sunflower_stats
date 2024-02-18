@@ -112,7 +112,7 @@ class DbChatStats {
 
   async year(chat_id: number): Promise<IDbChatUserStats[]> {
     const startOfYear = this.dateRange.yearRange[0];
-    const endOfYear = this.dateRange.monthRange[1];
+    const endOfYear = this.dateRange.yearRange[1];
 
     const query = `
       SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
