@@ -29,7 +29,7 @@ function getInactivePageMessage(
   active: YAMLWrapper<IActive>
 ) {
   const inactiveUsers = getInactivePage(chat_id, page, active);
-  if (inactiveUsers.length === 0) return "Ця сторінка порожня\.";
+  if (inactiveUsers.length === 0) return "Ця сторінка порожня.";
 
   return inactiveUsers
     .map(
