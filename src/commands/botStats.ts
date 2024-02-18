@@ -1,3 +1,4 @@
+import moment from "moment";
 import { MyContext } from "../types/context";
 
 type IBotStats = {
@@ -19,7 +20,16 @@ const BOT_STATS: IBotStats = {
 };
 
 function bot_stats_cmd(ctx: MyContext) {
-  let statsMsg = `Нових чатів: ${BOT_STATS.newGroups}\n\n`;
+  let statsMsg = `
+Нових чатів: ${BOT_STATS.newGroups}
+
+Повідомлень за ${moment
+    .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
+    .humanize()}: ${BOT_STATS.messages.total}`;
+
+  if (Object.keys(BOT_STATS.commands).length > 0) {
+    statsMsg += "\n\nЧастота використання команд:";
+  }
 
   for (const cmd in BOT_STATS.commands) {
     statsMsg += `${cmd} - ${BOT_STATS.commands[cmd]}\n`;
