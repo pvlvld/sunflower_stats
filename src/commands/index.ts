@@ -25,8 +25,6 @@ function regCommands(
   active: YAMLWrapper<IActive>,
   yamlStats: YAMLStats
 ) {
-  bot.hears(/^бот?$/i, async (ctx) => botTest_cmd(ctx));
-
   bot.command("help", async (ctx) => {
     collectBotStats.command("help");
     help_cmd(ctx);
@@ -79,10 +77,6 @@ function regCommands(
       stats_all(ctx, dbStats, yamlStats, active);
     });
 
-  bot.hears("migrate data", (ctx) => {
-    if (ctx.from?.id === 6102695950) migrateData(ctx);
-  });
-
   bot.chatType(["group", "supergroup"]).hears(/^(!я|!йа)$/i, async (ctx) => {
     collectBotStats.command("я");
     stats_my(ctx, dbStats, yamlStats, active);
@@ -113,8 +107,16 @@ function regCommands(
     chatInactive_cmd(ctx, active);
   });
 
+  // -------- STAFF COMMANDS --------
+
+  bot.hears(/^бот?$/i, async (ctx) => botTest_cmd(ctx));
+
   bot.chatType(["group", "supergroup"]).hears("bot stats", async (ctx) => {
     if (ctx.from?.id === 6102695950) bot_stats_cmd(ctx);
+  });
+
+  bot.hears("migrate data", (ctx) => {
+    if (ctx.from?.id === 6102695950) migrateData(ctx);
   });
 }
 
