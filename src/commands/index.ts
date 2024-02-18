@@ -131,6 +131,10 @@ function regCommands(
   bot.hears("reset msg", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetMessages();
   });
+
+  bot.hears("gc", (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) Bun.gc(true);
+  });
 }
 
 export default regCommands;
