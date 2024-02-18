@@ -18,6 +18,7 @@ import regHandlers from "./handlers";
 import { autoQuote } from "@roziscoding/grammy-autoquote";
 import { autoThread } from "./middlewares/autoThreads";
 import moment from "moment";
+import { botStatsManager } from "./commands/botStats";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -42,12 +43,13 @@ async function main() {
   let server: http.Server = {} as http.Server;
   await DBPoolManager.createPool();
 
+  const active = new YAMLWrapper<IActive>(() => "active", "data/active");
   const todayStats = new TodayStats(
     () => `stats${formattedDate.today}`, // statsYYYY-MM-DD.yaml
     "data/stats",
-    DBPoolManager.getPool
+    DBPoolManager.getPool,
+    active
   );
-  const active = new YAMLWrapper<IActive>(() => "active", "data/active");
   const dbStats = new DbStats(DBPoolManager.getPool, DateRange);
 
   active.load();
@@ -107,6 +109,7 @@ async function main() {
 
     active.save();
     todayStats.save();
+    await botStatsManager.sendToMainChat();
 
     console.log("Done.");
     process.exit();
