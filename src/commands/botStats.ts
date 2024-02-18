@@ -29,7 +29,7 @@ function getStatsMsg() {
     .humanize()}: ${BOT_STATS.messages.total}`;
 
   if (Object.keys(BOT_STATS.commands).length > 0) {
-    statsMsg += "\n\nЧастота використання команд:";
+    statsMsg += "\n\nЧастота використання команд:\n";
   }
 
   for (const cmd in BOT_STATS.commands) {
