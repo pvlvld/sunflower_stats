@@ -20,6 +20,8 @@ import set_nickname from "./set_nickname";
 import del_nickname from "./del_nickname";
 import bot_stats_cmd, { botStatsManager } from "./botStats";
 
+const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
+
 function regCommands(
   dbStats: DbStats,
   active: YAMLWrapper<IActive>,
@@ -114,19 +116,19 @@ function regCommands(
   bot.hears(/^бот?$/i, async (ctx) => botTest_cmd(ctx));
 
   bot.chatType(["group", "supergroup"]).hears("bot stats", async (ctx) => {
-    if (ctx.from?.id === 6102695950) bot_stats_cmd(ctx);
+    if (ADMINS.includes(ctx.from?.id || -1)) bot_stats_cmd(ctx);
   });
 
   bot.hears("migrate data", (ctx) => {
-    if (ctx.from?.id === 6102695950) migrateData(ctx);
+    if (ADMINS.includes(ctx.from?.id || -1)) migrateData(ctx);
   });
 
   bot.hears("reset stats", (ctx) => {
-    if (ctx.from?.id === 6102695950) botStatsManager.resetAll();
+    if (ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetAll();
   });
 
   bot.hears("reset msg", (ctx) => {
-    if (ctx.from?.id === 6102695950) botStatsManager.resetMessages();
+    if (ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetMessages();
   });
 }
 
