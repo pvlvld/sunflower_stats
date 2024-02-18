@@ -1,16 +1,16 @@
 import type { MyContext } from "../types/context";
 import type { ChatTypeContext } from "grammy";
 import getUserNameLink from "../utils/getUserNameLink";
-import YAMLStats from "../data/stats";
+import TodayStats from "../data/stats";
 import IActive from "../data/active";
 import YAMLWrapper from "../data/YAMLWrapper";
 
 async function stats_today(
   ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
-  yamlStats: YAMLStats,
+  todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
-  const stats = yamlStats.data[ctx.chat.id];
+  const stats = todayStats.data[ctx.chat.id];
   if (!stats || stats === undefined) return;
 
   let reply = "📊 Статистика чату за сьогодні:\n\n";

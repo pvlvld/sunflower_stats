@@ -1,11 +1,11 @@
 import * as cron from "node-cron";
 import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
-import YAMLStats from "../data/stats";
+import TodayStats from "../data/stats";
 import path from "path";
 import formattedDate from "./date";
 
-function createScheduler(active: YAMLWrapper<IActive>, yamlStats: YAMLStats) {
+function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
   return cron.schedule(
     "0 * * * *", //Every hour at 00 minutes
     (date) => {
@@ -13,11 +13,11 @@ function createScheduler(active: YAMLWrapper<IActive>, yamlStats: YAMLStats) {
         active.save(
           path.join("data/active", `active-${formattedDate.today}.yaml`)
         );
-        yamlStats.clear(); // Clearing local today stats on midnight
+        todayStats.clear(); // Clearing local today stats on midnight
       }
 
       active.save();
-      yamlStats.save();
+      todayStats.save();
     },
     {
       timezone: "Europe/Kiev",

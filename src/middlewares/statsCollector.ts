@@ -1,8 +1,8 @@
 import { type Context, type NextFunction } from "grammy";
-import YAMLStats from "../data/stats";
+import TodayStats from "../data/stats";
 import { botStatsManager } from "../commands/botStats";
 
-export function StatsCollectorWrapper(yamlStats: YAMLStats) {
+export function StatsCollectorWrapper(todayStats: TodayStats) {
   return async function statsCollector(ctx: Context, next: NextFunction) {
     botStatsManager.newMessage();
     if (
@@ -13,11 +13,11 @@ export function StatsCollectorWrapper(yamlStats: YAMLStats) {
     ) {
       return await next();
     } else {
-      yamlStats.data[ctx.chat.id] ??= {};
+      todayStats.data[ctx.chat.id] ??= {};
       //@ts-expect-error
-      yamlStats.data[ctx.chat.id][ctx.from.id] ??= 1;
+      todayStats.data[ctx.chat.id][ctx.from.id] ??= 1;
       //@ts-expect-error
-      yamlStats.data[ctx.chat.id][ctx.from.id] += 1;
+      todayStats.data[ctx.chat.id][ctx.from.id] += 1;
     }
 
     return await next();

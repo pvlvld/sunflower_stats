@@ -3,7 +3,7 @@ import bot from "./bot";
 import { GrammyError, HttpError } from "grammy";
 import * as http from "http";
 import process from "node:process";
-import { YAMLStats } from "./data/stats";
+import { TodayStats } from "./data/stats";
 import { IActive } from "./data/active";
 import DBPoolManager from "./db/db";
 import DbStats from "./db/stats";
@@ -42,7 +42,7 @@ async function main() {
   let server: http.Server = {} as http.Server;
   await DBPoolManager.createPool();
 
-  const yamlStats = new YAMLStats(
+  const todayStats = new TodayStats(
     () => `stats${formattedDate.today}`, // statsYYYY-MM-DD.yaml
     "data/stats",
     DBPoolManager.getPool
@@ -51,16 +51,16 @@ async function main() {
   const dbStats = new DbStats(DBPoolManager.getPool, DateRange);
 
   active.load();
-  yamlStats.load();
+  todayStats.load();
 
   bot.use(ActiveCollectorWrapper(active, formattedDate));
-  bot.use(StatsCollectorWrapper(yamlStats));
+  bot.use(StatsCollectorWrapper(todayStats));
   bot.use(autoQuote);
   bot.use(autoThread());
-  regHandlers(active, yamlStats);
-  regCommands(dbStats, active, yamlStats);
+  regHandlers(active, todayStats);
+  regCommands(dbStats, active, todayStats);
 
-  createScheduler(active, yamlStats);
+  createScheduler(active, todayStats);
 
   bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
     bot.start({
@@ -106,7 +106,7 @@ async function main() {
     }
 
     active.save();
-    yamlStats.save();
+    todayStats.save();
 
     console.log("Done.");
     process.exit();

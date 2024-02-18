@@ -1,5 +1,5 @@
 import { User } from "@grammyjs/types";
-import YAMLStats from "../data/stats";
+import TodayStats from "../data/stats";
 import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
 import { IDbChatUserStatsPeriods } from "../types/stats";
@@ -9,10 +9,10 @@ function getUserStatsMessage(
   chat_id: number,
   user: User,
   dbStats: IDbChatUserStatsPeriods,
-  yamlStats: YAMLStats,
+  todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
-  const stats_today = yamlStats.data[chat_id]?.[user.id] || 0;
+  const stats_today = todayStats.data[chat_id]?.[user.id] || 0;
 
   const nickname = active.data[chat_id]?.[user.id]?.nickname;
 

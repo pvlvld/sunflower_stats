@@ -3,14 +3,14 @@ import type { ChatTypeContext, HearsContext } from "grammy";
 import DbStats from "../db/stats";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
-import YAMLStats from "../data/stats";
+import TodayStats from "../data/stats";
 import IActive from "../data/active";
 import YAMLWrapper from "../data/YAMLWrapper";
 
 async function stats_all(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
   dbStats: DbStats,
-  yamlStats: YAMLStats,
+  todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
   const stats = await dbStats.chat.all(ctx.chat.id);
@@ -21,7 +21,7 @@ async function stats_all(
 
   ctx.reply(
     "📊 Статистика чату за весь час:\n\n" +
-      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats, active),
+      getStatsRatingPlusToday(stats, ctx.chat.id, todayStats, active),
     {
       parse_mode: "HTML",
       disable_notification: true,

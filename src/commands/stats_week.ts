@@ -3,14 +3,14 @@ import type { ChatTypeContext, HearsContext } from "grammy";
 import DbStats from "../db/stats";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
-import YAMLStats from "../data/stats";
+import TodayStats from "../data/stats";
 import YAMLWrapper from "../data/YAMLWrapper";
 import IActive from "../data/active";
 
 async function stats_week(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
   dbStats: DbStats,
-  yamlStats: YAMLStats,
+  todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
   const stats = await dbStats.chat.week(ctx.chat.id);
@@ -21,7 +21,7 @@ async function stats_week(
 
   ctx.reply(
     "📊 Статистика чату за цей тиждень:\n\n" +
-      getStatsRatingPlusToday(stats, ctx.chat.id, yamlStats, active),
+      getStatsRatingPlusToday(stats, ctx.chat.id, todayStats, active),
     {
       parse_mode: "HTML",
       disable_notification: true,

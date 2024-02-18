@@ -1,7 +1,7 @@
 import bot from "../bot";
 import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
-import YAMLStats from "../data/stats";
+import TodayStats from "../data/stats";
 import DbStats from "../db/stats";
 import botTest_cmd from "./botTets";
 import chatInactive_cmd from "./chat_inactive";
@@ -23,7 +23,7 @@ import bot_stats_cmd, { botStatsManager } from "./botStats";
 function regCommands(
   dbStats: DbStats,
   active: YAMLWrapper<IActive>,
-  yamlStats: YAMLStats
+  todayStats: TodayStats
 ) {
   bot.command("help", async (ctx) => {
     botStatsManager.commandUse("help");
@@ -46,45 +46,45 @@ function regCommands(
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата)\s*(сьогодні|день)?$/i, async (ctx) => {
       botStatsManager.commandUse("стата сьогодні");
-      stats_today(ctx, yamlStats, active);
+      stats_today(ctx, todayStats, active);
     });
 
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
       botStatsManager.commandUse("стата тиждень");
-      stats_week(ctx, dbStats, yamlStats, active);
+      stats_week(ctx, dbStats, todayStats, active);
     });
 
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) місяць$/i, async (ctx) => {
       botStatsManager.commandUse("стата місяць");
-      stats_month(ctx, dbStats, yamlStats, active);
+      stats_month(ctx, dbStats, todayStats, active);
     });
 
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) рік$/i, async (ctx) => {
       botStatsManager.commandUse("стата рік");
-      stats_year(ctx, dbStats, yamlStats, active);
+      stats_year(ctx, dbStats, todayStats, active);
     });
 
   bot
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) вся$/i, async (ctx) => {
       botStatsManager.commandUse("стата вся");
-      stats_all(ctx, dbStats, yamlStats, active);
+      stats_all(ctx, dbStats, todayStats, active);
     });
 
   bot.chatType(["group", "supergroup"]).hears(/^(!я|!йа)$/i, async (ctx) => {
     botStatsManager.commandUse("я");
-    stats_my(ctx, dbStats, yamlStats, active);
+    stats_my(ctx, dbStats, todayStats, active);
   });
 
   bot.chatType(["group", "supergroup"]).hears(/^(!ти)$/i, async (ctx) => {
     botStatsManager.commandUse("ти");
-    stats_their(ctx, dbStats, yamlStats, active);
+    stats_their(ctx, dbStats, todayStats, active);
   });
 
   bot

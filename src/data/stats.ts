@@ -2,7 +2,7 @@ import { IStats } from "../types/stats";
 import YAMLWrapper from "./YAMLWrapper";
 import mysql2 from "mysql2/promise";
 
-export class YAMLStats extends YAMLWrapper<IStats> {
+export class TodayStats extends YAMLWrapper<IStats> {
   dbPool: mysql2.Pool;
   constructor(filename: () => string, dirrectory: string, dbPool: mysql2.Pool) {
     super(filename, dirrectory);
@@ -12,4 +12,4 @@ export class YAMLStats extends YAMLWrapper<IStats> {
   writeStatsToDB() {}
 }
 
-export default YAMLStats;
+export default TodayStats;
