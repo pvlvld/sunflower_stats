@@ -6,10 +6,12 @@ import { addFullNameField } from "./middlewares/addFullNameField";
 import { autoThread } from "./middlewares/autoThreads";
 import start_menu from "./ui/menus/start";
 import help_menu from "./ui/menus/help";
+import { hydrateReply, parseMode } from "@grammyjs/parse-mode";
+import type { ParseModeFlavor } from "@grammyjs/parse-mode";
 
 if (!process.env.BOT_TOKEN) throw new Error("Token required");
 
-const bot = new Bot<MyContext>(process.env.BOT_TOKEN);
+const bot = new Bot<ParseModeFlavor<MyContext>>(process.env.BOT_TOKEN);
 
 const autoRetryTransformer = autoRetry({
   maxDelaySeconds: 60,
@@ -43,13 +45,15 @@ bot.api.config.use(async (prev, method, payload, signal) => {
 
   return prev(method, payload, signal);
 });
+bot.api.config.use(parseMode("HTML"));
 
 bot.drop(matchFilter(":is_automatic_forward"));
 
 // MIDDLEWARES
 bot.use(ignoreOldMessages);
-bot.use(addFullNameField);
 bot.use(autoThread());
+bot.use(hydrateReply);
+bot.use(addFullNameField);
 
 // MENUS
 bot.use(start_menu);
