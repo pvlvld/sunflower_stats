@@ -4,6 +4,7 @@ import { IActive } from "../data/active";
 import TodayStats from "../data/stats";
 import path from "path";
 import formattedDate from "./date";
+import { botStatsManager } from "../commands/botStats";
 
 function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
   return cron.schedule(
@@ -13,7 +14,9 @@ function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
         active.save(
           path.join("data/active", `active-${formattedDate.today}.yaml`)
         );
-        todayStats.writeStatsToDB()
+        todayStats.writeStatsToDB();
+        botStatsManager.sendToMainChat();
+        botStatsManager.resetAll();
         todayStats.clear(); // Clearing local today stats on midnight
       }
 
