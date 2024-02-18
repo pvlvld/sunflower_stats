@@ -59,8 +59,8 @@ export const botStatsManager = {
     BOT_STATS.commands = {};
     BOT_STATS.newGroups = 0;
   },
-  sendToMainChat: () => {
-    bot.api.sendMessage("-1001898242958", getStatsMsg());
+  sendToMainChat: async () => {
+    return await bot.api.sendMessage("-1001898242958", getStatsMsg());
   },
 };
 

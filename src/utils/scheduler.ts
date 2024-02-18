@@ -9,13 +9,13 @@ import { botStatsManager } from "../commands/botStats";
 function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
   return cron.schedule(
     "0 * * * *", //Every hour at 00 minutes
-    (date) => {
+    async (date) => {
       if (date instanceof Date && date.getHours() === 0) {
         active.save(
           path.join("data/active", `active-${formattedDate.today}.yaml`)
         );
         todayStats.writeStatsToDB();
-        botStatsManager.sendToMainChat();
+        await botStatsManager.sendToMainChat();
         botStatsManager.resetAll();
         todayStats.clear(); // Clearing local today stats on midnight
       }
