@@ -113,7 +113,7 @@ function regCommands(
     chatInactive_cmd(ctx, active);
   });
 
-  bot.chatType(["group", "supergroup"]).hears("cmd stats", async (ctx) => {
+  bot.chatType(["group", "supergroup"]).hears("bot stats", async (ctx) => {
     if (ctx.from?.id === 6102695950) bot_stats_cmd(ctx);
   });
 }
