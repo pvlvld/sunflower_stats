@@ -17,6 +17,8 @@ import YAMLWrapper from "./data/YAMLWrapper";
 import regHandlers from "./handlers";
 import { autoQuote } from "@roziscoding/grammy-autoquote";
 import { autoThread } from "./middlewares/autoThreads";
+import moment from "moment";
+moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
   console.error(err);
