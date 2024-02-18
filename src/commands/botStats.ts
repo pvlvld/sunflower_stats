@@ -1,5 +1,6 @@
 import moment from "moment";
 import { MyContext } from "../types/context";
+import bot from "../bot";
 
 type IBotStats = {
   commands: { [key: string]: number };
@@ -19,11 +20,11 @@ const BOT_STATS: IBotStats = {
   },
 };
 
-function bot_stats_cmd(ctx: MyContext) {
+function getStatsMsg() {
   let statsMsg = `
-Нових чатів: ${BOT_STATS.newGroups}
-
-Повідомлень за ${moment
+  Нових чатів: ${BOT_STATS.newGroups}
+  
+  Повідомлень за ${moment
     .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
     .humanize()}: ${BOT_STATS.messages.total}`;
 
@@ -35,7 +36,11 @@ function bot_stats_cmd(ctx: MyContext) {
     statsMsg += `${cmd} - ${BOT_STATS.commands[cmd]}\n`;
   }
 
-  ctx.reply(statsMsg, { link_preview_options: { is_disabled: true } });
+  return statsMsg;
+}
+
+function bot_stats_cmd(ctx: MyContext) {
+  ctx.reply(getStatsMsg(), { link_preview_options: { is_disabled: true } });
 }
 
 export const botStatsManager = {
@@ -53,6 +58,9 @@ export const botStatsManager = {
     botStatsManager.resetMessages();
     BOT_STATS.commands = {};
     BOT_STATS.newGroups = 0;
+  },
+  sendToMainChat: () => {
+    bot.api.sendMessage("-1001898242958", getStatsMsg());
   },
 };
 
