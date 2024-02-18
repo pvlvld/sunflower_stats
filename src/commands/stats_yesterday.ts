@@ -3,10 +3,14 @@ import DbStats from "../db/stats";
 import { MyContext } from "../types/context";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import getUserNameLink from "../utils/getUserNameLink";
+import YAMLWrapper from "../data/YAMLWrapper";
+import IActive from "../data/active";
+import { type } from "os";
 
 async function stats_yestarday(
   ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
-  dbStats: DbStats
+  dbStats: DbStats,
+  active: YAMLWrapper<IActive>
 ) {
   const stats = await dbStats.chat.yesterday(ctx.chat.id);
 
@@ -16,19 +20,26 @@ async function stats_yestarday(
   }
 
   let reply = "📊 Статистика чату за вчора:\n\n";
-  let totlal_messages = 0;
+  let total_messages: number = 0;
 
   for (let i = 0; i < Math.min(100, stats?.length || 100); i++) {
-    reply += `${i + 1}\\. ${getUserNameLink.markdown(
-      stats[i].name,
+    reply += `${i + 1}. ${getUserNameLink.html(
+      active.data[ctx.chat.id]?.[stats[i].user_id]?.nickname ||
+        active.data[ctx.chat.id]?.[stats[i].user_id]?.name ||
+        stats[i].name,
       stats[i].username,
       stats[i].user_id
     )} — ${stats[i].count}\n`;
 
-    totlal_messages += stats[i].count;
+    total_messages += stats[i].count;
+
   }
 
-  reply += `\nЗагальна кількість повідомлень: ${totlal_messages}`;
+  
+  
+
+
+  reply += `\nЗагальна кількість повідомлень: ${total_messages}`;
 
   ctx.reply(reply, {
     parse_mode: "HTML",

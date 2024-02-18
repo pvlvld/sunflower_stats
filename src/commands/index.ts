@@ -39,7 +39,7 @@ function regCommands(
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата) вчора$/i, async (ctx) => {
       botStatsManager.commandUse("стата вчора");
-      stats_yestarday(ctx, dbStats);
+      stats_yestarday(ctx, dbStats, active);
     });
 
   bot
