@@ -5,7 +5,6 @@ import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import getUserNameLink from "../utils/getUserNameLink";
 import YAMLWrapper from "../data/YAMLWrapper";
 import IActive from "../data/active";
-import { type } from "os";
 
 async function stats_yestarday(
   ctx: ChatTypeContext<MyContext, "supergroup" | "group">,

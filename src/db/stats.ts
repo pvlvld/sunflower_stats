@@ -59,7 +59,7 @@ class DbChatStats {
   async yesterday(chat_id: number): Promise<IDbChatUserStats[]> {
     try {
       const query = `
-      SELECT user_id, SUM(count) AS count,
+      SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
         MAX(name) AS name,
         MAX(username) AS username
       FROM stats_day_statistics
