@@ -1,8 +1,10 @@
 import { type Context, type NextFunction } from "grammy";
 import YAMLStats from "../data/stats";
+import { botStatsManager } from "../commands/botStats";
 
 export function StatsCollectorWrapper(yamlStats: YAMLStats) {
   return async function statsCollector(ctx: Context, next: NextFunction) {
+    botStatsManager.newMessage();
     if (
       !ctx.chat ||
       ctx.from?.is_bot ||
