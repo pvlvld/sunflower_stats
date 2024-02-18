@@ -13,6 +13,7 @@ async function stats_all(
   todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
+  const start = Date.now();
   const stats = await dbStats.chat.all(ctx.chat.id);
   if (!isDbResNotEmpty(stats)) {
     ctx.reply("Щось пішло не так.");
@@ -27,6 +28,9 @@ async function stats_all(
       link_preview_options: { is_disabled: true },
     }
   );
+  if (ctx.chat.id === -1001898242958) {
+    ctx.reply(`${Date.now() - start}ms`);
+  }
 }
 
 export default stats_all;
