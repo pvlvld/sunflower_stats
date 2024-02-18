@@ -111,15 +111,12 @@ class DbChatStats {
   }
 
   async year(chat_id: number): Promise<IDbChatUserStats[]> {
-    const startOfYear = this.dateRange.yearRange[0];
-    const endOfYear = this.dateRange.yearRange[1];
-
     const query = `
       SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
          MAX(name) AS name,
          MAX(username) AS username
       FROM stats_day_statistics
-      WHERE chat_id = ${chat_id} AND date BETWEEN "${startOfYear}" AND "${endOfYear}"
+      WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange.yearRange[0]}" AND "${this.dateRange.yearRange[1]}"
       GROUP BY user_id
       ORDER BY count DESC;
     `;

@@ -24,10 +24,10 @@ export class FormattedDate {
   }
 
   get yearRange(): [firstDayOfYear: string, lastDayOfYear: string] {
-    const startOfYear = moment().startOf("year").format("YYYY-MM-DD");
-    const endOfYear = moment().endOf("year").format("YYYY-MM-DD");
-
-    return [startOfYear, endOfYear];
+    return [
+      moment().startOf("year").format("YYYY-MM-DD"),
+      moment().endOf("year").format("YYYY-MM-DD"),
+    ];
   }
 }
 
