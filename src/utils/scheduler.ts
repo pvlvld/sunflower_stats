@@ -13,6 +13,7 @@ function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
         active.save(
           path.join("data/active", `active-${formattedDate.today}.yaml`)
         );
+        todayStats.writeStatsToDB()
         todayStats.clear(); // Clearing local today stats on midnight
       }
 
