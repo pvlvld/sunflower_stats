@@ -32,12 +32,7 @@ async function stats_yestarday(
     )} — ${stats[i].count}\n`;
 
     total_messages += stats[i].count;
-
   }
-
-  
-  
-
 
   reply += `\nЗагальна кількість повідомлень: ${total_messages}`;
 
