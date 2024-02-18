@@ -101,11 +101,13 @@ function regCommands(
       del_nickname(ctx, active);
     });
 
-  bot.chatType(["group", "supergroup"]).hears(/^(!інактив)/i, async (ctx) => {
-    botStatsManager.commandUse("інактив");
-    //@ts-expect-error
-    chatInactive_cmd(ctx, active);
-  });
+  bot
+    .chatType(["group", "supergroup"])
+    .hears(/^(!інактив|!неактив)/i, async (ctx) => {
+      botStatsManager.commandUse("інактив");
+      //@ts-expect-error
+      chatInactive_cmd(ctx, active);
+    });
 
   // -------- STAFF COMMANDS --------
 
