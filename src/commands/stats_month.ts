@@ -1,7 +1,6 @@
 import type { MyContext } from "../types/context";
 import { type ChatTypeContext, type HearsContext } from "grammy";
 import DbStats from "../db/stats";
-import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import TodayStats from "../data/stats";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import YAMLWrapper from "../data/YAMLWrapper";

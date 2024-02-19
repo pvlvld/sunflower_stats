@@ -1,6 +1,5 @@
 import type { MyContext } from "../types/context";
 import type { ChatTypeContext } from "grammy";
-import getUserNameLink from "../utils/getUserNameLink";
 import TodayStats from "../data/stats";
 import IActive from "../data/active";
 import YAMLWrapper from "../data/YAMLWrapper";

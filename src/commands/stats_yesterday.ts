@@ -1,4 +1,4 @@
-import { ChatTypeContext, Filter } from "grammy";
+import { ChatTypeContext } from "grammy";
 import DbStats from "../db/stats";
 import { MyContext } from "../types/context";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
