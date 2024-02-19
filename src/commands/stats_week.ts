@@ -14,10 +14,6 @@ async function stats_week(
   active: YAMLWrapper<IActive>
 ) {
   const stats = await dbStats.chat.week(ctx.chat.id);
-  if (!isDbResNotEmpty(stats)) {
-    ctx.reply("Щось пішло не так.");
-    return;
-  }
 
   ctx.reply(
     "📊 Статистика чату за цей тиждень:\n\n" +

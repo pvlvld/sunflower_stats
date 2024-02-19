@@ -14,10 +14,6 @@ async function stats_year(
   active: YAMLWrapper<IActive>
 ) {
   const stats = await dbStats.chat.year(ctx.chat.id);
-  if (!isDbResNotEmpty(stats)) {
-    ctx.reply("Щось пішло не так.");
-    return;
-  }
 
   ctx.reply(
     "📊 Статистика чату за цей рік:\n\n" +
