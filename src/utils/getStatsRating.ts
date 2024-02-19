@@ -17,7 +17,7 @@ export function getStatsRatingPlusToday(
   for (let i = 0; i < stats.length; i++) {
     const totalUserMessages =
       (stats[i].count || 0) +
-      (todayStats.data[chat_id]?.[stats[i].user_id] || 0);
+      +(todayStats.data[chat_id]?.[stats[i].user_id] || 0);
     totalChatMessages += totalUserMessages;
 
     if (user_count >= 50) continue;
