@@ -28,7 +28,7 @@ class YAMLWrapper<T> {
     try {
       //@ts-ignore
       this.data = YAML.load(fs.readFileSync(this.filepath(), "utf8"), {
-        schema: YAML.FAILSAFE_SCHEMA,
+        schema: YAML.JSON_SCHEMA,
       });
     } catch (e: any) {
       if (isNodeError(e) && e.code === "ENOENT") {
