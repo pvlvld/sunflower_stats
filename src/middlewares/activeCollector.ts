@@ -34,8 +34,7 @@ function ActiveCollectorWrapper(
         active.data[ctx.chat.id][ctx.from.id].name = ctx.from.first_name
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
-          .replace(/͞/g, "")
-          .replace(/͟/g, "");
+          .replace(/[̩͟͞]/g, "");
         //@ts-expect-error
         active.data[ctx.chat.id][ctx.from.id].username = ctx.from.username;
       }
