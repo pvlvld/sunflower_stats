@@ -20,6 +20,7 @@ function chatInactive_cmd(
 
   ctx.reply(getInactivePageMessage(ctx.chat.id, Math.abs(page), active), {
     link_preview_options: { is_disabled: true },
+    disable_notification: true,
   });
 }
 
