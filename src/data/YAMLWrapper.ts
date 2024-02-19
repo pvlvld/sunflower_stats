@@ -25,7 +25,7 @@ class YAMLWrapper<T> {
     this.data = {} as T;
   }
 
-  async load() {
+  load() {
     try {
       //@ts-ignore
       this.data = YAML.load(fs.readFileSync(this.filepath(), "utf8"), {
