@@ -21,7 +21,7 @@ const getUserNameLink = {
       username && username !== "null"
         ? `https://${username}.t.me`
         : `tg://user?id=${user_id}`
-    }">${name}</a>`;
+    }">${Escape.html(name)}</a>`;
   },
 };
 
