@@ -29,7 +29,7 @@ export function getStatsRatingPlusToday(
       active.data[chat_id]?.[stats[i].user_id]?.nickname ||
         active.data[chat_id]?.[stats[i].user_id]?.name ||
         stats[i].name,
-      stats[i].username,
+      active.data[chat_id]?.[stats[i].user_id]?.username,
       stats[i].user_id
     )} — ${totalUserMessages.toLocaleString("fr-FR")}\n`;
   }
