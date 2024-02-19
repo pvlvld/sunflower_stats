@@ -4,6 +4,7 @@ import getUserNameLink from "../utils/getUserNameLink";
 import TodayStats from "../data/stats";
 import IActive from "../data/active";
 import YAMLWrapper from "../data/YAMLWrapper";
+import { getStatsRatingToday } from "../utils/getStatsRating";
 
 async function stats_today(
   ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
@@ -13,33 +14,14 @@ async function stats_today(
   const stats = todayStats.data[ctx.chat.id];
   if (!stats || stats === undefined) return;
 
-  let reply = "📊 Статистика чату за сьогодні:\n\n";
-  let totlal_messages = 0;
-
-  const usersId_sorted = Object.keys(stats).sort((u1, u2) => {
-    //@ts-expect-error
-    return stats[u1] < stats[u2] ? 1 : -1;
-  });
-
-  for (let i = 0; i < Math.min(50, usersId_sorted.length); i++) {
-    const user_id = usersId_sorted[i];
-    reply += `${i + 1}. ${getUserNameLink.html(
-      active.data[ctx.chat.id]?.[user_id]?.nickname ||
-        active.data[ctx.chat.id]?.[user_id]?.name ||
-        "Невідомо",
-      active.data[ctx.chat.id]?.[user_id]?.username,
-      user_id
-    )} — ${stats[user_id] || 0}\n`;
-
-    totlal_messages += stats[user_id] || 0;
-  }
-
-  reply += `\nЗагальна кількість повідомлень: ${totlal_messages}`;
-
-  ctx.reply(reply, {
-    disable_notification: true,
-    link_preview_options: { is_disabled: true },
-  });
+  ctx.reply(
+    "📊 Статистика чату за сьогодні:\n\n" +
+      getStatsRatingToday(ctx.chat.id, todayStats, active),
+    {
+      disable_notification: true,
+      link_preview_options: { is_disabled: true },
+    }
+  );
 }
 
 export default stats_today;
