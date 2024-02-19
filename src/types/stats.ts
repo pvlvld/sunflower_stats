@@ -12,7 +12,7 @@
 export interface IStats {
   [chat_id: string | number]:
     | {
-        [user_id: string | number]: number | undefined;
+        [user_id: string | number]: string | undefined;
       }
     | undefined;
 }
