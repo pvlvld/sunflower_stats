@@ -3,7 +3,7 @@ import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
 import { MyContext } from "../types/context";
 import formattedDate from "../utils/date";
-import YAML from "yaml";
+import * as YAML from "js-yaml";
 import { IStats } from "../types/stats";
 import TodayStats from "../data/stats";
 
@@ -34,7 +34,7 @@ function clearActive(ctx: MyContext, todayStats: TodayStats) {
   }
   old_stats.clear();
   todayStats.data = new_stats;
-  fs.writeFileSync("data/stats/stats.yaml", YAML.stringify(new_stats));
+  fs.writeFileSync("data/stats/stats.yaml", YAML.dump(new_stats));
 
   console.log("Stats Done");
   ctx.reply("Stats ✅ Done");
@@ -74,7 +74,7 @@ function mergeActive(ctx: MyContext, active: YAMLWrapper<IActive>) {
     }
   }
   active.data = mergedActive;
-  fs.writeFileSync("data/active/active.yaml", YAML.stringify(mergedActive));
+  fs.writeFileSync("data/active/active.yaml", YAML.dump(mergedActive));
 
   console.log("Aсtive Done");
   ctx.reply("Aсtive ✅ Done");
