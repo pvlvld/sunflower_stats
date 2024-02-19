@@ -133,7 +133,11 @@ function regCommands(
   });
 
   bot.hears("gc", (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) Bun.gc(true);
+    if (ADMINS.includes(ctx.from?.id || -1)) {
+      if (typeof Bun !== "undefined") {
+        Bun.gc(true);
+      }
+    }
   });
 }
 

@@ -62,6 +62,9 @@ async function main() {
   regHandlers(active, todayStats);
   regCommands(dbStats, active, todayStats);
 
+  if (typeof Bun !== "undefined") {
+    Bun.gc(true);
+  }
   createScheduler(active, todayStats);
 
   bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
