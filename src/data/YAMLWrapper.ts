@@ -1,4 +1,3 @@
-// import YAML from "yaml";
 import fs from "fs";
 import { isNodeError } from "../types/typeGuards";
 import path from "path";
