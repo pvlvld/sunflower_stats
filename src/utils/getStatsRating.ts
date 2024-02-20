@@ -17,46 +17,41 @@ export function getStatsRatingPlusToday(
   let reply = "";
   let totalChatMessages = 0;
 
-  let user_count = 0;
+  const merged = stats.reduce(
+    (obj: { [user_id: string]: IDbChatUserStats }, item) => (
+      (obj[item.user_id] = item), obj
+    ),
+    {}
+  );
 
-  const chatMembersStats = { ...todayStats.data[chat_id]! };
-
-  for (const user of stats) {
-    if (chatMembersStats[user.user_id] && stats[user.user_id]) {
-      stats[user.user_id].count += chatMembersStats[user.user_id] || 0;
-      delete chatMembersStats[user.user_id];
+  for (const user_id of Object.keys(todayStats.data[chat_id] || {})) {
+    if (merged[user_id]) {
+      merged[user_id].name =
+        active.data[chat_id]?.[user_id]?.name || "Невідомо";
+      merged[user_id].username = active.data[chat_id]?.[user_id]?.username;
+      merged[user_id].count += todayStats.data[chat_id]?.[user_id] || 0;
+    } else {
+      merged[user_id].user_id = +user_id;
+      merged[user_id].name =
+        active.data[chat_id]?.[user_id]?.name || "Невідомо";
+      merged[user_id].username = active.data[chat_id]?.[user_id]?.username;
+      merged[user_id].count = todayStats.data[chat_id]?.[user_id] || 0;
     }
   }
 
-  for (const user_id in chatMembersStats) {
-    stats.push({
-      user_id: +user_id,
-      name: active.data[chat_id]?.[user_id]?.name || "Невідомо",
-      username: active.data[chat_id]?.[user_id]?.username || null,
-      count: chatMembersStats[user_id] ?? 0,
-    });
-  }
-
-  stats.sort((a, b) => {
-    return a.count < b.count ? 1 : -1;
+  const usersId_sorted = Object.keys(merged).sort((u1, u2) => {
+    return merged[u1].count < merged[u2].count ? 1 : -1;
   });
 
-  for (let i = 0; i < stats.length; i++) {
-    const totalUserMessages = stats[i].count || 0;
-    totalChatMessages += totalUserMessages;
+  for (let i = 0; i < Math.min(50, usersId_sorted.length); i++) {
+    const user_id = usersId_sorted[i];
+    reply += `${i + 1}. ${getUserNameLink.html(
+      merged[user_id].name,
+      merged[user_id].username,
+      user_id
+    )} — ${merged[user_id].count}\n`;
 
-    if (user_count >= 50) continue;
-    if (!active.data[chat_id]?.[stats[i].user_id]) {
-      continue;
-    }
-    user_count++;
-    reply += `${user_count}. ${getUserNameLink.html(
-      active.data[chat_id]?.[stats[i].user_id]?.nickname ||
-        active.data[chat_id]?.[stats[i].user_id]?.name ||
-        stats[i].name,
-      active.data[chat_id]?.[stats[i].user_id]?.username,
-      stats[i].user_id
-    )} — ${totalUserMessages.toLocaleString("fr-FR")}\n`;
+    totalChatMessages += merged[user_id].count;
   }
 
   reply += `\nЗагальна кількість повідомлень: ${totalChatMessages.toLocaleString(
