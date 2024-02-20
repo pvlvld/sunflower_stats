@@ -19,6 +19,7 @@ import { autoQuote } from "@roziscoding/grammy-autoquote";
 import { autoThread } from "./middlewares/autoThreads";
 import moment from "moment";
 import { botStatsManager } from "./commands/botStats";
+import collectGarbage from "./utils/collectGarbage";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -62,9 +63,8 @@ async function main() {
   regHandlers(active, todayStats);
   regCommands(dbStats, active, todayStats);
 
-  if (typeof Bun !== "undefined") {
-    Bun.gc(true);
-  }
+  collectGarbage()
+
   createScheduler(active, todayStats);
 
   bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {

@@ -19,6 +19,7 @@ import stats_yestarday from "./stats_yesterday";
 import set_nickname from "./set_nickname";
 import del_nickname from "./del_nickname";
 import bot_stats_cmd, { botStatsManager } from "./botStats";
+import collectGarbage from "../utils/collectGarbage";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
@@ -134,8 +135,14 @@ function regCommands(
 
   bot.hears("gc", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) {
+      collectGarbage();
+    }
+  });
+
+  bot.hears("shrink", (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) {
       if (typeof Bun !== "undefined") {
-        Bun.gc(true);
+        Bun.shrink();
       }
     }
   });
