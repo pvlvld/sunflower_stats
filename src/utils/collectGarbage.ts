@@ -1,4 +1,4 @@
-function gc() {
+function collectGarbage() {
   if (typeof Bun !== "undefined") {
     Bun.gc(false);
     return;
@@ -9,4 +9,4 @@ function gc() {
   }
 }
 
-export default gc;
+export default collectGarbage;
