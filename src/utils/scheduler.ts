@@ -22,6 +22,10 @@ function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
 
       active.save();
       todayStats.save();
+
+      if (typeof Bun !== "undefined") {
+        Bun.gc(true);
+      }
     },
     {
       timezone: "Europe/Kiev",
