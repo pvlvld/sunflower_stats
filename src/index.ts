@@ -26,13 +26,6 @@ process.on("uncaughtException", function (err) {
   console.log("Node NOT Exiting...");
 });
 
-if (typeof Bun !== "undefined") {
-  addEventListener("error", (err) => {
-    console.error(err);
-    console.log("Bun NOT Exiting...");
-  });
-}
-
 bot.catch((err) => {
   const ctx = err.ctx;
   console.error(`Error while handling update ${ctx.update.update_id}:`);
