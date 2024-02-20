@@ -18,10 +18,31 @@ export function getStatsRatingPlusToday(
   let totalChatMessages = 0;
 
   let user_count = 0;
+
+  const chatMembersStats = { ...todayStats.data[chat_id]! };
+
+  for (const user of stats) {
+    if (chatMembersStats[user.user_id] && stats[user.user_id]) {
+      stats[user.user_id].count += chatMembersStats[user.user_id] || 0;
+      delete chatMembersStats[user.user_id];
+    }
+  }
+
+  for (const user_id in chatMembersStats) {
+    stats.push({
+      user_id: +user_id,
+      name: active.data[chat_id]?.[user_id]?.name || "Невідомо",
+      username: active.data[chat_id]?.[user_id]?.username || null,
+      count: chatMembersStats[user_id] ?? 0,
+    });
+  }
+
+  stats.sort((a, b) => {
+    return a.count < b.count ? 1 : -1;
+  });
+
   for (let i = 0; i < stats.length; i++) {
-    const totalUserMessages =
-      (stats[i].count || 0) +
-      (todayStats.data[chat_id]?.[stats[i].user_id] || 0);
+    const totalUserMessages = stats[i].count || 0;
     totalChatMessages += totalUserMessages;
 
     if (user_count >= 50) continue;
