@@ -3,7 +3,7 @@ import Escape from "./escape";
 const getUserNameLink = {
   markdown: (
     name: string,
-    username: string | undefined,
+    username: string | undefined | null,
     user_id: number | string
   ) => {
     return `[${Escape.markdownV1(name)}](${
@@ -14,7 +14,7 @@ const getUserNameLink = {
   },
   html: (
     name: string,
-    username: string | undefined,
+    username: string | undefined | null,
     user_id: number | string
   ) => {
     return `<a href="${

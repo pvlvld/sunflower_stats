@@ -28,5 +28,5 @@ export interface IDbChatUserStats {
   user_id: number;
   count: number;
   name: string;
-  username: string | null;
+  username?: string | null;
 }

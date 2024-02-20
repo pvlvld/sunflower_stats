@@ -4,7 +4,7 @@ export interface IActive {
         [user_id: string | number]:
           | {
               name?: string;
-              username?: string;
+              username?: string | null;
               nickname?: string;
               active_last: string;
               active_first: string;
