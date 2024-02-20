@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "start": "pm2 start src/index.ts --name stats --kill-timeout 30000",
+    "node": "pm2 start build/index.js --node-args=\"--expose-gc --inspect\" --name stats --kill-timeout 30000",
     "compile": "tsc",
     "dev": "DEV=true bun --watch src/index.ts"
   },
