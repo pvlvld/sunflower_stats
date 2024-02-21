@@ -44,13 +44,21 @@ export function getStatsRatingPlusToday(
     return merged[u1].count < merged[u2].count ? 1 : -1;
   });
 
-  for (let i = 0; i < Math.min(50, usersId_sorted.length); i++) {
+  let statsRowLimit = Math.min(50, usersId_sorted.length);
+  let statsRowsCount = 1;
+
+  for (let i = 0; i < statsRowLimit; i++) {
     const user_id = usersId_sorted[i];
-    reply += `${i + 1}. ${getUserNameLink.html(
-      merged[user_id].name,
-      merged[user_id].username,
-      user_id
-    )} — ${merged[user_id].count}\n`;
+    if (active.data[chat_id]?.[user_id]) {
+      reply += `${statsRowsCount}. ${getUserNameLink.html(
+        merged[user_id].name,
+        merged[user_id].username,
+        user_id
+      )} — ${merged[user_id].count}\n`;
+      statsRowsCount++;
+    } else {
+      statsRowLimit++;
+    }
 
     totalChatMessages += merged[user_id].count;
   }
