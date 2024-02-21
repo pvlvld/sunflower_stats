@@ -12,11 +12,14 @@ async function stats_month(
   todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
-  const stats = await dbStats.chat.month(ctx.chat.id);
-
   ctx.reply(
     "📊 Статистика чату за цей місяць:\n\n" +
-      getStatsRatingPlusToday(stats, ctx.chat.id, todayStats, active),
+      getStatsRatingPlusToday(
+        await dbStats.chat.inRage(ctx.chat.id, "monthRange"),
+        ctx.chat.id,
+        todayStats,
+        active
+      ),
     {
       disable_notification: true,
       link_preview_options: { is_disabled: true },

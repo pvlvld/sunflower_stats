@@ -1,5 +1,5 @@
 import mysql from "mysql2/promise";
-import { FormattedDate } from "../utils/date";
+import { FormattedDate, IFormattedRangeDateGetters } from "../utils/date";
 import { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
 
 class DbStats {
@@ -74,53 +74,16 @@ class DbChatStats {
     }
   }
 
-  async week(chat_id: number): Promise<IDbChatUserStats[]> {
+  async inRage(chat_id: number, range: keyof IFormattedRangeDateGetters) {
     const query = `
     SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
        MAX(name) AS name,
        MAX(username) AS username
     FROM stats_day_statistics
-    WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange.weekRange[0]}" AND "${this.dateRange.weekRange[1]}"
+    WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange[range][0]}" AND "${this.dateRange[range][1]}"
     GROUP BY user_id
     ORDER BY count DESC;
       `;
-    try {
-      return (await this.dbPool.query(query))[0] as IDbChatUserStats[];
-    } catch (error) {
-      console.error(error);
-      return [] as IDbChatUserStats[];
-    }
-  }
-
-  async month(chat_id: number): Promise<IDbChatUserStats[]> {
-    const query = `
-    SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
-       MAX(name) AS name,
-       MAX(username) AS username
-    FROM stats_day_statistics
-    WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange.monthRange[0]}" AND "${this.dateRange.monthRange[1]}"
-    GROUP BY user_id
-    ORDER BY count DESC;
-      `;
-    try {
-      return (await this.dbPool.query(query))[0] as IDbChatUserStats[];
-    } catch (error) {
-      console.error(error);
-      return [] as IDbChatUserStats[];
-    }
-  }
-
-  async year(chat_id: number): Promise<IDbChatUserStats[]> {
-    const query = `
-      SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
-         MAX(name) AS name,
-         MAX(username) AS username
-      FROM stats_day_statistics
-      WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange.yearRange[0]}" AND "${this.dateRange.yearRange[1]}"
-      GROUP BY user_id
-      ORDER BY count DESC;
-    `;
-
     try {
       return (await this.dbPool.query(query))[0] as IDbChatUserStats[];
     } catch (error) {
