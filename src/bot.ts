@@ -2,7 +2,6 @@ import { Bot, matchFilter, session } from "grammy";
 import { autoRetry } from "@grammyjs/auto-retry";
 import { MyContext } from "./types/context";
 import { ignoreOldMessages } from "./middlewares/ignoreOldMessages";
-import { addFullNameField } from "./middlewares/addFullNameField";
 import { autoThread } from "./middlewares/autoThreads";
 import start_menu from "./ui/menus/start";
 import help_menu from "./ui/menus/help";
@@ -53,7 +52,6 @@ bot.drop(matchFilter(":is_automatic_forward"));
 bot.use(ignoreOldMessages);
 bot.use(autoThread());
 bot.use(hydrateReply);
-bot.use(addFullNameField);
 
 // MENUS
 bot.use(start_menu);
