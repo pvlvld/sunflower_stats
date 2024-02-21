@@ -20,6 +20,7 @@ import set_nickname from "./set_nickname";
 import del_nickname from "./del_nickname";
 import bot_stats_cmd, { botStatsManager } from "./botStats";
 import collectGarbage from "../utils/collectGarbage";
+import leaveChat_cmd from "./leaveChat";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
@@ -144,6 +145,11 @@ function regCommands(
       if (typeof Bun !== "undefined") {
         Bun.shrink();
       }
+    }
+  });
+  bot.hears("shrink", (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) {
+      leaveChat_cmd(ctx);
     }
   });
 }
