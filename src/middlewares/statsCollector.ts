@@ -15,7 +15,7 @@ export function StatsCollectorWrapper(todayStats: TodayStats) {
     } else {
       todayStats.data[ctx.chat.id] ??= {};
       //@ts-expect-error
-      todayStats.data[ctx.chat.id][ctx.from.id] ??= 1;
+      todayStats.data[ctx.chat.id][ctx.from.id] ??= 0;
       //@ts-expect-error
       todayStats.data[ctx.chat.id][ctx.from.id] += 1;
     }
