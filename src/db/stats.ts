@@ -2,6 +2,10 @@ import mysql from "mysql2/promise";
 import { FormattedDate, IFormattedRangeDateGetters } from "../utils/date";
 import { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
 
+type IDateRanges =
+  | keyof IFormattedRangeDateGetters
+  | [from: string, to: string];
+
 class DbStats {
   public chat;
   public user;
@@ -74,18 +78,33 @@ class DbChatStats {
     }
   }
 
-  async inRage(chat_id: number, range: keyof IFormattedRangeDateGetters) {
-    const query = `
-    SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
-       MAX(name) AS name,
-       MAX(username) AS username
-    FROM stats_day_statistics
-    WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange[range][0]}" AND "${this.dateRange[range][1]}"
-    GROUP BY user_id
-    ORDER BY count DESC;
-      `;
+  async inRage(chat_id: number, range: IDateRanges) {
     try {
-      return (await this.dbPool.query(query))[0] as IDbChatUserStats[];
+      if (typeof range === "string") {
+        return (
+          await this.dbPool.query(`
+        SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
+           MAX(name) AS name,
+           MAX(username) AS username
+        FROM stats_day_statistics
+        WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange[range][0]}" AND "${this.dateRange[range][1]}"
+        GROUP BY user_id
+        ORDER BY count DESC;
+          `)
+        )[0] as IDbChatUserStats[];
+      } else {
+        return (
+          await this.dbPool.query(`
+        SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
+           MAX(name) AS name,
+           MAX(username) AS username
+        FROM stats_day_statistics
+        WHERE chat_id = ${chat_id} AND date BETWEEN "${range[0]}" AND "${range[1]}"
+        GROUP BY user_id
+        ORDER BY count DESC;
+          `)
+        )[0] as IDbChatUserStats[];
+      }
     } catch (error) {
       console.error(error);
       return [] as IDbChatUserStats[];
