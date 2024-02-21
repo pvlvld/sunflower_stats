@@ -48,6 +48,8 @@ export function getStatsRatingPlusToday(
   let statsRowsCount = 1;
 
   for (let i = 0; i < statsRowLimit; i++) {
+    if (statsRowLimit >= usersId_sorted.length - 1) break;
+
     const user_id = usersId_sorted[i];
     if (active.data[chat_id]?.[user_id]) {
       reply += `${statsRowsCount}. ${getUserNameLink.html(
