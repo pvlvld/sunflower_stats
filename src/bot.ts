@@ -49,7 +49,7 @@ bot.api.config.use(parseMode("HTML"));
 bot.drop(matchFilter(":is_automatic_forward"));
 
 // MIDDLEWARES
-bot.use(ignoreOldMessages);
+// bot.use(ignoreOldMessages); // commented due to dropping old updates on start
 bot.use(autoThread());
 bot.use(hydrateReply);
 
