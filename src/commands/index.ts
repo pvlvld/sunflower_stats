@@ -22,6 +22,7 @@ import bot_stats_cmd, { botStatsManager } from "./botStats";
 import collectGarbage from "../utils/collectGarbage";
 import leaveChat_cmd from "./leaveChat";
 import getChatAdmins_cmd from "./getChatAdmins";
+import getChatInvite_cmd from "./getChatInvite";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
@@ -158,6 +159,12 @@ function regCommands(
   bot.hears(/^!ssadmins/, (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) {
       getChatAdmins_cmd(ctx);
+    }
+  });
+
+  bot.hears(/^!ssinvite/, (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) {
+      getChatInvite_cmd(ctx);
     }
   });
 }
