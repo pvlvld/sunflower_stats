@@ -81,7 +81,7 @@ async function main() {
     console.log("Bot is started.");
     bot.api.sendAnimation(
       "-1001898242958",
-      "CgACAgIAAxkBAAIbKWWxO4FNC2yLM4-zkmnhLNEPcYy-AALUQAACLPtwSUWUvK8qKPSqNAQ",
+      "CgACAgQAAx0CcSTjjgABAhXRZdevgUUSZYWy2J7TCl_H_0RH1cIAAsQEAAL0Qn1T8YKWwZ59DLs0BA",
       { caption: "Бота запущено!" }
     );
   });
