@@ -147,7 +147,7 @@ function regCommands(
       }
     }
   });
-  bot.hears("shrink", (ctx) => {
+  bot.hears("!leave", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) {
       leaveChat_cmd(ctx);
     }
