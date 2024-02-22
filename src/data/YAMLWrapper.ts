@@ -72,7 +72,6 @@ class YAMLWrapper<T> {
   clear() {
     this.data = {} as T;
     bot.api.sendMessage("-1001898242958", `${this.filename()} cleared.`);
-    if (global.gc) global.gc();
   }
 }
 
