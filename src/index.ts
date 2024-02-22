@@ -68,15 +68,37 @@ async function main() {
   createScheduler(active, todayStats);
 
   bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
-    bot.start({
-      drop_pending_updates: true,
-      allowed_updates: [
-        "message",
-        "my_chat_member",
-        "chat_member",
-        "callback_query",
-      ],
-    });
+    if (process.env.TEST === "test") {
+      console.log("TEST MODE");
+      const handleUpdate = webhookCallback(bot, "std/http");
+      if (typeof Bun !== "undefined") {
+        Bun.serve({
+          async fetch(req) {
+            try {
+              return await handleUpdate(req);
+            } catch (err) {
+              console.error(err);
+            }
+          },
+          port: 6666,
+        });
+      } else {
+        const app = http.createServer(webhookCallback(bot, "http"));
+        server = app.listen(Number(6666));
+      }
+
+      console.log("Started in test mode");
+    } else {
+      bot.start({
+        drop_pending_updates: true,
+        allowed_updates: [
+          "message",
+          "my_chat_member",
+          "chat_member",
+          "callback_query",
+        ],
+      });
+    }
 
     console.log("Bot is started.");
     bot.api.sendAnimation(
