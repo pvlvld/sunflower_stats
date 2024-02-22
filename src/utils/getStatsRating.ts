@@ -47,24 +47,19 @@ export function getStatsRatingPlusToday(
   let statsRowLimit = Math.min(50, usersId_sorted.length);
   let statsRowsCount = 1;
 
-  for (let i = 0; i < statsRowLimit; i++) {
-    if (statsRowLimit >= usersId_sorted.length - 1) break;
-
+  for (let i = 0; i < usersId_sorted.length + 1; i++) {
     const user_id = usersId_sorted[i];
-    if (active.data[chat_id]?.[user_id]) {
+    if (active.data[chat_id]?.[user_id] && statsRowsCount < statsRowLimit + 1) {
       reply += `${statsRowsCount}. ${getUserNameLink.html(
         merged[user_id].name,
         merged[user_id].username,
         user_id
       )} — ${merged[user_id].count}\n`;
       statsRowsCount++;
-    } else {
-      statsRowLimit++;
     }
 
-    totalChatMessages += merged[user_id].count;
+    totalChatMessages += merged[user_id]?.count || 0;
   }
-
   reply += `\nЗагальна кількість повідомлень: ${totalChatMessages.toLocaleString(
     "fr-FR"
   )}`;
