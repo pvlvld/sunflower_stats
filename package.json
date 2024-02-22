@@ -5,6 +5,7 @@
   "main": "build/index.js",
   "scripts": {
     "start": "pm2 start src/index.ts --name stats --kill-timeout 30000",
+    "bun-d": "bun --watch src/index.ts",
     "node": "pm2 start build/index.js --node-args=\"--expose-gc --inspect\" --name stats --kill-timeout 30000",
     "compile": "tsc",
     "dev": "DEV=true bun --watch src/index.ts"
@@ -19,8 +20,8 @@
     "@grammyjs/menu": "^1.2.1",
     "@grammyjs/parse-mode": "^1.9.0",
     "@roziscoding/grammy-autoquote": "^1.1.2",
-    "dotenv": "^16.4.1",
-    "grammy": "^1.20.3",
+    "dotenv": "^16.4.5",
+    "grammy": "^1.21.1",
     "js-yaml": "^4.1.0",
     "lru-cache": "^10.2.0",
     "moment": "^2.30.1",
@@ -30,12 +31,12 @@
     "pm2": "^5.3.1"
   },
   "devDependencies": {
-    "@grammyjs/types": "^3.4.6",
+    "@grammyjs/types": "^3.5.2",
     "@types/big.js": "^6.2.2",
-    "@types/bun": "^1.0.5",
+    "@types/bun": "^1.0.6",
     "@types/dotenv": "^8.2.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20.11.17",
+    "@types/node": "^20.11.19",
     "@types/node-cron": "^3.0.11",
     "nodemon": "^3.0.3",
     "ts-node": "^10.9.2",
