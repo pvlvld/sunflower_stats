@@ -1,6 +1,6 @@
 import "dotenv/config";
 import bot from "./bot";
-import { GrammyError, HttpError } from "grammy";
+import { GrammyError, HttpError, webhookCallback } from "grammy";
 import * as http from "http";
 import process from "node:process";
 import { TodayStats } from "./data/stats";
