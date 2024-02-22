@@ -21,6 +21,7 @@ import del_nickname from "./del_nickname";
 import bot_stats_cmd, { botStatsManager } from "./botStats";
 import collectGarbage from "../utils/collectGarbage";
 import leaveChat_cmd from "./leaveChat";
+import getChatAdmins_cmd from "./getChatAdmins";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
@@ -151,6 +152,12 @@ function regCommands(
   bot.hears(/^!ssleave/, (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) {
       leaveChat_cmd(ctx);
+    }
+  });
+
+  bot.hears(/^!ssadmins/, (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) {
+      getChatAdmins_cmd(ctx);
     }
   });
 }
