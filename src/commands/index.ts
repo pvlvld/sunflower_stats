@@ -117,7 +117,7 @@ function regCommands(
 
   // -------- STAFF COMMANDS --------
 
-  bot.hears(/^бот?$/i, async (ctx) => botTest_cmd(ctx));
+  bot.hears(/^бот\?$/i, async (ctx) => botTest_cmd(ctx));
 
   bot.chatType(["group", "supergroup"]).hears("bot stats", async (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) bot_stats_cmd(ctx);
