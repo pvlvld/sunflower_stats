@@ -13,8 +13,8 @@ if (!process.env.BOT_TOKEN) throw new Error("Token required");
 const bot = new Bot<ParseModeFlavor<MyContext>>(process.env.BOT_TOKEN);
 
 const autoRetryTransformer = autoRetry({
-  maxDelaySeconds: 60,
-  maxRetryAttempts: 3,
+  maxDelaySeconds: 30,
+  maxRetryAttempts: 2,
   retryOnInternalServerErrors: false,
 });
 
