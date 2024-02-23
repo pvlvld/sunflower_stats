@@ -5,8 +5,9 @@
   "main": "build/index.js",
   "scripts": {
     "start": "pm2 start src/index.ts --name stats --kill-timeout 30000",
-    "bun-d": "bun --watch src/index.ts",
-    "node": "pm2 start build/index.js --node-args=\"--expose-gc --inspect\" --name stats --kill-timeout 30000",
+    "bun": "bun --watch src/index.ts",
+    "node": "pm2 start build/index.js --node-args=\"--expose-gc --compact-on-every-full-gc --memory-balancer --no-compilation-cache --optimize_for_size --max_old_space_size=1024\" --name stats --kill-timeout 30000",
+    "node-i": "node --expose-gc --inspect build/index.js",
     "compile": "tsc",
     "dev": "DEV=true bun --watch src/index.ts"
   },
