@@ -25,10 +25,12 @@ const METHODS = new Set([
 
 export function autoThread<C extends Context>(): MiddlewareFn<C> {
   return async (ctx, next) => {
-    if (ctx.msg?.message_thread_id !== undefined && !!ctx.msg?.is_topic_message) {
+    if (ctx.msg?.message_thread_id && ctx.msg?.is_topic_message) {
       ctx.api.config.use(async (prev, method, payload, signal) => {
         if (!("message_thread_id" in payload) && METHODS.has(method)) {
-          Object.assign(payload, { message_thread_id: ctx.msg?.message_thread_id });
+          Object.assign(payload, {
+            message_thread_id: ctx.msg?.message_thread_id,
+          });
         }
         return await prev(method, payload, signal);
       });
