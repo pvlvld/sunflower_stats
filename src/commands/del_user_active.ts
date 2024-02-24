@@ -3,7 +3,7 @@ import YAMLWrapper from "../data/YAMLWrapper";
 import IActive from "../data/active";
 import { CommandContext } from "grammy";
 
-async function delete_from_stats(
+async function del_user_active(
   ctx: CommandContext<MyContext>,
   active: YAMLWrapper<IActive>
 ) {
@@ -29,4 +29,4 @@ async function delete_from_stats(
   ctx.reply("❌ Цього користувача немає в активі.");
 }
 
-export default delete_from_stats;
+export default del_user_active;

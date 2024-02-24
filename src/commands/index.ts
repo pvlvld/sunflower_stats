@@ -18,7 +18,7 @@ import stats_year from "./stats_year";
 import stats_yestarday from "./stats_yesterday";
 import set_nickname from "./set_nickname";
 import del_nickname from "./del_nickname";
-import delete_from_stats from "./delete_from_stats";
+import del_user_active from "./del_user_active";
 import bot_stats_cmd, { botStatsManager } from "./botStats";
 import collectGarbage from "../utils/collectGarbage";
 import leaveChat_cmd from "./leaveChat";
@@ -119,7 +119,7 @@ function regCommands(
   bot
     .chatType(["group", "supergroup"])
     .command("del_from_active", async (ctx) => {
-      if (ctx.message?.reply_to_message) delete_from_stats(ctx, active);
+      if (ctx.message?.reply_to_message) del_user_active(ctx, active);
     });
 
   // -------- STAFF COMMANDS --------
