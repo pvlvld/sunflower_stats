@@ -20,6 +20,7 @@ import { autoThread } from "./middlewares/autoThreads";
 import moment from "moment";
 import { botStatsManager } from "./commands/botStats";
 import collectGarbage from "./utils/collectGarbage";
+import { limit } from "@grammyjs/ratelimiter";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -58,6 +59,12 @@ async function main() {
 
   bot.use(ActiveCollectorWrapper(active, formattedDate));
   bot.use(StatsCollectorWrapper(todayStats));
+  bot.use(
+    limit({
+      timeFrame: 5000,
+      limit: 1,
+    })
+  );
   bot.use(autoQuote);
   bot.use(autoThread());
   regHandlers(active, todayStats);
