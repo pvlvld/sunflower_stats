@@ -12,13 +12,7 @@ function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
     "0 * * * *", //Every hour at 00 minutes
     async (date) => {
       if (date instanceof Date && date.getHours() === 0) {
-        active.save(
-          path.join("data/active", `active-${formattedDate.today}.yaml`)
-        );
-        todayStats.writeStatsToDB();
-        await botStatsManager.sendToMainChat();
-        botStatsManager.resetAll();
-        todayStats.clear(); // Clearing local today stats on midnight
+        await startNewDay(active, todayStats);
       }
 
       active.save();
@@ -30,6 +24,17 @@ function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
       timezone: "Europe/Kiev",
     }
   );
+}
+
+export async function startNewDay(
+  active: YAMLWrapper<IActive>,
+  todayStats: TodayStats
+) {
+  active.save(path.join("data/active", `active-${formattedDate.today}.yaml`));
+  todayStats.writeStatsToDB();
+  await botStatsManager.sendToMainChat();
+  botStatsManager.resetAll();
+  todayStats.clear();
 }
 
 export default createScheduler;
