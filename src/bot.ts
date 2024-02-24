@@ -14,7 +14,7 @@ const bot = new Bot<ParseModeFlavor<MyContext>>(process.env.BOT_TOKEN);
 
 const autoRetryTransformer = autoRetry({
   maxDelaySeconds: 30,
-  maxRetryAttempts: 2,
+  maxRetryAttempts: 1,
   retryOnInternalServerErrors: false,
 });
 
