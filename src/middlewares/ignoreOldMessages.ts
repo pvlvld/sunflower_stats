@@ -1,6 +1,6 @@
 import type { Context, NextFunction } from "grammy";
 
-const afterSeconds = 60;
+const afterSeconds = 30;
 
 function dateInSeconds() {
   return Math.round(Date.now() / 1000);
