@@ -33,6 +33,3 @@ function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
 }
 
 export default createScheduler;
-// save local
-// write to db
-// clear
