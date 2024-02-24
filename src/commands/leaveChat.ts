@@ -3,8 +3,7 @@ import type { MyContext } from "../types/context";
 import parseCmdArgs from "../utils/parseCmdArgs";
 
 export async function leaveChat_cmd(ctx: HearsContext<MyContext>) {
-  //@ts-expect-error
-  const args = parseCmdArgs(ctx.msg.text);
+  const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
   if (args.length < 1 || isNaN(parseInt(args[0]))) return;
 
   try {
