@@ -17,9 +17,6 @@ bot.use(
   limit({
     timeFrame: 5000,
     limit: 1,
-    onLimitExceeded: async (ctx) => {
-      await ctx.reply("Не так швидко!");
-    },
   })
 );
 
