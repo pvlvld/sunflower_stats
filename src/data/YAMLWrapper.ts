@@ -26,10 +26,9 @@ class YAMLWrapper<T> {
 
   load() {
     try {
-      //@ts-ignore
       this.data = YAML.load(fs.readFileSync(this.filepath(), "utf8"), {
         schema: YAML.JSON_SCHEMA,
-      });
+      }) as T;
     } catch (e: any) {
       if (isNodeError(e) && e.code === "ENOENT") {
         console.info(`${this.filepath()} not found. Starting new one.`);
