@@ -4,7 +4,7 @@ import IActive from "../data/active";
 
 async function delete_from_stats(ctx: MyContext, active: YAMLWrapper<IActive>) {
     const chatMember = await ctx.getChatMember(ctx.from?.id || -1)
-    if (!chatMember && chatMember["status"] == 'creator') {
+    if (!chatMember || chatMember["status"] != 'creator') {
         ctx.reply("❌ Щось пішло не так або ви не є власником чату");
         return
     } else {
