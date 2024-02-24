@@ -7,10 +7,21 @@ import start_menu from "./ui/menus/start";
 import help_menu from "./ui/menus/help";
 import { hydrateReply, parseMode } from "@grammyjs/parse-mode";
 import type { ParseModeFlavor } from "@grammyjs/parse-mode";
+import { limit } from "@grammyjs/ratelimiter";
 
 if (!process.env.BOT_TOKEN) throw new Error("Token required");
 
 const bot = new Bot<ParseModeFlavor<MyContext>>(process.env.BOT_TOKEN);
+
+bot.use(
+  limit({
+    timeFrame: 5000,
+    limit: 1,
+    onLimitExceeded: async (ctx) => {
+      await ctx.reply("Не так швидко!");
+    },
+  })
+);
 
 const autoRetryTransformer = autoRetry({
   maxDelaySeconds: 30,
