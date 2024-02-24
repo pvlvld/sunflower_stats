@@ -7,7 +7,7 @@
     "start": "pm2 start src/index.ts --name stats --kill-timeout 30000",
     "bun": "bun --watch src/index.ts",
     "node": "pm2 start build/index.js --node-args=\"--expose-gc --memory-balancer --no-compilation-cache --optimize_for_size --max_old_space_size=1024\" --name stats --kill-timeout 30000 --log-date-format 'MM-DD HH:mm:ss'",
-    "node-i": "node --expose-gc --inspect build/index.js",
+    "node-i": "pm2 start build/index.js --node-args=\"--expose-gc --inspect --memory-balancer --no-compilation-cache --optimize_for_size --max_old_space_size=1024\" --name stats --kill-timeout 30000 --log-date-format 'MM-DD HH:mm:ss'",
     "compile": "tsc",
     "dev": "DEV=true bun --watch src/index.ts"
   },
