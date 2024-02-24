@@ -167,6 +167,12 @@ function regCommands(
       getChatInvite_cmd(ctx);
     }
   });
+
+  bot.hears(/^!ssforceclearstats/, (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) {
+      todayStats.clear();
+    }
+  });
 }
 
 export default regCommands;
