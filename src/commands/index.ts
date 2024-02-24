@@ -112,7 +112,6 @@ function regCommands(
     .chatType(["group", "supergroup"])
     .hears(/^(!інактив|!неактив)/i, async (ctx) => {
       botStatsManager.commandUse("інактив");
-      //@ts-expect-error
       chatInactive_cmd(ctx, active);
     });
 

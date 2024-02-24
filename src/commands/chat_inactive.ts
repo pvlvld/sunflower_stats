@@ -1,21 +1,18 @@
 import YAMLWrapper from "../data/YAMLWrapper";
 import IActive from "../data/active";
 import { type MyContext } from "../types/context";
-import Escape from "../utils/escape";
 import getUserNameLink from "../utils/getUserNameLink";
 import parseCmdArgs from "../utils/parseCmdArgs";
-import { type ChatTypeContext, type HearsContext, type Filter } from "grammy";
+import { type ChatTypeContext, type HearsContext } from "grammy";
 
 const PAGE_LENGTH = 25;
 
 function chatInactive_cmd(
-  ctx: Filter<
-    HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
-    ":text"
-  >,
+  ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
+
   active: YAMLWrapper<IActive>
 ) {
-  const page = parseInt(parseCmdArgs(ctx.msg.text)[0]);
+  const page = parseInt(parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0]);
   if (!page) return ctx.reply("Введіть номер сторінки.\n!неактив 1");
 
   ctx.reply(getInactivePageMessage(ctx.chat.id, Math.abs(page), active), {
