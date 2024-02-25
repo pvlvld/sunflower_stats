@@ -1,4 +1,4 @@
-import { Bot, matchFilter, session } from "grammy";
+import { Bot, matchFilter } from "grammy";
 import { autoRetry } from "@grammyjs/auto-retry";
 import { MyContext } from "./types/context";
 import { ignoreOldMessages } from "./middlewares/ignoreOldMessages";

@@ -9,7 +9,7 @@ async function del_user_active(
 ) {
   const chatMember = await ctx
     .getChatMember(ctx.from?.id || -1)
-    .catch((e) => {});
+    .catch(() => {});
   if (!chatMember || chatMember.status != "creator") {
     ctx.reply("❌ Щось пішло не так або ви не є власником чату");
     return;

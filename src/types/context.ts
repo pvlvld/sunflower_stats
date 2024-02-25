@@ -1,4 +1,3 @@
-import type { User } from "@grammyjs/types";
 import type { ChatTypeContext, Filter } from "grammy";
 import type { Context } from "grammy";
 

@@ -10,7 +10,7 @@ function regHandlers(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
     leaveChatMemberHandler(ctx, todayStats, active);
   });
 
-  bot.on("msg:new_chat_members:me", (ctx) => {
+  bot.on("msg:new_chat_members:me", () => {
     botStatsManager.newGroup();
   });
 }

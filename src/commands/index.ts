@@ -103,7 +103,7 @@ function regCommands(
 
   bot
     .chatType(["group", "supergroup"])
-    .hears(/^(\-нік|\-нікнейм)/i, async (ctx) => {
+    .hears(/^(-нік|-нікнейм)/i, async (ctx) => {
       botStatsManager.commandUse("нік");
       del_nickname(ctx, active);
     });

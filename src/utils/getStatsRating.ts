@@ -1,7 +1,7 @@
 import YAMLWrapper from "../data/YAMLWrapper";
 import IActive from "../data/active";
 import TodayStats from "../data/stats";
-import { IDbChatUserStats, IStats } from "../types/stats";
+import { IDbChatUserStats } from "../types/stats";
 import getUserNameLink from "./getUserNameLink";
 
 export function getStatsRatingPlusToday(
@@ -44,7 +44,7 @@ export function getStatsRatingPlusToday(
     return merged[u1].count < merged[u2].count ? 1 : -1;
   });
 
-  let statsRowLimit = Math.min(50, usersId_sorted.length);
+  const statsRowLimit = Math.min(50, usersId_sorted.length);
   let statsRowsCount = 1;
 
   for (let i = 0; i < usersId_sorted.length + 1; i++) {

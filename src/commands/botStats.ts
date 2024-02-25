@@ -62,7 +62,7 @@ export const botStatsManager = {
   sendToMainChat: async () => {
     return await bot.api
       .sendMessage("-1001898242958", getStatsMsg())
-      .catch((e) => {});
+      .catch(() => {});
   },
 };
 

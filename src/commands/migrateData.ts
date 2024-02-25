@@ -48,7 +48,7 @@ function mergeActive(ctx: MyContext, active: YAMLWrapper<IActive>) {
   old_active.load();
   console.log("Loaded active.json");
 
-  let mergedActive = {} as IActive;
+  const mergedActive = {} as IActive;
 
   for (const chat in old_first_seen) {
     for (const user in old_first_seen[chat]) {

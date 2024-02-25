@@ -5,15 +5,6 @@ import IActive from "./active";
 import formattedDate from "../utils/date";
 import bot from "../bot";
 
-const writeConection = mysql2.createConnection({
-  namedPlaceholders: true,
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_DATABASE,
-  charset: process.env.DB_CHARSET,
-});
-
 export class TodayStats extends YAMLWrapper<IStats> {
   private dbPool: mysql2.Pool;
   private writeConnection!: mysql2.Connection;
