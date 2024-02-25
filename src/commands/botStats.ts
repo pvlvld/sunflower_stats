@@ -39,8 +39,10 @@ function getStatsMsg() {
   return statsMsg;
 }
 
-function bot_stats_cmd(ctx: MyContext) {
-  ctx.reply(getStatsMsg(), { link_preview_options: { is_disabled: true } });
+async function bot_stats_cmd(ctx: MyContext) {
+  await ctx.reply(getStatsMsg(), {
+    link_preview_options: { is_disabled: true },
+  });
 }
 
 export const botStatsManager = {

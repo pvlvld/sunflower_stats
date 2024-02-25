@@ -14,7 +14,7 @@ async function stats_yestarday(
   const stats = await dbStats.chat.yesterday(ctx.chat.id);
 
   if (!isDbResNotEmpty(stats)) {
-    ctx.reply("Статистика за вчора відсутня.");
+    await ctx.reply("Статистика за вчора відсутня.");
     return;
   }
 
@@ -35,7 +35,7 @@ async function stats_yestarday(
 
   reply += `\nЗагальна кількість повідомлень: ${total_messages}`;
 
-  ctx.reply(reply, {
+  await ctx.reply(reply, {
     disable_notification: true,
     link_preview_options: { is_disabled: true },
   });

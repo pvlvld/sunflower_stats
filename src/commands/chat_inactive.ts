@@ -7,15 +7,18 @@ import { type ChatTypeContext, type HearsContext } from "grammy";
 
 const PAGE_LENGTH = 25;
 
-function chatInactive_cmd(
+async function chatInactive_cmd(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
 
   active: YAMLWrapper<IActive>
 ) {
   const page = parseInt(parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0]);
-  if (!page) return ctx.reply("Введіть номер сторінки.\n!неактив 1");
+  if (!page) {
+    await ctx.reply("Введіть номер сторінки.\n!неактив 1");
+    return;
+  }
 
-  ctx.reply(getInactivePageMessage(ctx.chat.id, Math.abs(page), active), {
+  await ctx.reply(getInactivePageMessage(ctx.chat.id, Math.abs(page), active), {
     link_preview_options: { is_disabled: true },
     disable_notification: true,
   });

@@ -13,7 +13,7 @@ async function stats_today(
   const stats = todayStats.data[ctx.chat.id];
   if (!stats || stats === undefined) return;
 
-  ctx.reply(
+  await ctx.reply(
     "📊 Статистика чату за сьогодні:\n\n" +
       getStatsRatingToday(ctx.chat.id, todayStats, active),
     {

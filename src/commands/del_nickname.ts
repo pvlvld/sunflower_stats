@@ -9,7 +9,7 @@ async function del_nickname(
 ) {
   //@ts-expect-error
   active.data[ctx.chat.id][ctx.from.id].nickname = undefined;
-  ctx.reply(`✅ Нікнейм успішно видалено.`, {
+  await ctx.reply(`✅ Нікнейм успішно видалено.`, {
     disable_notification: true,
     link_preview_options: { is_disabled: true },
   });

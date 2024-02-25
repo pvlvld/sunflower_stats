@@ -1,8 +1,8 @@
 import { MyContext } from "../types/context";
 import start_menu from "../ui/menus/start";
 
-function start_cmd(ctx: MyContext) {
-  ctx.reply(
+async function start_cmd(ctx: MyContext) {
+  await ctx.reply(
     `
 Привіт! Я — новий бот для статистики із сім'ї Соняшника. Ось мої команди: 
 📊 Стата/статистика вчора/день/тиждень/місяць/рік/вся

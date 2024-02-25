@@ -11,7 +11,7 @@ async function del_user_active(
     .getChatMember(ctx.from?.id || -1)
     .catch(() => {});
   if (!chatMember || chatMember.status != "creator") {
-    ctx.reply("❌ Щось пішло не так або ви не є власником чату");
+    await ctx.reply("❌ Щось пішло не так або ви не є власником чату");
     return;
   }
   if (
@@ -19,14 +19,14 @@ async function del_user_active(
     active.data[ctx.chat.id]?.[ctx.msg.reply_to_message.from.id]
   ) {
     delete active.data[ctx.chat.id]?.[ctx.msg.reply_to_message.from.id];
-    ctx.reply(
+    await ctx.reply(
       `✅ Успішно видалено ${
         active.data[ctx.chat.id]?.[ctx.msg.reply_to_message.from.id]?.name
       } з активу та приховано зі статистики.`
     );
     return;
   }
-  ctx.reply("❌ Цього користувача немає в активі.");
+  await ctx.reply("❌ Цього користувача немає в активі.");
 }
 
 export default del_user_active;

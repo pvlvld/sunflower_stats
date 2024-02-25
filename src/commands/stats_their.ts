@@ -13,13 +13,13 @@ async function stats_their(
   active: YAMLWrapper<IActive>
 ) {
   if (!ctx.msg.reply_to_message?.from || ctx.msg.reply_to_message.from.is_bot) {
-    ctx.reply(
+    await ctx.reply(
       "Для використання команди, потрібно відповісти нею на повідомлення учасника."
     );
     return;
   }
 
-  ctx.reply(
+  await ctx.reply(
     getUserStatsMessage(
       ctx.chat.id,
       ctx.msg.reply_to_message.from,

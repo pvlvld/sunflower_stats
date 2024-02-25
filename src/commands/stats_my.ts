@@ -12,7 +12,7 @@ async function stats_my(
   todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
-  ctx.reply(
+  await ctx.reply(
     getUserStatsMessage(
       ctx.chat.id,
       ctx.from,

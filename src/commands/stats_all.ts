@@ -16,11 +16,11 @@ async function stats_all(
   const start = Date.now();
   const stats = await dbStats.chat.all(ctx.chat.id);
   if (!isDbResNotEmpty(stats)) {
-    ctx.reply("Щось пішло не так.");
+    await ctx.reply("Щось пішло не так.");
     return;
   }
 
-  ctx.reply(
+  await ctx.reply(
     "📊 Статистика чату за весь час:\n\n" +
       getStatsRatingPlusToday(stats, ctx.chat.id, todayStats, active),
     {

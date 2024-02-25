@@ -12,7 +12,7 @@ async function stats_month(
   todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
-  ctx.reply(
+  await ctx.reply(
     "📊 Статистика чату за цей місяць:\n\n" +
       getStatsRatingPlusToday(
         await dbStats.chat.inRage(ctx.chat.id, "monthRange"),
