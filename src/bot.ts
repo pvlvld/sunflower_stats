@@ -30,7 +30,7 @@ const autoRetryTransformer = autoRetry({
 
 // API TRANSFORMERS
 
-bot.api.config.use(async (prev, method, payload, signal) => {
+bot.api.config.use(async function autoRetry(prev, method, payload, signal) {
   if (
     [
       "getChat",
