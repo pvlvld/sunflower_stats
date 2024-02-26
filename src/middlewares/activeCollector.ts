@@ -7,7 +7,7 @@ function ActiveCollectorWrapper(
   active: YAMLWrapper<IActive>,
   formattedDate: FormattedDate
 ) {
-  return async function statsCollector(ctx: Context, next: NextFunction) {
+  return async function activeCollector(ctx: Context, next: NextFunction) {
     if (
       !ctx.from ||
       !ctx.chat ||
