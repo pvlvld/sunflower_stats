@@ -1,4 +1,3 @@
-import { User } from "@grammyjs/types";
 import TodayStats from "../data/stats";
 import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
@@ -7,18 +6,20 @@ import Escape from "./escape";
 
 function getUserStatsMessage(
   chat_id: number,
-  user: User,
+  user_id: number,
   dbStats: IDbChatUserStatsPeriods,
   todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
-  const stats_today = todayStats.data[chat_id]?.[user.id] || 0;
+  const stats_today = todayStats.data[chat_id]?.[user_id] || 0;
 
-  const nickname = active.data[chat_id]?.[user.id]?.nickname;
+  const nickname = active.data[chat_id]?.[user_id]?.nickname;
 
   return Escape.html(`
 ❄️ Статистика ${
-    nickname ? `${nickname} (${user.first_name})` : `${user.first_name}`
+    nickname
+      ? `${nickname} (${active.data[chat_id]?.[user_id]?.name})`
+      : `${active.data[chat_id]?.[user_id]?.name}`
   }
     
 📊 Актив: 
@@ -30,7 +31,7 @@ function getUserStatsMessage(
 - за весь час: ${dbStats.total + stats_today}
 
 📅 Перша поява в чаті: ${
-    active.data[chat_id]?.[user.id]?.active_first || "невідомо"
+    active.data[chat_id]?.[user_id]?.active_first || "невідомо"
   }`);
 }
 
