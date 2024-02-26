@@ -14,48 +14,32 @@ async function del_user_active(
   const chatMember = await ctx
     .getChatMember(ctx.from?.id || -1)
     .catch(() => {});
-  if (
-    !chatMember ||
-    chatMember.status != "creator" ||
-    !ADMINS.includes(ctx.from?.id || -1)
-  ) {
-    await ctx.reply("❌ Щось пішло не так або ви не є власником чату");
-    return;
-  }
+  if (chatMember?.status === "creator" || ADMINS.includes(ctx.from?.id || -1)) {
+    const userId =
+      ctx.msg.reply_to_message?.from?.id ||
+      getUserId(
+        parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0],
+        ctx.chat.id,
+        active
+      ) ||
+      -1;
 
-  if (ctx.msg.reply_to_message?.from?.id) {
-    if (active.data[ctx.chat.id]?.[ctx.msg.reply_to_message.from.id]) {
+    if (userId !== -1 && active.data[ctx.chat.id]?.[userId]) {
       await ctx.reply(
         `✅ Успішно видалено ${
-          active.data[ctx.chat.id]?.[ctx.msg.reply_to_message.from.id]?.name
+          active.data[ctx.chat.id]?.[userId]?.name
         } з активу та приховано зі статистики.`
       );
-      delete active.data[ctx.chat.id]?.[ctx.msg.reply_to_message.from.id];
+      delete active.data[ctx.chat.id]?.[userId];
+      return;
+    } else {
+      await ctx.reply("❌ Користувача не знайдено");
       return;
     }
-  } else {
-    const wantedUser = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0];
-    if (!wantedUser) {
-      await ctx.reply("❌ Користувача не знайдено.");
-      return;
-    }
-    const wantedUserId = getUserId(wantedUser, ctx.chat.id, active);
-
-    if (wantedUserId === -1) {
-      await ctx.reply("❌ Користувача не знайдено.");
-      return;
-    }
-
-    await ctx.reply(
-      `✅ Успішно видалено ${
-        active.data[ctx.chat.id]?.[wantedUserId]?.name
-      } з активу та приховано зі статистики.`
-    );
-    delete active.data[ctx.chat.id]?.[wantedUserId];
-    return;
   }
 
-  await ctx.reply("❌ Цього користувача немає в активі.");
+  await ctx.reply("❌ Щось пішло не так або ви не є власником чату");
+  return;
 }
 
 export default del_user_active;
