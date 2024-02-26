@@ -118,7 +118,7 @@ function regCommands(
   bot
     .chatType(["group", "supergroup"])
     .command("del_from_active", async (ctx) => {
-      if (ctx.message?.reply_to_message) del_user_active(ctx, active);
+      del_user_active(ctx, active);
     });
 
   // -------- STAFF COMMANDS --------
