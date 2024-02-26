@@ -48,9 +48,7 @@ async function main() {
   const active = new YAMLWrapper<IActive>(() => "active", "data/active");
   const todayStats = new TodayStats(
     () => `stats${formattedDate.today}`, // statsYYYY-MM-DD.yaml
-    "data/stats",
-    DBPoolManager.getPool,
-    active
+    "data/stats"
   );
   const dbStats = new DbStats(DBPoolManager.getPool, DateRange);
 
