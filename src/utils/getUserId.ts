@@ -1,17 +1,16 @@
-import { HearsContext } from "grammy";
-import { MyContext } from "../types/context";
 import YAMLWrapper from "../data/YAMLWrapper";
 import IActive from "../data/active";
-import parseCmdArgs from "./parseCmdArgs";
 
 //** Returns user_id or -1 on fail*/
-function getUserId(ctx: HearsContext<MyContext>, active: YAMLWrapper<IActive>) {
-  let wantedUser = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0];
-
+function getUserId(
+  wantedUser: string,
+  chat_id: number | string,
+  active: YAMLWrapper<IActive>
+) {
   if (wantedUser.startsWith("@")) {
     wantedUser = wantedUser.slice(1);
-    for (const user in active.data[ctx.chat.id]) {
-      if (active.data[ctx.chat.id]?.[user]?.username === wantedUser) {
+    for (const user in active.data[chat_id]) {
+      if (active.data[chat_id]?.[user]?.username === wantedUser) {
         return +user;
       }
     }
@@ -19,8 +18,8 @@ function getUserId(ctx: HearsContext<MyContext>, active: YAMLWrapper<IActive>) {
   }
 
   if (isNaN(Number(wantedUser))) {
-    for (const user in active.data[ctx.chat.id]) {
-      if (active.data[ctx.chat.id]?.[user]?.name === wantedUser) {
+    for (const user in active.data[chat_id]) {
+      if (active.data[chat_id]?.[user]?.name === wantedUser) {
         return +user;
       }
     }
