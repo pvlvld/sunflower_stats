@@ -24,6 +24,8 @@ import collectGarbage from "../utils/collectGarbage";
 import leaveChat_cmd from "./leaveChat";
 import getChatAdmins_cmd from "./getChatAdmins";
 import getChatInvite_cmd from "./getChatInvite";
+import getUserId from "../utils/getUserId";
+import parseCmdArgs from "../utils/parseCmdArgs";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
@@ -177,6 +179,15 @@ function regCommands(
   bot.hears(/^!ssforceclearstats/, (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) {
       todayStats.clear();
+    }
+  });
+
+  bot.hears(/^!ssru/, (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) {
+      const wantedUser = parseCmdArgs(ctx.msg?.text ?? ctx.msg?.caption)[0];
+      if (wantedUser) {
+        ctx.reply(String(getUserId(wantedUser, ctx.chat.id, active)));
+      }
     }
   });
 }
