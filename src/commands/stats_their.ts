@@ -5,6 +5,8 @@ import TodayStats from "../data/stats";
 import YAMLWrapper from "../data/YAMLWrapper";
 import { IActive } from "../data/active";
 import getUserStatsMessage from "../utils/getUserStatsMessage";
+import getUserId from "../utils/getUserId";
+import parseCmdArgs from "../utils/parseCmdArgs";
 
 async function stats_their(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
@@ -12,18 +14,25 @@ async function stats_their(
   todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
-  if (!ctx.msg.reply_to_message?.from || ctx.msg.reply_to_message.from.is_bot) {
-    await ctx.reply(
-      "Для використання команди, потрібно відповісти нею на повідомлення учасника."
-    );
+  const userId =
+    ctx.msg.reply_to_message?.from?.id ||
+    getUserId(
+      parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0],
+      ctx.chat.id,
+      active
+    ) ||
+    -1;
+
+  if (userId === -1) {
+    await ctx.reply("Користувача не знайдено.");
     return;
   }
 
   await ctx.reply(
     getUserStatsMessage(
       ctx.chat.id,
-      ctx.msg.reply_to_message.from,
-      await dbStats.user.all(ctx.chat.id, ctx.msg.reply_to_message.from.id),
+      userId,
+      await dbStats.user.all(ctx.chat.id, userId),
       todayStats,
       active
     ),

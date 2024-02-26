@@ -91,7 +91,7 @@ function regCommands(
     stats_my(ctx, dbStats, todayStats, active);
   });
 
-  bot.chatType(["group", "supergroup"]).hears(/^(!ти)$/i, async (ctx) => {
+  bot.chatType(["group", "supergroup"]).hears(/^(!ти)/i, async (ctx) => {
     botStatsManager.commandUse("ти");
     stats_their(ctx, dbStats, todayStats, active);
   });
