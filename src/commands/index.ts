@@ -119,7 +119,7 @@ function regCommands(
 
   bot
     .chatType(["group", "supergroup"])
-    .command("del_from_active", async (ctx) => {
+    .command(["del_from_active", "sshide"], async (ctx) => {
       del_user_active(ctx, active);
     });
 
