@@ -25,8 +25,8 @@ async function stats_yestarday(
     reply += `${i + 1}. ${getUserNameLink.html(
       active.data[ctx.chat.id]?.[stats[i].user_id]?.nickname ||
         active.data[ctx.chat.id]?.[stats[i].user_id]?.name ||
-        stats[i].name,
-      stats[i].username,
+        "Невідомо",
+      active.data[ctx.chat.id]?.[stats[i].user_id]?.username,
       stats[i].user_id
     )} — ${stats[i].count}\n`;
 

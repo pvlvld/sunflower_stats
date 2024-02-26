@@ -2,8 +2,6 @@ CREATE TABLE stats_day_statistics (
   id int NOT NULL AUTO_INCREMENT,
   chat_id bigint DEFAULT NULL,
   user_id bigint DEFAULT NULL,
-  name varchar(45) DEFAULT NULL,
-  username varchar(45) DEFAULT NULL,
   count int DEFAULT NULL,
   date date DEFAULT NULL,
   PRIMARY KEY (id),

@@ -63,9 +63,7 @@ class DbChatStats {
   async yesterday(chat_id: number): Promise<IDbChatUserStats[]> {
     try {
       const query = `
-      SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
-        MAX(name) AS name,
-        MAX(username) AS username
+      SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count
       FROM stats_day_statistics
       WHERE chat_id = ${chat_id} AND date = "${this.dateRange.yesterday}"
       GROUP BY user_id
@@ -83,9 +81,7 @@ class DbChatStats {
       if (typeof range === "string") {
         return (
           await this.dbPool.query(`
-        SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
-           MAX(name) AS name,
-           MAX(username) AS username
+        SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count
         FROM stats_day_statistics
         WHERE chat_id = ${chat_id} AND date BETWEEN "${this.dateRange[range][0]}" AND "${this.dateRange[range][1]}"
         GROUP BY user_id
@@ -95,9 +91,7 @@ class DbChatStats {
       } else {
         return (
           await this.dbPool.query(`
-        SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
-           MAX(name) AS name,
-           MAX(username) AS username
+        SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count
         FROM stats_day_statistics
         WHERE chat_id = ${chat_id} AND date BETWEEN "${range[0]}" AND "${range[1]}"
         GROUP BY user_id
@@ -113,9 +107,7 @@ class DbChatStats {
 
   async all(chat_id: number): Promise<IDbChatUserStats[]> {
     const query = `
-    SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count,
-        MAX(name) AS name,
-        MAX(username) AS username
+    SELECT user_id, CAST(SUM(count) AS UNSIGNED) AS count
     FROM stats_day_statistics
     WHERE chat_id = ${chat_id}
     GROUP BY user_id

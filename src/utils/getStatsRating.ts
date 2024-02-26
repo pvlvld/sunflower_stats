@@ -26,16 +26,10 @@ export function getStatsRatingPlusToday(
 
   for (const user_id of Object.keys(todayStats.data[chat_id] || {})) {
     if (merged[user_id]) {
-      merged[user_id].name =
-        active.data[chat_id]?.[user_id]?.name || "Невідомо";
-      merged[user_id].username = active.data[chat_id]?.[user_id]?.username;
       merged[user_id].count += todayStats.data[chat_id]?.[user_id] || 0;
     } else {
       merged[user_id] ??= {} as IDbChatUserStats;
       merged[user_id].user_id = +user_id;
-      merged[user_id].name =
-        active.data[chat_id]?.[user_id]?.name || "Невідомо";
-      merged[user_id].username = active.data[chat_id]?.[user_id]?.username;
       merged[user_id].count = todayStats.data[chat_id]?.[user_id] || 0;
     }
   }
@@ -51,8 +45,8 @@ export function getStatsRatingPlusToday(
     const user_id = usersId_sorted[i];
     if (active.data[chat_id]?.[user_id] && statsRowsCount < statsRowLimit + 1) {
       reply += `${statsRowsCount}. ${getUserNameLink.html(
-        merged[user_id].name,
-        merged[user_id].username,
+        active.data[chat_id]?.[user_id]?.name || "Невідомо",
+        active.data[chat_id]?.[user_id]?.username,
         user_id
       )} — ${merged[user_id].count}\n`;
       statsRowsCount++;
