@@ -1,62 +1,61 @@
 import { IStats } from "../types/stats";
 import YAMLWrapper from "./YAMLWrapper";
 import mysql2 from "mysql2/promise";
-import IActive from "./active";
 import formattedDate from "../utils/date";
-import bot from "../bot";
 
 export class TodayStats extends YAMLWrapper<IStats> {
-  private dbPool: mysql2.Pool;
-  private writeConnection!: mysql2.Connection;
-  private active: YAMLWrapper<IActive>;
-
-  constructor(
-    filename: () => string,
-    dirrectory: string,
-    dbPool: mysql2.Pool,
-    active: YAMLWrapper<IActive>
-  ) {
+  constructor(filename: () => string, dirrectory: string) {
     super(filename, dirrectory);
-    this.dbPool = dbPool;
-    this.active = active;
   }
 
-  private async getWriteConnection() {
-    if (!this.writeConnection) {
-      this.writeConnection = await mysql2.createConnection({
-        namedPlaceholders: true,
-        host: process.env.DB_HOST,
-        user: process.env.DB_USER,
-        password: process.env.DB_PASSWORD,
-        database: process.env.DB_DATABASE,
-        charset: process.env.DB_CHARSET,
-      });
-    }
-    return this.writeConnection;
+  private async getWriteDBPool() {
+    return mysql2.createPool({
+      connectionLimit: 10,
+      namedPlaceholders: true,
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_DATABASE,
+      charset: process.env.DB_CHARSET,
+    });
   }
 
   async writeStatsToDB() {
-    const connection = await this.getWriteConnection();
-    bot.api.sendMessage("-1001898242958", "Запис стати в бд");
+    const dbpool = await this.getWriteDBPool();
+
     const date = formattedDate.yesterday;
+    const insertValues = [];
+
     for (const chatId in this.data) {
       for (const userId in this.data[chatId]) {
-        const query = this.dbPool.format(
-          `INSERT INTO stats_day_statistics (chat_id, user_id, name, username, count, date) VALUES (${chatId}, ${userId}, ?, ?, ?, "${date}")`,
-          [
-            this.active.data[chatId]?.[userId]?.name || "Невідомо",
-            this.active.data[chatId]?.[userId]?.username || null,
-            this.data[chatId]?.[userId] || 0,
-          ]
-        );
-        try {
-          connection.query(query);
-        } catch (error) {
-          console.error(error);
-        }
+        const count = this.data[chatId]?.[userId] || 0;
+
+        insertValues.push([chatId, userId, count, date]);
       }
+
+      if (insertValues.length === 0) continue;
+
+      try {
+        // Prepare the bulk insert query
+        const sql = `
+          INSERT INTO stats_day_statistics (chat_id, user_id, count, date)
+          VALUES ?
+        `;
+        const connection = await dbpool.getConnection();
+        connection.query(sql, [insertValues]).then(() => {
+          connection.release();
+        });
+
+        // console.log(`Saved chat: ${chatId}`);
+      } catch (error) {
+        console.error(error);
+        console.log(insertValues);
+      }
+      insertValues.length = 0;
     }
-    console.log("saved");
+
+    dbpool.end();
+    console.log("Writed all chats stats!");
   }
 }
 
