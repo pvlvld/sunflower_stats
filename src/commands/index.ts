@@ -117,7 +117,7 @@ function regCommands(
       chatInactive_cmd(ctx, active);
     });
 
-  bot.chatType(["group", "supergroup"]).hears("!ссприховати", async (ctx) => {
+  bot.chatType(["group", "supergroup"]).hears(/^!ссприховати/i, async (ctx) => {
     botStatsManager.commandUse("ссприховати");
     del_user_active(ctx, active);
   });

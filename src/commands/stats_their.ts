@@ -17,7 +17,7 @@ async function stats_their(
   const userId =
     ctx.msg.reply_to_message?.from?.id ||
     getUserId(
-      parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0],
+      (ctx.msg.text ?? ctx.msg.caption).slice(4),
       ctx.chat.id,
       active
     ) ||
