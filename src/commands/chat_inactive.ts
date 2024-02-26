@@ -12,7 +12,7 @@ async function chatInactive_cmd(
 
   active: YAMLWrapper<IActive>
 ) {
-  const page = parseInt(parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0]);
+  const page = parseInt(parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0] ?? "");
   if (!page) {
     await ctx.reply("Введіть номер сторінки.\n!неактив 1");
     return;

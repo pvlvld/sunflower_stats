@@ -1,4 +1,4 @@
-function parseCmdArgs(command: string): string[] {
+function parseCmdArgs(command: string): string[] | undefined[] {
   return command.split(/\s+/).slice(1);
 }
 
