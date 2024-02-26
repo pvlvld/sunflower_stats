@@ -1,14 +1,14 @@
 import { MyContext } from "../types/context";
 import YAMLWrapper from "../data/YAMLWrapper";
 import IActive from "../data/active";
-import { CommandContext } from "grammy";
+import { HearsContext } from "grammy";
 import getUserId from "../utils/getUserId";
 import parseCmdArgs from "../utils/parseCmdArgs";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
 async function del_user_active(
-  ctx: CommandContext<MyContext>,
+  ctx: HearsContext<MyContext>,
   active: YAMLWrapper<IActive>
 ) {
   const chatMember = await ctx

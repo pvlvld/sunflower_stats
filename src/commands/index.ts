@@ -117,12 +117,10 @@ function regCommands(
       chatInactive_cmd(ctx, active);
     });
 
-  bot
-    .chatType(["group", "supergroup"])
-    .command(["del_from_active", "sshide"], async (ctx) => {
-      botStatsManager.commandUse("sshide");
-      del_user_active(ctx, active);
-    });
+  bot.chatType(["group", "supergroup"]).hears("!ссприховати", async (ctx) => {
+    botStatsManager.commandUse("ссприховати");
+    del_user_active(ctx, active);
+  });
 
   // -------- STAFF COMMANDS --------
 
