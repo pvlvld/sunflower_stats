@@ -15,7 +15,7 @@ async function stats_my(
   await ctx.reply(
     getUserStatsMessage(
       ctx.chat.id,
-      ctx.from,
+      ctx.from.id,
       await dbStats.user.all(ctx.chat.id, ctx.from.id),
       todayStats,
       active
