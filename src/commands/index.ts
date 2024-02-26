@@ -120,6 +120,7 @@ function regCommands(
   bot
     .chatType(["group", "supergroup"])
     .command(["del_from_active", "sshide"], async (ctx) => {
+      botStatsManager.commandUse("sshide");
       del_user_active(ctx, active);
     });
 
