@@ -31,9 +31,9 @@ export async function startNewDay(
   todayStats: TodayStats
 ) {
   active.save(path.join("data/active", `active-${formattedDate.today}.yaml`));
-  todayStats.writeStatsToDB();
   await botStatsManager.sendToMainChat();
   botStatsManager.resetAll();
+  await todayStats.writeStatsToDB();
   todayStats.clear();
 }
 
