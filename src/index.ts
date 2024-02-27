@@ -21,6 +21,8 @@ import moment from "moment";
 import { botStatsManager } from "./commands/botStats";
 import collectGarbage from "./utils/collectGarbage";
 import { limit } from "@grammyjs/ratelimiter";
+import * as fs from "fs";
+import fastify from "fastify";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -68,11 +70,11 @@ async function main() {
   regHandlers(active, todayStats);
   regCommands(dbStats, active, todayStats);
 
-  collectGarbage()
+  collectGarbage();
 
   createScheduler(active, todayStats);
 
-  bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
+  bot.api.deleteWebhook({ drop_pending_updates: true }).then(async () => {
     if (process.env.TEST === "test") {
       console.log("TEST MODE");
       const handleUpdate = webhookCallback(bot, "std/http");
@@ -92,7 +94,61 @@ async function main() {
         server = app.listen(Number(6666));
       }
 
-      console.log("Started in test mode");
+      console.log("Started in test mode.");
+    } else if (process.env.WEBHOOK) {
+      if (typeof Bun !== "undefined") {
+        const handleUpdate = webhookCallback(bot, "std/http");
+        Bun.serve({
+          async fetch(req) {
+            console.log("New req!");
+            if (req.method !== "POST") {
+              return new Response();
+            }
+
+            try {
+              return await handleUpdate(req);
+            } catch (err) {
+              console.error(err);
+            }
+          },
+          port: 443,
+        });
+        bot.api.setWebhook(`https://80.64.218.61:443/`, {
+          drop_pending_updates: true,
+        });
+      } else {
+        const handleUpdate = webhookCallback(bot, "fastify");
+        const server = fastify({
+          https: {
+            cert: fs.readFileSync(
+              "/etc/letsencrypt/live/soniashnyk.pp.ua/fullchain.pem"
+            ),
+            key: fs.readFileSync(
+              "/etc/letsencrypt/live/soniashnyk.pp.ua/privkey.pem"
+            ),
+          },
+        });
+        server.post(`/${process.env.BOT_TOKEN}`, (req) => {
+          return handleUpdate(req);
+        });
+
+        server.setErrorHandler(async (error) => {
+          console.error(error);
+        });
+
+        server.listen({ port: 443, host: "0.0.0.0" }, async (error) => {
+          if (error) {
+            console.error(error);
+            process.exit(1);
+          }
+        });
+        await bot.api.setWebhook(
+          `https://soniashnyk.pp.ua/${process.env.BOT_TOKEN}`
+        );
+      }
+
+      console.log("Bot is started using webhook.");
+      console.log(await bot.api.getWebhookInfo());
     } else {
       bot.start({
         drop_pending_updates: true,
@@ -103,9 +159,9 @@ async function main() {
           "callback_query",
         ],
       });
+      console.log("Bot is started using long polling.");
     }
 
-    console.log("Bot is started.");
     bot.api.sendAnimation(
       "-1001898242958",
       "CgACAgQAAx0CcSTjjgABAhXRZdevgUUSZYWy2J7TCl_H_0RH1cIAAsQEAAL0Qn1T8YKWwZ59DLs0BA",
