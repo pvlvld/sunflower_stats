@@ -20,9 +20,11 @@ async function stats_yestarday(
 
   let reply = "📊 Статистика чату за вчора:\n\n";
   let total_messages: number = 0;
+  let rowNumber = 1;
 
-  for (let i = 0; i < Math.min(100, stats?.length || 100); i++) {
-    reply += `${i + 1}. ${getUserNameLink.html(
+  for (let i = 0; i < Math.min(100, stats.length); i++) {
+    if (active.data[ctx.chat.id]?.[stats[i].user_id] === undefined) continue;
+    reply += `${rowNumber}. ${getUserNameLink.html(
       active.data[ctx.chat.id]?.[stats[i].user_id]?.nickname ||
         active.data[ctx.chat.id]?.[stats[i].user_id]?.name ||
         "Невідомо",
@@ -30,6 +32,7 @@ async function stats_yestarday(
       stats[i].user_id
     )} — ${stats[i].count}\n`;
 
+    rowNumber++;
     total_messages += stats[i].count;
   }
 

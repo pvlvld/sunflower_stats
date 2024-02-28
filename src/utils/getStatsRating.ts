@@ -28,9 +28,10 @@ export function getStatsRatingPlusToday(
     if (merged[user_id]) {
       merged[user_id].count += todayStats.data[chat_id]?.[user_id] || 0;
     } else {
-      merged[user_id] ??= {} as IDbChatUserStats;
-      merged[user_id].user_id = +user_id;
-      merged[user_id].count = todayStats.data[chat_id]?.[user_id] || 0;
+      merged[user_id] ??= {
+        user_id: +user_id,
+        count: todayStats.data[chat_id]?.[user_id] || 0,
+      } as IDbChatUserStats;
     }
   }
 
