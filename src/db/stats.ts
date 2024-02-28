@@ -33,16 +33,17 @@ class DbUserStats {
     const query = `
     SELECT
     SUM(count)::INTEGER AS total,
-    SUM(CASE WHEN date BETWEEN "${this.dateRange.yearRange[0]}" AND "${this.dateRange.yearRange[1]}" THEN count ELSE 0 END)::INTEGER AS year,
-    SUM(CASE WHEN date BETWEEN "${this.dateRange.monthRange[0]}" AND "${this.dateRange.monthRange[1]}" THEN count ELSE 0 END)::INTEGER AS month,
-    SUM(CASE WHEN date BETWEEN "${this.dateRange.weekRange[0]}" AND "${this.dateRange.weekRange[1]}" THEN count ELSE 0 END)::INTEGER AS week
+    SUM(CASE WHEN date BETWEEN '${this.dateRange.yearRange[0]}' AND '${this.dateRange.yearRange[1]}' THEN count ELSE 0 END)::INTEGER AS year,
+    SUM(CASE WHEN date BETWEEN '${this.dateRange.monthRange[0]}' AND '${this.dateRange.monthRange[1]}' THEN count ELSE 0 END)::INTEGER AS month,
+    SUM(CASE WHEN date BETWEEN '${this.dateRange.weekRange[0]}' AND '${this.dateRange.weekRange[1]}' THEN count ELSE 0 END)::INTEGER AS week
     FROM stats_day_statistics
     WHERE chat_id = ${chat_id} AND user_id = ${user_id};
     `;
 
     try {
-      //@ts-expect-error
-      return (await this.dbPool.query(query))[0][0] as IDbChatUserStatsPeriods;
+      console.log((await this.dbPool.query(query)).rows[0]);
+      return (await this.dbPool.query(query))
+        .rows[0] as IDbChatUserStatsPeriods;
     } catch (error) {
       console.error(error);
       return {} as IDbChatUserStatsPeriods;
