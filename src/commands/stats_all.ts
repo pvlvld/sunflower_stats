@@ -20,6 +20,8 @@ async function stats_all(
     return;
   }
 
+  const queryTime = Date.now();
+
   await ctx.reply(
     "📊 Статистика чату за весь час:\n\n" +
       getStatsRatingPlusToday(stats, ctx.chat.id, todayStats, active),
@@ -28,8 +30,14 @@ async function stats_all(
       link_preview_options: { is_disabled: true },
     }
   );
+
   if (ctx.chat.id === -1001898242958) {
-    ctx.reply(`${Date.now() - start}ms`);
+    const now = Date.now();
+    ctx.reply(
+      `DB: ${queryTime - start}ms\nGen: ${now - queryTime}ms\nTotal: ${
+        now - start
+      }ms`
+    );
   }
 }
 
