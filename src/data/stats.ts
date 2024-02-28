@@ -1,7 +1,10 @@
 import { IStats } from "../types/stats";
 import YAMLWrapper from "./YAMLWrapper";
-import mysql2 from "mysql2/promise";
 import formattedDate from "../utils/date";
+import { Pool } from "pg";
+import pgp from "pg-promise";
+
+const myPgp = pgp({ capSQL: true });
 
 export class TodayStats extends YAMLWrapper<IStats> {
   constructor(filename: () => string, dirrectory: string) {
@@ -9,14 +12,12 @@ export class TodayStats extends YAMLWrapper<IStats> {
   }
 
   private async getWriteDBPool() {
-    return mysql2.createPool({
-      connectionLimit: 10,
-      namedPlaceholders: true,
+    return new Pool({
       host: process.env.DB_HOST,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_DATABASE,
-      charset: process.env.DB_CHARSET,
+      max: 10,
     });
   }
 
@@ -26,23 +27,27 @@ export class TodayStats extends YAMLWrapper<IStats> {
     const date = formattedDate.yesterday;
     const insertValues = [];
 
+    const cs = new myPgp.helpers.ColumnSet(
+      ["chat_id", "user_id", "count", "date"],
+      {
+        table: "stats_day_statistics",
+      }
+    );
+
     for (const chatId in this.data) {
       for (const userId in this.data[chatId]) {
         const count = this.data[chatId]?.[userId] || 0;
 
-        insertValues.push([chatId, userId, count, date]);
+        insertValues.push({ chat_id: chatId, user_id: userId, count, date });
       }
 
       if (insertValues.length === 0) continue;
 
+      // Prepare the bulk insert query
       try {
-        // Prepare the bulk insert query
-        const sql = `
-          INSERT INTO stats_day_statistics (chat_id, user_id, count, date)
-          VALUES ?
-        `;
-        const connection = await dbpool.getConnection();
-        connection.query(sql, [insertValues]).then(() => {
+        const query = myPgp.helpers.insert(insertValues, cs);
+        const connection = await dbpool.connect();
+        connection.query(query).then(() => {
           connection.release();
         });
 

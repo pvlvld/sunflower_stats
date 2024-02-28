@@ -1,25 +1,26 @@
-import { Pool, type PoolConfig } from "pg";
+import mysql from "mysql2/promise";
 
 if (
   !process.env.DB_HOST ||
   !process.env.DB_USER ||
   !process.env.DB_PASSWORD ||
-  !process.env.DB_DATABASE
+  !process.env.DB_DATABASE ||
+  !process.env.DB_CHARSET
 ) {
   throw new Error("Provide database env credentials.");
 }
 
-class PgSQLPoolManager {
-  private config: PoolConfig;
-  private pool!: Pool;
+class MySQLPoolManager {
+  private config: mysql.ConnectionOptions;
+  private pool!: mysql.Pool;
 
-  constructor(config: PoolConfig) {
+  constructor(config: mysql.ConnectionOptions) {
     this.config = config;
   }
 
   async createPool() {
     if (this.pool) return;
-    this.pool = new Pool(this.config);
+    this.pool = mysql.createPool(this.config);
     await this.pool.query("SELECT 1");
   }
 
@@ -31,12 +32,14 @@ class PgSQLPoolManager {
   }
 }
 
-const DBPoolManager = new PgSQLPoolManager({
+const DBPoolManager = new MySQLPoolManager({
+  connectionLimit: 10,
+  namedPlaceholders: true,
   host: process.env.DB_HOST,
-  database: process.env.DB_DATABASE,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
-  max: 15,
+  database: process.env.DB_DATABASE,
+  charset: process.env.DB_CHARSET,
 });
 
 export default DBPoolManager;
