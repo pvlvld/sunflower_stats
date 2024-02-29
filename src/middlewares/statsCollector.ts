@@ -6,10 +6,13 @@ export function StatsCollectorWrapper(todayStats: TodayStats) {
   return async function statsCollector(ctx: Context, next: NextFunction) {
     botStatsManager.newMessage();
     if (
+      !ctx.from ||
       !ctx.chat ||
-      ctx.from?.is_bot ||
-      ctx.chat.id === ctx.from?.id ||
-      !!ctx.msg?.reply_to_message?.is_automatic_forward
+      ctx.from.is_bot ||
+      ctx.chat.id === ctx.from.id ||
+      !!ctx.msg?.reply_to_message?.is_automatic_forward ||
+      ctx.msg?.new_chat_members ||
+      [136817688, 777000].includes(ctx.from.id) // anonimous users
     ) {
       return await next();
     } else {
