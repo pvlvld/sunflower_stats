@@ -157,6 +157,7 @@ async function main() {
           "my_chat_member",
           "chat_member",
           "callback_query",
+          "chat_member",
         ],
       });
       console.log("Bot is started using long polling.");
