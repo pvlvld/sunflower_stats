@@ -164,8 +164,10 @@ async function main() {
 
     bot.api.sendAnimation(
       "-1001898242958",
-      "CgACAgQAAx0CcSTjjgABAhXRZdevgUUSZYWy2J7TCl_H_0RH1cIAAsQEAAL0Qn1T8YKWwZ59DLs0BA",
-      { caption: "Бота запущено!" }
+      "CgACAgQAAx0CcSTjjgABAiHYZd_RHo6J7FddO7xoh3ZjD--DEZEAAsQEAAL0Qn1T8YKWwZ59DLs0BA",
+      {
+        caption: "Бота запущено!",
+      }
     );
   });
 
