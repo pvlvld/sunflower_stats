@@ -26,6 +26,7 @@ import getChatAdmins_cmd from "./getChatAdmins";
 import getChatInvite_cmd from "./getChatInvite";
 import getUserId from "../utils/getUserId";
 import parseCmdArgs from "../utils/parseCmdArgs";
+import { removeAnonimousActive } from "./staff/utils_cmd";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
@@ -189,6 +190,11 @@ function regCommands(
       }
     }
   });
-}
 
+  bot.hears(/^!ssremoveanon/, (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) {
+      removeAnonimousActive(active);
+    }
+  });
+}
 export default regCommands;
