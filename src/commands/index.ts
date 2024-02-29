@@ -193,7 +193,7 @@ function regCommands(
 
   bot.hears(/^!ssremoveanon/, (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) {
-      removeAnonimousActive(active);
+      removeAnonimousActive(ctx, active);
     }
   });
 }
