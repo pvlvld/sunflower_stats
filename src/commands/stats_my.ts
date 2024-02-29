@@ -12,6 +12,10 @@ async function stats_my(
   todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
+  if ([136817688, 777000].includes(ctx.from.id)) {
+    return;
+  }
+
   await ctx.reply(
     getUserStatsMessage(
       ctx.chat.id,

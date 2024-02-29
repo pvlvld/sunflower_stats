@@ -23,7 +23,10 @@ async function stats_their(
     ) ||
     -1;
 
-  if (userId === -1) {
+  if (
+    [136817688, 777000, -1].includes(userId) ||
+    ctx.msg.reply_to_message?.from?.is_bot
+  ) {
     await ctx.reply("Користувача не знайдено.");
     return;
   }
