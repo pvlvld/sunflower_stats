@@ -41,7 +41,6 @@ class DbUserStats {
     `;
 
     try {
-      console.log((await this.dbPool.query(query)).rows[0]);
       return (await this.dbPool.query(query))
         .rows[0] as IDbChatUserStatsPeriods;
     } catch (error) {
