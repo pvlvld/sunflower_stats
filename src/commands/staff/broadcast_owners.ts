@@ -28,7 +28,7 @@ async function broadcast_owners_cmd(
         admins = await ctx.api.getChatAdministrators(chat);
         owner = admins.filter((a) => a.status === "creator")[0] as any;
         if (!owner) {
-          continue;
+          break;
         }
 
         try {
