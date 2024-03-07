@@ -18,13 +18,13 @@ export function getStatsRatingPlusToday(
   let totalChatMessages = 0;
 
   const merged = stats.reduce(
-    (obj: { [user_id: string]: IDbChatUserStats }, item) => (
-      (obj[item.user_id] = item), obj
-    ),
+    (obj: { [user_id: string]: IDbChatUserStats }, item) => ((obj[item.user_id] = item), obj),
     {}
   );
 
-  for (const user_id of Object.keys(todayStats.data[chat_id] || {})) {
+  let user_id: string;
+
+  for (user_id of Object.keys(todayStats.data[chat_id] || {})) {
     if (merged[user_id]) {
       merged[user_id].count += todayStats.data[chat_id]?.[user_id] || 0;
     } else {
@@ -43,7 +43,7 @@ export function getStatsRatingPlusToday(
   let statsRowsCount = 1;
 
   for (let i = 0; i < usersId_sorted.length + 1; i++) {
-    const user_id = usersId_sorted[i];
+    user_id = usersId_sorted[i];
     if (active.data[chat_id]?.[user_id] && statsRowsCount < statsRowLimit + 1) {
       reply += `${statsRowsCount}. ${getUserNameLink.html(
         active.data[chat_id]?.[user_id]?.name || "Невідомо",
@@ -55,9 +55,7 @@ export function getStatsRatingPlusToday(
 
     totalChatMessages += merged[user_id]?.count || 0;
   }
-  reply += `\nЗагальна кількість повідомлень: ${totalChatMessages.toLocaleString(
-    "fr-FR"
-  )}`;
+  reply += `\nЗагальна кількість повідомлень: ${totalChatMessages.toLocaleString("fr-FR")}`;
 
   return reply;
 }
@@ -78,9 +76,10 @@ export function getStatsRatingToday(
   });
 
   let reply = "";
+  let user_id: string;
 
   for (let i = 0; i < Math.min(50, usersId_sorted.length); i++) {
-    const user_id = usersId_sorted[i];
+    user_id = usersId_sorted[i];
     reply += `${i + 1}. ${getUserNameLink.html(
       active.data[chat_id]?.[user_id]?.nickname ||
         active.data[chat_id]?.[user_id]?.name ||
