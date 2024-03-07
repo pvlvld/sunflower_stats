@@ -27,14 +27,11 @@ import getChatInvite_cmd from "./getChatInvite";
 import getUserId from "../utils/getUserId";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import { removeAnonimousActive } from "./staff/utils_cmd";
+import broadcast_owners_cmd from "./staff/broadcast_owners";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
-function regCommands(
-  dbStats: DbStats,
-  active: YAMLWrapper<IActive>,
-  todayStats: TodayStats
-) {
+function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>, todayStats: TodayStats) {
   bot.command("help", async (ctx) => {
     botStatsManager.commandUse("help");
     help_cmd(ctx);
@@ -45,12 +42,10 @@ function regCommands(
     start_cmd(ctx);
   });
 
-  bot
-    .chatType(["group", "supergroup"])
-    .hears(/^(статистика|стата) вчора$/i, async (ctx) => {
-      botStatsManager.commandUse("стата вчора");
-      stats_yestarday(ctx, dbStats, active);
-    });
+  bot.chatType(["group", "supergroup"]).hears(/^(статистика|стата) вчора$/i, async (ctx) => {
+    botStatsManager.commandUse("стата вчора");
+    stats_yestarday(ctx, dbStats, active);
+  });
 
   bot
     .chatType(["group", "supergroup"])
@@ -59,33 +54,25 @@ function regCommands(
       stats_today(ctx, todayStats, active);
     });
 
-  bot
-    .chatType(["group", "supergroup"])
-    .hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
-      botStatsManager.commandUse("стата тиждень");
-      stats_week(ctx, dbStats, todayStats, active);
-    });
+  bot.chatType(["group", "supergroup"]).hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
+    botStatsManager.commandUse("стата тиждень");
+    stats_week(ctx, dbStats, todayStats, active);
+  });
 
-  bot
-    .chatType(["group", "supergroup"])
-    .hears(/^(статистика|стата) місяць$/i, async (ctx) => {
-      botStatsManager.commandUse("стата місяць");
-      stats_month(ctx, dbStats, todayStats, active);
-    });
+  bot.chatType(["group", "supergroup"]).hears(/^(статистика|стата) місяць$/i, async (ctx) => {
+    botStatsManager.commandUse("стата місяць");
+    stats_month(ctx, dbStats, todayStats, active);
+  });
 
-  bot
-    .chatType(["group", "supergroup"])
-    .hears(/^(статистика|стата) рік$/i, async (ctx) => {
-      botStatsManager.commandUse("стата рік");
-      stats_year(ctx, dbStats, todayStats, active);
-    });
+  bot.chatType(["group", "supergroup"]).hears(/^(статистика|стата) рік$/i, async (ctx) => {
+    botStatsManager.commandUse("стата рік");
+    stats_year(ctx, dbStats, todayStats, active);
+  });
 
-  bot
-    .chatType(["group", "supergroup"])
-    .hears(/^(статистика|стата) вся$/i, async (ctx) => {
-      botStatsManager.commandUse("стата вся");
-      stats_all(ctx, dbStats, todayStats, active);
-    });
+  bot.chatType(["group", "supergroup"]).hears(/^(статистика|стата) вся$/i, async (ctx) => {
+    botStatsManager.commandUse("стата вся");
+    stats_all(ctx, dbStats, todayStats, active);
+  });
 
   bot.chatType(["group", "supergroup"]).hears(/^(!я|!йа)$/i, async (ctx) => {
     botStatsManager.commandUse("я");
@@ -97,26 +84,20 @@ function regCommands(
     stats_their(ctx, dbStats, todayStats, active);
   });
 
-  bot
-    .chatType(["group", "supergroup"])
-    .hears(/^(\+нік|\+нікнейм)/i, async (ctx) => {
-      botStatsManager.commandUse("нік");
-      set_nickname(ctx, active);
-    });
+  bot.chatType(["group", "supergroup"]).hears(/^(\+нік|\+нікнейм)/i, async (ctx) => {
+    botStatsManager.commandUse("нік");
+    set_nickname(ctx, active);
+  });
 
-  bot
-    .chatType(["group", "supergroup"])
-    .hears(/^(-нік|-нікнейм)/i, async (ctx) => {
-      botStatsManager.commandUse("нік");
-      del_nickname(ctx, active);
-    });
+  bot.chatType(["group", "supergroup"]).hears(/^(-нік|-нікнейм)/i, async (ctx) => {
+    botStatsManager.commandUse("нік");
+    del_nickname(ctx, active);
+  });
 
-  bot
-    .chatType(["group", "supergroup"])
-    .hears(/^(!інактив|!неактив)/i, async (ctx) => {
-      botStatsManager.commandUse("інактив");
-      chatInactive_cmd(ctx, active);
-    });
+  bot.chatType(["group", "supergroup"]).hears(/^(!інактив|!неактив)/i, async (ctx) => {
+    botStatsManager.commandUse("інактив");
+    chatInactive_cmd(ctx, active);
+  });
 
   bot.chatType(["group", "supergroup"]).hears(/^!ссприховати/i, async (ctx) => {
     botStatsManager.commandUse("ссприховати");
@@ -132,8 +113,7 @@ function regCommands(
   });
 
   bot.hears("migrate data", (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1))
-      migrateData(ctx, todayStats, active);
+    if (ADMINS.includes(ctx.from?.id || -1)) migrateData(ctx, todayStats, active);
   });
 
   bot.hears("reset stats", (ctx) => {
@@ -195,6 +175,10 @@ function regCommands(
     if (ADMINS.includes(ctx.from?.id || -1)) {
       removeAnonimousActive(ctx, active);
     }
+  });
+
+  bot.chatType(["supergroup", "group"]).hears("!broadcast_owners", (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) broadcast_owners_cmd(ctx, active);
   });
 }
 export default regCommands;
