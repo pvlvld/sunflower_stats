@@ -43,7 +43,7 @@ async function broadcast_owners_cmd(
     }
   }
 
-  ctx.reply("Розсилку власникам закінчено.");
+  ctx.reply(`Розсилку власникам закінчено.\nУспішно надіслано ${counter} повідомлень.`);
 }
 
 export default broadcast_owners_cmd;
