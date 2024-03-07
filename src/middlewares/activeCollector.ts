@@ -22,7 +22,10 @@ function ActiveCollectorWrapper(active: YAMLWrapper<IActive>, formattedDate: For
         //@ts-expect-error
         active.data[ctx.chat.id][ctx.from.id] = {
           active_last: formattedDate.today,
-          active_first: formattedDate.today,
+          active_first: formattedDate.today
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/[̩͟͞]/g, ""),
           name: ctx.from.first_name,
           username: ctx.from.username,
         };
