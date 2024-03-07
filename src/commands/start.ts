@@ -1,5 +1,5 @@
-import { MyContext } from "../types/context";
 import start_menu from "../ui/menus/start";
+import type { MyContext } from "../types/context";
 
 async function start_cmd(ctx: MyContext) {
   await ctx.reply(

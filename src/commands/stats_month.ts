@@ -1,10 +1,10 @@
-import type { MyContext } from "../types/context";
-import { type ChatTypeContext, type HearsContext } from "grammy";
-import DbStats from "../db/stats";
-import TodayStats from "../data/stats";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
-import YAMLWrapper from "../data/YAMLWrapper";
-import IActive from "../data/active";
+import type DbStats from "../db/stats";
+import type IActive from "../data/active";
+import type TodayStats from "../data/stats";
+import type { MyContext } from "../types/context";
+import type YAMLWrapper from "../data/YAMLWrapper";
+import type { ChatTypeContext, HearsContext } from "grammy";
 
 async function stats_month(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,

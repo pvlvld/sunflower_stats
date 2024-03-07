@@ -1,17 +1,13 @@
 import fs from "fs";
-import YAMLWrapper from "../data/YAMLWrapper";
-import { IActive } from "../data/active";
-import { MyContext } from "../types/context";
-import formattedDate from "../utils/date";
 import * as YAML from "js-yaml";
-import { IStats } from "../types/stats";
-import TodayStats from "../data/stats";
+import formattedDate from "../utils/date";
+import YAMLWrapper from "../data/YAMLWrapper";
+import type TodayStats from "../data/stats";
+import type { IStats } from "../types/stats";
+import type { IActive } from "../data/active";
+import type { MyContext } from "../types/context";
 
-function migrateData(
-  ctx: MyContext,
-  todayStats: TodayStats,
-  active: YAMLWrapper<IActive>
-) {
+function migrateData(ctx: MyContext, todayStats: TodayStats, active: YAMLWrapper<IActive>) {
   mergeActive(ctx, active);
   clearActive(ctx, todayStats);
 }
@@ -55,8 +51,7 @@ function mergeActive(ctx: MyContext, active: YAMLWrapper<IActive>) {
       if (chat == user) continue;
       if (!old_active.data[chat]?.[user]?.name) continue;
       const active_last =
-        (old_active.data[chat]?.[user]?.date as string | undefined) ||
-        formattedDate.today;
+        (old_active.data[chat]?.[user]?.date as string | undefined) || formattedDate.today;
       if (active_last.startsWith("2023")) continue;
 
       mergedActive[chat] ??= {};

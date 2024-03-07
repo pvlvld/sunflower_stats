@@ -1,11 +1,11 @@
-import type { MyContext } from "../types/context";
-import type { ChatTypeContext, HearsContext } from "grammy";
-import DbStats from "../db/stats";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
-import TodayStats from "../data/stats";
-import IActive from "../data/active";
-import YAMLWrapper from "../data/YAMLWrapper";
+import type DbStats from "../db/stats";
+import type IActive from "../data/active";
+import type TodayStats from "../data/stats";
+import type { MyContext } from "../types/context";
+import type YAMLWrapper from "../data/YAMLWrapper";
+import type { ChatTypeContext, HearsContext } from "grammy";
 
 async function stats_all(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
@@ -33,11 +33,7 @@ async function stats_all(
 
   if (ctx.chat.id === -1001898242958) {
     const now = Date.now();
-    ctx.reply(
-      `DB: ${queryTime - start}ms\nGen: ${now - queryTime}ms\nTotal: ${
-        now - start
-      }ms`
-    );
+    ctx.reply(`DB: ${queryTime - start}ms\nGen: ${now - queryTime}ms\nTotal: ${now - start}ms`);
   }
 }
 

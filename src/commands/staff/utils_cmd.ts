@@ -1,11 +1,8 @@
-import YAMLWrapper from "../../data/YAMLWrapper";
-import IActive from "../../data/active";
-import { MyContext } from "../../types/context";
+import type YAMLWrapper from "../../data/YAMLWrapper";
+import type IActive from "../../data/active";
+import type { MyContext } from "../../types/context";
 
-export function removeAnonimousActive(
-  ctx: MyContext,
-  active: YAMLWrapper<IActive>
-) {
+export function removeAnonimousActive(ctx: MyContext, active: YAMLWrapper<IActive>) {
   let hidedCount = 0;
   for (const chat_id in active.data) {
     for (const user_id in active.data[chat_id]) {

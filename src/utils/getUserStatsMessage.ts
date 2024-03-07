@@ -1,8 +1,8 @@
-import TodayStats from "../data/stats";
-import YAMLWrapper from "../data/YAMLWrapper";
-import { IActive } from "../data/active";
-import { IDbChatUserStatsPeriods } from "../types/stats";
 import Escape from "./escape";
+import type TodayStats from "../data/stats";
+import type { IActive } from "../data/active";
+import type YAMLWrapper from "../data/YAMLWrapper";
+import type { IDbChatUserStatsPeriods } from "../types/stats";
 
 function getUserStatsMessage(
   chat_id: number,
@@ -30,9 +30,7 @@ function getUserStatsMessage(
 - за рік: ${dbStats.year + stats_today}
 - за весь час: ${dbStats.total + stats_today}
 
-📅 Перша поява в чаті: ${
-    active.data[chat_id]?.[user_id]?.active_first || "невідомо"
-  }`);
+📅 Перша поява в чаті: ${active.data[chat_id]?.[user_id]?.active_first || "невідомо"}`);
 }
 
 export default getUserStatsMessage;

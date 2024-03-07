@@ -1,7 +1,7 @@
+import type IActive from "../data/active";
 import type { MyContext } from "../types/context";
-import { type ChatTypeContext, type HearsContext } from "grammy";
-import YAMLWrapper from "../data/YAMLWrapper";
-import IActive from "../data/active";
+import type YAMLWrapper from "../data/YAMLWrapper";
+import type { ChatTypeContext, HearsContext } from "grammy";
 
 async function del_nickname(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,

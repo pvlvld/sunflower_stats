@@ -1,8 +1,8 @@
+import type YAMLWrapper from "../data/YAMLWrapper";
+import type { IActive } from "../data/active";
+import type TodayStats from "../data/stats";
+import type DbStats from "../db/stats";
 import bot from "../bot";
-import YAMLWrapper from "../data/YAMLWrapper";
-import { IActive } from "../data/active";
-import TodayStats from "../data/stats";
-import DbStats from "../db/stats";
 import botTest_cmd from "./botTets";
 import chatInactive_cmd from "./chat_inactive";
 import help_cmd from "./help";

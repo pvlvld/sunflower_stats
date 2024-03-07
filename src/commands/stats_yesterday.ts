@@ -1,10 +1,10 @@
-import { ChatTypeContext } from "grammy";
-import DbStats from "../db/stats";
-import { MyContext } from "../types/context";
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import getUserNameLink from "../utils/getUserNameLink";
-import YAMLWrapper from "../data/YAMLWrapper";
-import IActive from "../data/active";
+import type DbStats from "../db/stats";
+import type IActive from "../data/active";
+import type { ChatTypeContext } from "grammy";
+import type { MyContext } from "../types/context";
+import type YAMLWrapper from "../data/YAMLWrapper";
 
 async function stats_yestarday(
   ctx: ChatTypeContext<MyContext, "supergroup" | "group">,

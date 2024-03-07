@@ -1,4 +1,4 @@
-import { MyContext } from "../types/context";
+import type { MyContext } from "../types/context";
 
 async function botTest_cmd(ctx: MyContext) {
   await ctx.reply("Тут ✅");

@@ -1,11 +1,11 @@
-import * as cron from "node-cron";
-import YAMLWrapper from "../data/YAMLWrapper";
-import { IActive } from "../data/active";
-import TodayStats from "../data/stats";
 import path from "path";
+import * as cron from "node-cron";
 import formattedDate from "./date";
-import { botStatsManager } from "../commands/botStats";
 import collectGarbage from "./collectGarbage";
+import { botStatsManager } from "../commands/botStats";
+import type TodayStats from "../data/stats";
+import type { IActive } from "../data/active";
+import type YAMLWrapper from "../data/YAMLWrapper";
 
 function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
   return cron.schedule(
@@ -26,10 +26,7 @@ function createScheduler(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
   );
 }
 
-export async function startNewDay(
-  active: YAMLWrapper<IActive>,
-  todayStats: TodayStats
-) {
+export async function startNewDay(active: YAMLWrapper<IActive>, todayStats: TodayStats) {
   active.save(path.join("data/active", `active-${formattedDate.today}.yaml`));
   await botStatsManager.sendToMainChat();
   botStatsManager.resetAll();

@@ -1,9 +1,9 @@
-import YAMLWrapper from "../data/YAMLWrapper";
-import IActive from "../data/active";
-import { type MyContext } from "../types/context";
-import getUserNameLink from "../utils/getUserNameLink";
 import parseCmdArgs from "../utils/parseCmdArgs";
-import { type ChatTypeContext, type HearsContext } from "grammy";
+import getUserNameLink from "../utils/getUserNameLink";
+import type IActive from "../data/active";
+import type { MyContext } from "../types/context";
+import type YAMLWrapper from "../data/YAMLWrapper";
+import type { ChatTypeContext, HearsContext } from "grammy";
 
 const PAGE_LENGTH = 25;
 
@@ -24,45 +24,27 @@ async function chatInactive_cmd(
   });
 }
 
-function getInactivePageMessage(
-  chat_id: number,
-  page: number,
-  active: YAMLWrapper<IActive>
-) {
+function getInactivePageMessage(chat_id: number, page: number, active: YAMLWrapper<IActive>) {
   const inactiveUsers = getInactivePage(chat_id, page, active);
   if (inactiveUsers.length === 0) return "Ця сторінка порожня.";
 
   return inactiveUsers
     .map(
       (user, i) =>
-        `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(
-          chat_id,
-          user,
-          active
-        )}`
+        `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(chat_id, user, active)}`
     )
     .join("\n");
 }
 
-function genUserPageRecord(
-  chat_id: number,
-  user: string,
-  active: YAMLWrapper<IActive>
-) {
+function genUserPageRecord(chat_id: number, user: string, active: YAMLWrapper<IActive>) {
   return `<b>${getUserNameLink.html(
-    active.data[chat_id]?.[user]?.nickname ||
-      active.data[chat_id]?.[user]?.name ||
-      "невідомо",
+    active.data[chat_id]?.[user]?.nickname || active.data[chat_id]?.[user]?.name || "невідомо",
     active.data[chat_id]?.[user]?.username,
     user
   )}</b> — ${active.data[chat_id]?.[user]?.active_last || "невідомо"}`;
 }
 
-function getInactivePage(
-  chat_id: number,
-  page: number,
-  active: YAMLWrapper<IActive>
-) {
+function getInactivePage(chat_id: number, page: number, active: YAMLWrapper<IActive>) {
   return getSortedInactive(chat_id, active).slice(
     PAGE_LENGTH * (page - 1),
     PAGE_LENGTH * (page - 1) + PAGE_LENGTH

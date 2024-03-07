@@ -1,5 +1,5 @@
-import { MyContext } from "../types/context";
 import help_menu from "../ui/menus/help";
+import type { MyContext } from "../types/context";
 
 async function help_cmd(ctx: MyContext) {
   await ctx.reply(

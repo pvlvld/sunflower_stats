@@ -1,6 +1,6 @@
-import { HearsContext } from "grammy";
-import type { MyContext } from "../types/context";
 import parseCmdArgs from "../utils/parseCmdArgs";
+import type { HearsContext } from "grammy";
+import type { MyContext } from "../types/context";
 
 export async function leaveChat_cmd(ctx: HearsContext<MyContext>) {
   const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);

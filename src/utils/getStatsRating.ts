@@ -1,8 +1,8 @@
-import YAMLWrapper from "../data/YAMLWrapper";
-import IActive from "../data/active";
-import TodayStats from "../data/stats";
-import { IDbChatUserStats } from "../types/stats";
 import getUserNameLink from "./getUserNameLink";
+import type IActive from "../data/active";
+import type TodayStats from "../data/stats";
+import type YAMLWrapper from "../data/YAMLWrapper";
+import type { IDbChatUserStats } from "../types/stats";
 
 export function getStatsRatingPlusToday(
   stats: IDbChatUserStats[],

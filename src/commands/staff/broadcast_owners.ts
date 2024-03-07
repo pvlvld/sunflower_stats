@@ -1,9 +1,9 @@
 import moment from "moment";
-import IActive from "../../data/active";
-import YAMLWrapper from "../../data/YAMLWrapper";
 import { autoRetry } from "@grammyjs/auto-retry";
 import type { HearsContext } from "grammy";
+import type IActive from "../../data/active";
 import type { MyContext } from "../../types/context";
+import type YAMLWrapper from "../../data/YAMLWrapper";
 import type { ChatMemberOwner } from "@grammyjs/types";
 
 async function broadcast_owners_cmd(

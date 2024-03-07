@@ -1,6 +1,6 @@
-import { type Context, type NextFunction } from "grammy";
-import TodayStats from "../data/stats";
 import { botStatsManager } from "../commands/botStats";
+import type TodayStats from "../data/stats";
+import { type Context, type NextFunction } from "grammy";
 
 export function StatsCollectorWrapper(todayStats: TodayStats) {
   return async function statsCollector(ctx: Context, next: NextFunction) {

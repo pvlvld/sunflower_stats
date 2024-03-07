@@ -1,9 +1,9 @@
-import type { MyContext } from "../types/context";
-import type { ChatTypeContext } from "grammy";
-import TodayStats from "../data/stats";
-import IActive from "../data/active";
-import YAMLWrapper from "../data/YAMLWrapper";
 import { getStatsRatingToday } from "../utils/getStatsRating";
+import type IActive from "../data/active";
+import type TodayStats from "../data/stats";
+import type { ChatTypeContext } from "grammy";
+import type { MyContext } from "../types/context";
+import type YAMLWrapper from "../data/YAMLWrapper";
 
 async function stats_today(
   ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
@@ -14,8 +14,7 @@ async function stats_today(
   if (!stats || stats === undefined) return;
 
   await ctx.reply(
-    "📊 Статистика чату за сьогодні:\n\n" +
-      getStatsRatingToday(ctx.chat.id, todayStats, active),
+    "📊 Статистика чату за сьогодні:\n\n" + getStatsRatingToday(ctx.chat.id, todayStats, active),
     {
       disable_notification: true,
       link_preview_options: { is_disabled: true },

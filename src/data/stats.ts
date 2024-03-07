@@ -1,8 +1,8 @@
-import { IStats } from "../types/stats";
-import YAMLWrapper from "./YAMLWrapper";
-import formattedDate from "../utils/date";
 import { Pool } from "pg";
 import pgp from "pg-promise";
+import YAMLWrapper from "./YAMLWrapper";
+import formattedDate from "../utils/date";
+import type { IStats } from "../types/stats";
 
 const myPgp = pgp({ capSQL: true });
 
@@ -27,12 +27,9 @@ export class TodayStats extends YAMLWrapper<IStats> {
     const date = formattedDate.yesterday;
     const insertValues = [];
 
-    const cs = new myPgp.helpers.ColumnSet(
-      ["chat_id", "user_id", "count", "date"],
-      {
-        table: "stats_day_statistics",
-      }
-    );
+    const cs = new myPgp.helpers.ColumnSet(["chat_id", "user_id", "count", "date"], {
+      table: "stats_day_statistics",
+    });
 
     for (const chatId in this.data) {
       for (const userId in this.data[chatId]) {

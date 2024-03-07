@@ -1,12 +1,9 @@
-import { type Context, type NextFunction } from "grammy";
-import YAMLWrapper from "../data/YAMLWrapper";
-import { IActive } from "../data/active";
 import { FormattedDate } from "../utils/date";
+import type { IActive } from "../data/active";
+import type YAMLWrapper from "../data/YAMLWrapper";
+import { type Context, type NextFunction } from "grammy";
 
-function ActiveCollectorWrapper(
-  active: YAMLWrapper<IActive>,
-  formattedDate: FormattedDate
-) {
+function ActiveCollectorWrapper(active: YAMLWrapper<IActive>, formattedDate: FormattedDate) {
   return async function activeCollector(ctx: Context, next: NextFunction) {
     if (
       !ctx.from ||

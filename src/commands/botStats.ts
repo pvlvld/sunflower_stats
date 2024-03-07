@@ -1,6 +1,6 @@
-import moment from "moment";
-import { MyContext } from "../types/context";
 import bot from "../bot";
+import moment from "moment";
+import type { MyContext } from "../types/context";
 
 type IBotStats = {
   commands: { [key: string]: number };
@@ -62,9 +62,7 @@ export const botStatsManager = {
     BOT_STATS.newGroups = 0;
   },
   sendToMainChat: async () => {
-    return await bot.api
-      .sendMessage("-1001898242958", getStatsMsg())
-      .catch(() => {});
+    return await bot.api.sendMessage("-1001898242958", getStatsMsg()).catch(() => {});
   },
 };
 

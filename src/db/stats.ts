@@ -1,9 +1,8 @@
-import { FormattedDate, IFormattedRangeDateGetters } from "../utils/date";
-import { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
 import { Pool } from "pg";
-type IDateRanges =
-  | keyof IFormattedRangeDateGetters
-  | [from: string, to: string];
+import { FormattedDate, type IFormattedRangeDateGetters } from "../utils/date";
+import type { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
+
+type IDateRanges = keyof IFormattedRangeDateGetters | [from: string, to: string];
 
 class DbStats {
   public chat;
@@ -26,10 +25,7 @@ class DbUserStats {
     this.dateRange = dateRange;
   }
 
-  async all(
-    chat_id: number,
-    user_id: number
-  ): Promise<IDbChatUserStatsPeriods> {
+  async all(chat_id: number, user_id: number): Promise<IDbChatUserStatsPeriods> {
     const query = `
     SELECT
     SUM(count)::INTEGER AS total,
@@ -41,8 +37,7 @@ class DbUserStats {
     `;
 
     try {
-      return (await this.dbPool.query(query))
-        .rows[0] as IDbChatUserStatsPeriods;
+      return (await this.dbPool.query(query)).rows[0] as IDbChatUserStatsPeriods;
     } catch (error) {
       console.error(error);
       return {} as IDbChatUserStatsPeriods;

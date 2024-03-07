@@ -1,8 +1,8 @@
-import { Filter } from "grammy";
-import { MyContext } from "../types/context";
-import TodayStats from "../data/stats";
-import YAMLWrapper from "../data/YAMLWrapper";
-import IActive from "../data/active";
+import type { Filter } from "grammy";
+import type IActive from "../data/active";
+import type TodayStats from "../data/stats";
+import type { MyContext } from "../types/context";
+import type YAMLWrapper from "../data/YAMLWrapper";
 
 const left_statuses = ["kicked", "left"];
 
@@ -13,9 +13,7 @@ function leaveChatMemberHandler(
 ) {
   if (left_statuses.includes(ctx.chatMember.new_chat_member.status)) {
     delete active.data[ctx.chat.id]?.[ctx.chatMember.new_chat_member.user.id];
-    delete todayStats.data[ctx.chat.id]?.[
-      ctx.chatMember.new_chat_member.user.id
-    ];
+    delete todayStats.data[ctx.chat.id]?.[ctx.chatMember.new_chat_member.user.id];
   }
 }
 

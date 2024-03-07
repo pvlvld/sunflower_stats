@@ -1,11 +1,11 @@
+import help_menu from "./ui/menus/help";
+import start_menu from "./ui/menus/start";
 import { Bot, matchFilter } from "grammy";
 import { autoRetry } from "@grammyjs/auto-retry";
-import { MyContext } from "./types/context";
-import { ignoreOldMessages } from "./middlewares/ignoreOldMessages";
 import { autoThread } from "./middlewares/autoThreads";
-import start_menu from "./ui/menus/start";
-import help_menu from "./ui/menus/help";
 import { hydrateReply, parseMode } from "@grammyjs/parse-mode";
+import { ignoreOldMessages } from "./middlewares/ignoreOldMessages";
+import type { MyContext } from "./types/context";
 import type { ParseModeFlavor } from "@grammyjs/parse-mode";
 
 if (!process.env.BOT_TOKEN) throw new Error("Token required");
@@ -31,14 +31,7 @@ const autoRetryTransformer = autoRetry({
 // API TRANSFORMERS
 
 bot.api.config.use(async function autoRetry(prev, method, payload, signal) {
-  if (
-    [
-      "getChat",
-      "getChatMemberCount",
-      "deleteMessage",
-      "answerCallbackQuery",
-    ].includes(method)
-  ) {
+  if (["getChat", "getChatMemberCount", "deleteMessage", "answerCallbackQuery"].includes(method)) {
     return autoRetryTransformer(prev, method, payload, signal);
   }
 

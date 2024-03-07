@@ -1,8 +1,9 @@
 import fs from "fs";
-import { isNodeError } from "../types/typeGuards";
 import path from "path";
 import bot from "../bot";
 import * as YAML from "js-yaml";
+import { isNodeError } from "../types/typeGuards";
+
 class YAMLWrapper<T> {
   readonly filename: () => string;
   readonly filepath: () => string;
@@ -14,9 +15,7 @@ class YAMLWrapper<T> {
       throw new Error("Filename must be without path and file extension.");
     }
     if (dirrectory.includes(".")) {
-      throw new Error(
-        "Dirrectory must contain only path to the file dirrectory."
-      );
+      throw new Error("Dirrectory must contain only path to the file dirrectory.");
     }
     this.filename = filename;
     this.dirrectory = dirrectory;
@@ -42,30 +41,19 @@ class YAMLWrapper<T> {
 
   save(custom_filepath?: string) {
     try {
-      fs.writeFileSync(
-        custom_filepath || this.filepath(),
-        YAML.dump(this.data)
-      );
+      fs.writeFileSync(custom_filepath || this.filepath(), YAML.dump(this.data));
     } catch (e: any) {
       if (isNodeError(e) && e.code === "ENOENT") {
-        console.info(
-          `${custom_filepath || this.filepath()} not found. Creating new one.`
-        );
+        console.info(`${custom_filepath || this.filepath()} not found. Creating new one.`);
 
         fs.mkdirSync(this.dirrectory, { recursive: true });
-        fs.writeFileSync(
-          custom_filepath || this.filepath(),
-          YAML.dump(this.data)
-        );
+        fs.writeFileSync(custom_filepath || this.filepath(), YAML.dump(this.data));
       } else {
         throw new Error(e);
       }
     }
     console.log(`${custom_filepath || this.filename()} saved.`);
-    bot.api.sendMessage(
-      "-1001898242958",
-      `${custom_filepath || this.filename()} saved.`
-    );
+    bot.api.sendMessage("-1001898242958", `${custom_filepath || this.filename()} saved.`);
   }
 
   clear() {
