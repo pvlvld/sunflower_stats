@@ -112,9 +112,9 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>, todayStats:
     if (ADMINS.includes(ctx.from?.id || -1)) bot_stats_cmd(ctx);
   });
 
-  bot.hears("migrate data", (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) migrateData(ctx, todayStats, active);
-  });
+  // bot.hears("migrate data", (ctx) => {
+  //   if (ADMINS.includes(ctx.from?.id || -1)) migrateData(ctx, todayStats, active);
+  // });
 
   bot.hears("!ssreset stats", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetAll();
