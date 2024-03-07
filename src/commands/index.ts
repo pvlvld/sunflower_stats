@@ -108,7 +108,7 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>, todayStats:
 
   bot.hears(/^бот\?$/i, async (ctx) => botTest_cmd(ctx));
 
-  bot.chatType(["group", "supergroup"]).hears("bot stats", async (ctx) => {
+  bot.chatType(["group", "supergroup"]).hears("!ssstats", async (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) bot_stats_cmd(ctx);
   });
 
@@ -116,21 +116,21 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>, todayStats:
     if (ADMINS.includes(ctx.from?.id || -1)) migrateData(ctx, todayStats, active);
   });
 
-  bot.hears("reset stats", (ctx) => {
+  bot.hears("!ssreset stats", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetAll();
   });
 
-  bot.hears("reset msg", (ctx) => {
+  bot.hears("!ssreset msg", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetMessages();
   });
 
-  bot.hears("gc", (ctx) => {
+  bot.hears("!ssgc", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) {
       collectGarbage();
     }
   });
 
-  bot.hears("shrink", (ctx) => {
+  bot.hears("!ssshrink", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) {
       if (typeof Bun !== "undefined") {
         Bun.shrink();
@@ -177,7 +177,7 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>, todayStats:
     }
   });
 
-  bot.chatType(["supergroup", "group"]).hears("!broadcast_owners", (ctx) => {
+  bot.chatType(["supergroup", "group"]).hears("!ssbroadcast_owners", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) broadcast_owners_cmd(ctx, active);
   });
 }
