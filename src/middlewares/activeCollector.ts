@@ -37,8 +37,10 @@ function ActiveCollectorWrapper(active: YAMLWrapper<IActive>, formattedDate: For
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
           .replace(/[̩͟͞]/g, "");
-        //@ts-expect-error
-        active.data[ctx.chat.id][ctx.from.id].username = ctx.from.username;
+        //@ts-expect-error // gc experiment
+        active.data[ctx.chat.id][ctx.from.id].username = ctx.from.username
+          ? ctx.from.username + ""
+          : undefined;
       }
     }
 
