@@ -24,9 +24,9 @@
     "@grammyjs/menu": "^1.2.1",
     "@grammyjs/parse-mode": "^1.9.0",
     "@grammyjs/ratelimiter": "^1.2.0",
-    "@roziscoding/grammy-autoquote": "^1.1.2",
+    "@roziscoding/grammy-autoquote": "^2.0.4",
     "dotenv": "^16.4.5",
-    "fastify": "^4.26.1",
+    "fastify": "^4.26.2",
     "grammy": "^1.21.1",
     "js-yaml": "^4.1.0",
     "lru-cache": "^10.2.0",
@@ -40,17 +40,17 @@
   "devDependencies": {
     "@grammyjs/types": "^3.5.2",
     "@types/big.js": "^6.2.2",
-    "@types/bun": "^1.0.6",
+    "@types/bun": "^1.0.8",
     "@types/dotenv": "^8.2.0",
     "@types/js-yaml": "^4.0.9",
-    "@types/node": "^20.11.19",
+    "@types/node": "^20.11.25",
     "@types/node-cron": "^3.0.11",
     "@types/pg": "^8.11.2",
-    "@typescript-eslint/eslint-plugin": "^7.0.2",
-    "@typescript-eslint/parser": "^7.0.2",
+    "@typescript-eslint/eslint-plugin": "^7.1.1",
+    "@typescript-eslint/parser": "^7.1.1",
     "eslint": "^8.57.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3",
-    "typescript-eslint": "^7.0.2"
+    "typescript": "^5.4.2",
+    "typescript-eslint": "^7.1.1"
   }
 }
