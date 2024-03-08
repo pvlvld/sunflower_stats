@@ -65,7 +65,7 @@ async function main() {
       limit: 1,
     })
   );
-  bot.use(autoQuote);
+  bot.use(autoQuote({ allowSendingWithoutReply: true }));
   bot.use(autoThread());
   regHandlers(active, todayStats);
   regCommands(dbStats, active, todayStats);
