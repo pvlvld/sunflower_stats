@@ -21,19 +21,20 @@ async function stats_all(
   }
 
   const queryTime = Date.now();
-
-  await ctx.reply(
+  const msg =
     "📊 Статистика чату за весь час:\n\n" +
-      getStatsRatingPlusToday(stats, ctx.chat.id, todayStats, active),
-    {
-      disable_notification: true,
-      link_preview_options: { is_disabled: true },
-    }
-  );
+    getStatsRatingPlusToday(stats, ctx.chat.id, todayStats, active);
+  const msgTime = Date.now();
+
+  await ctx.reply(msg, {
+    disable_notification: true,
+    link_preview_options: { is_disabled: true },
+  });
 
   if (ctx.chat.id === -1001898242958) {
-    const now = Date.now();
-    ctx.reply(`DB: ${queryTime - start}ms\nGen: ${now - queryTime}ms\nTotal: ${now - start}ms`);
+    ctx.reply(
+      `DB: ${queryTime - start}ms\nGen: ${msgTime - queryTime}ms\nTotal: ${msgTime - start}ms`
+    );
   }
 }
 
