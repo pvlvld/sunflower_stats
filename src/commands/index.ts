@@ -28,6 +28,7 @@ import getUserId from "../utils/getUserId";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import { removeAnonimousActive } from "./staff/utils_cmd";
 import broadcast_owners_cmd from "./staff/broadcast_owners";
+import bench_db_cmd from "./staff/bench_db";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
@@ -179,6 +180,10 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>, todayStats:
 
   bot.chatType(["supergroup", "group"]).hears("!ssbroadcast_owners", (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) broadcast_owners_cmd(ctx, active);
+  });
+
+  bot.chatType(["supergroup", "group"]).hears(/^!ssbdb/, (ctx) => {
+    if (ADMINS.includes(ctx.from?.id || -1)) bench_db_cmd(ctx, active);
   });
 }
 export default regCommands;
