@@ -14,7 +14,7 @@ export function getStatsRatingPlusToday(
     return getStatsRatingToday(chat_id, todayStats, active);
   }
 
-  let reply = "";
+  const replyParts: string[] = [];
   let totalChatMessages = 0;
 
   const merged = stats.reduce(
@@ -45,19 +45,21 @@ export function getStatsRatingPlusToday(
   for (let i = 0; i < usersId_sorted.length + 1; i++) {
     user_id = usersId_sorted[i];
     if (active.data[chat_id]?.[user_id] && statsRowsCount < statsRowLimit + 1) {
-      reply += `${statsRowsCount}. ${getUserNameLink.html(
-        active.data[chat_id]?.[user_id]?.name || "Невідомо",
-        active.data[chat_id]?.[user_id]?.username,
-        user_id
-      )} — ${merged[user_id].count}\n`;
+      replyParts.push(
+        `${statsRowsCount}. ${getUserNameLink.html(
+          active.data[chat_id]?.[user_id]?.name || "Невідомо",
+          active.data[chat_id]?.[user_id]?.username,
+          user_id
+        )} — ${merged[user_id].count}\n`
+      );
       statsRowsCount++;
     }
 
     totalChatMessages += merged[user_id]?.count || 0;
   }
-  reply += `\nЗагальна кількість повідомлень: ${totalChatMessages.toLocaleString("fr-FR")}`;
+  replyParts.push(`\nЗагальна кількість повідомлень: ${totalChatMessages.toLocaleString("fr-FR")}`);
 
-  return reply;
+  return replyParts.join("");
 }
 
 export function getStatsRatingToday(
