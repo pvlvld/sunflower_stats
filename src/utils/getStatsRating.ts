@@ -17,10 +17,10 @@ export function getStatsRatingPlusToday(
   const replyParts: string[] = [];
   let totalChatMessages = 0;
 
-  const merged = stats.reduce(
-    (obj: { [user_id: string]: IDbChatUserStats }, item) => ((obj[item.user_id] = item), obj),
-    {}
-  );
+  const merged: { [user_id: string]: IDbChatUserStats } = {};
+  for (const item of stats) {
+    merged[item.user_id] = item;
+  }
 
   let user_id: string;
 
