@@ -77,21 +77,25 @@ export function getStatsRatingToday(
     return stats[u1] < stats[u2] ? 1 : -1;
   });
 
-  let reply = "";
+  const replyParts: string[] = [];
   let user_id: string;
 
   for (let i = 0; i < Math.min(50, usersId_sorted.length); i++) {
     user_id = usersId_sorted[i];
-    reply += `${i + 1}. ${getUserNameLink.html(
-      active.data[chat_id]?.[user_id]?.nickname ||
-        active.data[chat_id]?.[user_id]?.name ||
-        "Невідомо",
-      active.data[chat_id]?.[user_id]?.username,
-      user_id
-    )} — ${stats[user_id] || 0}\n`;
+    replyParts.push(
+      `${i + 1}. ${getUserNameLink.html(
+        active.data[chat_id]?.[user_id]?.nickname ||
+          active.data[chat_id]?.[user_id]?.name ||
+          "Невідомо",
+        active.data[chat_id]?.[user_id]?.username,
+        user_id
+      )} — ${stats[user_id] || 0}\n`
+    );
 
     totlal_messages += stats[user_id] || 0;
   }
 
-  return (reply += `\nЗагальна кількість повідомлень: ${totlal_messages}`);
+  replyParts.push(`\nЗагальна кількість повідомлень: ${totlal_messages}`);
+
+  return replyParts.join("");
 }
