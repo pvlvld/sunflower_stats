@@ -33,7 +33,8 @@ class DbUserStats {
     SUM(count)::INTEGER AS total,
     SUM(CASE WHEN date BETWEEN '${this.dateRange.yearRange[0]}' AND '${this.dateRange.yearRange[1]}' THEN count ELSE 0 END)::INTEGER AS year,
     SUM(CASE WHEN date BETWEEN '${this.dateRange.monthRange[0]}' AND '${this.dateRange.monthRange[1]}' THEN count ELSE 0 END)::INTEGER AS month,
-    SUM(CASE WHEN date BETWEEN '${this.dateRange.weekRange[0]}' AND '${this.dateRange.weekRange[1]}' THEN count ELSE 0 END)::INTEGER AS week
+    SUM(CASE WHEN date BETWEEN '${this.dateRange.weekRange[0]}' AND '${this.dateRange.weekRange[1]}' THEN count ELSE 0 END)::INTEGER AS week,
+    SUM(CASE WHEN date = '${this.dateRange.today}' THEN count ELSE 0 END)::INTEGER AS today
     FROM stats_day_statistics
     WHERE chat_id = ${chat_id} AND user_id = ${user_id};
     `;
