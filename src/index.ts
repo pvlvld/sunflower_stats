@@ -52,7 +52,7 @@ async function main() {
     () => `stats${formattedDate.today}`, // statsYYYY-MM-DD.yaml
     "data/stats"
   );
-  const dbStats = new DbStats(DBPoolManager.getPool, DateRange);
+  const dbStats = new DbStats(DBPoolManager.getPoolRead, DBPoolManager.getPoolWrite, DateRange);
 
   active.load();
   todayStats.load();
