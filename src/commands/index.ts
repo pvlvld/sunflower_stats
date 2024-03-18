@@ -5,7 +5,6 @@ import bot from "../bot";
 import botTest_cmd from "./botTets";
 import chatInactive_cmd from "./chat_inactive";
 import help_cmd from "./help";
-// import migrateData from "./migrateData";
 import start_cmd from "./start";
 import stats_all from "./stats_all";
 import stats_month from "./stats_month";
