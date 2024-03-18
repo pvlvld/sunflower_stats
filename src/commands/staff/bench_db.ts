@@ -65,11 +65,9 @@ async function pg(chatUserIdPairs: ReturnType<typeof convertIActiveToArray>, opt
       const connection = await pool.connect();
       connection
         .query(
-          `INSERT INTO public.test_active (chat_id, user_id)
-    VALUES (${pair[0]}, ${pair[1]})
-    ON CONFLICT (chat_id, user_id, date)
-    DO UPDATE SET count = excluded.count + 1;
-    `
+          `INSERT INTO public.stats_day_statistics_test (chat_id, user_id)
+          VALUES (${pair[0]}, ${pair[1]})
+          ON CONFLICT (chat_id, user_id, date) DO UPDATE SET count = stats_day_statistics_test.count + 1;`
         )
         .then(() => {
           connection.release();
