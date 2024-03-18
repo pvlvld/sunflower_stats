@@ -22,6 +22,7 @@ export interface IDbChatUserStatsPeriods {
   year: number;
   month: string;
   week: string;
+  today: string;
 }
 
 export interface IDbChatUserStats {

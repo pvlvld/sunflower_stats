@@ -1,19 +1,13 @@
 import getUserNameLink from "./getUserNameLink";
 import type IActive from "../data/active";
-import type TodayStats from "../data/stats";
 import type YAMLWrapper from "../data/YAMLWrapper";
 import type { IDbChatUserStats } from "../types/stats";
 
 export function getStatsRatingPlusToday(
   stats: IDbChatUserStats[],
   chat_id: number,
-  todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
-  if (stats.length === 0) {
-    return getStatsRatingToday(chat_id, todayStats, active);
-  }
-
   const replyParts: string[] = [];
   let totalChatMessages = 0;
 
@@ -23,17 +17,6 @@ export function getStatsRatingPlusToday(
   }
 
   let user_id: string;
-
-  for (user_id of Object.keys(todayStats.data[chat_id] || {})) {
-    if (merged[user_id]) {
-      merged[user_id].count += todayStats.data[chat_id]?.[user_id] || 0;
-    } else {
-      merged[user_id] ??= {
-        user_id: +user_id,
-        count: todayStats.data[chat_id]?.[user_id] || 0,
-      } as IDbChatUserStats;
-    }
-  }
 
   const usersId_sorted = Object.keys(merged).sort((u1, u2) => {
     return merged[u1].count < merged[u2].count ? 1 : -1;

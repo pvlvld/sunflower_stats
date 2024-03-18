@@ -11,6 +11,7 @@ export class FormattedDate {
   get today(): string {
     return moment().format("YYYY-MM-DD");
   }
+
   get yesterday(): string {
     return moment().subtract(1, "days").format("YYYY-MM-DD");
   }

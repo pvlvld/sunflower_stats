@@ -48,17 +48,12 @@ async function main() {
   await DBPoolManager.createPool();
 
   const active = new YAMLWrapper<IActive>(() => "active", "data/active");
-  const todayStats = new TodayStats(
-    () => `stats${formattedDate.today}`, // statsYYYY-MM-DD.yaml
-    "data/stats"
-  );
   const dbStats = new DbStats(DBPoolManager.getPoolRead, DBPoolManager.getPoolWrite, DateRange);
 
   active.load();
-  todayStats.load();
 
   bot.use(ActiveCollectorWrapper(active, formattedDate));
-  bot.use(StatsCollectorWrapper(todayStats));
+  bot.use(StatsCollectorWrapper(dbStats));
   bot.use(
     limit({
       timeFrame: 5000,
@@ -67,8 +62,8 @@ async function main() {
   );
   bot.use(autoQuote({ allowSendingWithoutReply: true }));
   bot.use(autoThread());
-  regHandlers(active, todayStats);
-  regCommands(dbStats, active, todayStats);
+  regHandlers(active);
+  regCommands(dbStats, active);
 
   collectGarbage();
 

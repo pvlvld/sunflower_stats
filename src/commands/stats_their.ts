@@ -1,7 +1,6 @@
 import getUserId from "../utils/getUserId";
 import getUserStatsMessage from "../utils/getUserStatsMessage";
 import type DbStats from "../db/stats";
-import type TodayStats from "../data/stats";
 import type { IActive } from "../data/active";
 import type { MyContext } from "../types/context";
 import type YAMLWrapper from "../data/YAMLWrapper";
@@ -10,7 +9,6 @@ import type { ChatTypeContext, HearsContext } from "grammy";
 async function stats_their(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
   dbStats: DbStats,
-  todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
   const userId =
@@ -24,13 +22,7 @@ async function stats_their(
   }
 
   await ctx.reply(
-    getUserStatsMessage(
-      ctx.chat.id,
-      userId,
-      await dbStats.user.all(ctx.chat.id, userId),
-      todayStats,
-      active
-    ),
+    getUserStatsMessage(ctx.chat.id, userId, await dbStats.user.all(ctx.chat.id, userId), active),
     {
       disable_notification: true,
       link_preview_options: { is_disabled: true },

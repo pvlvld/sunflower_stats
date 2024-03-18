@@ -1,12 +1,11 @@
 import type YAMLWrapper from "../data/YAMLWrapper";
 import type { IActive } from "../data/active";
-import type TodayStats from "../data/stats";
 import type DbStats from "../db/stats";
 import bot from "../bot";
 import botTest_cmd from "./botTets";
 import chatInactive_cmd from "./chat_inactive";
 import help_cmd from "./help";
-import migrateData from "./migrateData";
+// import migrateData from "./migrateData";
 import start_cmd from "./start";
 import stats_all from "./stats_all";
 import stats_month from "./stats_month";
@@ -32,7 +31,7 @@ import bench_db_cmd from "./staff/bench_db";
 
 const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
 
-function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>, todayStats: TodayStats) {
+function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>) {
   bot.command("help", async (ctx) => {
     botStatsManager.commandUse("help");
     help_cmd(ctx);
@@ -52,37 +51,37 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>, todayStats:
     .chatType(["group", "supergroup"])
     .hears(/^(статистика|стата)\s*(сьогодні|день)?$/i, async (ctx) => {
       botStatsManager.commandUse("стата сьогодні");
-      stats_today(ctx, todayStats, active);
+      stats_today(ctx, dbStats, active);
     });
 
   bot.chatType(["group", "supergroup"]).hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
     botStatsManager.commandUse("стата тиждень");
-    stats_week(ctx, dbStats, todayStats, active);
+    stats_week(ctx, dbStats, active);
   });
 
   bot.chatType(["group", "supergroup"]).hears(/^(статистика|стата) місяць$/i, async (ctx) => {
     botStatsManager.commandUse("стата місяць");
-    stats_month(ctx, dbStats, todayStats, active);
+    stats_month(ctx, dbStats, active);
   });
 
   bot.chatType(["group", "supergroup"]).hears(/^(статистика|стата) рік$/i, async (ctx) => {
     botStatsManager.commandUse("стата рік");
-    stats_year(ctx, dbStats, todayStats, active);
+    stats_year(ctx, dbStats, active);
   });
 
   bot.chatType(["group", "supergroup"]).hears(/^(статистика|стата) вся$/i, async (ctx) => {
     botStatsManager.commandUse("стата вся");
-    stats_all(ctx, dbStats, todayStats, active);
+    stats_all(ctx, dbStats, active);
   });
 
   bot.chatType(["group", "supergroup"]).hears(/^(!я|!йа)$/i, async (ctx) => {
     botStatsManager.commandUse("я");
-    stats_my(ctx, dbStats, todayStats, active);
+    stats_my(ctx, dbStats, active);
   });
 
   bot.chatType(["group", "supergroup"]).hears(/^(!ти)/i, async (ctx) => {
     botStatsManager.commandUse("ти");
-    stats_their(ctx, dbStats, todayStats, active);
+    stats_their(ctx, dbStats, active);
   });
 
   bot.chatType(["group", "supergroup"]).hears(/^(\+нік|\+нікнейм)/i, async (ctx) => {
@@ -154,12 +153,6 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>, todayStats:
   bot.hears(/^!ssinvite/, (ctx) => {
     if (ADMINS.includes(ctx.from?.id || -1)) {
       getChatInvite_cmd(ctx);
-    }
-  });
-
-  bot.hears(/^!ssforceclearstats/, (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) {
-      todayStats.clear();
     }
   });
 

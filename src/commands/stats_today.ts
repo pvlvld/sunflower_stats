@@ -1,20 +1,20 @@
-import { getStatsRatingToday } from "../utils/getStatsRating";
+import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import type IActive from "../data/active";
-import type TodayStats from "../data/stats";
 import type { ChatTypeContext } from "grammy";
 import type { MyContext } from "../types/context";
 import type YAMLWrapper from "../data/YAMLWrapper";
+import DbStats from "../db/stats";
 
 async function stats_today(
   ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
-  todayStats: TodayStats,
+  dbStats: DbStats,
   active: YAMLWrapper<IActive>
 ) {
-  const stats = todayStats.data[ctx.chat.id];
+  const stats = await dbStats.chat.today(ctx.chat.id);
   if (!stats || stats === undefined) return;
 
   await ctx.reply(
-    "📊 Статистика чату за сьогодні:\n\n" + getStatsRatingToday(ctx.chat.id, todayStats, active),
+    "📊 Статистика чату за сьогодні:\n\n" + getStatsRatingPlusToday(stats, ctx.chat.id, active),
     {
       disable_notification: true,
       link_preview_options: { is_disabled: true },

@@ -68,6 +68,22 @@ class DbChatStats {
     this.dateRange = dateRange;
   }
 
+  async today(chat_id: number): Promise<IDbChatUserStats[]> {
+    try {
+      const query = `
+      SELECT user_id, SUM(count)::INTEGER  AS count
+      FROM stats_day_statistics
+      WHERE chat_id = ${chat_id} AND date = '${this.dateRange.today}'
+      GROUP BY user_id
+      ORDER BY count DESC;
+        `;
+      return (await this.dbPool.query(query)).rows as IDbChatUserStats[];
+    } catch (error) {
+      console.error(error);
+      return [] as IDbChatUserStats[];
+    }
+  }
+
   async yesterday(chat_id: number): Promise<IDbChatUserStats[]> {
     try {
       const query = `

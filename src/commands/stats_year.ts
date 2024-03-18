@@ -1,7 +1,6 @@
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import type DbStats from "../db/stats";
 import type IActive from "../data/active";
-import type TodayStats from "../data/stats";
 import type { MyContext } from "../types/context";
 import type YAMLWrapper from "../data/YAMLWrapper";
 import type { ChatTypeContext, HearsContext } from "grammy";
@@ -9,7 +8,6 @@ import type { ChatTypeContext, HearsContext } from "grammy";
 async function stats_year(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
   dbStats: DbStats,
-  todayStats: TodayStats,
   active: YAMLWrapper<IActive>
 ) {
   await ctx.reply(
@@ -17,7 +15,6 @@ async function stats_year(
       getStatsRatingPlusToday(
         await dbStats.chat.inRage(ctx.chat.id, "yearRange"),
         ctx.chat.id,
-        todayStats,
         active
       ),
     {
