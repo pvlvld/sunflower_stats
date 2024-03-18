@@ -3,7 +3,6 @@ import bot from "./bot";
 import { GrammyError, HttpError, webhookCallback } from "grammy";
 import * as http from "http";
 import process from "node:process";
-import { TodayStats } from "./data/stats";
 import { IActive } from "./data/active";
 import DBPoolManager from "./db/db";
 import DbStats from "./db/stats";
@@ -67,7 +66,7 @@ async function main() {
 
   collectGarbage();
 
-  createScheduler(active, todayStats);
+  createScheduler(active);
 
   bot.api.deleteWebhook({ drop_pending_updates: true }).then(async () => {
     if (process.env.TEST === "test") {
@@ -192,7 +191,6 @@ async function main() {
     }
 
     active.save();
-    todayStats.save();
     await botStatsManager.sendToMainChat();
 
     console.log("Done.");
