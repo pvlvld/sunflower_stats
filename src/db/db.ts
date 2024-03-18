@@ -11,23 +11,32 @@ if (
 
 class PgSQLPoolManager {
   private config: PoolConfig;
-  private pool!: Pool;
+  private poolRead!: Pool;
+  private poolWrite!: Pool;
 
   constructor(config: PoolConfig) {
     this.config = config;
   }
 
   async createPool() {
-    if (this.pool) return;
-    this.pool = new Pool(this.config);
-    await this.pool.query("SELECT 1");
+    if (this.poolRead && this.poolWrite) return;
+    this.poolRead = new Pool(this.config);
+    this.poolWrite = new Pool(this.config);
+    await this.poolRead.query("SELECT 1");
   }
 
-  get getPool() {
-    if (!this.pool) {
+  get getPoolRead() {
+    if (!this.poolRead) {
       throw new Error("Pool was not created.");
     }
-    return this.pool;
+    return this.poolRead;
+  }
+
+  get getPoolWrite() {
+    if (!this.poolWrite) {
+      throw new Error("Pool was not created.");
+    }
+    return this.poolWrite;
   }
 }
 

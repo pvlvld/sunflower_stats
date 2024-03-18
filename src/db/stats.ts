@@ -9,19 +9,21 @@ class DbStats {
   public user;
   public bot;
 
-  constructor(dbPool: Pool, dateRange: FormattedDate) {
-    this.chat = new DbChatStats(dbPool, dateRange);
-    this.user = new DbUserStats(dbPool, dateRange);
-    this.bot = new DbBotStats(dbPool);
+  constructor(poolRead: Pool, poolWrite: Pool, dateRange: FormattedDate) {
+    this.chat = new DbChatStats(poolRead, dateRange);
+    this.user = new DbUserStats(poolRead, poolWrite, dateRange);
+    this.bot = new DbBotStats(poolRead);
   }
 }
 
 class DbUserStats {
-  private dbPool: Pool;
+  private poolRead: Pool;
+  private poolWrite: Pool;
   private dateRange: FormattedDate;
 
-  constructor(dbPool: Pool, dateRange: FormattedDate) {
-    this.dbPool = dbPool;
+  constructor(poolRead: Pool, poolWrite: Pool, dateRange: FormattedDate) {
+    this.poolRead = poolRead;
+    this.poolWrite = poolWrite;
     this.dateRange = dateRange;
   }
 
@@ -37,7 +39,7 @@ class DbUserStats {
     `;
 
     try {
-      return (await this.dbPool.query(query)).rows[0] as IDbChatUserStatsPeriods;
+      return (await this.poolRead.query(query)).rows[0] as IDbChatUserStatsPeriods;
     } catch (error) {
       console.error(error);
       return {} as IDbChatUserStatsPeriods;
