@@ -45,6 +45,18 @@ class DbUserStats {
       return {} as IDbChatUserStatsPeriods;
     }
   }
+
+  async countUserMessage(chat_id: number, user_id: number) {
+    try {
+      return void (await this.poolWrite.query(`
+      INSERT INTO public.stats_day_statistics (chat_id, user_id)
+      VALUES (${chat_id}, ${user_id})
+      ON CONFLICT (chat_id, user_id, date)
+      DO UPDATE SET count = stats_day_statistics.count + 1;`));
+    } catch (error) {
+      console.error(error);
+    }
+  }
 }
 
 class DbChatStats {
