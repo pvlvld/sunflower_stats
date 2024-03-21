@@ -24,10 +24,10 @@ const BOT_STATS: IBotStats = {
 
 function getStatsMsg() {
   let statsMsg = `
-  Нових чатів: ${BOT_STATS.joinGroups}
-  Покинуто чатів: ${BOT_STATS.leftGroups}
+Нових чатів: ${BOT_STATS.joinGroups}
+Покинуто чатів: ${BOT_STATS.leftGroups}
   
-  Повідомлень за ${moment
+Повідомлень за ${moment
     .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
     .humanize()}: ${BOT_STATS.messages.total}`;
 
