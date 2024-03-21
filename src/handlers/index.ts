@@ -9,7 +9,7 @@ const left_statuses = ["kicked", "left"];
 function regHandlers(active: YAMLWrapper<IActive>) {
   bot.on("my_chat_member", (ctx) => {
     if (left_statuses.includes(ctx.myChatMember.old_chat_member.status)) {
-      botStatsManager.newGroup();
+      botStatsManager.joinGroup();
     } else if (left_statuses.includes(ctx.myChatMember.new_chat_member.status)) {
       botStatsManager.leftGroup();
     }

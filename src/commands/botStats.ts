@@ -4,7 +4,7 @@ import type { MyContext } from "../types/context";
 
 type IBotStats = {
   commands: { [key: string]: number };
-  newGroups: number;
+  joinGroups: number;
   leftGroups: number;
   messages: {
     total: number;
@@ -14,7 +14,7 @@ type IBotStats = {
 
 const BOT_STATS: IBotStats = {
   commands: {},
-  newGroups: 0,
+  joinGroups: 0,
   leftGroups: 0,
   messages: {
     total: 0,
@@ -24,7 +24,7 @@ const BOT_STATS: IBotStats = {
 
 function getStatsMsg() {
   let statsMsg = `
-  Нових чатів: ${BOT_STATS.newGroups}
+  Нових чатів: ${BOT_STATS.joinGroups}
   
   Повідомлень за ${moment
     .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
@@ -52,7 +52,7 @@ export const botStatsManager = {
     BOT_STATS.commands[cmd] ??= 0;
     BOT_STATS.commands[cmd]++;
   },
-  newGroup: () => BOT_STATS.newGroups++,
+  joinGroup: () => BOT_STATS.joinGroups++,
   leftGroup: () => BOT_STATS.leftGroups++,
   newMessage: () => BOT_STATS.messages.total++,
   resetMessages: () => {
@@ -62,7 +62,7 @@ export const botStatsManager = {
   resetAll: () => {
     botStatsManager.resetMessages();
     BOT_STATS.commands = {};
-    BOT_STATS.newGroups = 0;
+    BOT_STATS.joinGroups = 0;
   },
   sendToMainChat: async () => {
     return await bot.api.sendMessage("-1001898242958", getStatsMsg()).catch(() => {});
