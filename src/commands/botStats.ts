@@ -5,6 +5,7 @@ import type { MyContext } from "../types/context";
 type IBotStats = {
   commands: { [key: string]: number };
   newGroups: number;
+  leftGroups: number;
   messages: {
     total: number;
     start_count_date: Date;
@@ -14,6 +15,7 @@ type IBotStats = {
 const BOT_STATS: IBotStats = {
   commands: {},
   newGroups: 0,
+  leftGroups: 0,
   messages: {
     total: 0,
     start_count_date: new Date(),
@@ -51,6 +53,7 @@ export const botStatsManager = {
     BOT_STATS.commands[cmd]++;
   },
   newGroup: () => BOT_STATS.newGroups++,
+  leftGroup: () => BOT_STATS.leftGroups++,
   newMessage: () => BOT_STATS.messages.total++,
   resetMessages: () => {
     BOT_STATS.messages.total = 0;
