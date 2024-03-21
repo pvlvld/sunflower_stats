@@ -34,8 +34,11 @@ function getStatsMsg() {
   if (Object.keys(BOT_STATS.commands).length > 0) {
     statsMsg += "\n\nЧастота використання команд:\n";
   }
+  const sortedCmdKeys = Object.keys(BOT_STATS.commands).sort(
+    (c1, c2) => BOT_STATS.commands[c2] - BOT_STATS.commands[c1]
+  );
 
-  for (const cmd in BOT_STATS.commands) {
+  for (const cmd of sortedCmdKeys) {
     statsMsg += `${cmd} - ${BOT_STATS.commands[cmd]}\n`;
   }
 
