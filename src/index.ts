@@ -148,10 +148,9 @@ async function main() {
         drop_pending_updates: true,
         allowed_updates: [
           "message",
+          "chat_member",
           "my_chat_member",
-          "chat_member",
           "callback_query",
-          "chat_member",
         ],
       });
       console.log("Bot is started using long polling.");
