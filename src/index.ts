@@ -55,7 +55,7 @@ async function main() {
   bot.use(StatsCollectorWrapper(dbStats));
   bot.use(
     limit({
-      timeFrame: 5000,
+      timeFrame: 3000,
       limit: 1,
     })
   );
