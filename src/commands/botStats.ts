@@ -67,6 +67,7 @@ export const botStatsManager = {
     botStatsManager.resetMessages();
     BOT_STATS.commands = {};
     BOT_STATS.joinGroups = 0;
+    BOT_STATS.leftGroups = 0;
   },
   sendToMainChat: async () => {
     return await bot.api.sendMessage("-1001898242958", getStatsMsg()).catch(() => {});
