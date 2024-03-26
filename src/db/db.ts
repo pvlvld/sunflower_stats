@@ -9,6 +9,8 @@ if (
   throw new Error("Provide database env credentials.");
 }
 
+export type IPgSQLPoolManager = PgSQLPoolManager;
+
 class PgSQLPoolManager {
   private config: PoolConfig;
   private poolRead!: Pool;
