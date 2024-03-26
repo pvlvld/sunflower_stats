@@ -4,7 +4,7 @@ import { GrammyError, HttpError, webhookCallback } from "grammy";
 import * as http from "http";
 import process from "node:process";
 import { IActive } from "./data/active";
-import DBPoolManager from "./db/db";
+import DBPoolManager, { IPgSQLPoolManager } from "./db/db";
 import DbStats from "./db/stats";
 import regCommands from "./commands";
 import DateRange from "./utils/date";
@@ -165,12 +165,12 @@ async function main() {
     );
   });
 
-  process.on("SIGINT", async () => await shutdown());
-  process.on("SIGTERM", async () => await shutdown());
+  process.on("SIGINT", async () => await shutdown(DBPoolManager));
+  process.on("SIGTERM", async () => await shutdown(DBPoolManager));
 
   let isShuttingDown = false;
 
-  async function shutdown() {
+  async function shutdown(DBPoolManager: IPgSQLPoolManager) {
     if (isShuttingDown) return;
     isShuttingDown = true;
 
@@ -182,6 +182,8 @@ async function main() {
     await bot.stop().then(() => {
       console.log("- Bot stopped.");
     });
+
+    await DBPoolManager.shutdown()
 
     if ("close" in server) {
       server.close(() => {
