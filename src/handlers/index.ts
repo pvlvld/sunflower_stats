@@ -13,7 +13,7 @@ function regHandlers(active: YAMLWrapper<IActive>) {
     } else if (left_statuses.includes(ctx.myChatMember.new_chat_member.status)) {
       botStatsManager.leftGroup();
       if (ctx.chat.type === "supergroup" && ctx.chat.username) {
-        await ctx.api.sendMessage(-1004189530299, `#Left @${ctx.chat.username}`).catch((e) => {});
+        await bot.api.sendMessage(-1004189530299, `#Left @${ctx.chat.username}`).catch((e) => {});
       }
     }
   });
