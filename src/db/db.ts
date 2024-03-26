@@ -38,6 +38,11 @@ class PgSQLPoolManager {
     }
     return this.poolWrite;
   }
+
+  async shutdown() {
+    await this.poolRead.end();
+    await this.poolWrite.end();
+  }
 }
 
 const DBPoolManager = new PgSQLPoolManager({
