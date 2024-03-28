@@ -4,7 +4,7 @@ import leaveChatMemberHandler from "./leaveChatMember";
 import type IActive from "../data/active";
 import type YAMLWrapper from "../data/YAMLWrapper";
 
-const left_statuses = ["kicked", "left"];
+const left_statuses = ["kicked", "left", "restricted"];
 
 function regHandlers(active: YAMLWrapper<IActive>) {
   bot.on("my_chat_member", async (ctx) => {
