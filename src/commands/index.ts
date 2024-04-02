@@ -27,8 +27,7 @@ import parseCmdArgs from "../utils/parseCmdArgs";
 import { removeAnonimousActive } from "./staff/utils_cmd";
 import broadcast_owners_cmd from "./staff/broadcast_owners";
 import bench_db_cmd from "./staff/bench_db";
-
-const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
+import cfg from "../config";
 
 function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>) {
   bot.command("help", async (ctx) => {
@@ -108,25 +107,25 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>) {
   bot.hears(/^бот\?$/i, async (ctx) => botTest_cmd(ctx));
 
   bot.chatType(["group", "supergroup"]).hears("!ssstats", async (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) bot_stats_cmd(ctx);
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) bot_stats_cmd(ctx);
   });
 
   bot.hears("!ssreset stats", (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetAll();
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetAll();
   });
 
   bot.hears("!ssreset msg", (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetMessages();
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) botStatsManager.resetMessages();
   });
 
   bot.hears("!ssgc", (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) {
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) {
       collectGarbage();
     }
   });
 
   bot.hears("!ssshrink", (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) {
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) {
       if (typeof Bun !== "undefined") {
         Bun.shrink();
       }
@@ -134,25 +133,25 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>) {
   });
 
   bot.hears(/^!ssleave/, (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) {
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) {
       leaveChat_cmd(ctx);
     }
   });
 
   bot.hears(/^!ssadmins/, (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) {
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) {
       getChatAdmins_cmd(ctx);
     }
   });
 
   bot.hears(/^!ssinvite/, (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) {
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) {
       getChatInvite_cmd(ctx);
     }
   });
 
   bot.hears(/^!ssru/, (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) {
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) {
       const wantedUser = parseCmdArgs(ctx.msg?.text ?? ctx.msg?.caption)[0];
       if (wantedUser) {
         ctx.reply(String(getUserId(wantedUser, ctx.chat.id, active)));
@@ -161,17 +160,17 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>) {
   });
 
   bot.hears(/^!ssremoveanon/, (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) {
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) {
       removeAnonimousActive(ctx, active);
     }
   });
 
   bot.chatType(["supergroup", "group"]).hears("!ssbroadcast_owners", (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) broadcast_owners_cmd(ctx, active);
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) broadcast_owners_cmd(ctx, active);
   });
 
   bot.chatType(["supergroup", "group"]).hears(/^!ssbdb/, (ctx) => {
-    if (ADMINS.includes(ctx.from?.id || -1)) bench_db_cmd(ctx, active);
+    if (cfg.ADMINS.includes(ctx.from?.id || -1)) bench_db_cmd(ctx, active);
   });
 }
 export default regCommands;

@@ -1,13 +1,5 @@
 import { Pool, type PoolConfig } from "pg";
-
-if (
-  !process.env.DB_HOST ||
-  !process.env.DB_USER ||
-  !process.env.DB_PASSWORD ||
-  !process.env.DB_DATABASE
-) {
-  throw new Error("Provide database env credentials.");
-}
+import cfg from "../config";
 
 export type IPgSQLPoolManager = PgSQLPoolManager;
 
@@ -48,10 +40,10 @@ class PgSQLPoolManager {
 }
 
 const DBPoolManager = new PgSQLPoolManager({
-  host: process.env.DB_HOST,
-  database: process.env.DB_DATABASE,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
+  host: cfg.DB_DATABASE,
+  database: cfg.DB_DATABASE,
+  user: cfg.DB_USER,
+  password: cfg.DB_PASSWORD,
   max: 15,
 });
 

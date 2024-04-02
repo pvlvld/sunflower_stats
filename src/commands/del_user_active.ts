@@ -3,12 +3,11 @@ import type IActive from "../data/active";
 import type { HearsContext } from "grammy";
 import type { MyContext } from "../types/context";
 import type YAMLWrapper from "../data/YAMLWrapper";
-
-const ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
+import cfg from "../config";
 
 async function del_user_active(ctx: HearsContext<MyContext>, active: YAMLWrapper<IActive>) {
   const chatMember = await ctx.getChatMember(ctx.from?.id || -1).catch(() => {});
-  if (chatMember?.status === "creator" || ADMINS.includes(ctx.from?.id || -1)) {
+  if (chatMember?.status === "creator" || cfg.ADMINS.includes(ctx.from?.id || -1)) {
     const userId =
       ctx.msg.reply_to_message?.from?.id ||
       getUserId((ctx.msg.text ?? ctx.msg.caption).slice(13), ctx.chat.id, active) ||

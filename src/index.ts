@@ -122,7 +122,7 @@ async function main() {
             ),
           },
         });
-        server.post(`/${process.env.BOT_TOKEN}`, (req) => {
+        server.post(`/${cfg.BOT_TOKEN}`, (req) => {
           return handleUpdate(req);
         });
 
@@ -136,9 +136,7 @@ async function main() {
             process.exit(1);
           }
         });
-        await bot.api.setWebhook(
-          `https://soniashnyk.pp.ua/${process.env.BOT_TOKEN}`
-        );
+        await bot.api.setWebhook(`https://soniashnyk.pp.ua/${cfg.BOT_TOKEN}`);
       }
 
       console.log("Bot is started using webhook.");
