@@ -26,6 +26,7 @@ function getCfg(): ICfg {
     throw new Error(`Bruh, fix your .env! Where's the ${e}?`);
   }
   cfg.ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
+  cfg.STATUSES ??= {} as any;
   cfg.STATUSES.LEFT_STATUSES = ["kicked", "left"];
 
   return Object.freeze(cfg);
