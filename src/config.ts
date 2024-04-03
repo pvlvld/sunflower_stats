@@ -6,14 +6,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   STATUSES: { LEFT_STATUSES: string[] };
 };
 
-const requiredEnv = [
-  "BOT_TOKEN",
-  "DB_HOST",
-  "DB_USER",
-  "DB_PORT",
-  "DB_PASSWORD",
-  "DB_DATABASE",
-] as const;
+const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE"] as const;
 
 function getCfg(): ICfg {
   const cfg = {} as ICfg;
