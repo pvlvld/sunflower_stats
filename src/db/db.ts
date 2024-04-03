@@ -40,7 +40,7 @@ class PgSQLPoolManager {
 }
 
 const DBPoolManager = new PgSQLPoolManager({
-  host: cfg.DB_DATABASE,
+  host: cfg.DB_HOST,
   database: cfg.DB_DATABASE,
   user: cfg.DB_USER,
   password: cfg.DB_PASSWORD,
