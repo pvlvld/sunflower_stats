@@ -22,6 +22,7 @@ import collectGarbage from "./utils/collectGarbage";
 import { limit } from "@grammyjs/ratelimiter";
 import * as fs from "fs";
 import fastify from "fastify";
+import cfg from "./config";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
