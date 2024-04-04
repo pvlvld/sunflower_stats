@@ -28,6 +28,7 @@ import { removeAnonimousActive } from "./staff/utils_cmd";
 import broadcast_owners_cmd from "./staff/broadcast_owners";
 import bench_db_cmd from "./staff/bench_db";
 import cfg from "../config";
+import botMemoryUsage from "./staff/botMemoryUsage";
 
 function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>) {
   bot.command("help", async (ctx) => {
@@ -172,5 +173,7 @@ function regCommands(dbStats: DbStats, active: YAMLWrapper<IActive>) {
   bot.chatType(["supergroup", "group"]).hears(/^!ssbdb/, (ctx) => {
     if (cfg.ADMINS.includes(ctx.from?.id || -1)) bench_db_cmd(ctx, active);
   });
+
+  bot.hears("!ssmem", async (ctx) => botMemoryUsage(ctx));
 }
 export default regCommands;
