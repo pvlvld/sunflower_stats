@@ -8,6 +8,10 @@ async function set_nickname(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
   active: YAMLWrapper<IActive>
 ) {
+  if (!active.data[ctx.chat.id]![ctx.from.id]) {
+    return;
+  }
+
   const nickname = parseCmdArgs(ctx.msg.text as string).join(" ");
   if (nickname.length === 0) {
     await ctx.reply(
@@ -21,8 +25,7 @@ async function set_nickname(
     return;
   }
 
-  //@ts-expect-error
-  active.data[ctx.chat.id][ctx.from.id].nickname = nickname;
+  active.data[ctx.chat.id]![ctx.from.id]!.nickname = nickname;
   await ctx.reply(`✅ Успішно встановлено нікнейм: ${nickname}`, {
     disable_notification: true,
     link_preview_options: { is_disabled: true },
