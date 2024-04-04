@@ -30,7 +30,9 @@ export function getStatsRatingPlusToday(
     if (active.data[chat_id]?.[user_id] && statsRowsCount < statsRowLimit + 1) {
       replyParts.push(
         `${statsRowsCount}. ${getUserNameLink.html(
-          active.data[chat_id]?.[user_id]?.name || "Невідомо",
+          active.data[chat_id]?.[user_id]?.nickname ||
+            active.data[chat_id]?.[user_id]?.name ||
+            "Невідомо",
           active.data[chat_id]?.[user_id]?.username,
           user_id
         )} — ${merged[user_id].count}\n`
