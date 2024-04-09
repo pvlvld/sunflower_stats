@@ -110,6 +110,7 @@ async function main() {
         });
         bot.api.setWebhook(`https://soniashnyk.pp.ua:443/`, {
           drop_pending_updates: true,
+          allowed_updates,
         });
       } else {
         server = createServer();
@@ -128,6 +129,7 @@ async function main() {
         });
         await bot.api.setWebhook(`https://soniashnyk.pp.ua/${cfg.BOT_TOKEN}`, {
           drop_pending_updates: true,
+          allowed_updates,
         });
       }
 
