@@ -23,6 +23,7 @@ import { limit } from "@grammyjs/ratelimiter";
 import * as fs from "fs";
 import fastify from "fastify";
 import cfg from "./config";
+import createServer from "./server";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -44,7 +45,7 @@ bot.catch((err) => {
 });
 
 async function main() {
-  let server: http.Server = {} as http.Server;
+  let server: http.Server | ReturnType<typeof createServer>;
   await DBPoolManager.createPool();
 
   const active = new YAMLWrapper<IActive>(() => "active", "data/active");
@@ -71,24 +72,17 @@ async function main() {
 
   bot.api.deleteWebhook({ drop_pending_updates: true }).then(async () => {
     if (process.env.TEST === "test") {
-      console.log("TEST MODE");
       const handleUpdate = webhookCallback(bot, "std/http");
-      if (typeof Bun !== "undefined") {
-        Bun.serve({
-          async fetch(req) {
-            try {
-              return await handleUpdate(req);
-            } catch (err) {
-              console.error(err);
-            }
-          },
-          port: 6666,
-        });
-      } else {
-        const app = http.createServer(webhookCallback(bot, "http"));
-        server = app.listen(Number(6666));
-      }
-
+      Bun.serve({
+        async fetch(req) {
+          try {
+            return await handleUpdate(req);
+          } catch (err) {
+            console.error(err);
+          }
+        },
+        port: 6666,
+      });
       console.log("Started in test mode.");
     } else if (process.env.WEBHOOK) {
       if (typeof Bun !== "undefined") {
@@ -107,29 +101,19 @@ async function main() {
             }
           },
           port: 443,
+          hostname: "0.0.0.0",
         });
-        bot.api.setWebhook(`https://80.64.218.61:443/`, {
+        bot.api.setWebhook(`https://soniashnyk.pp.ua:443/`, {
           drop_pending_updates: true,
         });
       } else {
-        const handleUpdate = webhookCallback(bot, "fastify");
-        const server = fastify({
-          https: {
-            cert: fs.readFileSync(
-              "/etc/letsencrypt/live/soniashnyk.pp.ua/fullchain.pem"
-            ),
-            key: fs.readFileSync(
-              "/etc/letsencrypt/live/soniashnyk.pp.ua/privkey.pem"
-            ),
-          },
-        });
-        server.post(`/${cfg.BOT_TOKEN}`, (req) => {
-          return handleUpdate(req);
-        });
-
-        server.setErrorHandler(async (error) => {
-          console.error(error);
-        });
+        server = createServer();
+        // const server = fastify({
+        //   https: {
+        //     cert: fs.readFileSync("/etc/letsencrypt/live/soniashnyk.pp.ua/fullchain.pem"),
+        //     key: fs.readFileSync("/etc/letsencrypt/live/soniashnyk.pp.ua/privkey.pem"),
+        //   },
+        // });
 
         server.listen({ port: 443, host: "0.0.0.0" }, async (error) => {
           if (error) {
@@ -137,7 +121,9 @@ async function main() {
             process.exit(1);
           }
         });
-        await bot.api.setWebhook(`https://soniashnyk.pp.ua/${cfg.BOT_TOKEN}`);
+        await bot.api.setWebhook(`https://soniashnyk.pp.ua/${cfg.BOT_TOKEN}`, {
+          drop_pending_updates: true,
+        });
       }
 
       console.log("Bot is started using webhook.");
@@ -145,12 +131,7 @@ async function main() {
     } else {
       bot.start({
         drop_pending_updates: true,
-        allowed_updates: [
-          "message",
-          "chat_member",
-          "my_chat_member",
-          "callback_query",
-        ],
+        allowed_updates: ["message", "chat_member", "my_chat_member", "callback_query"],
       });
       console.log("Bot is started using long polling.");
     }
@@ -174,7 +155,7 @@ async function main() {
     isShuttingDown = true;
 
     console.log("Shutting down.");
-    await bot.api.deleteWebhook().then(() => {
+    await bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
       console.log("Webhook removed");
     });
 
@@ -182,7 +163,7 @@ async function main() {
       console.log("- Bot stopped.");
     });
 
-    await DBPoolManager.shutdown()
+    await DBPoolManager.shutdown();
 
     if ("close" in server) {
       server.close(() => {
