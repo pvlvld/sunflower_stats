@@ -24,6 +24,7 @@ import * as fs from "fs";
 import fastify from "fastify";
 import cfg from "./config";
 import createServer from "./server";
+import { run } from "@grammyjs/runner";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -46,6 +47,10 @@ bot.catch((err) => {
 
 async function main() {
   let server: http.Server | ReturnType<typeof createServer>;
+  let runner: ReturnType<typeof run>;
+
+  const allowed_updates = ["message", "chat_member", "my_chat_member", "callback_query"] as const;
+
   await DBPoolManager.createPool();
 
   const active = new YAMLWrapper<IActive>(() => "active", "data/active");
@@ -129,10 +134,7 @@ async function main() {
       console.log("Bot is started using webhook.");
       console.log(await bot.api.getWebhookInfo());
     } else {
-      bot.start({
-        drop_pending_updates: true,
-        allowed_updates: ["message", "chat_member", "my_chat_member", "callback_query"],
-      });
+      run(bot, { runner: { fetch: { allowed_updates } } });
       console.log("Bot is started using long polling.");
     }
 
@@ -158,6 +160,8 @@ async function main() {
     await bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
       console.log("Webhook removed");
     });
+
+    await runner?.stop();
 
     await bot.stop().then(() => {
       console.log("- Bot stopped.");
