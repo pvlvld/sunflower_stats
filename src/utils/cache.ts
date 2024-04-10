@@ -1,9 +1,20 @@
 import { LRUCache } from "lru-cache";
+import NodeCache from "node-cache";
 
-const options = {
-  max: 100,
-  updateAgeOnGet: true,
-};
-const cache = new LRUCache(options);
+class CacheManager {
+  public LRU: LRUCache<{}, {}, unknown>;
+  public TTL: NodeCache;
 
-export default cache;
+  constructor() {
+    this.LRU = new LRUCache({
+      max: 100,
+      updateAgeOnGet: true,
+    });
+
+    this.TTL = new NodeCache({ stdTTL: 60, checkperiod: 5 });
+  }
+}
+
+const cacheManager = new CacheManager();
+
+export default cacheManager;
