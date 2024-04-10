@@ -171,7 +171,7 @@ async function main() {
 
     await DBPoolManager.shutdown();
 
-    if ("close" in server) {
+    if (server && "close" in server) {
       server.close(() => {
         console.log("- Server closed.");
       });
