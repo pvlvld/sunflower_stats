@@ -2,16 +2,16 @@ import { LRUCache } from "lru-cache";
 import NodeCache from "node-cache";
 
 class CacheManager {
-  public LRU: LRUCache<{}, {}, unknown>;
-  public TTL: NodeCache;
+  public LRUCache: LRUCache<{}, {}, unknown>;
+  public TTLCache: NodeCache;
 
   constructor() {
-    this.LRU = new LRUCache({
-      max: 100,
+    this.LRUCache = new LRUCache({
+      max: 1000,
       updateAgeOnGet: true,
     });
 
-    this.TTL = new NodeCache({ stdTTL: 60, checkperiod: 5 });
+    this.TTLCache = new NodeCache({ stdTTL: 60, checkperiod: 5 });
   }
 }
 
