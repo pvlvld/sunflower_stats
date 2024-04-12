@@ -6,7 +6,7 @@ function getUserId(
   wantedUser: string | undefined,
   chat_id: number | string,
   active: YAMLWrapper<IActive>
-) {
+): number {
   if (wantedUser === undefined) return -1;
   if (wantedUser.startsWith("@")) {
     wantedUser = wantedUser.slice(1);
@@ -25,6 +25,10 @@ function getUserId(
       }
     }
     return -1;
+  } else {
+    if (active.data[chat_id]?.[wantedUser]) {
+      return +wantedUser;
+    }
   }
 
   return -1;
