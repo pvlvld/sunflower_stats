@@ -1,7 +1,7 @@
 import type IActive from "../data/active";
 import type YAMLWrapper from "../data/YAMLWrapper";
 
-//** Returns user_id or -1 on fail*/
+/** Returns user_id or -1 on fail*/
 function getUserId(
   wantedUser: string | undefined,
   chat_id: number | string,
