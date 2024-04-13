@@ -1,9 +1,9 @@
 import type { ChatTypeContext, Context, HearsContext, CommandContext } from "grammy";
 import type { Update } from "grammy/types";
 
-type IGroupContext = ChatTypeContext<Context, "group" | "supergroup">;
-
 export type IContext = Context;
+
+export type IGroupContext = ChatTypeContext<IContext, "group" | "supergroup">;
 
 export type IGroupHearsContext = HearsContext<IGroupContext>;
 
