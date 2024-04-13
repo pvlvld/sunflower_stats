@@ -9,7 +9,7 @@ import type { MyContext } from "./types/context";
 import type { ParseModeFlavor } from "@grammyjs/parse-mode";
 import cfg from "./config";
 
-const bot = new Bot<ParseModeFlavor<MyContext>>(cfg.BOT_TOKEN);
+const bot = new Bot<MyContext>(cfg.BOT_TOKEN);
 
 const autoRetryTransformer = autoRetry({
   maxDelaySeconds: 30,
