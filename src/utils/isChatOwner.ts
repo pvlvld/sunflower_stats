@@ -1,12 +1,22 @@
-import type { IGroupHearsCommandContext } from "../types";
+import type { IGroupContext, IGroupHearsCommandContext } from "../types";
+import type { CallbackQueryContext, InlineQueryContext } from "grammy";
 import cfg from "../config";
 import cacheManager from "./cache";
 
-async function isChatOwner(ctx: IGroupHearsCommandContext): Promise<boolean> {
+async function isChatOwner(
+  ctx:
+    | IGroupHearsCommandContext
+    | CallbackQueryContext<IGroupContext>
+    | InlineQueryContext<IGroupContext>
+): Promise<boolean> {
+  if (cfg.ADMINS.includes(ctx.from.id)) {
+    return true;
+  }
+
   const cachedOwner = cacheManager.LRUCache.get(getCacheKey(ctx.chat.id));
 
   if (cachedOwner) {
-    return ctx.from.id === cachedOwner || cfg.ADMINS.includes(ctx.from.id);
+    return ctx.from.id === cachedOwner;
   }
 
   const admins = await ctx.getChatAdministrators().catch((e) => {});
