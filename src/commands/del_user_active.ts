@@ -14,13 +14,10 @@ async function del_user_active(ctx: HearsContext<MyContext>, active: YAMLWrapper
       -1;
 
     if (userId !== -1 && active.data[ctx.chat.id]?.[userId]) {
+      const targetName = active.data[ctx.chat.id]?.[userId]?.name;
       delete active.data[ctx.chat.id]?.[userId];
       await ctx
-        .reply(
-          `✅ Успішно видалено ${
-            active.data[ctx.chat.id]?.[userId]?.name
-          } з активу та приховано зі статистики.`
-        )
+        .reply(`✅ Успішно видалено ${targetName} з активу та приховано зі статистики.`)
         .catch((e) => console.error(e));
       return;
     } else {
