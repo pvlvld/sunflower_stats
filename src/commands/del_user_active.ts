@@ -4,6 +4,7 @@ import type { HearsContext } from "grammy";
 import type { MyContext } from "../types/context";
 import type YAMLWrapper from "../data/YAMLWrapper";
 import cfg from "../config";
+import Escape from "../utils/escape";
 
 async function del_user_active(ctx: HearsContext<MyContext>, active: YAMLWrapper<IActive>) {
   const chatMember = await ctx.getChatMember(ctx.from?.id || -1).catch(() => {});
@@ -14,10 +15,13 @@ async function del_user_active(ctx: HearsContext<MyContext>, active: YAMLWrapper
       -1;
 
     if (userId !== -1 && active.data[ctx.chat.id]?.[userId]) {
-      const targetName = active.data[ctx.chat.id]?.[userId]?.name;
+      const targetName = active.data[ctx.chat.id]![userId]!.name as string;
       delete active.data[ctx.chat.id]?.[userId];
       await ctx
-        .reply(`✅ Успішно видалено ${targetName} з активу та приховано зі статистики.`)
+        .reply(
+          `✅ Успішно видалено ${Escape.html(targetName)} з активу та приховано зі статистики.`,
+          { parse_mode: "HTML" }
+        )
         .catch((e) => console.error(e));
       return;
     } else {
