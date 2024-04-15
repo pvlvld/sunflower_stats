@@ -1,22 +1,19 @@
-import type { IGroupContext, IGroupHearsCommandContext } from "../types";
-import type { CallbackQueryContext, InlineQueryContext } from "grammy";
+import type { IGroupContext, IGroupHearsCommandContext, IGroupTextContext } from "../types";
+import type { MenuFlavor } from "@grammyjs/menu";
 import cfg from "../config";
 import cacheManager from "./cache";
 
 async function isChatOwner(
-  ctx:
-    | IGroupHearsCommandContext
-    | CallbackQueryContext<IGroupContext>
-    | InlineQueryContext<IGroupContext>
+  ctx: IGroupHearsCommandContext | (IGroupContext & MenuFlavor) | IGroupTextContext
 ): Promise<boolean> {
-  if (cfg.ADMINS.includes(ctx.from.id)) {
+  if (cfg.ADMINS.includes(ctx.from?.id ?? -1)) {
     return true;
   }
 
   const cachedOwner = cacheManager.LRUCache.get(getCacheKey(ctx.chat.id));
 
   if (cachedOwner) {
-    return ctx.from.id === cachedOwner;
+    return ctx.from?.id === cachedOwner;
   }
 
   const admins = await ctx.getChatAdministrators().catch((e) => {});
@@ -27,7 +24,7 @@ async function isChatOwner(
   for (let admin of admins) {
     if (admin.status === "creator") {
       cacheManager.LRUCache.set(getCacheKey(ctx.chat.id), admin.user.id);
-      return admin.user.id === ctx.from.id;
+      return admin.user.id === ctx.from?.id;
     }
   }
 
