@@ -1,13 +1,8 @@
 import getUserNameLink from "./getUserNameLink";
-import type IActive from "../data/active";
-import type YAMLWrapper from "../data/YAMLWrapper";
 import type { IDbChatUserStats } from "../types/stats";
+import { active } from "../data/active";
 
-export function getStatsRatingPlusToday(
-  stats: IDbChatUserStats[],
-  chat_id: number,
-  active: YAMLWrapper<IActive>
-) {
+export function getStatsRatingPlusToday(stats: IDbChatUserStats[], chat_id: number) {
   const replyParts: string[] = [];
   let totalChatMessages = 0;
 

@@ -1,16 +1,14 @@
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import type DbStats from "../db/stats";
-import type IActive from "../data/active";
 import type { MyContext } from "../types/context";
-import type YAMLWrapper from "../data/YAMLWrapper";
 import type { ChatTypeContext, HearsContext } from "grammy";
+import { active } from "../data/active";
 const Big = require("big-js");
 
 async function stats_all(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
-  dbStats: DbStats,
-  active: YAMLWrapper<IActive>
+  dbStats: DbStats
 ) {
   const start = String(process.hrtime.bigint());
   const stats = await dbStats.chat.all(ctx.chat.id);
@@ -20,8 +18,7 @@ async function stats_all(
   }
 
   const queryTime = String(process.hrtime.bigint());
-  const msg =
-    "📊 Статистика чату за весь час:\n\n" + getStatsRatingPlusToday(stats, ctx.chat.id, active);
+  const msg = "📊 Статистика чату за весь час:\n\n" + getStatsRatingPlusToday(stats, ctx.chat.id);
   const msgTime = String(process.hrtime.bigint());
 
   await ctx.reply(msg, {

@@ -1,15 +1,11 @@
 import moment from "moment";
 import { autoRetry } from "@grammyjs/auto-retry";
 import type { HearsContext } from "grammy";
-import type IActive from "../../data/active";
 import type { MyContext } from "../../types/context";
-import type YAMLWrapper from "../../data/YAMLWrapper";
 import type { ChatMemberOwner } from "@grammyjs/types";
+import { active } from "../../data/active";
 
-async function broadcast_owners_cmd(
-  ctx: HearsContext<MyContext>,
-  active: YAMLWrapper<IActive>
-): Promise<void> {
+async function broadcast_owners_cmd(ctx: HearsContext<MyContext>): Promise<void> {
   if (!ctx.msg.reply_to_message) {
     return void ctx.reply("Команда має бути у відповідь на цільове повідомлення.");
   }

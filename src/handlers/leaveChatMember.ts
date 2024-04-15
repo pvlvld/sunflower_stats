@@ -1,12 +1,8 @@
 import type { Filter } from "grammy";
-import type IActive from "../data/active";
 import type { MyContext } from "../types/context";
-import type YAMLWrapper from "../data/YAMLWrapper";
+import { active } from "../data/active";
 
-function leaveChatMemberHandler(
-  ctx: Filter<MyContext, "chat_member">,
-  active: YAMLWrapper<IActive>
-) {
+function leaveChatMemberHandler(ctx: Filter<MyContext, "chat_member">) {
   delete active.data[ctx.chat.id]?.[ctx.chatMember.new_chat_member.user.id];
 }
 

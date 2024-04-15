@@ -1,12 +1,7 @@
-import type IActive from "../data/active";
-import type YAMLWrapper from "../data/YAMLWrapper";
+import { active } from "../data/active";
 
 /** Returns user_id or -1 on fail*/
-function getUserId(
-  wantedUser: string | undefined,
-  chat_id: number | string,
-  active: YAMLWrapper<IActive>
-): number {
+function getUserId(wantedUser: string | undefined, chat_id: number | string): number {
   if (wantedUser === undefined) return -1;
   if (wantedUser.startsWith("@")) {
     wantedUser = wantedUser.slice(1);

@@ -1,22 +1,16 @@
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import type DbStats from "../db/stats";
-import type IActive from "../data/active";
 import type { MyContext } from "../types/context";
-import type YAMLWrapper from "../data/YAMLWrapper";
 import type { ChatTypeContext, HearsContext } from "grammy";
+import { active } from "../data/active";
 
 async function stats_month(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
-  dbStats: DbStats,
-  active: YAMLWrapper<IActive>
+  dbStats: DbStats
 ) {
   await ctx.reply(
     "📊 Статистика чату за цей місяць:\n\n" +
-      getStatsRatingPlusToday(
-        await dbStats.chat.inRage(ctx.chat.id, "monthRange"),
-        ctx.chat.id,
-        active
-      ),
+      getStatsRatingPlusToday(await dbStats.chat.inRage(ctx.chat.id, "monthRange"), ctx.chat.id),
     {
       disable_notification: true,
       link_preview_options: { is_disabled: true },

@@ -1,15 +1,13 @@
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import getUserNameLink from "../utils/getUserNameLink";
 import type DbStats from "../db/stats";
-import type IActive from "../data/active";
 import type { ChatTypeContext } from "grammy";
 import type { MyContext } from "../types/context";
-import type YAMLWrapper from "../data/YAMLWrapper";
+import { active } from "../data/active";
 
 async function stats_yestarday(
   ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
-  dbStats: DbStats,
-  active: YAMLWrapper<IActive>
+  dbStats: DbStats
 ) {
   const stats = await dbStats.chat.yesterday(ctx.chat.id);
 

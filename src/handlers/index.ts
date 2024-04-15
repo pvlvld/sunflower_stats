@@ -1,11 +1,10 @@
 import bot from "../bot";
 import { botStatsManager } from "../commands/botStats";
 import leaveChatMemberHandler from "./leaveChatMember";
-import type IActive from "../data/active";
-import type YAMLWrapper from "../data/YAMLWrapper";
+import { active } from "../data/active";
 import cfg from "../config";
 
-function regHandlers(active: YAMLWrapper<IActive>) {
+function regHandlers() {
   bot.on("my_chat_member", async (ctx) => {
     if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.myChatMember.old_chat_member.status)) {
       botStatsManager.joinGroup();

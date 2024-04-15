@@ -1,15 +1,13 @@
 import getUserId from "../utils/getUserId";
 import getUserStatsMessage from "../utils/getUserStatsMessage";
 import type DbStats from "../db/stats";
-import type { IActive } from "../data/active";
 import type { MyContext } from "../types/context";
-import type YAMLWrapper from "../data/YAMLWrapper";
 import type { ChatTypeContext, HearsContext } from "grammy";
+import { active } from "../data/active";
 
 async function stats_their(
   ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
-  dbStats: DbStats,
-  active: YAMLWrapper<IActive>
+  dbStats: DbStats
 ) {
   const userId =
     ctx.msg.reply_to_message?.from?.id ||

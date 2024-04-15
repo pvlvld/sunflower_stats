@@ -3,15 +3,14 @@ import * as cron from "node-cron";
 import formattedDate from "./date";
 import collectGarbage from "./collectGarbage";
 import { botStatsManager } from "../commands/botStats";
-import type { IActive } from "../data/active";
-import type YAMLWrapper from "../data/YAMLWrapper";
+import { active } from "../data/active";
 
-function createScheduler(active: YAMLWrapper<IActive>) {
+function createScheduler() {
   return cron.schedule(
     "0 * * * *", //Every hour at 00 minutes
     async (date) => {
       if (date instanceof Date && date.getHours() === 0) {
-        await startNewDay(active);
+        await startNewDay();
       }
 
       active.save();
@@ -24,7 +23,7 @@ function createScheduler(active: YAMLWrapper<IActive>) {
   );
 }
 
-export async function startNewDay(active: YAMLWrapper<IActive>) {
+export async function startNewDay() {
   active.save(path.join("data/active", `active-${formattedDate.today}.yaml`));
   await botStatsManager.sendToMainChat();
   botStatsManager.resetAll();

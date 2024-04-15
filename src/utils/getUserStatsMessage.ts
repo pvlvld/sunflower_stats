@@ -1,15 +1,9 @@
 import Escape from "./escape";
-import type { IActive } from "../data/active";
-import type YAMLWrapper from "../data/YAMLWrapper";
 import type { IDbChatUserStatsPeriods } from "../types/stats";
 import moment from "moment";
+import { active } from "../data/active";
 
-function getUserStatsMessage(
-  chat_id: number,
-  user_id: number,
-  dbStats: IDbChatUserStatsPeriods,
-  active: YAMLWrapper<IActive>
-) {
+function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDbChatUserStatsPeriods) {
   const nickname = active.data[chat_id]?.[user_id]?.nickname;
 
   return Escape.html(`

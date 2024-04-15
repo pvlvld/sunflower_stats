@@ -1,7 +1,6 @@
 import { Pool } from "pg";
 import { GroupTextContext } from "../../types/context";
-import YAMLWrapper from "../../data/YAMLWrapper";
-import IActive from "../../data/active";
+import IActive, { active } from "../../data/active";
 import Database, { SqliteError } from "better-sqlite3";
 
 const types = ["pg", "lite"] as const;
@@ -13,11 +12,7 @@ type IOptions = {
   ids_range: number;
 };
 
-async function bench_db_cmd(
-  ctx: GroupTextContext,
-  active: YAMLWrapper<IActive>,
-  options = {} as IOptions
-) {
+async function bench_db_cmd(ctx: GroupTextContext, options = {} as IOptions) {
   const args = (ctx.msg?.text ?? ctx.msg?.caption)?.split(" ");
   if (types.includes(args[1] as (typeof types)[number])) {
     options.type = args[1] as (typeof types)[number];

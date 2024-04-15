@@ -12,7 +12,6 @@ import formattedDate from "./utils/date";
 import ActiveCollectorWrapper from "./middlewares/activeCollector";
 import StatsCollectorWrapper from "./middlewares/statsCollector";
 import createScheduler from "./utils/scheduler";
-import YAMLWrapper from "./data/YAMLWrapper";
 import regHandlers from "./handlers";
 import { autoQuote } from "@roziscoding/grammy-autoquote";
 import { autoThread } from "./middlewares/autoThreads";
@@ -56,7 +55,7 @@ async function main() {
 
   active.load();
 
-  bot.use(ActiveCollectorWrapper(active, formattedDate));
+  bot.use(ActiveCollectorWrapper(formattedDate));
   bot.use(StatsCollectorWrapper(dbStats));
   bot.use(
     limit({
@@ -66,12 +65,12 @@ async function main() {
   );
   bot.use(autoQuote({ allowSendingWithoutReply: true }));
   bot.use(autoThread());
-  regHandlers(active);
-  regCommands(dbStats, active);
+  regHandlers();
+  regCommands(dbStats);
 
   collectGarbage();
 
-  createScheduler(active);
+  createScheduler();
 
   bot.api.deleteWebhook({ drop_pending_updates: true }).then(async () => {
     if (process.env.TEST === "test") {

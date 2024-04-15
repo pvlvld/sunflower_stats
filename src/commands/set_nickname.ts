@@ -1,13 +1,9 @@
 import parseCmdArgs from "../utils/parseCmdArgs";
-import type IActive from "../data/active";
 import type { MyContext } from "../types/context";
-import type YAMLWrapper from "../data/YAMLWrapper";
 import type { ChatTypeContext, HearsContext } from "grammy";
+import { active } from "../data/active";
 
-async function set_nickname(
-  ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
-  active: YAMLWrapper<IActive>
-) {
+async function set_nickname(ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>) {
   if (!active.data[ctx.chat.id]![ctx.from.id]) {
     return;
   }
