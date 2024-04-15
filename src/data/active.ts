@@ -1,3 +1,5 @@
+import YAMLWrapper from "./YAMLWrapper";
+
 export interface IActive {
   [chat_id: string | number]:
     | {
@@ -13,5 +15,7 @@ export interface IActive {
       }
     | undefined;
 }
+
+export const active = new YAMLWrapper<IActive>(() => "active", "data/active");
 
 export default IActive;

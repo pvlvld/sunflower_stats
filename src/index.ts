@@ -3,7 +3,7 @@ import bot from "./bot";
 import { GrammyError, HttpError, webhookCallback } from "grammy";
 import * as http from "http";
 import process from "node:process";
-import { IActive } from "./data/active";
+import { active } from "./data/active";
 import DBPoolManager, { IPgSQLPoolManager } from "./db/db";
 import DbStats from "./db/stats";
 import regCommands from "./commands";
@@ -52,8 +52,6 @@ async function main() {
   const allowed_updates = ["message", "chat_member", "my_chat_member", "callback_query"] as const;
 
   await DBPoolManager.createPool();
-
-  const active = new YAMLWrapper<IActive>(() => "active", "data/active");
   const dbStats = new DbStats(DBPoolManager.getPoolRead, DBPoolManager.getPoolWrite, DateRange);
 
   active.load();
