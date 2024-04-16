@@ -137,6 +137,7 @@ async function chatCleanupWorker(
 
   for (let i = 0; i < targetMembers.length; i++) {
     await ctx.banChatMember(targetMembers[i].user_id).catch((e) => {});
+    delete active.data[ctx.chat.id]?.[ctx.from!.id];
   }
 }
 
