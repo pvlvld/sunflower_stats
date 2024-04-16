@@ -153,7 +153,7 @@ async function chatCleanupWorker(
       delete active.data[ctx.chat.id]?.[targetMembers[i].user_id];
     } catch (e) {
       if (e instanceof GrammyError) {
-        if (e.description.indexOf("not enough rights")) {
+        if (e.description.indexOf("not enough rights") !== -1) {
           cacheManager.TTLCache.del(`cleanup_${ctx.chat.id}`);
           return false;
         }
