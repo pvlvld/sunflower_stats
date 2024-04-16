@@ -155,24 +155,24 @@ async function main() {
     if (isShuttingDown) return;
     isShuttingDown = true;
 
-    console.log("Shutting down.");
-    await bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
-      console.log("Webhook removed");
-    });
-
     await runner?.stop();
 
     await bot.stop().then(() => {
       console.log("- Bot stopped.");
     });
 
-    await DBPoolManager.shutdown();
+    console.log("Shutting down.");
+    await bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
+      console.log("Webhook removed");
+    });
 
     if (server && "close" in server) {
       server.close(() => {
         console.log("- Server closed.");
       });
     }
+
+    await DBPoolManager.shutdown();
 
     active.save();
     await botStatsManager.sendToMainChat();
