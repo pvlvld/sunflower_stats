@@ -11,7 +11,7 @@ async function stats_their(
 ) {
   const userId =
     ctx.msg.reply_to_message?.from?.id ||
-    getUserId((ctx.msg.text ?? ctx.msg.caption).slice(4), ctx.chat.id, active) ||
+    getUserId((ctx.msg.text ?? ctx.msg.caption).slice(4), ctx.chat.id) ||
     -1;
 
   if ([136817688, 777000, -1].includes(userId) || ctx.msg.reply_to_message?.from?.is_bot) {
@@ -20,7 +20,7 @@ async function stats_their(
   }
 
   await ctx.reply(
-    getUserStatsMessage(ctx.chat.id, userId, await dbStats.user.all(ctx.chat.id, userId), active),
+    getUserStatsMessage(ctx.chat.id, userId, await dbStats.user.all(ctx.chat.id, userId)),
     {
       disable_notification: true,
       link_preview_options: { is_disabled: true },

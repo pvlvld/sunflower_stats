@@ -1,7 +1,6 @@
 import bot from "../bot";
 import { botStatsManager } from "../commands/botStats";
 import leaveChatMemberHandler from "./leaveChatMember";
-import { active } from "../data/active";
 import cfg from "../config";
 
 function regHandlers() {
@@ -18,7 +17,7 @@ function regHandlers() {
 
   bot.on("chat_member", (ctx) => {
     if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.new_chat_member.status)) {
-      leaveChatMemberHandler(ctx, active);
+      leaveChatMemberHandler(ctx);
     }
   });
 }

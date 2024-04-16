@@ -10,7 +10,7 @@ async function del_user_active(ctx: HearsContext<MyContext>) {
   if (chatMember?.status === "creator" || cfg.ADMINS.includes(ctx.from?.id || -1)) {
     const userId =
       ctx.msg.reply_to_message?.from?.id ||
-      getUserId((ctx.msg.text ?? ctx.msg.caption).slice(13), ctx.chat.id, active) ||
+      getUserId((ctx.msg.text ?? ctx.msg.caption).slice(13), ctx.chat.id) ||
       -1;
 
     if (userId !== -1 && active.data[ctx.chat.id]?.[userId]) {
