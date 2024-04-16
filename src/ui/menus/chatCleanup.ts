@@ -139,6 +139,7 @@ async function chatCleanupWorker(
     await ctx.banChatMember(targetMembers[i].user_id).catch((e) => {});
     delete active.data[ctx.chat.id]?.[ctx.from!.id];
   }
+  cacheManager.TTLCache.del(`cleanup_${ctx.chat.id}`);
 }
 
 export default chatCleanup_menu;
