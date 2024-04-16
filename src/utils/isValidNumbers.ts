@@ -1,4 +1,4 @@
-function isValidNumbers(numbers: string[]): boolean {
+function isValidNumbers(numbers: any[]): boolean {
   numbers.forEach((n) => {
     if (isNaN(parseInt(n))) {
       return false;
