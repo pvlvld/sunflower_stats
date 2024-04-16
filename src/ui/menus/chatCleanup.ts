@@ -5,6 +5,7 @@ import isChatOwner from "../../utils/isChatOwner";
 import { autoRetry } from "@grammyjs/auto-retry";
 import cacheManager from "../../utils/cache";
 import { active } from "../../data/active";
+import { GrammyError } from "grammy";
 
 const chatCleanup_menu = new Menu<IGroupTextContext>("chatCleanup-menu", {
   autoAnswer: false,
@@ -59,11 +60,22 @@ const chatCleanup_menu = new Menu<IGroupTextContext>("chatCleanup-menu", {
       ctx.deleteMessage().catch((e) => {});
 
       const statusMessage = await ctx.reply("Починаю чистку!").catch((e) => {});
-      await chatCleanupWorker(ctx, targetMembers as { user_id: number }[]);
-      if (statusMessage) {
-        await ctx.api
+      const cleanupStatus = await chatCleanupWorker(ctx, targetMembers as { user_id: number }[]);
+
+      if (statusMessage && cleanupStatus) {
+        return void (await ctx.api
           .editMessageText(ctx.chat.id, statusMessage.message_id, "Чистку успішно закінчено!")
-          .catch((e) => {});
+          .catch((e) => {}));
+      }
+
+      if (statusMessage) {
+        return void (await ctx.api
+          .editMessageText(
+            ctx.chat.id,
+            statusMessage.message_id,
+            "⚠️ У бота недостатньо прав. Будь ласка, видайте боту наступні права: \nБлокувати користувачів (Ban users)"
+          )
+          .catch((e) => {}));
       }
     });
 
@@ -136,10 +148,20 @@ async function chatCleanupWorker(
   ctx.replyWithChatAction("typing").catch((e) => {});
 
   for (let i = 0; i < targetMembers.length; i++) {
-    await ctx.banChatMember(targetMembers[i].user_id).catch((e) => {});
-    delete active.data[ctx.chat.id]?.[ctx.from!.id];
+    try {
+      await ctx.banChatMember(targetMembers[i].user_id);
+      delete active.data[ctx.chat.id]?.[targetMembers[i].user_id];
+    } catch (e) {
+      if (e instanceof GrammyError) {
+        if (e.description.indexOf("not enough rights")) {
+          cacheManager.TTLCache.del(`cleanup_${ctx.chat.id}`);
+          return false;
+        }
+      }
+    }
   }
   cacheManager.TTLCache.del(`cleanup_${ctx.chat.id}`);
+  return true;
 }
 
 export default chatCleanup_menu;
