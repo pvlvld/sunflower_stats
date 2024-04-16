@@ -8,6 +8,7 @@ import { ignoreOldMessages } from "./middlewares/ignoreOldMessages";
 import type { MyContext } from "./types/context";
 import type { ParseModeFlavor } from "@grammyjs/parse-mode";
 import cfg from "./config";
+import chatCleanup_menu from "./ui/menus/chatCleanup";
 
 const bot = new Bot<MyContext>(cfg.BOT_TOKEN);
 
@@ -41,12 +42,13 @@ bot.api.config.use(parseMode("HTML"));
 bot.drop(matchFilter(":is_automatic_forward"));
 
 // MIDDLEWARES
-bot.use(ignoreOldMessages);
+// bot.use(ignoreOldMessages);
 bot.use(autoThread());
 bot.use(hydrateReply);
 
 // MENUS
 bot.use(start_menu);
 bot.use(help_menu);
+bot.use(chatCleanup_menu);
 
 export default bot;

@@ -27,6 +27,7 @@ import broadcast_owners_cmd from "./staff/broadcast_owners";
 import bench_db_cmd from "./staff/bench_db";
 import cfg from "../config";
 import botMemoryUsage from "./staff/botMemoryUsage";
+import { chatCleanup } from "./chatCleanup";
 
 function regCommands(dbStats: DbStats) {
   const group = bot.chatType(["supergroup", "group"]);
@@ -100,6 +101,10 @@ function regCommands(dbStats: DbStats) {
   group.hears(/^!ссприховати/i, async (ctx) => {
     botStatsManager.commandUse("ссприховати");
     del_user_active(ctx);
+  });
+
+  group.hears(/^!чистка/, async (ctx) => {
+    chatCleanup(ctx);
   });
 
   // -------- STAFF COMMANDS --------
