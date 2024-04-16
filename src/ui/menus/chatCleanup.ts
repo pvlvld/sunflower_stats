@@ -19,33 +19,6 @@ const chatCleanup_menu = new Menu<IGroupTextContext>("chatCleanup-menu", {
       | { user_id: number }[]
       | undefined;
 
-    range.text("Список 🔍", async (ctx) => {
-      ctx.answerCallbackQuery().catch((e) => {});
-
-      if (!(await isChatOwner(ctx))) {
-        return;
-      }
-
-      if (await destroyMenuIfOutdated(ctx, targetMembers)) {
-        return void (await ctx.reply("Ця чистка застаріла. Створіть нову.").catch((e) => {}));
-      }
-
-      const targetMembersListIndex = ctx.msg?.text?.indexOf("Список:");
-
-      if (targetMembersListIndex === -1) {
-        let msg = `${ctx.msg!.text}\n\nСписок:\n${getTargetMembersList(
-          ctx.chat.id,
-          targetMembers as { user_id: number }[]
-        )}`;
-
-        await ctx.editMessageText(msg, {
-          link_preview_options: { is_disabled: true },
-        });
-      } else {
-        ctx.editMessageText(ctx.msg!.text!.slice(0, targetMembersListIndex));
-      }
-    });
-
     range.text("Видалити ✅", async (ctx) => {
       ctx.answerCallbackQuery().catch((e) => {});
 
@@ -79,7 +52,7 @@ const chatCleanup_menu = new Menu<IGroupTextContext>("chatCleanup-menu", {
       }
     });
 
-    range.row().text("Скасувати ❌", async (ctx) => {
+    range.text("Скасувати ❌", async (ctx) => {
       ctx.answerCallbackQuery().catch((e) => {});
 
       if (!(await isChatOwner(ctx)) || (await destroyMenuIfOutdated(ctx, targetMembers))) {
@@ -89,6 +62,33 @@ const chatCleanup_menu = new Menu<IGroupTextContext>("chatCleanup-menu", {
       cacheManager.TTLCache.del(`cleanup_${ctx.chat.id}`);
       await ctx.menu.close({ immediate: true }).catch((e) => {});
       await ctx.deleteMessage().catch((e) => {});
+    });
+
+    range.row().text("Список 🔍", async (ctx) => {
+      ctx.answerCallbackQuery().catch((e) => {});
+
+      if (!(await isChatOwner(ctx))) {
+        return;
+      }
+
+      if (await destroyMenuIfOutdated(ctx, targetMembers)) {
+        return void (await ctx.reply("Ця чистка застаріла. Створіть нову.").catch((e) => {}));
+      }
+
+      const targetMembersListIndex = ctx.msg?.text?.indexOf("Список:");
+
+      if (targetMembersListIndex === -1) {
+        let msg = `${ctx.msg!.text}\n\nСписок:\n${getTargetMembersList(
+          ctx.chat.id,
+          targetMembers as { user_id: number }[]
+        )}`;
+
+        await ctx.editMessageText(msg, {
+          link_preview_options: { is_disabled: true },
+        });
+      } else {
+        ctx.editMessageText(ctx.msg!.text!.slice(0, targetMembersListIndex));
+      }
     });
 
     return range;
