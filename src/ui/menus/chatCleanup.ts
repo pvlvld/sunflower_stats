@@ -46,7 +46,7 @@ const chatCleanup_menu = new Menu<IGroupTextContext>("chatCleanup-menu", {
       }
     });
 
-    range.text("Підтвердити ✅", async (ctx) => {
+    range.text("Видалити ✅", async (ctx) => {
       ctx.answerCallbackQuery().catch((e) => {});
 
       if (!(await isChatOwner(ctx))) {
