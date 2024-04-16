@@ -11,7 +11,7 @@ export async function chatCleanup(ctx: GroupTextContext): Promise<void> {
 
   if (args.length !== 2 || !isValidNumbers([args[0], args[1]])) {
     return void (await ctx.reply(
-      "Це робиться не так. Спробуй щось на кшталт:\n!чистка 7 100\n7 - кількість днів, 100 - мінімальна кількість повідомлень за цей час"
+      "Це робиться не так. Спробуйте щось на кшталт:\n!чистка 7 100\n7 - кількість днів, 100 - мінімальна кількість повідомлень за цей час"
     ));
   }
 
