@@ -45,7 +45,7 @@ function regCommands(dbStats: DbStats) {
 
   group.hears(/^(статистика|стата) вчора$/i, async (ctx) => {
     botStatsManager.commandUse("стата вчора");
-    stats_yestarday(ctx, dbStats, active);
+    stats_yestarday(ctx, dbStats);
   });
 
   group.hears(/^(статистика|стата)\s*(сьогодні|день)?$/i, async (ctx) => {
