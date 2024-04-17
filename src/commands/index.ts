@@ -104,6 +104,7 @@ function regCommands(dbStats: DbStats) {
   });
 
   group.hears(/^!чистка/, async (ctx) => {
+    botStatsManager.commandUse("чистка");
     chatCleanup(ctx);
   });
 
