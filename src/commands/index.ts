@@ -103,7 +103,7 @@ function regCommands(dbStats: DbStats) {
     del_user_active(ctx);
   });
 
-  group.hears(/^!чистка/, async (ctx) => {
+  group.hears(/^!чистка \d+ \d/, async (ctx) => {
     botStatsManager.commandUse("чистка");
     chatCleanup(ctx);
   });
