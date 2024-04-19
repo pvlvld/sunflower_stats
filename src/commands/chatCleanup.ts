@@ -49,7 +49,7 @@ export async function chatCleanup(ctx: GroupTextContext): Promise<void> {
     return void (await ctx.reply("За вказаними параметрами знайдено 0 учасників."));
   }
 
-  cacheManager.TTLCache.set(`cleanup_${ctx.chat.id}`, targetMembers);
+  cacheManager.TTLCache.set(`cleanup_${ctx.chat.id}`, targetMembers, 60 * 5);
   void (await ctx.reply(
     getChatCleanupText(String(targetMembers.length), targetDaysCount, targetMessagesCount),
     { reply_markup: chatCleanup_menu }
