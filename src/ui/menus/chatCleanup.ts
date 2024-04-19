@@ -100,10 +100,7 @@ async function destroyMenuIfOutdated(
   ctx: IGroupTextContext & MenuFlavor,
   targetMembers: { user_id: number }[] | undefined
 ): Promise<boolean> {
-  if (
-    ctx.msg.text &&
-    (!targetMembers || ctx.msg.text?.match(/\d+/)?.[0] !== String(targetMembers.length))
-  ) {
+  if (ctx.msg.text && !targetMembers) {
     try {
       ctx.menu.close({ immediate: true }).catch((e) => {});
       await ctx.deleteMessage().catch((e) => {});
