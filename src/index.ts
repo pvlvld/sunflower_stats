@@ -153,6 +153,7 @@ async function main() {
 
   async function shutdown(DBPoolManager: IPgSQLPoolManager) {
     if (isShuttingDown) return;
+    console.log("Shutting down.");
     isShuttingDown = true;
 
     await runner?.stop();
@@ -161,7 +162,6 @@ async function main() {
       console.log("- Bot stopped.");
     });
 
-    console.log("Shutting down.");
     await bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
       console.log("Webhook removed");
     });
