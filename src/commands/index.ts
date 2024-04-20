@@ -28,6 +28,7 @@ import bench_db_cmd from "./staff/bench_db";
 import cfg from "../config";
 import botMemoryUsage from "./staff/botMemoryUsage";
 import { chatCleanup } from "./chatCleanup";
+import removeFromChatCleanup from "./removeFromChatCleanup";
 
 function regCommands(dbStats: DbStats) {
   const group = bot.chatType(["supergroup", "group"]);
@@ -106,6 +107,10 @@ function regCommands(dbStats: DbStats) {
   group.hears(/^!чистка \d+ \d/, async (ctx) => {
     botStatsManager.commandUse("чистка");
     chatCleanup(ctx);
+  });
+
+  group.hears(/^!рест/, async (ctx) => {
+    removeFromChatCleanup(ctx);
   });
 
   // -------- STAFF COMMANDS --------
