@@ -16,15 +16,19 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
       .catch((e) => {}));
   }
 
+  const cacheKey = `cleanup_${ctx.chat.id}`;
+  let targetMembers = cacheManager.TTLCache.get(cacheKey) as { user_id: number }[] | undefined;
+
   let targetId =
     ctx.msg.reply_to_message?.from?.id ||
     getUserId((ctx.msg.text ?? ctx.msg.caption).slice(6), ctx.chat.id);
   if (targetId === -1) {
+    if (targetMembers) {
+      cacheManager.TTLCache.set(`cleanup_${ctx.chat.id}`, targetMembers, 60 * 5);
+    }
     return void (await ctx.reply("❌ Користувача не знайдено"));
   }
 
-  const cacheKey = `cleanup_${ctx.chat.id}`;
-  let targetMembers = cacheManager.TTLCache.get(cacheKey) as { user_id: number }[] | undefined;
   if (!targetMembers) {
     // Try to promote target as an empty admin with with "рест" role
     switch (await setRestStatus(ctx, targetId)) {
@@ -61,6 +65,7 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
       .catch((e) => {}));
   }
 
+  cacheManager.TTLCache.set(`cleanup_${ctx.chat.id}`, targetMembers, 60 * 5);
   return void (await ctx
     .reply("🤷🏻‍♀️ Схоже, що цього користувача немає в поточній чистці.")
     .catch((e) => {}));
