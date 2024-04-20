@@ -3,7 +3,6 @@ import bot from "../bot";
 import botTest_cmd from "./botTets";
 import chatInactive_cmd from "./chat_inactive";
 import help_cmd from "./help";
-import start_cmd from "./start";
 import stats_all from "./stats_all";
 import stats_month from "./stats_month";
 import stats_my from "./stats_my";
@@ -34,14 +33,9 @@ function regCommands(dbStats: DbStats) {
   const group = bot.chatType(["supergroup", "group"]);
   const botAdmin = group.filter((ctx) => cfg.ADMINS.includes(ctx.from?.id || -1));
 
-  bot.command("help", async (ctx) => {
+  bot.command(["help", "start"], async (ctx) => {
     botStatsManager.commandUse("help");
     help_cmd(ctx);
-  });
-
-  bot.command("start", async (ctx) => {
-    botStatsManager.commandUse("start");
-    start_cmd(ctx);
   });
 
   group.hears(/^(статистика|стата) вчора$/i, async (ctx) => {

@@ -1,5 +1,4 @@
 import help_menu from "./ui/menus/help";
-import start_menu from "./ui/menus/start";
 import { Bot, matchFilter } from "grammy";
 import { autoRetry } from "@grammyjs/auto-retry";
 import { autoThread } from "./middlewares/autoThreads";
@@ -47,7 +46,6 @@ bot.use(autoThread());
 bot.use(hydrateReply);
 
 // MENUS
-bot.use(start_menu);
 bot.use(help_menu);
 bot.use(chatCleanup_menu);
 
