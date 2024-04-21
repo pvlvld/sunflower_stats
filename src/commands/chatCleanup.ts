@@ -5,6 +5,7 @@ import parseCmdArgs from "../utils/parseCmdArgs";
 import chatCleanup_menu from "../ui/menus/chatCleanup";
 import cacheManager from "../utils/cache";
 import isValidNumbers from "../utils/isValidNumbers";
+import { active } from "../data/active";
 
 export async function chatCleanup(ctx: GroupTextContext): Promise<void> {
   const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
@@ -27,7 +28,7 @@ export async function chatCleanup(ctx: GroupTextContext): Promise<void> {
 
   const [targetDaysCount, targetMessagesCount] = args as string[];
 
-  const targetMembers = (
+  let targetMembers = (
     await DBPoolManager.getPoolRead.query(
       `
       WITH chat_activity AS (
