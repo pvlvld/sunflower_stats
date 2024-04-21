@@ -78,7 +78,10 @@ const chatCleanup_menu = new Menu<IGroupTextContext>("chatCleanup-menu", {
       const targetMembersListIndex = ctx.msg?.text?.indexOf("Список:");
 
       if (targetMembersListIndex === -1) {
-        let msg = `${ctx.msg!.text}\n\nСписок:\n${getTargetMembersList(
+        let msg = `${ctx.msg!.text!.replace(
+          /\d+/,
+          String(targetMembers!.length)
+        )}\n\nСписок:\n${getTargetMembersList(
           ctx.chat.id,
           targetMembers as { user_id: number }[]
         )}`;
