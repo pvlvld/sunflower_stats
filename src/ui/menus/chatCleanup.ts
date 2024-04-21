@@ -118,7 +118,7 @@ const targetMembersListMaxSize = 100;
 function getTargetMembersList(chat_id: number, targetMembers: { user_id: number }[]): string {
   const targetMemberNames: string[] = [];
 
-  for (let i = 0; i <= Math.min(targetMembersListMaxSize, targetMembers.length); i++) {
+  for (let i = 0; i < Math.min(targetMembersListMaxSize, targetMembers.length); i++) {
     if (active.data[chat_id]?.[targetMembers[i]?.user_id]) {
       targetMemberNames.push(
         getUserNameLink.html(
