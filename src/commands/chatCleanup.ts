@@ -45,6 +45,9 @@ export async function chatCleanup(ctx: GroupTextContext): Promise<void> {
     )
   ).rows as { user_id: number }[];
 
+  // Filter left chat members
+  targetMembers = targetMembers.filter((m) => !!active.data[ctx.chat.id]?.[m.user_id]);
+
   if (targetMembers.length === 0) {
     return void (await ctx.reply("За вказаними параметрами знайдено 0 учасників."));
   }
