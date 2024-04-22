@@ -157,6 +157,8 @@ async function chatCleanupWorker(
           cacheManager.TTLCache.del(`cleanup_${ctx.chat.id}`);
           return false;
         }
+      } else {
+        delete active.data[ctx.chat.id]?.[targetMembers[i].user_id];
       }
     }
   }
