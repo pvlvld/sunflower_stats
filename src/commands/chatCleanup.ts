@@ -6,6 +6,7 @@ import chatCleanup_menu from "../ui/menus/chatCleanup";
 import cacheManager from "../utils/cache";
 import isValidNumbers from "../utils/isValidNumbers";
 import { active } from "../data/active";
+import moment from "moment";
 
 export async function chatCleanup(ctx: GroupTextContext): Promise<void> {
   const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
@@ -46,8 +47,14 @@ export async function chatCleanup(ctx: GroupTextContext): Promise<void> {
     )
   ).rows as { user_id: number }[];
 
-  // Filter left chat members
-  targetMembers = targetMembers.filter((m) => !!active.data[ctx.chat.id]?.[m.user_id]);
+  // Filter left chat members & members that in chat less than targetDaysCount
+  const beforeTargetDaysCount = moment().subtract(targetDaysCount + 1, "days");
+  targetMembers = targetMembers.filter((m) => {
+    return (
+      !!active.data[ctx.chat.id]?.[m.user_id]?.active_first &&
+      beforeTargetDaysCount.isSameOrBefore(active.data[ctx.chat.id]![m.user_id]!.active_first)
+    );
+  });
 
   if (targetMembers.length === 0) {
     return void (await ctx.reply("За вказаними параметрами знайдено 0 учасників."));
