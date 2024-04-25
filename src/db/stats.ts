@@ -35,7 +35,7 @@ class DbUserStats {
     SUM(CASE WHEN date BETWEEN '${this.dateRange.monthRange[0]}' AND '${this.dateRange.monthRange[1]}' THEN count ELSE 0 END)::INTEGER AS month,
     SUM(CASE WHEN date BETWEEN '${this.dateRange.weekRange[0]}' AND '${this.dateRange.weekRange[1]}' THEN count ELSE 0 END)::INTEGER AS week,
     SUM(CASE WHEN date = '${this.dateRange.today}' THEN count ELSE 0 END)::INTEGER AS today
-    FROM stats_day_statistics
+    FROM stats_daily
     WHERE chat_id = ${chat_id} AND user_id = ${user_id};
     `;
 
@@ -49,11 +49,7 @@ class DbUserStats {
 
   async countUserMessage(chat_id: number, user_id: number) {
     try {
-      return void (await this.poolWrite.query(`
-      INSERT INTO public.stats_day_statistics (chat_id, user_id)
-      VALUES (${chat_id}, ${user_id})
-      ON CONFLICT (chat_id, user_id, date)
-      DO UPDATE SET count = stats_day_statistics.count + 1;`));
+      return void (await this.poolWrite.query(`SELECT update_stats_daily(${chat_id}, ${user_id})`));
     } catch (error) {
       console.error(error);
     }
@@ -73,7 +69,7 @@ class DbChatStats {
     try {
       const query = `
       SELECT user_id, SUM(count)::INTEGER  AS count
-      FROM stats_day_statistics
+      FROM stats_daily
       WHERE chat_id = ${chat_id} AND date = '${this.dateRange.today}'
       GROUP BY user_id
       ORDER BY count DESC;
@@ -89,7 +85,7 @@ class DbChatStats {
     try {
       const query = `
       SELECT user_id, SUM(count)::INTEGER  AS count
-      FROM stats_day_statistics
+      FROM stats_daily
       WHERE chat_id = ${chat_id} AND date = '${this.dateRange.yesterday}'
       GROUP BY user_id
       ORDER BY count DESC;
@@ -107,7 +103,7 @@ class DbChatStats {
         return (
           await this.dbPool.query(`
         SELECT user_id, SUM(count)::INTEGER AS count
-        FROM stats_day_statistics
+        FROM stats_daily
         WHERE chat_id = ${chat_id} AND date BETWEEN '${this.dateRange[range][0]}' AND '${this.dateRange[range][1]}'
         GROUP BY user_id
         ORDER BY count DESC;
@@ -117,7 +113,7 @@ class DbChatStats {
         return (
           await this.dbPool.query(`
         SELECT user_id, SUM(count)::INTEGER AS count
-        FROM stats_day_statistics
+        FROM stats_daily
         WHERE chat_id = ${chat_id} AND date BETWEEN '${range[0]}' AND '${range[1]}'
         GROUP BY user_id
         ORDER BY count DESC;
@@ -133,7 +129,7 @@ class DbChatStats {
   async all(chat_id: number): Promise<IDbChatUserStats[]> {
     const query = `
     SELECT user_id, SUM(count)::INTEGER AS count
-    FROM stats_day_statistics
+    FROM stats_daily
     WHERE chat_id = ${chat_id}
     GROUP BY user_id
     ORDER BY count DESC;`;

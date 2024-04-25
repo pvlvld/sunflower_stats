@@ -34,7 +34,7 @@ export async function chatCleanup(ctx: GroupTextContext): Promise<void> {
       `
       WITH chat_activity AS (
         SELECT user_id, SUM(count) AS total_count
-        FROM public.stats_day_statistics
+        FROM public.stats_daily
         WHERE date >= current_date - INTERVAL '${parseInt(targetDaysCount)} DAY' AND chat_id = ${
         ctx.chat.id
       }
