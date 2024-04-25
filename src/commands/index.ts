@@ -1,4 +1,3 @@
-import type DbStats from "../db/stats";
 import bot from "../bot";
 import botTest_cmd from "./botTets";
 import chatInactive_cmd from "./chat_inactive";
@@ -29,7 +28,7 @@ import botMemoryUsage from "./staff/botMemoryUsage";
 import { chatCleanup } from "./chatCleanup";
 import removeFromChatCleanup from "./removeFromChatCleanup";
 
-function regCommands(dbStats: DbStats) {
+function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
   const botAdmin = group.filter((ctx) => cfg.ADMINS.includes(ctx.from?.id || -1));
 
@@ -40,42 +39,42 @@ function regCommands(dbStats: DbStats) {
 
   group.hears(/^(статистика|стата) вчора$/i, async (ctx) => {
     botStatsManager.commandUse("стата вчора");
-    stats_yestarday(ctx, dbStats);
+    stats_yestarday(ctx);
   });
 
   group.hears(/^(статистика|стата)\s*(сьогодні|день)?$/i, async (ctx) => {
     botStatsManager.commandUse("стата сьогодні");
-    stats_today(ctx, dbStats);
+    stats_today(ctx);
   });
 
   group.hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
     botStatsManager.commandUse("стата тиждень");
-    stats_week(ctx, dbStats);
+    stats_week(ctx);
   });
 
   group.hears(/^(статистика|стата) місяць$/i, async (ctx) => {
     botStatsManager.commandUse("стата місяць");
-    stats_month(ctx, dbStats);
+    stats_month(ctx);
   });
 
   group.hears(/^(статистика|стата) рік$/i, async (ctx) => {
     botStatsManager.commandUse("стата рік");
-    stats_year(ctx, dbStats);
+    stats_year(ctx);
   });
 
   group.hears(/^(статистика|стата) вся$/i, async (ctx) => {
     botStatsManager.commandUse("стата вся");
-    stats_all(ctx, dbStats);
+    stats_all(ctx);
   });
 
   group.hears(/^(!я|!йа)$/i, async (ctx) => {
     botStatsManager.commandUse("я");
-    stats_my(ctx, dbStats);
+    stats_my(ctx);
   });
 
   group.hears(/^(!ти)/i, async (ctx) => {
     botStatsManager.commandUse("ти");
-    stats_their(ctx, dbStats);
+    stats_their(ctx);
   });
 
   group.hears(/^(\+нік|\+нікнейм)/i, async (ctx) => {

@@ -1,13 +1,9 @@
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import type { ChatTypeContext } from "grammy";
 import type { MyContext } from "../types/context";
-import DbStats from "../db/stats";
-import { active } from "../data/active";
+import dbStats from "../db/stats";
 
-async function stats_today(
-  ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
-  dbStats: DbStats
-) {
+async function stats_today(ctx: ChatTypeContext<MyContext, "supergroup" | "group">) {
   const stats = await dbStats.chat.today(ctx.chat.id);
   if (!stats || stats === undefined) return;
 

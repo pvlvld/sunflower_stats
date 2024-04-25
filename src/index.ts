@@ -1,14 +1,12 @@
-import "dotenv/config";
+import DBPoolManager, { IPgSQLPoolManager } from "./db/db";
+DBPoolManager.createPool();
+
 import bot from "./bot";
 import { GrammyError, HttpError, webhookCallback } from "grammy";
 import * as http from "http";
 import process from "node:process";
 import { active } from "./data/active";
-import DBPoolManager, { IPgSQLPoolManager } from "./db/db";
-import DbStats from "./db/stats";
 import regCommands from "./commands";
-import DateRange from "./utils/date";
-import formattedDate from "./utils/date";
 import ActiveCollectorWrapper from "./middlewares/activeCollector";
 import StatsCollectorWrapper from "./middlewares/statsCollector";
 import createScheduler from "./utils/scheduler";
@@ -19,8 +17,6 @@ import moment from "moment";
 import { botStatsManager } from "./commands/botStats";
 import collectGarbage from "./utils/collectGarbage";
 import { limit } from "@grammyjs/ratelimiter";
-import * as fs from "fs";
-import fastify from "fastify";
 import cfg from "./config";
 import createServer from "./server";
 import { run } from "@grammyjs/runner";
@@ -51,12 +47,11 @@ async function main() {
   const allowed_updates = ["message", "chat_member", "my_chat_member", "callback_query"] as const;
 
   await DBPoolManager.createPool();
-  const dbStats = new DbStats(DBPoolManager.getPoolRead, DBPoolManager.getPoolWrite, DateRange);
 
   active.load();
 
-  bot.use(ActiveCollectorWrapper(formattedDate));
-  bot.use(StatsCollectorWrapper(dbStats));
+  bot.use(ActiveCollectorWrapper());
+  bot.use(StatsCollectorWrapper());
   bot.use(
     limit({
       timeFrame: 3000,
@@ -66,7 +61,7 @@ async function main() {
   bot.use(autoQuote({ allowSendingWithoutReply: true }));
   bot.use(autoThread());
   regHandlers();
-  regCommands(dbStats);
+  regCommands();
 
   collectGarbage();
 
@@ -111,13 +106,6 @@ async function main() {
         });
       } else {
         server = createServer();
-        // const server = fastify({
-        //   https: {
-        //     cert: fs.readFileSync("/etc/letsencrypt/live/soniashnyk.pp.ua/fullchain.pem"),
-        //     key: fs.readFileSync("/etc/letsencrypt/live/soniashnyk.pp.ua/privkey.pem"),
-        //   },
-        // });
-
         server.listen({ port: 443, host: "0.0.0.0" }, async (error) => {
           if (error) {
             console.error(error);

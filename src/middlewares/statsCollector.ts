@@ -1,8 +1,8 @@
 import { botStatsManager } from "../commands/botStats";
 import { type Context, type NextFunction } from "grammy";
-import DbStats from "../db/stats";
+import dbStats from "../db/stats";
 
-export function StatsCollectorWrapper(dbStats: DbStats) {
+export function StatsCollectorWrapper() {
   return async function statsCollector(ctx: Context, next: NextFunction) {
     botStatsManager.newMessage();
     if (

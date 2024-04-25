@@ -1,17 +1,18 @@
 import { Pool } from "pg";
-import { FormattedDate, type IFormattedRangeDateGetters } from "../utils/date";
+import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date";
 import type { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
+import DBPoolManager from "./db";
 
 type IDateRanges = keyof IFormattedRangeDateGetters | [from: string, to: string];
 
-class DbStats {
+class DbStatsWrapper {
   public chat;
   public user;
   public bot;
 
-  constructor(poolRead: Pool, poolWrite: Pool, dateRange: FormattedDate) {
-    this.chat = new DbChatStats(poolRead, dateRange);
-    this.user = new DbUserStats(poolRead, poolWrite, dateRange);
+  constructor(poolRead: Pool, poolWrite: Pool) {
+    this.chat = new DbChatStats(poolRead);
+    this.user = new DbUserStats(poolRead, poolWrite);
     this.bot = new DbBotStats(poolRead);
   }
 }
@@ -19,22 +20,20 @@ class DbStats {
 class DbUserStats {
   private poolRead: Pool;
   private poolWrite: Pool;
-  private dateRange: FormattedDate;
 
-  constructor(poolRead: Pool, poolWrite: Pool, dateRange: FormattedDate) {
+  constructor(poolRead: Pool, poolWrite: Pool) {
     this.poolRead = poolRead;
     this.poolWrite = poolWrite;
-    this.dateRange = dateRange;
   }
 
   async all(chat_id: number, user_id: number): Promise<IDbChatUserStatsPeriods> {
     const query = `
     SELECT
     SUM(count)::INTEGER AS total,
-    SUM(CASE WHEN date BETWEEN '${this.dateRange.yearRange[0]}' AND '${this.dateRange.yearRange[1]}' THEN count ELSE 0 END)::INTEGER AS year,
-    SUM(CASE WHEN date BETWEEN '${this.dateRange.monthRange[0]}' AND '${this.dateRange.monthRange[1]}' THEN count ELSE 0 END)::INTEGER AS month,
-    SUM(CASE WHEN date BETWEEN '${this.dateRange.weekRange[0]}' AND '${this.dateRange.weekRange[1]}' THEN count ELSE 0 END)::INTEGER AS week,
-    SUM(CASE WHEN date = '${this.dateRange.today}' THEN count ELSE 0 END)::INTEGER AS today
+    SUM(CASE WHEN date BETWEEN '${formattedDate.yearRange[0]}' AND '${formattedDate.yearRange[1]}' THEN count ELSE 0 END)::INTEGER AS year,
+    SUM(CASE WHEN date BETWEEN '${formattedDate.monthRange[0]}' AND '${formattedDate.monthRange[1]}' THEN count ELSE 0 END)::INTEGER AS month,
+    SUM(CASE WHEN date BETWEEN '${formattedDate.weekRange[0]}' AND '${formattedDate.weekRange[1]}' THEN count ELSE 0 END)::INTEGER AS week,
+    SUM(CASE WHEN date = '${formattedDate.today}' THEN count ELSE 0 END)::INTEGER AS today
     FROM stats_daily
     WHERE chat_id = ${chat_id} AND user_id = ${user_id};
     `;
@@ -58,11 +57,9 @@ class DbUserStats {
 
 class DbChatStats {
   private dbPool: Pool;
-  private dateRange: FormattedDate;
 
-  constructor(dbPool: Pool, dateRange: FormattedDate) {
+  constructor(dbPool: Pool) {
     this.dbPool = dbPool;
-    this.dateRange = dateRange;
   }
 
   async today(chat_id: number): Promise<IDbChatUserStats[]> {
@@ -70,7 +67,7 @@ class DbChatStats {
       const query = `
       SELECT user_id, SUM(count)::INTEGER  AS count
       FROM stats_daily
-      WHERE chat_id = ${chat_id} AND date = '${this.dateRange.today}'
+      WHERE chat_id = ${chat_id} AND date = '${formattedDate.today}'
       GROUP BY user_id
       ORDER BY count DESC;
         `;
@@ -86,7 +83,7 @@ class DbChatStats {
       const query = `
       SELECT user_id, SUM(count)::INTEGER  AS count
       FROM stats_daily
-      WHERE chat_id = ${chat_id} AND date = '${this.dateRange.yesterday}'
+      WHERE chat_id = ${chat_id} AND date = '${formattedDate.yesterday}'
       GROUP BY user_id
       ORDER BY count DESC;
         `;
@@ -104,7 +101,7 @@ class DbChatStats {
           await this.dbPool.query(`
         SELECT user_id, SUM(count)::INTEGER AS count
         FROM stats_daily
-        WHERE chat_id = ${chat_id} AND date BETWEEN '${this.dateRange[range][0]}' AND '${this.dateRange[range][1]}'
+        WHERE chat_id = ${chat_id} AND date = ${formattedDate[range]}'
         GROUP BY user_id
         ORDER BY count DESC;
           `)
@@ -150,4 +147,6 @@ class DbBotStats {
   }
 }
 
-export default DbStats;
+const dbStats = new DbStatsWrapper(DBPoolManager.getPoolRead, DBPoolManager.getPoolWrite);
+export default dbStats;
+// export default DbStats;

@@ -1,14 +1,11 @@
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import getUserNameLink from "../utils/getUserNameLink";
-import type DbStats from "../db/stats";
 import type { ChatTypeContext } from "grammy";
 import type { MyContext } from "../types/context";
 import { active } from "../data/active";
+import dbStats from "../db/stats";
 
-async function stats_yestarday(
-  ctx: ChatTypeContext<MyContext, "supergroup" | "group">,
-  dbStats: DbStats
-) {
+async function stats_yestarday(ctx: ChatTypeContext<MyContext, "supergroup" | "group">) {
   const stats = await dbStats.chat.yesterday(ctx.chat.id);
 
   if (!isDbResNotEmpty(stats)) {

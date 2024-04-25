@@ -1,8 +1,8 @@
-import { FormattedDate } from "../utils/date";
+import formattedDate from "../utils/date";
 import { active } from "../data/active";
 import { type Context, type NextFunction } from "grammy";
 
-function ActiveCollectorWrapper(formattedDate: FormattedDate) {
+function ActiveCollectorWrapper() {
   return async function activeCollector(ctx: Context, next: NextFunction) {
     if (
       !ctx.from ||

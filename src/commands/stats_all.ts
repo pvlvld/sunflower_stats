@@ -1,15 +1,11 @@
 import isDbResNotEmpty from "../utils/isDbResNotEmpty";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
-import type DbStats from "../db/stats";
 import type { MyContext } from "../types/context";
 import type { ChatTypeContext, HearsContext } from "grammy";
-import { active } from "../data/active";
+import dbStats from "../db/stats";
 const Big = require("big-js");
 
-async function stats_all(
-  ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
-  dbStats: DbStats
-) {
+async function stats_all(ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>) {
   const start = String(process.hrtime.bigint());
   const stats = await dbStats.chat.all(ctx.chat.id);
   if (!isDbResNotEmpty(stats)) {

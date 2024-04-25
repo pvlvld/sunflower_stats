@@ -1,13 +1,9 @@
-import DbStats from "../db/stats";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import type { MyContext } from "../types/context";
 import type { ChatTypeContext, HearsContext } from "grammy";
-import { active } from "../data/active";
+import dbStats from "../db/stats";
 
-async function stats_week(
-  ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
-  dbStats: DbStats
-) {
+async function stats_week(ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>) {
   await ctx.reply(
     "📊 Статистика чату за цей тиждень:\n\n" +
       getStatsRatingPlusToday(await dbStats.chat.inRage(ctx.chat.id, "weekRange"), ctx.chat.id),
