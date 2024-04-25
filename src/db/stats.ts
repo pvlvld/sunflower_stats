@@ -123,6 +123,23 @@ class DbChatStats {
     }
   }
 
+  async date(chat_id: number, date: string) {
+    try {
+      return (
+        await this.dbPool.query(`
+        SELECT user_id, SUM(count)::INTEGER AS count
+        FROM stats_daily
+        WHERE chat_id = ${chat_id} AND date = ${date}
+        GROUP BY user_id
+        ORDER BY count DESC;
+          `)
+      ).rows as IDbChatUserStats[];
+    } catch (error) {
+      console.error(error);
+      return [] as IDbChatUserStats[];
+    }
+  }
+
   async all(chat_id: number): Promise<IDbChatUserStats[]> {
     const query = `
     SELECT user_id, SUM(count)::INTEGER AS count
