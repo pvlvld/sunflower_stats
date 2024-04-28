@@ -1,6 +1,7 @@
 import formattedDate from "../utils/date";
 import { active } from "../data/active";
 import { type Context, type NextFunction } from "grammy";
+import removeNonspacingMarkUTF from "../utils/removeNonspacingMarkUTF";
 
 function ActiveCollectorWrapper() {
   return async function activeCollector(ctx: Context, next: NextFunction) {
@@ -21,10 +22,7 @@ function ActiveCollectorWrapper() {
         //@ts-expect-error
         active.data[ctx.chat.id][ctx.from.id] = {
           active_last: formattedDate.today,
-          active_first: formattedDate.today
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/[̩͟͞]/g, ""),
+          active_first: formattedDate.today,
           name: ctx.from.first_name,
           username: ctx.from.username,
         };
@@ -32,10 +30,9 @@ function ActiveCollectorWrapper() {
         //@ts-expect-error
         active.data[ctx.chat.id][ctx.from.id].active_last = formattedDate.today;
         //@ts-expect-error
-        active.data[ctx.chat.id][ctx.from.id].name = ctx.from.first_name
+        active.data[ctx.chat.id][ctx.from.id].name = removeNonspacingMarkUTF(ctx.from.first_name)
           .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/[̩͟͞]/g, "");
+          .replace(/>/g, "&gt;");
         //@ts-expect-error // gc experiment
         active.data[ctx.chat.id][ctx.from.id].username = ctx.from.username
           ? ctx.from.username + ""
