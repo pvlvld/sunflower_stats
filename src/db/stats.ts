@@ -129,7 +129,7 @@ class DbChatStats {
         await this.dbPool.query(`
         SELECT user_id, SUM(count)::INTEGER AS count
         FROM stats_daily
-        WHERE chat_id = ${chat_id} AND date = ${date}
+        WHERE chat_id = ${chat_id} AND date = '${date}'
         GROUP BY user_id
         ORDER BY count DESC;
           `)
