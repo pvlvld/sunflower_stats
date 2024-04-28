@@ -19,23 +19,19 @@ function ActiveCollectorWrapper() {
       active.data[ctx.chat.id] ??= {};
 
       if (active.data[ctx.chat.id]?.[ctx.from.id] === undefined) {
-        //@ts-expect-error
-        active.data[ctx.chat.id][ctx.from.id] = {
+        active.data[ctx.chat.id]![ctx.from.id] = {
           active_last: formattedDate.today,
           active_first: formattedDate.today,
           name: ctx.from.first_name,
           username: ctx.from.username,
         };
       } else {
-        //@ts-expect-error
-        active.data[ctx.chat.id][ctx.from.id].active_last = formattedDate.today;
-        //@ts-expect-error
-        active.data[ctx.chat.id][ctx.from.id].name = removeNonspacingMarkUTF(ctx.from.first_name)
+        active.data[ctx.chat.id]![ctx.from.id]!.active_last = formattedDate.today;
+        active.data[ctx.chat.id]![ctx.from.id]!.name = removeNonspacingMarkUTF(ctx.from.first_name)
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;");
-        //@ts-expect-error // gc experiment
-        active.data[ctx.chat.id][ctx.from.id].username = ctx.from.username
-          ? ctx.from.username + ""
+        active.data[ctx.chat.id]![ctx.from.id]!.username = ctx.from.username
+          ? ctx.from.username
           : undefined;
       }
     }
