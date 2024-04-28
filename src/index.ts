@@ -41,6 +41,8 @@ bot.catch((err) => {
 });
 
 async function main() {
+  await DBPoolManager.createPool();
+
   let server: http.Server | ReturnType<typeof createServer>;
   let runner: ReturnType<typeof run>;
 
