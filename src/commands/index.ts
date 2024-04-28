@@ -27,6 +27,7 @@ import cfg from "../config";
 import botMemoryUsage from "./staff/botMemoryUsage";
 import { chatCleanup } from "./chatCleanup";
 import removeFromChatCleanup from "./removeFromChatCleanup";
+import stats_chat_range_cmd from "./stats_chat_range";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -65,6 +66,11 @@ function regCommands() {
   group.hears(/^(статистика|стата) вся$/i, async (ctx) => {
     botStatsManager.commandUse("стата вся");
     stats_all(ctx);
+  });
+
+  group.hears(/^(статистика|стата) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/, async (ctx) => {
+    botStatsManager.commandUse("стата дата");
+    stats_chat_range_cmd(ctx);
   });
 
   group.hears(/^(!я|!йа)$/i, async (ctx) => {
