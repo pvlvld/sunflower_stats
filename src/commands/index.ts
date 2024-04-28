@@ -28,6 +28,7 @@ import botMemoryUsage from "./staff/botMemoryUsage";
 import { chatCleanup } from "./chatCleanup";
 import removeFromChatCleanup from "./removeFromChatCleanup";
 import stats_chat_range_cmd from "./stats_chat_range";
+import memes from "./memes";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -150,5 +151,11 @@ function regCommands() {
   botAdmin.hears(/^!ssbdb/, (ctx) => bench_db_cmd(ctx));
 
   botAdmin.hears("!ssmem", async (ctx) => botMemoryUsage(ctx));
+
+  // Etc.
+
+  bot.on("message", async (ctx) => {
+    memes(ctx);
+  });
 }
 export default regCommands;
