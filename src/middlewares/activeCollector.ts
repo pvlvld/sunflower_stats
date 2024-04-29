@@ -18,15 +18,16 @@ function ActiveCollectorWrapper() {
     } else {
       active.data[ctx.chat.id] ??= {};
 
+      const today = formattedDate.today[0];
       if (active.data[ctx.chat.id]?.[ctx.from.id] === undefined) {
         active.data[ctx.chat.id]![ctx.from.id] = {
-          active_last: formattedDate.today,
-          active_first: formattedDate.today,
+          active_last: today,
+          active_first: today,
           name: ctx.from.first_name,
           username: ctx.from.username,
         };
       } else {
-        active.data[ctx.chat.id]![ctx.from.id]!.active_last = formattedDate.today;
+        active.data[ctx.chat.id]![ctx.from.id]!.active_last = today;
         active.data[ctx.chat.id]![ctx.from.id]!.name = removeNonspacingMarkUTF(ctx.from.first_name)
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;");
