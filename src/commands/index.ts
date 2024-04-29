@@ -2,14 +2,8 @@ import bot from "../bot";
 import botTest_cmd from "./botTets";
 import chatInactive_cmd from "./chat_inactive";
 import help_cmd from "./help";
-import stats_all from "./stats_all";
-import stats_month from "./stats_month";
 import stats_my from "./stats_my";
 import stats_their from "./stats_their";
-import stats_today from "./stats_today";
-import stats_week from "./stats_week";
-import stats_year from "./stats_year";
-import stats_yestarday from "./stats_yesterday";
 import set_nickname from "./set_nickname";
 import del_nickname from "./del_nickname";
 import del_user_active from "./del_user_active";
@@ -29,6 +23,7 @@ import { chatCleanup } from "./chatCleanup";
 import removeFromChatCleanup from "./removeFromChatCleanup";
 import stats_chat_range_cmd from "./stats_chat_range";
 import memes from "./memes";
+import stats_chat from "./stats_chat";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -39,34 +34,12 @@ function regCommands() {
     help_cmd(ctx);
   });
 
-  group.hears(/^(статистика|стата) вчора$/i, async (ctx) => {
-    botStatsManager.commandUse("стата вчора");
-    stats_yestarday(ctx);
+  group.hears(/^(стата|статистика)$/i, async (ctx) => {
+    stats_chat(ctx);
   });
 
-  group.hears(/^(статистика|стата)\s*(сьогодні|день)?$/i, async (ctx) => {
-    botStatsManager.commandUse("стата сьогодні");
-    stats_today(ctx);
-  });
-
-  group.hears(/^(статистика|стата) тиждень$/i, async (ctx) => {
-    botStatsManager.commandUse("стата тиждень");
-    stats_week(ctx);
-  });
-
-  group.hears(/^(статистика|стата) місяць$/i, async (ctx) => {
-    botStatsManager.commandUse("стата місяць");
-    stats_month(ctx);
-  });
-
-  group.hears(/^(статистика|стата) рік$/i, async (ctx) => {
-    botStatsManager.commandUse("стата рік");
-    stats_year(ctx);
-  });
-
-  group.hears(/^(статистика|стата) вся$/i, async (ctx) => {
-    botStatsManager.commandUse("стата вся");
-    stats_all(ctx);
+  group.hears(/^(стата|статистика) (сьогодні|вся|тиждень|місяць|вчора|рік)$/i, async (ctx) => {
+    stats_chat(ctx);
   });
 
   group.hears(/^(статистика|стата) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/, async (ctx) => {
