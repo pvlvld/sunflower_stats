@@ -94,14 +94,15 @@ class DbChatStats {
     }
   }
 
-  async inRage(chat_id: number, range: IDateRanges) {
+  async inRage(chat_id: number, rawRange: IDateRanges) {
     try {
-      if (typeof range === "string") {
+      if (typeof rawRange === "string") {
+        const range = formattedDate[rawRange];
         return (
           await this.dbPool.query(`
         SELECT user_id, SUM(count)::INTEGER AS count
         FROM stats_daily
-        WHERE chat_id = ${chat_id} AND date BETWEEN '${formattedDate[range][0]}' AND '${formattedDate[range][1]}'
+        WHERE chat_id = ${chat_id} AND date BETWEEN '${range[0]}' AND '${range[1]}'
         GROUP BY user_id
         ORDER BY count DESC;
           `)
@@ -111,7 +112,7 @@ class DbChatStats {
           await this.dbPool.query(`
         SELECT user_id, SUM(count)::INTEGER AS count
         FROM stats_daily
-        WHERE chat_id = ${chat_id} AND date BETWEEN '${range[0]}' AND '${range[1]}'
+        WHERE chat_id = ${chat_id} AND date BETWEEN '${rawRange[0]}' AND '${rawRange[1]}'
         GROUP BY user_id
         ORDER BY count DESC;
           `)
