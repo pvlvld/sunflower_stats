@@ -1,8 +1,8 @@
 import moment from "moment";
 
 export interface IFormattedRangeDateGetters {
-  today: string;
-  yesterday: string;
+  today: string[];
+  yesterday: string[];
   weekRange: [monday: string, sunday: string];
   monthRange: [firstDayOfTheMonth: string, lastDayOfTheMonth: string];
   yearRange: [firstDayOfYear: string, lastDayOfYear: string];
@@ -11,12 +11,14 @@ export interface IFormattedRangeDateGetters {
 
 /** Dates in "YYY-MM-DD" format.*/
 export class FormattedDate {
-  get today(): string {
-    return moment().format("YYYY-MM-DD");
+  get today(): IFormattedRangeDateGetters["today"] {
+    const today = moment().format("YYYY-MM-DD");
+    return [today, today];
   }
 
-  get yesterday(): string {
-    return moment().subtract(1, "days").format("YYYY-MM-DD");
+  get yesterday(): IFormattedRangeDateGetters["yesterday"] {
+    const yesterday = moment().subtract(1, "days").format("YYYY-MM-DD");
+    return [yesterday, yesterday];
   }
 
   get weekRange(): IFormattedRangeDateGetters["weekRange"] {
