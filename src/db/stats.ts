@@ -33,7 +33,7 @@ class DbUserStats {
     SUM(CASE WHEN date BETWEEN '${formattedDate.yearRange[0]}' AND '${formattedDate.yearRange[1]}' THEN count ELSE 0 END)::INTEGER AS year,
     SUM(CASE WHEN date BETWEEN '${formattedDate.monthRange[0]}' AND '${formattedDate.monthRange[1]}' THEN count ELSE 0 END)::INTEGER AS month,
     SUM(CASE WHEN date BETWEEN '${formattedDate.weekRange[0]}' AND '${formattedDate.weekRange[1]}' THEN count ELSE 0 END)::INTEGER AS week,
-    SUM(CASE WHEN date = '${formattedDate.today}' THEN count ELSE 0 END)::INTEGER AS today
+    SUM(CASE WHEN date = '${formattedDate.today[0]}' THEN count ELSE 0 END)::INTEGER AS today
     FROM stats_daily
     WHERE chat_id = ${chat_id} AND user_id = ${user_id};
     `;
@@ -83,7 +83,7 @@ class DbChatStats {
       const query = `
       SELECT user_id, SUM(count)::INTEGER  AS count
       FROM stats_daily
-      WHERE chat_id = ${chat_id} AND date = '${formattedDate.yesterday}'
+      WHERE chat_id = ${chat_id} AND date = '${formattedDate.yesterday[0]}'
       GROUP BY user_id
       ORDER BY count DESC;
         `;

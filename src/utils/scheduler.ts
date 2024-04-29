@@ -24,7 +24,7 @@ function createScheduler() {
 }
 
 export async function startNewDay() {
-  active.save(path.join("data/active", `active-${formattedDate.today}.yaml`));
+  active.save(path.join("data/active", `active-${formattedDate.today[0]}.yaml`));
   await botStatsManager.sendToMainChat();
   botStatsManager.resetAll();
 }
