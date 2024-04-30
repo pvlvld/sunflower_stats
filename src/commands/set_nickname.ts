@@ -1,9 +1,8 @@
 import parseCmdArgs from "../utils/parseCmdArgs";
-import type { MyContext } from "../types/context";
-import type { ChatTypeContext, HearsContext } from "grammy";
+import type { IGroupTextContext } from "../types/context";
 import { active } from "../data/active";
 
-async function set_nickname(ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>) {
+async function set_nickname(ctx: IGroupTextContext) {
   if (!active.data[ctx.chat.id]![ctx.from.id]) {
     return;
   }

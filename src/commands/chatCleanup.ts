@@ -1,4 +1,4 @@
-import type { GroupTextContext } from "../types/context";
+import type { IGroupTextContext } from "../types/context";
 import DBPoolManager from "../db/db";
 import isChatOwner from "../utils/isChatOwner";
 import parseCmdArgs from "../utils/parseCmdArgs";
@@ -8,7 +8,7 @@ import isValidNumbers from "../utils/isValidNumbers";
 import { active } from "../data/active";
 import moment from "moment";
 
-export async function chatCleanup(ctx: GroupTextContext): Promise<void> {
+export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
   const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
 
   if (args.length !== 2 || !isValidNumbers([args[0], args[1]])) {

@@ -1,4 +1,4 @@
-import type { IGroupTextContext } from "../types";
+import type { IGroupTextContext } from "../types/context";
 const Big = require("big-js");
 import dbStats from "../db/stats";
 import { botStatsManager } from "./botStats";

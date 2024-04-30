@@ -1,9 +1,17 @@
-import type { ChatTypeContext, CommandContext, HearsContext } from "grammy";
+import type { ChatTypeContext, Context, HearsContext, CommandContext, Filter } from "grammy";
 import type { ParseModeFlavor } from "@grammyjs/parse-mode";
-import type { Context } from "grammy";
+import type { Update } from "grammy/types";
 
-export type MyContext = ParseModeFlavor<Context>;
+export type IContext = ParseModeFlavor<Context>;
 
-export type MyGroupContext = ChatTypeContext<MyContext, "group" | "supergroup">;
+export type IGroupContext = ChatTypeContext<IContext, "supergroup" | "group">;
 
-export type GroupTextContext = CommandContext<MyGroupContext> | HearsContext<MyGroupContext>;
+export type IGroupHearsContext = HearsContext<IGroupContext>;
+
+export type IGroupCommandContext = CommandContext<IGroupContext>;
+
+export type IGroupHearsCommandContext = IGroupHearsContext | IGroupCommandContext;
+
+export type IGroupTextContext = Filter<IGroupContext, ":text" | ":caption">;
+
+export type IUpdates = ReadonlyArray<Exclude<keyof Update, "update_id">>;

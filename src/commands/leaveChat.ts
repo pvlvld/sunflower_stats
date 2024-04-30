@@ -1,8 +1,7 @@
 import parseCmdArgs from "../utils/parseCmdArgs";
-import type { HearsContext } from "grammy";
-import type { MyContext } from "../types/context";
+import type { IGroupHearsContext } from "../types/context";
 
-export async function leaveChat_cmd(ctx: HearsContext<MyContext>) {
+export async function leaveChat_cmd(ctx: IGroupHearsContext) {
   const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
   if (!isNaN(parseInt(args[0] || ""))) {
     try {

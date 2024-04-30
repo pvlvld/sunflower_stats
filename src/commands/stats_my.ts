@@ -1,10 +1,9 @@
 import getUserStatsMessage from "../utils/getUserStatsMessage";
-import type { MyContext } from "../types/context";
-import type { ChatTypeContext, HearsContext } from "grammy";
+import type { IGroupTextContext } from "../types/context";
 import dbStats from "../db/stats";
 const Big = require("big-js");
 
-async function stats_my(ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>) {
+async function stats_my(ctx: IGroupTextContext) {
   if ([136817688, 777000].includes(ctx.from.id)) {
     return;
   }

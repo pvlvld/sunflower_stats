@@ -1,7 +1,7 @@
 import { active } from "../../data/active";
-import type { MyContext } from "../../types/context";
+import type { IContext } from "../../types/context";
 
-export function removeAnonimousActive(ctx: MyContext) {
+export function removeAnonimousActive(ctx: IContext) {
   let hidedCount = 0;
   for (const chat_id in active.data) {
     for (const user_id in active.data[chat_id]) {

@@ -1,7 +1,7 @@
 import { Menu } from "@grammyjs/menu";
-import type { MyContext } from "../../types/context";
+import type { IContext } from "../../types/context";
 
-const help_menu = new Menu<MyContext>("help-menu", {
+const help_menu = new Menu<IContext>("help-menu", {
   autoAnswer: true,
 })
   .url("Додати бота в чат", "https://t.me/soniashnyk_statistics_bot?startgroup")

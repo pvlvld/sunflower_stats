@@ -1,5 +1,5 @@
 import { Pool } from "pg";
-import { GroupTextContext } from "../../types/context";
+import { IGroupTextContext } from "../../types/context";
 import IActive, { active } from "../../data/active";
 import Database, { SqliteError } from "better-sqlite3";
 
@@ -12,7 +12,7 @@ type IOptions = {
   ids_range: number;
 };
 
-async function bench_db_cmd(ctx: GroupTextContext, options = {} as IOptions) {
+async function bench_db_cmd(ctx: IGroupTextContext, options = {} as IOptions) {
   const args = (ctx.msg?.text ?? ctx.msg?.caption)?.split(" ");
   if (types.includes(args[1] as (typeof types)[number])) {
     options.type = args[1] as (typeof types)[number];

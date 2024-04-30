@@ -1,4 +1,4 @@
-import type { IGroupTextContext } from "../types";
+import type { IGroupTextContext } from "../types/context";
 import { GrammyError } from "grammy";
 import { active } from "../data/active";
 import cacheManager from "../utils/cache";

@@ -1,11 +1,10 @@
 import getUserId from "../utils/getUserId";
-import type { HearsContext } from "grammy";
-import type { MyContext } from "../types/context";
+import type { IGroupHearsContext } from "../types/context";
 import cfg from "../config";
 import Escape from "../utils/escape";
 import { active } from "../data/active";
 
-async function del_user_active(ctx: HearsContext<MyContext>) {
+async function del_user_active(ctx: IGroupHearsContext) {
   const chatMember = await ctx.getChatMember(ctx.from?.id || -1).catch(() => {});
   if (chatMember?.status === "creator" || cfg.ADMINS.includes(ctx.from?.id || -1)) {
     const userId =

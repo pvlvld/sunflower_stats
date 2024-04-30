@@ -1,6 +1,6 @@
 import bot from "../bot";
 import moment from "moment";
-import type { MyContext } from "../types/context";
+import type { IContext } from "../types/context";
 
 type IBotStats = {
   commands: { [key: string]: number };
@@ -45,7 +45,7 @@ function getStatsMsg() {
   return statsMsg;
 }
 
-async function bot_stats_cmd(ctx: MyContext) {
+async function bot_stats_cmd(ctx: IContext) {
   await ctx.reply(getStatsMsg(), {
     link_preview_options: { is_disabled: true },
   });

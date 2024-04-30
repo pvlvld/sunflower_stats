@@ -1,14 +1,10 @@
-import type { ChatTypeContext, HearsContext } from "grammy";
-import type { MyContext } from "../types/context";
+import type { IGroupTextContext } from "../types/context";
 import DbStats from "../db/stats";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import isValidNumbers from "../utils/isValidNumbers";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 
-async function stats_chat_range_cmd(
-  ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>,
-  validateDate = true
-) {
+async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true) {
   const dateRange = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string[];
 
   if (dateRange.length > 2 || (validateDate && !isValidDateRange(dateRange))) {

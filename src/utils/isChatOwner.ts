@@ -1,4 +1,4 @@
-import type { IGroupContext, IGroupHearsCommandContext, IGroupTextContext } from "../types";
+import type { IGroupContext, IGroupHearsCommandContext, IGroupTextContext } from "../types/context";
 import type { MenuFlavor } from "@grammyjs/menu";
 import cfg from "../config";
 import cacheManager from "./cache";

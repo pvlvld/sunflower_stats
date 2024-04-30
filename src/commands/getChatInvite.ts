@@ -1,7 +1,7 @@
 import parseCmdArgs from "../utils/parseCmdArgs";
-import type { MyContext } from "../types/context";
+import type { IContext } from "../types/context";
 
-async function getChatInvite_cmd(ctx: MyContext) {
+async function getChatInvite_cmd(ctx: IContext) {
   const chat_id = parseCmdArgs(ctx.msg?.text || "")?.[0];
   if (chat_id) {
     let reply = "";

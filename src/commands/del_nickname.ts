@@ -1,8 +1,7 @@
+import type { IGroupTextContext } from "../types/context";
 import { active } from "../data/active";
-import type { MyContext } from "../types/context";
-import type { ChatTypeContext, HearsContext } from "grammy";
 
-async function del_nickname(ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>) {
+async function del_nickname(ctx: IGroupTextContext) {
   try {
     active.data[ctx.chat.id]![ctx.from.id]!.nickname = undefined;
     await ctx.reply(`✅ Нікнейм успішно видалено.`, {

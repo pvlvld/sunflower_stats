@@ -1,4 +1,4 @@
-import type { IGroupContext, IGroupTextContext } from "../../types";
+import type { IGroupContext, IGroupTextContext } from "../../types/context";
 import { Menu, type MenuFlavor } from "@grammyjs/menu";
 import getUserNameLink from "../../utils/getUserNameLink";
 import isChatOwner from "../../utils/isChatOwner";

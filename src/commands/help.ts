@@ -1,7 +1,7 @@
 import help_menu from "../ui/menus/help";
-import type { MyContext } from "../types/context";
+import type { IContext } from "../types/context";
 
-async function help_cmd(ctx: MyContext) {
+async function help_cmd(ctx: IContext) {
   await ctx.reply(
     `
 🌻Бот статистики Соняшник.

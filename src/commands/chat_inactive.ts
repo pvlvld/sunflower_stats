@@ -1,14 +1,11 @@
+import type { IGroupTextContext } from "../types/context";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import getUserNameLink from "../utils/getUserNameLink";
-import type { MyContext } from "../types/context";
-import type { ChatTypeContext, HearsContext } from "grammy";
 import { active } from "../data/active";
 
 const PAGE_LENGTH = 25;
 
-async function chatInactive_cmd(
-  ctx: HearsContext<ChatTypeContext<MyContext, "supergroup" | "group">>
-) {
+async function chatInactive_cmd(ctx: IGroupTextContext) {
   const page = parseInt(parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0] ?? "");
   if (!page) {
     await ctx.reply("Введіть номер сторінки.\n!неактив 1");
