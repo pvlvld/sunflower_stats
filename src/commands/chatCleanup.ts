@@ -51,7 +51,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
   const beforeTargetDaysCount = moment().subtract(targetDaysCount + 1, "days");
   targetMembers = targetMembers.filter((m) => {
     return (
-      !!active.data[ctx.chat.id]?.[m.user_id]?.active_first &&
+      active.data[ctx.chat.id]?.[m.user_id]?.active_first &&
       beforeTargetDaysCount.isSameOrBefore(active.data[ctx.chat.id]![m.user_id]!.active_first)
     );
   });
