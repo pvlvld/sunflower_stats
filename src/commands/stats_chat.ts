@@ -15,8 +15,9 @@ const cmdToDateRangeMap = {
 } as const;
 
 async function stats_chat(ctx: IGroupTextContext): Promise<void> {
-  const rawCmdDateRange = ((ctx.msg.text ?? ctx.msg.caption).split(" ")[1] ??
-    "сьогодні") as keyof typeof cmdToDateRangeMap;
+  const rawCmdDateRange = (
+    (ctx.msg.text ?? ctx.msg.caption).split(" ")[1] ?? "сьогодні"
+  ).toLowerCase() as keyof typeof cmdToDateRangeMap;
   const dateRange = cmdToDateRangeMap[rawCmdDateRange];
 
   const start = String(process.hrtime.bigint());
