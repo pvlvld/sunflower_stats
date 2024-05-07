@@ -41,7 +41,7 @@ bot.api.config.use(parseMode("HTML"));
 bot.drop(matchFilter(":is_automatic_forward"));
 
 // MIDDLEWARES
-// bot.use(ignoreOldMessages);
+bot.use(ignoreOldMessages);
 bot.use(autoThread());
 bot.use(hydrateReply);
 
