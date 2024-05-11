@@ -14,7 +14,6 @@ const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 const autoRetryTransformer = autoRetry({
   maxDelaySeconds: 30,
   maxRetryAttempts: 1,
-  retryOnInternalServerErrors: false,
 });
 
 // PLUGINS
