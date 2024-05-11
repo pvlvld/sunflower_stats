@@ -5,11 +5,11 @@ export interface IActive {
     | {
         [user_id: string | number]:
           | {
-              name?: string;
-              username?: string | null;
-              nickname?: string;
-              active_last: string;
               active_first: string;
+              active_last: string;
+              name: string;
+              nickname: string | null;
+              username: string | null;
             }
           | undefined;
       }

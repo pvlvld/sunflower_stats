@@ -21,19 +21,18 @@ function ActiveCollectorWrapper() {
       const today = formattedDate.today[0];
       if (active.data[ctx.chat.id]?.[ctx.from.id] === undefined) {
         active.data[ctx.chat.id]![ctx.from.id] = {
-          active_last: today,
           active_first: today,
+          active_last: today,
           name: ctx.from.first_name,
-          username: ctx.from.username,
+          nickname: null,
+          username: ctx.from.username || null,
         };
       } else {
         active.data[ctx.chat.id]![ctx.from.id]!.active_last = today;
         active.data[ctx.chat.id]![ctx.from.id]!.name = removeNonspacingMarkUTF(ctx.from.first_name)
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;");
-        active.data[ctx.chat.id]![ctx.from.id]!.username = ctx.from.username
-          ? ctx.from.username
-          : undefined;
+        active.data[ctx.chat.id]![ctx.from.id]!.username = ctx.from.username || null;
       }
     }
 
