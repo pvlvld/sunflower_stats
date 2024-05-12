@@ -31,6 +31,14 @@ function regCommands() {
   const botAdmin = group.filter((ctx) => cfg.ADMINS.includes(ctx.from?.id || -1));
 
   bot.command(["help", "start"], async (ctx) => {
+    if (
+      ["supergroup", "group"].includes(ctx.msg.chat.type) &&
+      ctx.msg.text.indexOf("@soniashnyk_statistics_bot") === -1 &&
+      ctx.msg.text.indexOf("@testSun203_bot") === -1
+    ) {
+      return;
+    }
+
     botStatsManager.commandUse("help");
     help_cmd(ctx);
   });
