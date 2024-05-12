@@ -8,6 +8,7 @@ import type { IContext } from "./types/context";
 import type { ParseModeFlavor } from "@grammyjs/parse-mode";
 import cfg from "./config";
 import chatCleanup_menu from "./ui/menus/chatCleanup";
+import { leftGroup_menu } from "./ui/menus/leftGroup";
 
 const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 
@@ -47,5 +48,6 @@ bot.use(hydrateReply);
 // MENUS
 bot.use(help_menu);
 bot.use(chatCleanup_menu);
+bot.use(leftGroup_menu);
 
 export default bot;
