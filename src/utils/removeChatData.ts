@@ -3,7 +3,7 @@ import DBPoolManager from "../db/db";
 import { QueryResult } from "pg";
 
 /** Returns -1 on db error */
-async function removeChatData(chat_id: string): Promise<number> {
+async function removeChatData(chat_id: string | number): Promise<number> {
   active.data[chat_id] = undefined;
   let res: QueryResult<any>;
 
