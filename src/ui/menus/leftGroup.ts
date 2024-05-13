@@ -1,9 +1,8 @@
 import type { IGroupContext } from "../../types/context";
 import type { Filter } from "grammy";
-import { active } from "../../data/active";
+import { removeChatData } from "../../utils/removeChatData";
 import { Menu } from "@grammyjs/menu";
 import cfg from "../../config";
-import DBPoolManager from "../../db/db";
 
 const leftGroup_menu = new Menu<Filter<IGroupContext, ":text">>("leftGroup-menu", {
   autoAnswer: true,
@@ -12,20 +11,20 @@ const leftGroup_menu = new Menu<Filter<IGroupContext, ":text">>("leftGroup-menu"
     return;
   }
 
-  const db = DBPoolManager.getPoolWrite;
   const chat_id = ctx.msg.text.substring(ctx.msg.text.lastIndexOf("-"));
-  active.data[chat_id] = undefined;
-  const res = await db.query(`
-    WITH deleted_rows AS (
-        DELETE FROM stats_daily
-        WHERE chat_id = ${chat_id}
-        RETURNING *
-        )
-    SELECT count(*) FROM deleted_rows;`);
+  const removedRows = await removeChatData(chat_id);
 
-  ctx.editMessageText(ctx.msg.text + `\nВидалено ${res.rows[0].count} записів.`, {
-    reply_markup: undefined,
-  });
+  if (removedRows === -1) {
+    return void ctx
+      .editMessageText(ctx.msg.text + "\nНе вдалося видалити дані чату. Помилка бази даних.")
+      .catch((e) => {});
+  }
+
+  return void ctx
+    .editMessageText(ctx.msg.text + `\nВидалено ${removedRows} записів.`, {
+      reply_markup: undefined,
+    })
+    .catch((e) => {});
 });
 
 export { leftGroup_menu };
