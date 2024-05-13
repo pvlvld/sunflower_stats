@@ -164,7 +164,7 @@ async function main() {
 
     await DBPoolManager.shutdown();
 
-    active.save();
+    await active.save();
     await botStatsManager.sendToMainChat();
 
     console.log("Done.");

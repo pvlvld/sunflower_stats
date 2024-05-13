@@ -39,7 +39,7 @@ class YAMLWrapper<T> {
     console.log(`${this.filename()}.yaml loaded.`);
   }
 
-  save(custom_filepath?: string) {
+  async save(custom_filepath?: string) {
     try {
       fs.writeFileSync(custom_filepath || this.filepath(), YAML.dump(this.data));
     } catch (e: any) {
