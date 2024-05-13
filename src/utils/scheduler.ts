@@ -11,9 +11,8 @@ function createScheduler() {
     async (date) => {
       if (date instanceof Date && date.getHours() === 0) {
         await startNewDay();
+        active.save();
       }
-
-      active.save();
 
       collectGarbage();
     },
