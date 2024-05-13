@@ -33,34 +33,25 @@ CREATE TABLE
 
 CREATE OR REPLACE FUNCTION update_stats_daily(
   IN input_chat_id BIGINT,
-  IN input_user_id BIGINT
+  IN input_user_id BIGINT,
+  INCREMENT_BY INTEGER DEFAULT 1
 )
 RETURNS VOID AS $$
 BEGIN
---   Check for existing chat
-  IF NOT EXISTS (SELECT 1 FROM public.chats WHERE public.chats.chat_id = input_chat_id) THEN
-    INSERT INTO public.chats (chat_id)
-    VALUES (input_chat_id)
-    ON CONFLICT (chat_id) DO NOTHING;
-  END IF;
+  -- Check for existing chat and user, and insert if not exists
+  INSERT INTO public.chats (chat_id)
+  VALUES (input_chat_id)
+  ON CONFLICT (chat_id) DO NOTHING;
+  
+  INSERT INTO public.users (user_id)
+  VALUES (input_user_id)
+  ON CONFLICT (user_id) DO NOTHING;
 
---   Check for existing user
-  IF NOT EXISTS (SELECT 1 FROM public.users WHERE user_id = input_user_id) THEN
-    INSERT INTO public.users (user_id)
-    VALUES (input_user_id)
-    ON CONFLICT (user_id) DO NOTHING;
-  END IF;
-
---   Update stats_daily with conflict resolution
-  UPDATE public.stats_daily
-  SET count = public.stats_daily.count + 1
-  WHERE public.stats_daily.chat_id = input_chat_id AND public.stats_daily.user_id = input_user_id AND date = current_date;
-
---   Insert a new row if no stats exist for the day
-  IF NOT FOUND THEN
-    INSERT INTO public.stats_daily (chat_id, user_id, count, date)
-    VALUES (input_chat_id, input_user_id, 1, current_date);
-  END IF;
+  -- Update or insert stats_daily
+  INSERT INTO public.stats_daily (chat_id, user_id, count, date)
+  VALUES (input_chat_id, input_user_id, INCREMENT_BY, current_date)
+  ON CONFLICT (chat_id, user_id, date)
+  DO UPDATE SET count = public.stats_daily.count + INCREMENT_BY;
 END;
 $$ LANGUAGE plpgsql;
 
