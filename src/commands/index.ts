@@ -25,6 +25,7 @@ import stats_chat_range_cmd from "./stats_chat_range";
 import memes from "./memes";
 import stats_chat from "./stats_chat";
 import { monomorphic_active } from "./staff/monomorphic_active";
+import { removeChatData_cmd } from "./staff/removeChatData";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -135,6 +136,8 @@ function regCommands() {
   botAdmin.hears("!ssmem", async (ctx) => botMemoryUsage(ctx));
 
   botAdmin.hears("!monoactive", async () => monomorphic_active());
+
+  botAdmin.hears("!ssrc", async (ctx) => removeChatData_cmd(ctx));
   // Etc.
 
   bot.on("message", async (ctx) => {
