@@ -137,7 +137,7 @@ function regCommands() {
 
   botAdmin.hears("!monoactive", async () => monomorphic_active());
 
-  botAdmin.hears("!ssrc", async (ctx) => removeChatData_cmd(ctx));
+  botAdmin.hears(/^!ssrc/, async (ctx) => removeChatData_cmd(ctx));
   // Etc.
 
   bot.on("message", async (ctx) => {
