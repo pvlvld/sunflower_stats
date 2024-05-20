@@ -1,6 +1,7 @@
-import { Pool, type PoolConfig } from "pg";
+import pg, { Pool, type PoolConfig } from "pg";
 import cfg from "../config";
-
+pg.types.setTypeParser(pg.types.builtins.INT8, parseInt);
+pg.types.setTypeParser(pg.types.builtins.INT4, parseInt);
 export type IPgSQLPoolManager = PgSQLPoolManager;
 
 class PgSQLPoolManager {

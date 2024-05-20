@@ -29,11 +29,11 @@ class DbUserStats {
   async all(chat_id: number, user_id: number): Promise<IDbChatUserStatsPeriods> {
     const query = `
     SELECT
-    SUM(count)::INTEGER AS total,
-    SUM(CASE WHEN date BETWEEN '${formattedDate.yearRange[0]}' AND '${formattedDate.yearRange[1]}' THEN count ELSE 0 END)::INTEGER AS year,
-    SUM(CASE WHEN date BETWEEN '${formattedDate.monthRange[0]}' AND '${formattedDate.monthRange[1]}' THEN count ELSE 0 END)::INTEGER AS month,
-    SUM(CASE WHEN date BETWEEN '${formattedDate.weekRange[0]}' AND '${formattedDate.weekRange[1]}' THEN count ELSE 0 END)::INTEGER AS week,
-    SUM(CASE WHEN date = '${formattedDate.today[0]}' THEN count ELSE 0 END)::INTEGER AS today
+    SUM(count) AS total,
+    SUM(CASE WHEN date BETWEEN '${formattedDate.yearRange[0]}' AND '${formattedDate.yearRange[1]}' THEN count ELSE 0 END) AS year,
+    SUM(CASE WHEN date BETWEEN '${formattedDate.monthRange[0]}' AND '${formattedDate.monthRange[1]}' THEN count ELSE 0 END) AS month,
+    SUM(CASE WHEN date BETWEEN '${formattedDate.weekRange[0]}' AND '${formattedDate.weekRange[1]}' THEN count ELSE 0 END) AS week,
+    SUM(CASE WHEN date = '${formattedDate.today[0]}' THEN count ELSE 0 END) AS today
     FROM stats_daily
     WHERE chat_id = ${chat_id} AND user_id = ${user_id};
     `;
@@ -65,7 +65,7 @@ class DbChatStats {
   async today(chat_id: number): Promise<IDbChatUserStats[]> {
     try {
       const query = `
-      SELECT user_id, SUM(count)::INTEGER  AS count
+      SELECT user_id, SUM(count)  AS count
       FROM stats_daily
       WHERE chat_id = ${chat_id} AND date = '${formattedDate.today}'
       GROUP BY user_id
@@ -81,7 +81,7 @@ class DbChatStats {
   async yesterday(chat_id: number): Promise<IDbChatUserStats[]> {
     try {
       const query = `
-      SELECT user_id, SUM(count)::INTEGER  AS count
+      SELECT user_id, SUM(count)  AS count
       FROM stats_daily
       WHERE chat_id = ${chat_id} AND date = '${formattedDate.yesterday[0]}'
       GROUP BY user_id
@@ -100,7 +100,7 @@ class DbChatStats {
         const range = formattedDate[rawRange];
         return (
           await this.dbPool.query(`
-        SELECT user_id, SUM(count)::INTEGER AS count
+        SELECT user_id, SUM(count) AS count
         FROM stats_daily
         WHERE chat_id = ${chat_id} AND date BETWEEN '${range[0]}' AND '${range[1]}'
         GROUP BY user_id
@@ -110,7 +110,7 @@ class DbChatStats {
       } else {
         return (
           await this.dbPool.query(`
-        SELECT user_id, SUM(count)::INTEGER AS count
+        SELECT user_id, SUM(count) AS count
         FROM stats_daily
         WHERE chat_id = ${chat_id} AND date BETWEEN '${rawRange[0]}' AND '${rawRange[1]}'
         GROUP BY user_id
@@ -128,7 +128,7 @@ class DbChatStats {
     try {
       return (
         await this.dbPool.query(`
-        SELECT user_id, SUM(count)::INTEGER AS count
+        SELECT user_id, SUM(count) AS count
         FROM stats_daily
         WHERE chat_id = ${chat_id} AND date = '${date}'
         GROUP BY user_id
@@ -143,7 +143,7 @@ class DbChatStats {
 
   async all(chat_id: number): Promise<IDbChatUserStats[]> {
     const query = `
-    SELECT user_id, SUM(count)::INTEGER AS count
+    SELECT user_id, SUM(count) AS count
     FROM stats_daily
     WHERE chat_id = ${chat_id}
     GROUP BY user_id
@@ -167,4 +167,3 @@ class DbBotStats {
 
 const dbStats = new DbStatsWrapper(DBPoolManager.getPoolRead, DBPoolManager.getPoolWrite);
 export default dbStats;
-// export default DbStats;
