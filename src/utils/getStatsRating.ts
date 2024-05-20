@@ -7,22 +7,29 @@ export function getStatsRatingPlusToday(stats: IDbChatUserStats[], chat_id: numb
   let totalChatMessages = 0;
 
   const statsRowLimit = Math.min(50, stats.length);
-  let statsRowsCount = 1;
+  const activeData = active.data[chat_id];
 
+  let statsRowsCount = 0;
+  let displayRank = 1;
   let user: IDbChatUserStats;
-  for (user of stats) {
-    if (active.data[chat_id]?.[user.user_id] && statsRowsCount < statsRowLimit + 1) {
+  let userData: any;
+  let nickname = "";
+
+  for (let i = 0; i < stats.length && statsRowsCount < statsRowLimit; i++) {
+    user = stats[i];
+    userData = activeData?.[user.user_id];
+
+    if (userData) {
+      nickname = userData.nickname || userData.name || "Невідомо";
       replyParts.push(
-        `${statsRowsCount}. ${getUserNameLink.html(
-          active.data[chat_id]?.[user.user_id]?.nickname ||
-            active.data[chat_id]?.[user.user_id]?.name ||
-            "Невідомо",
-          active.data[chat_id]?.[user.user_id]?.username,
-          user.user_id
-        )} — ${user.count || 0}\n`
+        `${displayRank}. ${getUserNameLink.html(nickname, userData.username, user.user_id)} — ${
+          user.count || 0
+        }\n`
       );
       statsRowsCount++;
+      displayRank++;
     }
+
     totalChatMessages += user.count || 0;
   }
 
