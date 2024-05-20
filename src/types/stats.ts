@@ -20,9 +20,9 @@ export interface IStats {
 export interface IDbChatUserStatsPeriods {
   total: number;
   year: number;
-  month: string;
-  week: string;
-  today: string;
+  month: number;
+  week: number;
+  today: number;
 }
 
 export interface IDbChatUserStats {
