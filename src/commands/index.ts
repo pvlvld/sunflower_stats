@@ -63,6 +63,12 @@ function regCommands() {
   });
 
   group.hears(/^(!ти)/i, async (ctx) => {
+    if (
+      (!ctx.msg.reply_to_message && !ctx.msg?.text?.startsWith("!ти ")) ||
+      (ctx.msg.reply_to_message && !(ctx.msg?.text === "!ти"))
+    ) {
+      return;
+    }
     botStatsManager.commandUse("ти");
     stats_their(ctx);
   });
