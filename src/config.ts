@@ -4,6 +4,7 @@ dotenv.config();
 type ICfg = Record<(typeof requiredEnv)[number], string> & {
   ADMINS: number[];
   STATUSES: { LEFT_STATUSES: string[] };
+  IGNORE_IDS: number[];
 };
 
 const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE"] as const;
@@ -21,6 +22,7 @@ function getCfg(): ICfg {
   cfg.ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
   cfg.STATUSES ??= {} as any;
   cfg.STATUSES.LEFT_STATUSES = ["kicked", "left"];
+  cfg.IGNORE_IDS = [136817688, 777000, -1];
 
   return Object.freeze(cfg);
 }
