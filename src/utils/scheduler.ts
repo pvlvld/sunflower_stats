@@ -4,6 +4,7 @@ import formattedDate from "./date";
 import collectGarbage from "./collectGarbage";
 import { botStatsManager } from "../commands/botStats";
 import { active } from "../data/active";
+import cacheManager from "./cache";
 
 function createScheduler() {
   return cron.schedule(
@@ -26,6 +27,7 @@ export async function startNewDay() {
   active.save(path.join("data/active", `active-${formattedDate.today[0]}.yaml`));
   await botStatsManager.sendToMainChat();
   botStatsManager.resetAll();
+  cacheManager.ChartCache.flush();
 }
 
 export default createScheduler;
