@@ -92,8 +92,10 @@ export async function getStatsChart(
   let data: any[];
   if (user_id) {
     data = await getUserData(chat_id, user_id);
+    void data.pop();
   } else {
     data = await getChatData(chat_id);
+    void data.pop();
   }
 
   if (data.length < 7) {
