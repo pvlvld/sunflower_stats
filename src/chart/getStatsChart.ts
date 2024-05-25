@@ -76,7 +76,7 @@ async function getChartConfig(): Promise<ChartConfiguration> {
         x: {
           grid: {
             display: false,
-            color: "#161525",
+            // color: "#161525",
           },
           // border: {
           //   dash: [8, 4],
@@ -92,7 +92,7 @@ async function getChartConfig(): Promise<ChartConfiguration> {
         y: {
           grid: {
             display: false,
-            color: "#161525",
+            // color: "#161525",
           },
           // border: {
           //   dash: [8, 4],
