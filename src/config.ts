@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE"] as const;
+
 type ICfg = Record<(typeof requiredEnv)[number], string> & {
   ADMINS: number[];
   STATUSES: { LEFT_STATUSES: string[] };
   IGNORE_IDS: number[];
 };
-
-const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE"] as const;
 
 function getCfg(): ICfg {
   const cfg = {} as ICfg;
