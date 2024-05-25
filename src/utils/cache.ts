@@ -37,7 +37,7 @@ const ChartCache = {
       _chartCache[id] = SkipChart;
       return;
     }
-    _chartCache[id] = { file_id, status: "ok" };
+    _chartCache[id] = Object.freeze({ file_id, status: "ok" });
   },
   flush: () => {
     _chartCache = {};
