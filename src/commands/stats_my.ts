@@ -37,6 +37,10 @@ async function stats_my(ctx: IGroupTextContext) {
         cacheManager.ChartCache.set(ctx.from.id, msg.photo[msg.photo.length - 1].file_id);
         return;
       }
+
+      if (chart === null) {
+        cacheManager.ChartCache.set(ctx.from.id, null);
+      }
     }
 
     return void (await ctx.reply(

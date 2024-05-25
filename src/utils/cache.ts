@@ -24,7 +24,7 @@ const ChartCache = {
   get: (id: number | string) => {
     return _chartCache[id];
   },
-  set: (id: number | string, file_id: string) => {
+  set: (id: number | string, file_id: string | null) => {
     _chartCache[id] = file_id;
   },
   flush: () => {
