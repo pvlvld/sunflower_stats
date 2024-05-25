@@ -12,45 +12,42 @@ async function stats_my(ctx: IGroupTextContext) {
   const cachedChart = cacheManager.ChartCache.get(ctx.from.id);
 
   try {
-    if (cachedChart) {
-      return void (await ctx.replyWithPhoto(cachedChart, {
-        caption: getUserStatsMessage(
-          ctx.chat.id,
-          ctx.from.id,
-          await dbStats.user.all(ctx.chat.id, ctx.from.id)
-        ),
-        disable_notification: true,
-      }));
-    }
-
-    if (cachedChart === undefined) {
-      const chart = await getStatsChart(ctx.chat.id, ctx.from.id);
-      if (chart) {
-        const msg = await ctx.replyWithPhoto(chart, {
+    switch (cachedChart.status) {
+      case "unrendered":
+        const chart = await getStatsChart(ctx.chat.id, ctx.from.id);
+        if (chart) {
+          const msg = await ctx.replyWithPhoto(chart, {
+            caption: getUserStatsMessage(
+              ctx.chat.id,
+              ctx.from.id,
+              await dbStats.user.all(ctx.chat.id, ctx.from.id)
+            ),
+            disable_notification: true,
+          });
+          cacheManager.ChartCache.set(ctx.from.id, msg.photo[msg.photo.length - 1].file_id);
+        } else {
+          cacheManager.ChartCache.set(ctx.from.id, "");
+        }
+        return;
+      case "ok":
+        return void (await ctx.replyWithPhoto(cachedChart.file_id, {
           caption: getUserStatsMessage(
             ctx.chat.id,
             ctx.from.id,
             await dbStats.user.all(ctx.chat.id, ctx.from.id)
           ),
           disable_notification: true,
-        });
-        cacheManager.ChartCache.set(ctx.from.id, msg.photo[msg.photo.length - 1].file_id);
-        return;
-      }
-
-      if (chart === null) {
-        cacheManager.ChartCache.set(ctx.from.id, null);
-      }
+        }));
+      case "skip":
+        return void (await ctx.reply(
+          getUserStatsMessage(
+            ctx.chat.id,
+            ctx.from.id,
+            await dbStats.user.all(ctx.chat.id, ctx.from.id)
+          ),
+          { disable_notification: true, link_preview_options: { is_disabled: true } }
+        ));
     }
-
-    return void (await ctx.reply(
-      getUserStatsMessage(
-        ctx.chat.id,
-        ctx.from.id,
-        await dbStats.user.all(ctx.chat.id, ctx.from.id)
-      ),
-      { disable_notification: true, link_preview_options: { is_disabled: true } }
-    ));
   } catch (error) {
     console.error(error);
   }

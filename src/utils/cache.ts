@@ -18,14 +18,25 @@ class CacheManager {
   }
 }
 
-let _chartCache: Record<string, string | undefined | null> = {};
+type ChartStatuses = "ok" | "skip" | "unrendered";
+type ChartCache = { file_id: string; status: ChartStatuses };
+let _chartCache: Record<string, ChartCache | undefined> = {};
+const UnrenderedChart = Object.freeze({ file_id: "", status: "unrendered" } as ChartCache);
+
 const ChartCache = {
-  /** returns @string file_id on success, @undefined if no cached image @null if chart must not be sent*/
-  get: (id: number | string) => {
-    return _chartCache[id];
+  get: (id: number | string): ChartCache => {
+    const chart = _chartCache[id];
+    if (chart) {
+      return chart;
+    }
+    return UnrenderedChart;
   },
-  set: (id: number | string, file_id: string | null) => {
-    _chartCache[id] = file_id;
+  set: (id: number | string, file_id: string) => {
+    if (file_id.length === 0) {
+      _chartCache[id] = { file_id, status: "skip" };
+      return;
+    }
+    _chartCache[id] = { file_id, status: "ok" };
   },
   flush: () => {
     _chartCache = {};
