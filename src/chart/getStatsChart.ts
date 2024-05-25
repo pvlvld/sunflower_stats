@@ -70,7 +70,7 @@ async function getChartConfig(): Promise<ChartConfiguration> {
       scales: {
         x: {
           grid: {
-            display: true,
+            display: false,
             color: "#161525",
           },
           border: {
@@ -86,7 +86,7 @@ async function getChartConfig(): Promise<ChartConfiguration> {
         },
         y: {
           grid: {
-            display: true,
+            display: false,
             color: "#161525",
           },
           border: {
