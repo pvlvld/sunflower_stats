@@ -5,11 +5,15 @@ import cacheManager from "../utils/cache";
 import dbStats from "../db/stats";
 import cfg from "../config";
 
+function getChartCacheKey(ctx: IGroupTextContext) {
+  return `${ctx.chat.id}_${ctx.from.id}`;
+}
+
 async function stats_my(ctx: IGroupTextContext) {
   if (cfg.IGNORE_IDS.includes(ctx.from.id)) {
     return;
   }
-  const cachedChart = cacheManager.ChartCache.get(ctx.from.id);
+  const cachedChart = cacheManager.ChartCache.get(getChartCacheKey(ctx));
 
   try {
     switch (cachedChart.status) {
@@ -24,9 +28,12 @@ async function stats_my(ctx: IGroupTextContext) {
             ),
             disable_notification: true,
           });
-          cacheManager.ChartCache.set(ctx.from.id, msg.photo[msg.photo.length - 1].file_id);
+          cacheManager.ChartCache.set(
+            getChartCacheKey(ctx),
+            msg.photo[msg.photo.length - 1].file_id
+          );
         } else {
-          cacheManager.ChartCache.set(ctx.from.id, "");
+          cacheManager.ChartCache.set(getChartCacheKey(ctx), "");
         }
         return;
       case "ok":
