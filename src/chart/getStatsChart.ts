@@ -138,7 +138,7 @@ export async function getStatsChart(
 function renderToBuffer(configuration: ChartConfiguration) {
   const canvas = ChartCanvasManager.get;
   const chart = new chartJs(canvas, configuration);
-  const buffer = chart.canvas.toBuffer("image/jpeg");
+  const buffer = chart.canvas.toBuffer("image/jpeg", { quality: 1 });
   destroyChart_Async(chart);
   ChartCanvasManager.recycle(canvas);
   return buffer;
