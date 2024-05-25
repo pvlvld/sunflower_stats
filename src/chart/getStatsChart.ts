@@ -54,6 +54,11 @@ async function getChartConfig(): Promise<ChartConfiguration> {
       ],
     },
     options: {
+      layout: {
+        padding: {
+          top: 80,
+        },
+      },
       color: "#e8e7ec",
       datasets: {
         line: {
@@ -73,10 +78,10 @@ async function getChartConfig(): Promise<ChartConfiguration> {
             display: false,
             color: "#161525",
           },
-          border: {
-            dash: [8, 4],
-            width: 4,
-          },
+          // border: {
+          //   dash: [8, 4],
+          //   width: 4,
+          // },
           ticks: {
             color: "#e8e7ec",
             font: {
@@ -89,10 +94,10 @@ async function getChartConfig(): Promise<ChartConfiguration> {
             display: false,
             color: "#161525",
           },
-          border: {
-            dash: [8, 4],
-            width: 4,
-          },
+          // border: {
+          //   dash: [8, 4],
+          //   width: 4,
+          // },
           ticks: {
             color: "#e8e7ec",
             font: {
