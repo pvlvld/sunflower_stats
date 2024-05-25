@@ -35,14 +35,26 @@ async function getChartConfig(): Promise<ChartConfiguration> {
       datasets: [
         {
           data: [] as any[],
-          borderColor: "rgb(240, 240, 240)",
+          borderColor: "#f3d319",
           borderCapStyle: "round",
+          fill: true,
+          backgroundColor: (context: any) => {
+            if (!context.chart.chartArea) {
+              return;
+            }
+            const { ctx, chartArea } = context.chart;
+            const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+            gradient.addColorStop(0, "#e9bd07");
+            gradient.addColorStop(0.9, "#0f0a10");
+            gradient.addColorStop(1, "#050414");
+            return gradient;
+          },
           tension: 0.2,
         },
       ],
     },
     options: {
-      color: "#ffc800",
+      color: "#e8e7ec",
       datasets: {
         line: {
           pointRadius: 0,
@@ -58,10 +70,15 @@ async function getChartConfig(): Promise<ChartConfiguration> {
       scales: {
         x: {
           grid: {
-            display: false,
+            display: true,
+            color: "#161525",
+          },
+          border: {
+            dash: [8, 4],
+            width: 4,
           },
           ticks: {
-            color: "#ffc800",
+            color: "#e8e7ec",
             font: {
               weight: "bold",
             },
@@ -69,10 +86,15 @@ async function getChartConfig(): Promise<ChartConfiguration> {
         },
         y: {
           grid: {
-            display: false,
+            display: true,
+            color: "#161525",
+          },
+          border: {
+            dash: [8, 4],
+            width: 4,
           },
           ticks: {
-            color: "#ffc800",
+            color: "#e8e7ec",
             font: {
               weight: "bold",
             },
