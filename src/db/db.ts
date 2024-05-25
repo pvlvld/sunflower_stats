@@ -38,6 +38,10 @@ class PgSQLPoolManager {
     await this.poolRead.end();
     await this.poolWrite.end();
   }
+
+  public getPoolsQueueStatus() {
+    return { read: this.poolRead.idleCount, write: this.poolWrite.idleCount };
+  }
 }
 
 const DBPoolManager = new PgSQLPoolManager({
