@@ -1,6 +1,7 @@
 import bot from "../bot";
 import moment from "moment";
 import type { IContext } from "../types/context";
+import DBPoolManager from "../db/db";
 
 type IBotStats = {
   commands: { [key: string]: number };
@@ -42,6 +43,8 @@ function getStatsMsg() {
     statsMsg += `${cmd} - ${BOT_STATS.commands[cmd]}\n`;
   }
 
+  const dbPoolsQueueStatus = DBPoolManager.getPoolsQueueStatus();
+  statsMsg += `\n\nread queue: ${dbPoolsQueueStatus.read}\nwrite queue: ${dbPoolsQueueStatus.write}`;
   return statsMsg;
 }
 
