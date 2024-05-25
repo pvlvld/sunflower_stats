@@ -22,6 +22,7 @@ type ChartStatuses = "ok" | "skip" | "unrendered";
 type ChartCache = { file_id: string; status: ChartStatuses };
 let _chartCache: Record<string, ChartCache | undefined> = {};
 const UnrenderedChart = Object.freeze({ file_id: "", status: "unrendered" } as ChartCache);
+const SkipChart = Object.freeze({ file_id: "", status: "skip" }) as ChartCache;
 
 const ChartCache = {
   get: (id: number | string): ChartCache => {
@@ -33,7 +34,7 @@ const ChartCache = {
   },
   set: (id: number | string, file_id: string) => {
     if (file_id.length === 0) {
-      _chartCache[id] = { file_id, status: "skip" };
+      _chartCache[id] = SkipChart;
       return;
     }
     _chartCache[id] = { file_id, status: "ok" };
