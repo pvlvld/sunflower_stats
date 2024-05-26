@@ -20,24 +20,25 @@ class CacheManager {
 
 type IChartStatuses = "ok" | "skip" | "unrendered";
 type IChartCache = { file_id: string; status: IChartStatuses };
-let _chartCache: Record<string, IChartCache | undefined> = {};
+let _chartCache: Record<string, Record<string, IChartCache | undefined> | undefined> = {};
 const UnrenderedChart = Object.freeze({ file_id: "", status: "unrendered" } as IChartCache);
 const SkipChart = Object.freeze({ file_id: "", status: "skip" }) as IChartCache;
 
 const ChartCache = {
-  get: (id: number | string): IChartCache => {
-    const chart = _chartCache[id];
+  get: (chat_id: number, user_id: number): IChartCache => {
+    const chart = _chartCache[chat_id]?.[user_id];
     if (chart) {
       return chart;
     }
     return UnrenderedChart;
   },
-  set: (id: number | string, file_id: string) => {
+  set: (chat_id: number, user_id: number, file_id: string) => {
+    _chartCache[chat_id] ??= {};
     if (file_id.length === 0) {
-      _chartCache[id] = SkipChart;
+      _chartCache[chat_id]![user_id] = SkipChart;
       return;
     }
-    _chartCache[id] = Object.freeze({ file_id, status: "ok" });
+    _chartCache[chat_id]![user_id] = Object.freeze({ file_id, status: "ok" });
   },
   flush: () => {
     _chartCache = {};

@@ -6,53 +6,45 @@ import cacheManager from "../utils/cache";
 import dbStats from "../db/stats";
 import cfg from "../config";
 
-function getChartCacheKey(chat_id: number, user_id: number) {
-  return `${chat_id}_${user_id}`;
-}
-
 async function stats_their(ctx: IGroupTextContext) {
-  const userId =
+  const chat_id = ctx.chat.id;
+  const user_id =
     ctx.msg.reply_to_message?.from?.id ||
-    getUserId((ctx.msg.text ?? ctx.msg.caption).slice(4), ctx.chat.id) ||
+    getUserId((ctx.msg.text ?? ctx.msg.caption).slice(4), chat_id) ||
     -1;
 
-  if (cfg.IGNORE_IDS.includes(ctx.from.id) || ctx.msg.reply_to_message?.from?.is_bot) {
+  if (cfg.IGNORE_IDS.includes(user_id) || ctx.msg.reply_to_message?.from?.is_bot) {
     void (await ctx.reply("Користувача не знайдено."));
   }
 
-  const chartCacheKey = getChartCacheKey(ctx.chat.id, userId);
-  const cachedChart = cacheManager.ChartCache.get(chartCacheKey);
+  const cachedChart = cacheManager.ChartCache.get(chat_id, user_id);
 
   try {
     switch (cachedChart.status) {
       case "unrendered":
-        const chart = await getStatsChart(ctx.chat.id, userId);
+        const chart = await getStatsChart(chat_id, user_id);
         if (chart) {
           const msg = await ctx.replyWithPhoto(chart, {
             caption: getUserStatsMessage(
-              ctx.chat.id,
-              userId,
-              await dbStats.user.all(ctx.chat.id, userId)
+              chat_id,
+              user_id,
+              await dbStats.user.all(chat_id, user_id)
             ),
             disable_notification: true,
           });
-          cacheManager.ChartCache.set(chartCacheKey, msg.photo[msg.photo.length - 1].file_id);
+          cacheManager.ChartCache.set(chat_id, user_id, msg.photo[msg.photo.length - 1].file_id);
         } else {
-          cacheManager.ChartCache.set(chartCacheKey, "");
+          cacheManager.ChartCache.set(chat_id, user_id, "");
         }
         return;
       case "ok":
         return void (await ctx.replyWithPhoto(cachedChart.file_id, {
-          caption: getUserStatsMessage(
-            ctx.chat.id,
-            userId,
-            await dbStats.user.all(ctx.chat.id, userId)
-          ),
+          caption: getUserStatsMessage(chat_id, user_id, await dbStats.user.all(chat_id, user_id)),
           disable_notification: true,
         }));
       case "skip":
         return void (await ctx.reply(
-          getUserStatsMessage(ctx.chat.id, userId, await dbStats.user.all(ctx.chat.id, userId)),
+          getUserStatsMessage(chat_id, user_id, await dbStats.user.all(chat_id, user_id)),
           { disable_notification: true, link_preview_options: { is_disabled: true } }
         ));
     }

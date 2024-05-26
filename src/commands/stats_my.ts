@@ -5,53 +5,40 @@ import cacheManager from "../utils/cache";
 import dbStats from "../db/stats";
 import cfg from "../config";
 
-function getChartCacheKey(ctx: IGroupTextContext) {
-  return `${ctx.chat.id}_${ctx.from.id}`;
-}
-
 async function stats_my(ctx: IGroupTextContext) {
-  if (cfg.IGNORE_IDS.includes(ctx.from.id)) {
+  const chat_id = ctx.chat.id;
+  const user_id = ctx.from.id;
+  if (cfg.IGNORE_IDS.includes(user_id)) {
     return;
   }
-  const cachedChart = cacheManager.ChartCache.get(getChartCacheKey(ctx));
+  const cachedChart = cacheManager.ChartCache.get(chat_id, user_id);
 
   try {
     switch (cachedChart.status) {
       case "unrendered":
-        const chart = await getStatsChart(ctx.chat.id, ctx.from.id);
+        const chart = await getStatsChart(chat_id, user_id);
         if (chart) {
           const msg = await ctx.replyWithPhoto(chart, {
             caption: getUserStatsMessage(
-              ctx.chat.id,
-              ctx.from.id,
-              await dbStats.user.all(ctx.chat.id, ctx.from.id)
+              chat_id,
+              user_id,
+              await dbStats.user.all(chat_id, user_id)
             ),
             disable_notification: true,
           });
-          cacheManager.ChartCache.set(
-            getChartCacheKey(ctx),
-            msg.photo[msg.photo.length - 1].file_id
-          );
+          cacheManager.ChartCache.set(chat_id, user_id, msg.photo[msg.photo.length - 1].file_id);
         } else {
-          cacheManager.ChartCache.set(getChartCacheKey(ctx), "");
+          cacheManager.ChartCache.set(chat_id, user_id, "");
         }
         return;
       case "ok":
         return void (await ctx.replyWithPhoto(cachedChart.file_id, {
-          caption: getUserStatsMessage(
-            ctx.chat.id,
-            ctx.from.id,
-            await dbStats.user.all(ctx.chat.id, ctx.from.id)
-          ),
+          caption: getUserStatsMessage(chat_id, user_id, await dbStats.user.all(chat_id, user_id)),
           disable_notification: true,
         }));
       case "skip":
         return void (await ctx.reply(
-          getUserStatsMessage(
-            ctx.chat.id,
-            ctx.from.id,
-            await dbStats.user.all(ctx.chat.id, ctx.from.id)
-          ),
+          getUserStatsMessage(chat_id, user_id, await dbStats.user.all(chat_id, user_id)),
           { disable_notification: true, link_preview_options: { is_disabled: true } }
         ));
     }
