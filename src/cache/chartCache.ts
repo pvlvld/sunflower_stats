@@ -1,11 +1,11 @@
 type IChartStatuses = "ok" | "skip" | "unrendered";
-type IChartCache = { file_id: string; status: IChartStatuses };
+type IChartCache = Readonly<{ file_id: string; status: IChartStatuses }>;
 
 class ChartCache {
   private _chartCache: Map<number, Map<number, IChartCache>>;
   private _userChats: Map<number, Set<number>>;
-  private _unrenderedChart: Readonly<IChartCache>;
-  private _skipChart: Readonly<IChartCache>;
+  private _unrenderedChart: IChartCache;
+  private _skipChart: IChartCache;
 
   constructor() {
     this._chartCache = new Map();
