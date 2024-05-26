@@ -1,10 +1,19 @@
 import { LRUCache } from "lru-cache";
 import NodeCache from "node-cache";
+import { secondsUntilMidnight } from "./secondsUntilMidnight";
+
+type IPremiumStatusCache = {
+  set: (id: number, status: boolean) => void;
+  get: (id: number) => any;
+  del: (id: number) => void;
+};
 
 class CacheManager {
   public LRUCache: LRUCache<{}, {}, unknown>;
   public TTLCache: NodeCache;
   public ChartCache: typeof ChartCache;
+  public PremiumStatusCache: IPremiumStatusCache;
+  private _premiumStatusCache: NodeCache;
 
   constructor() {
     this.LRUCache = new LRUCache({
@@ -15,6 +24,20 @@ class CacheManager {
     this.TTLCache = new NodeCache({ stdTTL: 60, checkperiod: 5 });
 
     this.ChartCache = ChartCache;
+
+    this._premiumStatusCache = new NodeCache({ stdTTL: 0, checkperiod: 30 });
+    this.PremiumStatusCache = {
+      set: (id: number, status: boolean) => {
+        // TODO: connect with donate microservice, update cache on signals
+        this._premiumStatusCache.set(id, status, secondsUntilMidnight());
+      },
+      get: (id: number) => {
+        return this._premiumStatusCache.get(id);
+      },
+      del: (id: number) => {
+        this._premiumStatusCache.del(id);
+      },
+    };
   }
 }
 
