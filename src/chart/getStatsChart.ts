@@ -44,9 +44,9 @@ async function getChartConfig(): Promise<ChartConfiguration> {
             }
             const { ctx, chartArea } = context.chart;
             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-            gradient.addColorStop(0, "#e9bd07");
-            gradient.addColorStop(0.9, "#0f0a10");
-            gradient.addColorStop(1, "#050414");
+            gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+            gradient.addColorStop(0.6, "rgba(233, 189, 7, 0.4)");
+            gradient.addColorStop(0, "rgba(233, 189, 7, 0.9)");
             return gradient;
           },
           tension: 0.2,
