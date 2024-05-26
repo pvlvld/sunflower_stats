@@ -3,7 +3,7 @@ import { Image, loadImage } from "canvas";
 import { Chart } from "chart.js/auto";
 
 const pluginBgImage = new Image();
-pluginBgImage.src = "data/img/chartBg.jpg";
+pluginBgImage.src = "data/chartBg/!default.jpg";
 
 let defaultBg: Image;
 
@@ -12,7 +12,7 @@ async function bgImagePlugin(bg = defaultBg) {
   if (defaultBg) {
     pluginBgImage = defaultBg;
   } else {
-    pluginBgImage = await loadImage("data/img/chartBg.jpg");
+    pluginBgImage = await loadImage("data/chartBg/!default.jpg");
   }
 
   return {
