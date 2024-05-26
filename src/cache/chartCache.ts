@@ -4,14 +4,14 @@ type IChartCache = { file_id: string; status: IChartStatuses };
 class ChartCache {
   private _chartCache: Map<number, Map<number, IChartCache>>;
   private _userChats: Map<number, Set<number>>;
-  private _UnrenderedChart: Readonly<IChartCache>;
-  private _SkipChart: Readonly<IChartCache>;
+  private _unrenderedChart: Readonly<IChartCache>;
+  private _skipChart: Readonly<IChartCache>;
 
   constructor() {
     this._chartCache = new Map();
     this._userChats = new Map();
-    this._SkipChart = Object.freeze({ file_id: "", status: "skip" });
-    this._UnrenderedChart = Object.freeze({ file_id: "", status: "unrendered" });
+    this._skipChart = Object.freeze({ file_id: "", status: "skip" });
+    this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered" });
   }
 
   get(chat_id: number, user_id: number): IChartCache {
@@ -22,7 +22,7 @@ class ChartCache {
         return chart;
       }
     }
-    return this._UnrenderedChart;
+    return this._unrenderedChart;
   }
 
   set(chat_id: number, user_id: number, file_id: string) {
@@ -33,7 +33,7 @@ class ChartCache {
     }
 
     if (file_id.length === 0) {
-      chatCache.set(user_id, this._SkipChart);
+      chatCache.set(user_id, this._skipChart);
     } else {
       chatCache.set(user_id, Object.freeze({ file_id, status: "ok" }));
     }
