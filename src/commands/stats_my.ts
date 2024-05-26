@@ -1,7 +1,7 @@
 import getUserStatsMessage from "../utils/getUserStatsMessage";
 import type { IGroupTextContext } from "../types/context";
 import { getStatsChart } from "../chart/getStatsChart";
-import cacheManager from "../utils/cache";
+import cacheManager from "../cache/cache";
 import dbStats from "../db/stats";
 import cfg from "../config";
 

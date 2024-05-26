@@ -3,7 +3,7 @@ import DBPoolManager from "../db/db";
 import isChatOwner from "../utils/isChatOwner";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import chatCleanup_menu from "../ui/menus/chatCleanup";
-import cacheManager from "../utils/cache";
+import cacheManager from "../cache/cache";
 import isValidNumbers from "../utils/isValidNumbers";
 import { active } from "../data/active";
 import moment from "moment";

@@ -1,7 +1,7 @@
 import type { IGroupTextContext } from "../types/context";
 import { GrammyError } from "grammy";
 import { active } from "../data/active";
-import cacheManager from "../utils/cache";
+import cacheManager from "../cache/cache";
 import getUserId from "../utils/getUserId";
 import isChatOwner from "../utils/isChatOwner";
 

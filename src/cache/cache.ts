@@ -1,6 +1,6 @@
 import { LRUCache } from "lru-cache";
 import NodeCache from "node-cache";
-import { secondsUntilMidnight } from "./secondsUntilMidnight";
+import { secondsUntilMidnight } from "../utils/secondsUntilMidnight";
 
 type IPremiumStatusCache = {
   set: (id: number, status: boolean) => void;

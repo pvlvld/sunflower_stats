@@ -1,7 +1,7 @@
 import type { IGroupContext, IGroupHearsCommandContext, IGroupTextContext } from "../types/context";
 import type { MenuFlavor } from "@grammyjs/menu";
 import cfg from "../config";
-import cacheManager from "./cache";
+import cacheManager from "../cache/cache";
 
 async function isChatOwner(
   ctx: IGroupHearsCommandContext | (IGroupContext & MenuFlavor) | IGroupTextContext

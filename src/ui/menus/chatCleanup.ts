@@ -3,7 +3,7 @@ import { Menu, type MenuFlavor } from "@grammyjs/menu";
 import getUserNameLink from "../../utils/getUserNameLink";
 import isChatOwner from "../../utils/isChatOwner";
 import { autoRetry } from "@grammyjs/auto-retry";
-import cacheManager from "../../utils/cache";
+import cacheManager from "../../cache/cache";
 import { active } from "../../data/active";
 import { GrammyError } from "grammy";
 

@@ -4,7 +4,7 @@ import formattedDate from "./date";
 import collectGarbage from "./collectGarbage";
 import { botStatsManager } from "../commands/botStats";
 import { active } from "../data/active";
-import cacheManager from "./cache";
+import cacheManager from "../cache/cache";
 
 function createScheduler() {
   return cron.schedule(
