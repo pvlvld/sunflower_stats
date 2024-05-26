@@ -87,6 +87,8 @@ async function getChartConfig(): Promise<ChartConfiguration> {
             font: {
               weight: "bold",
             },
+            textStrokeColor: "#000000",
+            textStrokeWidth: 1,
           },
         },
         y: {
@@ -103,6 +105,8 @@ async function getChartConfig(): Promise<ChartConfiguration> {
             font: {
               weight: "bold",
             },
+            textStrokeColor: "#000000",
+            textStrokeWidth: 1,
           },
         },
       },
