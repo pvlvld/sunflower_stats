@@ -9,6 +9,7 @@ import type { ParseModeFlavor } from "@grammyjs/parse-mode";
 import cfg from "./config";
 import chatCleanup_menu from "./ui/menus/chatCleanup";
 import { leftGroup_menu } from "./ui/menus/leftGroup";
+import { hydrateFiles } from "@grammyjs/files";
 
 const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 
@@ -37,7 +38,7 @@ bot.api.config.use(async function autoRetry(prev, method, payload, signal) {
   return prev(method, payload, signal);
 });
 bot.api.config.use(parseMode("HTML"));
-
+bot.api.config.use(hydrateFiles(bot.token));
 bot.drop(matchFilter(":is_automatic_forward"));
 
 // MIDDLEWARES

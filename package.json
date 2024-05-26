@@ -21,6 +21,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "@grammyjs/auto-retry": "^2.0.1",
+    "@grammyjs/files": "^1.1.0",
     "@grammyjs/menu": "^1.2.1",
     "@grammyjs/parse-mode": "^1.10.0",
     "@grammyjs/ratelimiter": "^1.2.0",
