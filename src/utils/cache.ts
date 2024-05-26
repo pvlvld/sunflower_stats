@@ -40,6 +40,10 @@ const ChartCache = {
     }
     _chartCache[chat_id]![user_id] = Object.freeze({ file_id, status: "ok" });
   },
+  remove: (chat_id: number, user_id: number) => {
+    _chartCache[chat_id] ??= {};
+    _chartCache[chat_id]![user_id] = undefined;
+  },
   flush: () => {
     _chartCache = {};
   },
