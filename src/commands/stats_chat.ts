@@ -21,12 +21,13 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   const dateRange = cmdToDateRangeMap[rawCmdDateRange];
 
   const start = String(process.hrtime.bigint());
-  const stats = await dbStats.chat.inRage(ctx.chat.id, dateRange);
+  const chat_id = ctx.chat.id;
+  const stats = await dbStats.chat.inRage(chat_id, dateRange);
   const queryTime = String(process.hrtime.bigint());
 
   const msg =
     `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
-    getStatsRatingPlusToday(stats, ctx.chat.id);
+    getStatsRatingPlusToday(stats, chat_id);
   const msgTime = String(process.hrtime.bigint());
 
   await ctx.reply(msg, {
@@ -35,7 +36,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   });
 
   botStatsManager.commandUse(`стата ${rawCmdDateRange}`);
-  if (ctx.chat.id === -1001898242958) {
+  if (chat_id === -1001898242958) {
     ctx.reply(
       `DB: ${new Big(queryTime).minus(start).div(1000000)}ms\nGen: ${new Big(msgTime)
         .minus(queryTime)
