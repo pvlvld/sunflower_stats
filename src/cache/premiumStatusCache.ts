@@ -1,12 +1,6 @@
 import NodeCache from "node-cache";
 import { secondsUntilMidnight } from "../utils/secondsUntilMidnight";
 
-type IPremiumStatusCache = {
-  set: (id: number, status: boolean) => void;
-  get: (id: number) => any;
-  del: (id: number) => void;
-};
-
 class PremiumStatusCache {
   private _premiumStatusCache: NodeCache;
 
