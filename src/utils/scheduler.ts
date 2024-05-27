@@ -27,7 +27,7 @@ export async function startNewDay() {
   active.save(path.join("data/active", `active-${formattedDate.today[0]}.yaml`));
   await botStatsManager.sendToMainChat();
   botStatsManager.resetAll();
-  cacheManager.ChartCache.flush();
+  cacheManager.ChartCache_User.flush();
 }
 
 export default createScheduler;

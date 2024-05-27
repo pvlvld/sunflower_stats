@@ -11,7 +11,7 @@ async function stats_my(ctx: IGroupTextContext) {
   if (cfg.IGNORE_IDS.includes(user_id)) {
     return;
   }
-  const cachedChart = cacheManager.ChartCache.get(chat_id, user_id);
+  const cachedChart = cacheManager.ChartCache_User.get(chat_id, user_id);
 
   try {
     switch (cachedChart.status) {
@@ -26,9 +26,13 @@ async function stats_my(ctx: IGroupTextContext) {
             ),
             disable_notification: true,
           });
-          cacheManager.ChartCache.set(chat_id, user_id, msg.photo[msg.photo.length - 1].file_id);
+          cacheManager.ChartCache_User.set(
+            chat_id,
+            user_id,
+            msg.photo[msg.photo.length - 1].file_id
+          );
         } else {
-          cacheManager.ChartCache.set(chat_id, user_id, "");
+          cacheManager.ChartCache_User.set(chat_id, user_id, "");
         }
         return;
       case "ok":

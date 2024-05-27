@@ -1,12 +1,12 @@
 import { LRUCache } from "lru-cache";
 import NodeCache from "node-cache";
 import { PremiumStatusCache } from "./premiumStatusCache";
-import { ChartCache } from "./chartCache";
+import { ChartCache_User } from "./chartCache_User";
 
 class CacheManager {
   public LRUCache: LRUCache<{}, {}, unknown>;
   public TTLCache: NodeCache;
-  public ChartCache: ChartCache;
+  public ChartCache_User: ChartCache_User;
   public PremiumStatusCache: PremiumStatusCache;
 
   constructor() {
@@ -17,7 +17,7 @@ class CacheManager {
 
     this.TTLCache = new NodeCache({ stdTTL: 60, checkperiod: 5 });
 
-    this.ChartCache = new ChartCache();
+    this.ChartCache_User = new ChartCache_User();
 
     this.PremiumStatusCache = new PremiumStatusCache();
   }

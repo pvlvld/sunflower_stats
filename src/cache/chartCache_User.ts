@@ -1,7 +1,7 @@
 type IChartStatuses = "ok" | "skip" | "unrendered";
 type IChartCache = Readonly<{ file_id: string; status: IChartStatuses }>;
 
-class ChartCache {
+class ChartCache_User {
   private _chartCache: Map<number, Map<number, IChartCache>>;
   private _userChats: Map<number, Set<number>>;
   private _unrenderedChart: IChartCache;
@@ -101,4 +101,4 @@ class ChartCache {
   }
 }
 
-export { ChartCache };
+export { ChartCache_User };
