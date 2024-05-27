@@ -15,19 +15,21 @@ export function getStatsRatingPlusToday(stats: IDbChatUserStats[], chat_id: numb
   let userData: any;
   let nickname = "";
 
-  for (let i = 0; i < stats.length && statsRowsCount < statsRowLimit; i++) {
+  for (let i = 0; i < stats.length; i++) {
     user = stats[i];
-    userData = activeData?.[user.user_id];
+    if (statsRowsCount < statsRowLimit) {
+      userData = activeData?.[user.user_id];
 
-    if (userData) {
-      nickname = userData.nickname || userData.name || "Невідомо";
-      replyParts.push(
-        `${displayRank}. ${getUserNameLink.html(nickname, userData.username, user.user_id)} — ${
-          user.count || 0
-        }\n`
-      );
-      statsRowsCount++;
-      displayRank++;
+      if (userData) {
+        nickname = userData.nickname || userData.name || "Невідомо";
+        replyParts.push(
+          `${displayRank}. ${getUserNameLink.html(nickname, userData.username, user.user_id)} — ${
+            user.count || 0
+          }\n`
+        );
+        statsRowsCount++;
+        displayRank++;
+      }
     }
 
     totalChatMessages += user.count || 0;
