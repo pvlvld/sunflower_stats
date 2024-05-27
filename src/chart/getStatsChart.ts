@@ -6,6 +6,8 @@ import { InputFile } from "grammy";
 import { ChartCanvasManager } from "./chartCanvas";
 const chartJs: typeof Chart = require("chart.js/auto");
 
+export type IChartType = "user" | "chat";
+
 async function getChatData(chat_id: number) {
   return (
     await DBPoolManager.getPoolRead.query(`
@@ -27,7 +29,11 @@ async function getUserData(chat_id: number, user_id: number) {
   ).rows;
 }
 
-async function getChartConfig(): Promise<ChartConfiguration> {
+async function getChartConfig(
+  chat_id: number,
+  user_id: number,
+  type: IChartType
+): Promise<ChartConfiguration> {
   return {
     type: "line",
     data: {
@@ -111,14 +117,15 @@ async function getChartConfig(): Promise<ChartConfiguration> {
         },
       },
     },
-    plugins: [await bgImagePlugin()],
+    plugins: [await bgImagePlugin(chat_id, user_id, type)],
   };
 }
 
 /**Rerutns @InputFile success @undefined stats contain less than 7 records*/
 export async function getStatsChart(
   chat_id: number,
-  user_id?: number
+  user_id: number,
+  type: IChartType
 ): Promise<InputFile | undefined> {
   let data: any[];
   if (user_id) {
@@ -137,7 +144,7 @@ export async function getStatsChart(
     void data.shift();
   }
 
-  const configuration = await getChartConfig();
+  const configuration = await getChartConfig(chat_id, user_id, type);
   configuration.data.datasets[0].data = data;
   configuration.data.labels = data.map((v) => v["x"]);
 

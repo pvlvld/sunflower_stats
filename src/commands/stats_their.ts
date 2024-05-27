@@ -22,7 +22,7 @@ async function stats_their(ctx: IGroupTextContext) {
   try {
     switch (cachedChart.status) {
       case "unrendered":
-        const chart = await getStatsChart(chat_id, user_id);
+        const chart = await getStatsChart(chat_id, user_id, "user");
         if (chart) {
           const msg = await ctx.replyWithPhoto(chart, {
             caption: getUserStatsMessage(

@@ -1,18 +1,31 @@
 import { Image, loadImage } from "canvas";
 //@ts-expect-error
 import { Chart } from "chart.js/auto";
+import { isPremium } from "../../utils/isPremium";
+import fs from "fs";
+import { IChartType } from "../getStatsChart";
 
-const pluginBgImage = new Image();
-pluginBgImage.src = "data/chartBg/!default.jpg";
+const baseBgPath = "./data/chartBg";
 
 let defaultBg: Image;
 
-async function bgImagePlugin(bg = defaultBg) {
+async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType) {
   let pluginBgImage: Image;
-  if (defaultBg) {
-    pluginBgImage = defaultBg;
+  // const isChatPremium = await isPremium(chat_id);
+  // const isUserPremium = await isPremium(user_id);
+
+  if (type === "chat") {
+    if (fs.existsSync(`${baseBgPath}/${chat_id}.jpg`)) {
+      pluginBgImage = await loadImage(`${baseBgPath}/${user_id}.jpg`);
+    } else {
+      pluginBgImage = await getDefaultBg();
+    }
   } else {
-    pluginBgImage = await loadImage("data/chartBg/!default.jpg");
+    if (fs.existsSync(`${baseBgPath}/${user_id}.jpg`)) {
+      pluginBgImage = await loadImage(`${baseBgPath}/${user_id}.jpg`);
+    } else {
+      pluginBgImage = await getDefaultBg();
+    }
   }
 
   return {
@@ -26,6 +39,15 @@ async function bgImagePlugin(bg = defaultBg) {
       }
     },
   };
+}
+
+async function getDefaultBg() {
+  if (defaultBg) {
+    return defaultBg;
+  }
+
+  defaultBg = await loadImage("data/chartBg/!default.jpg");
+  return defaultBg;
 }
 
 export { bgImagePlugin };
