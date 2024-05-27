@@ -14,6 +14,16 @@ const cmdToDateRangeMap = {
   undefined: "today",
 } as const;
 
+type IDateRange = (typeof cmdToDateRangeMap)[keyof typeof cmdToDateRangeMap];
+type IAllowedChartStatsRanges = Exclude<IDateRange, "today" | "yesterday">;
+
+const allowedChartStatsRanges: IAllowedChartStatsRanges[] = [
+  "weekRange",
+  "monthRange",
+  "yearRange",
+  "all",
+] as const;
+
 async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   const rawCmdDateRange = (
     (ctx.msg.text ?? ctx.msg.caption).split(" ")[1] ?? "сьогодні"
