@@ -1,0 +1,34 @@
+import { FieldPacket } from "mysql2";
+import { getOldDbPool } from "../db/oldDb";
+import cfg from "../config";
+
+type IQueryResult =
+  | []
+  | {
+      isPremium: 1;
+    }[];
+
+//TODO: cache, local db
+async function isPremium(id: number) {
+  if (cfg.ADMINS.includes(id)) {
+    return true;
+  }
+
+  const pool = await getOldDbPool();
+  let queryResult: [IQueryResult, FieldPacket[]];
+  if (id > 0) {
+    //@ts-expect-error
+    queryResult = await pool.query<IQueryResult>(
+      `SELECT status_premium as isPremium FROM users_son WHERE user_id = ${id}`
+    );
+  } else {
+    // @ts-expect-error
+    queryResult = await pool.query<IQueryResult>(
+      `SELECT state as isPremium FROM chats_premium WHERE chat_id = ${id}`
+    );
+  }
+
+  return Boolean(queryResult[0]?.[0]?.isPremium ?? 0);
+}
+
+export { isPremium };
