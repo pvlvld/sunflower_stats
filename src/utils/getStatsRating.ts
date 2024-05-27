@@ -6,7 +6,7 @@ export function getStatsRatingPlusToday(stats: IDbChatUserStats[], chat_id: numb
   const replyParts: string[] = [];
   let totalChatMessages = 0;
 
-  const statsRowLimit = Math.min(50, stats.length);
+  const statsRowLimit = Math.min(25, stats.length);
   const activeData = active.data[chat_id];
 
   let statsRowsCount = 0;
