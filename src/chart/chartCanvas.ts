@@ -3,7 +3,7 @@ import { CanvasRenderingContext2D, createCanvas } from "canvas";
 const deePool = require("deepool");
 
 function makeCanvas() {
-  return createCanvas(1200, 600).getContext("2d");
+  return createCanvas(1280, 640).getContext("2d");
 }
 
 const canvasPool = deePool.create(makeCanvas);
