@@ -21,6 +21,10 @@ async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType)
       pluginBgImage = await getDefaultBg();
     }
   } else {
+    // TODO:
+    // 1. premium chat global custom gb settings
+    // 2. premium user only
+    // (in that order)
     if (fs.existsSync(`${baseBgPath}/${user_id}.jpg`)) {
       pluginBgImage = await loadImage(`${baseBgPath}/${user_id}.jpg`);
     } else {
