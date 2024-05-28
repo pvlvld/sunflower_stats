@@ -47,6 +47,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     getStatsRatingPlusToday(stats, chat_id);
 
   const msgTime = String(process.hrtime.bigint());
+  let chartTime = "";
 
   if (allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges)) {
     const cachedChart = cacheManager.ChartCache_Chat.get(
@@ -55,6 +56,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     );
 
     if (cachedChart.status === "ok") {
+      chartTime = String(process.hrtime.bigint());
       return void (await ctx
         .replyWithPhoto(cachedChart.file_id, { caption: statsMessage, disable_notification: true })
         .catch((e) => {}));
@@ -67,6 +69,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
       );
 
       if (chartImage) {
+        chartTime = String(process.hrtime.bigint());
         const msg = await ctx
           .replyWithPhoto(chartImage, {
             caption: statsMessage,
@@ -99,7 +102,9 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     ctx.reply(
       `DB: ${new Big(queryTime).minus(start).div(1000000)}ms\nGen: ${new Big(msgTime)
         .minus(queryTime)
-        .div(1000000)}ms\nTotal: ${new Big(msgTime).minus(start).div(1000000)}ms`
+        .div(1000000)}ms\nChart: ${new Big(chartTime)
+        .minus(msgTime)
+        .div(1000000)}ms}\nTotal: ${new Big(chartTime).minus(start).div(1000000)}ms`
     );
   }
 }
