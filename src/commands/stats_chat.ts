@@ -46,6 +46,8 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
     getStatsRatingPlusToday(stats, chat_id);
 
+  const msgTime = String(process.hrtime.bigint());
+
   if (allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges)) {
     const cachedChart = cacheManager.ChartCache_Chat.get(
       chat_id,
@@ -86,8 +88,6 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
       }
     }
   }
-
-  const msgTime = String(process.hrtime.bigint());
 
   await ctx.reply(statsMessage, {
     disable_notification: true,
