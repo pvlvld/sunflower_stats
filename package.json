@@ -4,13 +4,13 @@
   "description": "",
   "main": "build/index.js",
   "scripts": {
-    "start-pm2": "pm2 start build/index.js --no-pmx --node-args=\"--expose-gc --optimize_for_size\" --name stats --kill-timeout 30000 --log-date-format 'MM-DD HH:mm:ss'",
-    "start-pm2j": "export LD_PRELOAD=$LD_PRELOAD:/usr/lib/aarch64-linux-gnu/libjemalloc.so && pm2 start build/index.js --no-pmx --node-args=\"--expose-gc --optimize_for_size\" --name stats --kill-timeout 30000 --log-date-format 'MM-DD HH:mm:ss'",
+    "start-pm2": "pm2 start build/index.js --no-pmx --node-args=\"--expose-gc --optimize_for_size\" --name stats --kill-timeout 60000 --log-date-format 'MM-DD HH:mm:ss'",
+    "start-pm2j": "export LD_PRELOAD=$LD_PRELOAD:/usr/lib/aarch64-linux-gnu/libjemalloc.so && pm2 start build/index.js --no-pmx --node-args=\"--expose-gc --optimize_for_size\" --name stats --kill-timeout 60000 --log-date-format 'MM-DD HH:mm:ss'",
     "start-forever": "export NODE_ENV='production' && forever start -c 'node --expose-gc --optimize_for_size' build/index.js",
     "start-foreverj": "NODE_ENV='production' && forever start -c 'LD_PRELOAD=$LD_PRELOAD:/usr/lib/aarch64-linux-gnu/libjemalloc.so node --expose-gc --optimize_for_size' build/index.js",
     "bun-dev": "bun --watch src/index.ts",
-    "start-node": "pm2 start build/index.js --no-pmx --node-args=\"--expose-gc --no-compilation-cache --optimize_for_size\" --name stats --kill-timeout 30000 --log-date-format 'MM-DD HH:mm:ss'",
-    "start-node-i": "pm2 start build/index.js --node-args=\"--expose-gc --inspect --no-compilation-cache --optimize_for_size\" --name stats --kill-timeout 30000 --log-date-format 'MM-DD HH:mm:ss'",
+    "start-node": "pm2 start build/index.js --no-pmx --node-args=\"--expose-gc --no-compilation-cache --optimize_for_size\" --name stats --kill-timeout 60000 --log-date-format 'MM-DD HH:mm:ss'",
+    "start-node-i": "pm2 start build/index.js --node-args=\"--expose-gc --inspect --no-compilation-cache --optimize_for_size\" --name stats --kill-timeout 60000 --log-date-format 'MM-DD HH:mm:ss'",
     "compile": "tsc",
     "dev": "DEV=true bun --watch src/index.ts"
   },
