@@ -15,14 +15,15 @@ const cmdToDateRangeMap = {
 } as const;
 
 type IDateRange = (typeof cmdToDateRangeMap)[keyof typeof cmdToDateRangeMap];
-type IAllowedChartStatsRanges = Exclude<IDateRange, "today" | "yesterday">;
+export type IAllowedChartStatsRanges = Exclude<IDateRange, "today" | "yesterday" | "weekRange">;
 
 const allowedChartStatsRanges: IAllowedChartStatsRanges[] = [
-  "weekRange",
   "monthRange",
   "yearRange",
   "all",
 ] as const;
+
+// TODO: use await Promise.all() for chart + msg
 
 async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   const rawCmdDateRange = (
