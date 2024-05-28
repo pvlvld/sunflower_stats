@@ -4,11 +4,14 @@ import { bgImagePlugin } from "./plugins/bgImagePlugin";
 import DBPoolManager from "../db/db";
 import { InputFile } from "grammy";
 import { ChartCanvasManager } from "./chartCanvas";
+import formattedDate from "../utils/date";
+import { IAllowedChartStatsRanges } from "../commands/stats_chat";
 const chartJs: typeof Chart = require("chart.js/auto");
 
 export type IChartType = "user" | "chat";
 
-async function getChatData(chat_id: number) {
+async function getChatData(chat_id: number, rawDateRange: IAllowedChartStatsRanges) {
+  const dateRange = formattedDate[rawDateRange];
   return (
     await DBPoolManager.getPoolRead.query(`
       SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y
@@ -125,15 +128,21 @@ async function getChartConfig(
 export async function getStatsChart(
   chat_id: number,
   user_id: number,
-  type: IChartType
+  type: IChartType,
+  rawDateRange?: IAllowedChartStatsRanges
 ): Promise<InputFile | undefined> {
   let data: any[];
-  if (user_id) {
+  if (type === "user") {
     data = await getUserData(chat_id, user_id);
     void data.pop();
   } else {
-    data = await getChatData(chat_id);
-    void data.pop();
+    if (rawDateRange) {
+      data = await getChatData(chat_id, rawDateRange);
+      void data.pop();
+    } else {
+      console.error("No date range is provided for the chat chart");
+      data = await getChatData(chat_id, "all");
+    }
   }
 
   if (data.length < 7) {
