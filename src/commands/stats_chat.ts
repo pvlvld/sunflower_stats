@@ -1,8 +1,10 @@
 import type { IGroupTextContext } from "../types/context";
-const Big = require("big-js");
-import dbStats from "../db/stats";
-import { botStatsManager } from "./botStats";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
+import { getStatsChart } from "../chart/getStatsChart";
+import { botStatsManager } from "./botStats";
+import cacheManager from "../cache/cache";
+import dbStats from "../db/stats";
+const Big = require("big-js");
 
 const cmdToDateRangeMap = {
   сьогодні: "today",
@@ -36,12 +38,54 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   const stats = await dbStats.chat.inRage(chat_id, dateRange);
   const queryTime = String(process.hrtime.bigint());
 
-  const msg =
+  const statsMessage =
     `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
     getStatsRatingPlusToday(stats, chat_id);
+
+  if (allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges)) {
+    const cachedChart = cacheManager.ChartCache_Chat.get(
+      chat_id,
+      dateRange as IAllowedChartStatsRanges
+    );
+
+    if (cachedChart.status === "ok") {
+      return void (await ctx
+        .replyWithPhoto(cachedChart.file_id, { caption: statsMessage, disable_notification: true })
+        .catch((e) => {}));
+    } else {
+      const chartImage = await getStatsChart(
+        chat_id,
+        chat_id,
+        "chat",
+        dateRange as IAllowedChartStatsRanges
+      );
+
+      if (chartImage) {
+        const msg = await ctx
+          .replyWithPhoto(chartImage, {
+            caption: statsMessage,
+            disable_notification: true,
+          })
+          .catch((e) => {
+            console.log(e);
+          });
+
+        if (msg) {
+          cacheManager.ChartCache_Chat.set(
+            chat_id,
+            dateRange as IAllowedChartStatsRanges,
+            msg.photo[msg.photo.length - 1].file_id
+          );
+        }
+
+        return;
+      }
+    }
+  }
+
   const msgTime = String(process.hrtime.bigint());
 
-  await ctx.reply(msg, {
+  await ctx.reply(statsMessage, {
     disable_notification: true,
     link_preview_options: { is_disabled: true },
   });
