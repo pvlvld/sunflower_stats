@@ -16,7 +16,7 @@ async function getChatData(chat_id: number, rawDateRange: IAllowedChartStatsRang
     await DBPoolManager.getPoolRead.query(`
       SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y
           FROM stats_daily
-          WHERE chat_id = ${chat_id}
+          WHERE chat_id = ${chat_id} AND date BETWEEN '${dateRange[0]}' AND '${dateRange[1]}'
           GROUP BY date
           ORDER BY date;`)
   ).rows;
