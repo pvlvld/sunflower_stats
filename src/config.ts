@@ -8,6 +8,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   STATUSES: { LEFT_STATUSES: string[] };
   IGNORE_IDS: number[];
   ANALYTICS_CHAT: number;
+  MAIN_CHAT: number;
 };
 
 function getCfg(): ICfg {
@@ -25,6 +26,7 @@ function getCfg(): ICfg {
   cfg.STATUSES.LEFT_STATUSES = ["kicked", "left"];
   cfg.IGNORE_IDS = [136817688, 777000, -1];
   cfg.ANALYTICS_CHAT = -1002144414380;
+  cfg.MAIN_CHAT = -1001898242958;
 
   return Object.freeze(cfg);
 }
