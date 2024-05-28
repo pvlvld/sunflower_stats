@@ -38,6 +38,10 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   const stats = await dbStats.chat.inRage(chat_id, dateRange);
   const queryTime = String(process.hrtime.bigint());
 
+  if (stats.length === 0) {
+    // TODO: meme
+  }
+
   const statsMessage =
     `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
     getStatsRatingPlusToday(stats, chat_id);
