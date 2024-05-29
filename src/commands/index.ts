@@ -37,7 +37,7 @@ function regCommands() {
 
   bot.command("donate", async (ctx) => donate_cmd(ctx));
 
-  bot.command("/refreshDonate", async (ctx) => {
+  bot.command("refreshDonate", async (ctx) => {
     refreshDonate_cmd(ctx);
   });
 
