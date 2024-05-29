@@ -1,6 +1,7 @@
 import type { Filter } from "grammy";
-import type { IContext } from "../types/context";
+import type { IContext, IGroupCommandContext } from "../types/context";
 import { donate_menu } from "../ui/menus/donate";
+import cacheManager from "../cache/cache";
 
 async function donate_cmd(ctx: Filter<IContext, ":text">) {
   if (ctx.chat.type == "private") {
@@ -16,4 +17,8 @@ async function donate_cmd(ctx: Filter<IContext, ":text">) {
   }
 }
 
-export { donate_cmd };
+function refreshDonate_cmd(ctx: IGroupCommandContext) {
+  cacheManager.PremiumStatusCache.del(ctx.from.id);
+}
+
+export { donate_cmd, refreshDonate_cmd };
