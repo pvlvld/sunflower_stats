@@ -113,7 +113,7 @@ function regCommands() {
   });
 
   const groupPhotoCaption = group.on(":photo").on(":caption");
-  groupPhotoCaption.hears("!стата фон свій", (ctx) => {
+  groupPhotoCaption.hears("!стата фон я", (ctx) => {
     setChartBg_Personal(ctx);
   });
   groupPhotoCaption.command("setMyBg", (ctx) => {
