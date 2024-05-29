@@ -137,6 +137,8 @@ function regCommands() {
 
   botAdmin.hears("!ssbroadcast_owners", (ctx) => broadcast_owners_cmd(ctx));
 
+  botAdmin.hears("!ssbroadcast_chats", (ctx) => broadcast_chats_cmd(ctx));
+
   botAdmin.hears(/^!ssbdb/, (ctx) => bench_db_cmd(ctx));
 
   botAdmin.hears("!ssmem", async (ctx) => botMemoryUsage(ctx));
