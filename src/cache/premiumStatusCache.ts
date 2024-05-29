@@ -32,6 +32,10 @@ class PremiumStatusCache {
   del(id: number) {
     this._premiumStatusCache.del(id);
   }
+
+  flush() {
+    this._premiumStatusCache.flushAll();
+  }
 }
 
 export { PremiumStatusCache };
