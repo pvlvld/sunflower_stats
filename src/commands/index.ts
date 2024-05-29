@@ -26,12 +26,17 @@ import memes from "./memes";
 import stats_chat from "./stats_chat";
 import { monomorphic_active } from "./staff/monomorphic_active";
 import { removeChatData_cmd } from "./staff/removeChatData";
+import { donate_cmd, refreshDonate_cmd } from "./donate";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
   const botAdmin = group.filter((ctx) => cfg.ADMINS.includes(ctx.from?.id || -1));
 
   bot.command("donate", async (ctx) => donate_cmd(ctx));
+
+  bot.command("/refreshDonate", async (ctx) => {
+    refreshDonate_cmd(ctx);
+  });
 
   bot.command(["help", "start"], async (ctx) => {
     if (

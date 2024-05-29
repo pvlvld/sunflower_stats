@@ -1,5 +1,5 @@
 import type { Filter } from "grammy";
-import type { IContext, IGroupCommandContext } from "../types/context";
+import type { ICommandContext, IContext, IGroupCommandContext } from "../types/context";
 import { donate_menu } from "../ui/menus/donate";
 import cacheManager from "../cache/cache";
 
@@ -17,8 +17,13 @@ async function donate_cmd(ctx: Filter<IContext, ":text">) {
   }
 }
 
-function refreshDonate_cmd(ctx: IGroupCommandContext) {
+async function refreshDonate_cmd(ctx: ICommandContext) {
+  if (!ctx.from?.id) {
+    return;
+  }
+
   cacheManager.PremiumStatusCache.del(ctx.from.id);
+  void (await ctx.reply("✅").catch((e) => {}));
 }
 
 export { donate_cmd, refreshDonate_cmd };
