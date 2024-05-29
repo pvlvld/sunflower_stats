@@ -17,6 +17,8 @@ export type IGroupHearsCommandContext = IGroupHearsContext | IGroupCommandContex
 
 export type IGroupTextContext = Filter<IGroupContext, ":text" | ":caption">;
 
-export type IGroupPhotoCaptionContext = Filter<Filter<IGroupContext, ":caption">, ":photo">;
+export type IGroupCaptionContext = Filter<IGroupContext, ":caption">;
+
+export type IGroupPhotoCaptionContext = Filter<IGroupCaptionContext, ":photo">;
 
 export type IUpdates = ReadonlyArray<Exclude<keyof Update, "update_id">>;
