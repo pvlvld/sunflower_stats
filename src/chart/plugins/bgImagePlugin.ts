@@ -16,7 +16,7 @@ async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType)
 
   if (type === "chat") {
     if (fs.existsSync(`${baseBgPath}/${chat_id}.jpg`)) {
-      pluginBgImage = await loadImage(`${baseBgPath}/${user_id}.jpg`);
+      pluginBgImage = await loadImage(`${baseBgPath}/${chat_id}.jpg`);
     } else {
       pluginBgImage = await getDefaultBg();
     }
