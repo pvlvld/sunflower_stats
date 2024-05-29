@@ -70,55 +70,18 @@ async function main() {
   createScheduler();
 
   bot.api.deleteWebhook({ drop_pending_updates: true }).then(async () => {
-    if (process.env.TEST === "test") {
-      const handleUpdate = webhookCallback(bot, "std/http");
-      Bun.serve({
-        async fetch(req) {
-          try {
-            return await handleUpdate(req);
-          } catch (err) {
-            console.error(err);
-          }
-        },
-        port: 6666,
+    if (process.env.WEBHOOK) {
+      server = createServer();
+      server.listen({ port: 443, host: "0.0.0.0" }, async (error) => {
+        if (error) {
+          console.error(error);
+          process.exit(1);
+        }
       });
-      console.log("Started in test mode.");
-    } else if (process.env.WEBHOOK) {
-      if (typeof Bun !== "undefined") {
-        const handleUpdate = webhookCallback(bot, "std/http");
-        Bun.serve({
-          async fetch(req) {
-            console.log("New req!");
-            if (req.method !== "POST") {
-              return new Response();
-            }
-
-            try {
-              return await handleUpdate(req);
-            } catch (err) {
-              console.error(err);
-            }
-          },
-          port: 443,
-          hostname: "0.0.0.0",
-        });
-        bot.api.setWebhook(`https://soniashnyk.pp.ua:443/`, {
-          drop_pending_updates: true,
-          allowed_updates,
-        });
-      } else {
-        server = createServer();
-        server.listen({ port: 443, host: "0.0.0.0" }, async (error) => {
-          if (error) {
-            console.error(error);
-            process.exit(1);
-          }
-        });
-        await bot.api.setWebhook(`https://soniashnyk.pp.ua/${cfg.BOT_TOKEN}`, {
-          drop_pending_updates: true,
-          allowed_updates,
-        });
-      }
+      await bot.api.setWebhook(`https://soniashnyk.pp.ua/${cfg.BOT_TOKEN}`, {
+        drop_pending_updates: true,
+        allowed_updates,
+      });
 
       console.log("Bot is started using webhook.");
       console.log(await bot.api.getWebhookInfo());
