@@ -1,4 +1,4 @@
-import type { IGroupContext, IGroupTextContext } from "../../types/context";
+import type { IGroupContext } from "../../types/context";
 import { Menu, type MenuFlavor } from "@grammyjs/menu";
 import getUserNameLink from "../../utils/getUserNameLink";
 import isChatOwner from "../../utils/isChatOwner";
@@ -7,9 +7,10 @@ import cacheManager from "../../cache/cache";
 import { active } from "../../data/active";
 import { GrammyError } from "grammy";
 
-const chatCleanup_menu = new Menu<IGroupTextContext>("chatCleanup-menu", {
+const chatCleanup_menu = new Menu<IGroupContext>("chatCleanup-menu", {
   autoAnswer: false,
   onMenuOutdated: async (ctx) => {
+    // : IGroupTextContext & MenuFlavor
     await ctx.deleteMessage().catch((e) => {});
     await ctx.answerCallbackQuery("Ця чистка застаріла. Створіть нову.").catch((e) => {});
   },
@@ -100,10 +101,10 @@ const chatCleanup_menu = new Menu<IGroupTextContext>("chatCleanup-menu", {
   .url("Підтримати існування соняха 🧡", "https://send.monobank.ua/jar/6TjRWExdMt");
 
 async function destroyMenuIfOutdated(
-  ctx: IGroupTextContext & MenuFlavor,
+  ctx: IGroupContext & MenuFlavor,
   targetMembers: { user_id: number }[] | undefined
 ): Promise<boolean> {
-  if (ctx.msg.text && !targetMembers) {
+  if (ctx.msg?.text && !targetMembers) {
     try {
       ctx.menu.close({ immediate: true }).catch((e) => {});
       await ctx.deleteMessage().catch((e) => {});

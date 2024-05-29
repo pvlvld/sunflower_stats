@@ -1,14 +1,16 @@
 import type { IGroupContext } from "../../types/context";
-import type { Filter } from "grammy";
 import { removeChatData } from "../../utils/removeChatData";
 import { Menu } from "@grammyjs/menu";
 import cfg from "../../config";
 
-const leftGroup_menu = new Menu<Filter<IGroupContext, ":text">>("leftGroup-menu", {
+const leftGroup_menu = new Menu<IGroupContext>("leftGroup-menu", {
   autoAnswer: true,
 }).text("Видалити дані чату", async (ctx) => {
   if (!cfg.ADMINS.includes(ctx.from.id)) {
     return;
+  }
+  if (!ctx.msg?.text) {
+    return void (await ctx.answerCallbackQuery("Це меню застаріло, створіть нове."));
   }
 
   const chat_id = ctx.msg.text.substring(ctx.msg.text.lastIndexOf("-"));
