@@ -29,6 +29,7 @@ export async function startNewDay() {
   botStatsManager.resetAll();
   cacheManager.ChartCache_User.flush();
   cacheManager.ChartCache_Chat.flush();
+  cacheManager.PremiumStatusCache.flush();
 }
 
 export default createScheduler;
