@@ -26,6 +26,9 @@ import memes from "./memes";
 import stats_chat from "./stats_chat";
 import { monomorphic_active } from "./staff/monomorphic_active";
 import { removeChatData_cmd } from "./staff/removeChatData";
+import { setChartBg_Chat, setChartBg_Personal } from "./chartBg";
+import isChatOwner from "../utils/isChatOwner";
+import broadcast_chats_cmd from "./staff/broadcast_chats";
 import { donate_cmd, refreshDonate_cmd } from "./donate";
 
 function regCommands() {
@@ -107,6 +110,25 @@ function regCommands() {
 
   group.hears(/^!рест/, async (ctx) => {
     removeFromChatCleanup(ctx);
+  });
+
+  const groupPhotoCaption = group.on(":photo").on(":caption");
+  groupPhotoCaption.hears("!стата фон свій", (ctx) => {
+    setChartBg_Personal(ctx);
+  });
+  groupPhotoCaption.command("setMyBg", (ctx) => {
+    setChartBg_Personal(ctx);
+  });
+
+  groupPhotoCaption.hears("!стата фон чат", async (ctx) => {
+    if (await isChatOwner(ctx)) {
+      setChartBg_Chat(ctx);
+    }
+  });
+  groupPhotoCaption.command("setChatBg", async (ctx) => {
+    if (await isChatOwner(ctx)) {
+      setChartBg_Chat(ctx);
+    }
   });
 
   // -------- STAFF COMMANDS --------
