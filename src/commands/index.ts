@@ -112,20 +112,20 @@ function regCommands() {
     removeFromChatCleanup(ctx);
   });
 
-  const groupPhotoCaption = group.on(":photo").on(":caption");
-  groupPhotoCaption.hears("!стата фон я", (ctx) => {
+  const groupCaption = group.on(":caption");
+  groupCaption.hears("!стата фон я", (ctx) => {
     setChartBg_Personal(ctx);
   });
-  groupPhotoCaption.command("setMyBg", (ctx) => {
+  groupCaption.command("setMyBg", (ctx) => {
     setChartBg_Personal(ctx);
   });
 
-  groupPhotoCaption.hears("!стата фон чат", async (ctx) => {
+  groupCaption.hears("!стата фон чат", async (ctx) => {
     if (await isChatOwner(ctx)) {
       setChartBg_Chat(ctx);
     }
   });
-  groupPhotoCaption.command("setChatBg", async (ctx) => {
+  groupCaption.command("setChatBg", async (ctx) => {
     if (await isChatOwner(ctx)) {
       setChartBg_Chat(ctx);
     }

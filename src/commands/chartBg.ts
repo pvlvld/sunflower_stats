@@ -1,10 +1,14 @@
-import { IGroupPhotoCaptionContext } from "../types/context";
+import { IGroupCaptionContext, IGroupPhotoCaptionContext } from "../types/context";
 import cacheManager from "../cache/cache";
 import { isPremium } from "../utils/isPremium";
 
 const baseBgPath = "./data/chartBg/";
 
-async function setChartBg_Personal(ctx: IGroupPhotoCaptionContext) {
+async function setChartBg_Personal(ctx: IGroupCaptionContext | IGroupPhotoCaptionContext) {
+  if (!ctx.has(":photo")) {
+    return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
+  }
+
   if (!(await isPremium(ctx.from.id))) {
     return void (await ctx
       .reply(
@@ -20,7 +24,11 @@ async function setChartBg_Personal(ctx: IGroupPhotoCaptionContext) {
   void (await ctx.reply("💅🏻 Персональний фон успішно оновлено!").catch((e) => {}));
 }
 
-async function setChartBg_Chat(ctx: IGroupPhotoCaptionContext) {
+async function setChartBg_Chat(ctx: IGroupCaptionContext | IGroupPhotoCaptionContext) {
+  if (!ctx.has(":photo")) {
+    return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
+  }
+
   const isDownloaded = await downloadBg(ctx, "chat");
   if (!isDownloaded) return;
   cacheManager.ChartCache_Chat.removeChat(ctx.chat.id);
