@@ -23,6 +23,7 @@ async function refreshDonate_cmd(ctx: ICommandContext) {
   }
 
   cacheManager.PremiumStatusCache.del(ctx.from.id);
+  cacheManager.PremiumStatusCache.del(ctx.chat.id);
   void (await ctx.reply("✅").catch((e) => {}));
 }
 
