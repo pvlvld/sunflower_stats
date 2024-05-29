@@ -31,6 +31,8 @@ function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
   const botAdmin = group.filter((ctx) => cfg.ADMINS.includes(ctx.from?.id || -1));
 
+  bot.command("donate", async (ctx) => donate_cmd(ctx));
+
   bot.command(["help", "start"], async (ctx) => {
     if (
       ["supergroup", "group"].includes(ctx.msg.chat.type) &&
