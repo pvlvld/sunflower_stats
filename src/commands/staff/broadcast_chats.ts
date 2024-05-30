@@ -11,9 +11,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     return void ctx.reply("Команда має бути у відповідь на цільове повідомлення.");
   }
 
-  const test = ctx.api.config.use(async (prev, method, payload, signal) => {
-    return autoRetry()(prev, method, payload, signal);
-  });
+  ctx.api.config.use(autoRetry())
 
   let counter = 0;
 
