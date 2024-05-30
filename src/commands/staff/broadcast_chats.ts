@@ -11,9 +11,10 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     return void ctx.reply("Команда має бути у відповідь на цільове повідомлення.");
   }
 
-  ctx.api.config.use(autoRetry())
+  ctx.api.config.use(autoRetry());
 
-  let counter = 0;
+  let successfullySent = 0;
+  let totalAttemptsSent = 0;
 
   for (let chat in active.data) {
     if (!chat.startsWith("-")) {
@@ -24,6 +25,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     for (let user in active.data[chat]) {
       if (moment().diff(moment(active.data[chat]![user]!.active_last), "days") < 3) {
         try {
+          totalAttemptsSent++;
           void (await ctx.api.forwardMessage(
             chat,
             ctx.chat.id,
@@ -32,7 +34,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
               disable_notification: true,
             }
           ));
-          counter++;
+          successfullySent++;
         } catch (e) {
           console.error(e);
           if (e instanceof GrammyError && e.description.includes("bot was kicked")) {
@@ -49,10 +51,16 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
   void (await ctx.api
     .sendMessage(
       cfg.ANALYTICS_CHAT ?? -1,
-      `Розсилку закінчено.\nУспішно надіслано ${counter} повідомлень.`
+      `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${
+        Object.keys(active.data).length
+      }`
     )
     .catch((e) => {}));
-  console.info(`Розсилку закінчено.\nУспішно надіслано ${counter} повідомлень.`);
+  console.info(
+    `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${
+      Object.keys(active.data).length
+    }`
+  );
 }
 
 export default broadcast_chats_cmd;
