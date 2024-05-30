@@ -52,8 +52,14 @@ async function stats_their(ctx: IGroupTextContext) {
           { disable_notification: true, link_preview_options: { is_disabled: true } }
         ));
     }
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    if (error.description.includes("not enough rights to send photos to the chat")) {
+      await ctx.reply(
+        "⚠️ Помилка! Як я маю надсилати вам графіки статистики без права на надсилання зображень?!"
+      );
+    } else {
+      console.error(error);
+    }
   }
 }
 

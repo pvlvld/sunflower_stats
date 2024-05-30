@@ -48,8 +48,14 @@ async function stats_my(ctx: IGroupTextContext) {
       default:
         throw new Error("Unknown cachedChart status!");
     }
-  } catch (error) {
-    console.error(error);
+  } catch (error: any) {
+    if (error.description.includes("not enough rights to send photos to the chat")) {
+      await ctx.reply(
+        "⚠️ Помилка! Як я маю надсилати вам графіки статистики без права на надсилання зображень?!"
+      );
+    } else {
+      console.error(error);
+    }
   }
 }
 
