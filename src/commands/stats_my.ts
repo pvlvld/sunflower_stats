@@ -45,6 +45,8 @@ async function stats_my(ctx: IGroupTextContext) {
           getUserStatsMessage(chat_id, user_id, await dbStats.user.all(chat_id, user_id)),
           { disable_notification: true, link_preview_options: { is_disabled: true } }
         ));
+      default:
+        throw new Error("Unknown cachedChart status!");
     }
   } catch (error) {
     console.error(error);
