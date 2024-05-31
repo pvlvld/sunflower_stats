@@ -8,30 +8,37 @@ class PgSQLPoolManager {
   private config: PoolConfig;
   private poolRead!: Pool;
   private poolWrite!: Pool;
+  private _isReady: boolean;
 
   constructor(config: PoolConfig) {
     this.config = config;
+    this._isReady = false;
+  }
+
+  get isReady() {
+    return this._isReady;
   }
 
   async createPool() {
-    if (this.poolRead && this.poolWrite) return;
+    if (this._isReady) return;
     this.poolRead = new Pool(this.config);
     this.poolWrite = new Pool(this.config);
     await this.poolRead.query("SELECT 1");
+    this._isReady = true;
   }
 
   get getPoolRead() {
-    if (!this.poolRead) {
-      throw new Error("Pool was not created.");
+    if (this._isReady) {
+      return this.poolRead;
     }
-    return this.poolRead;
+    throw new Error("Pool was not created.");
   }
 
   get getPoolWrite() {
-    if (!this.poolWrite) {
-      throw new Error("Pool was not created.");
+    if (this._isReady) {
+      return this.poolWrite;
     }
-    return this.poolWrite;
+    throw new Error("Pool was not created.");
   }
 
   async shutdown() {
