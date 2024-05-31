@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date";
 import type { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
-import DBPoolManager from "./db";
+import DBPoolManager, { type IPgSQLPoolManager } from "./db";
 
 type IDateRanges = keyof IFormattedRangeDateGetters | [from: string, to: string];
 
@@ -10,10 +10,10 @@ class DbStatsWrapper {
   public user;
   public bot;
 
-  constructor(poolRead: Pool, poolWrite: Pool) {
-    this.chat = new DbChatStats(poolRead);
-    this.user = new DbUserStats(poolRead, poolWrite);
-    this.bot = new DbBotStats(poolRead);
+  constructor(DbPoolManager: IPgSQLPoolManager) {
+    this.chat = new DbChatStats(DbPoolManager.getPoolRead);
+    this.user = new DbUserStats(DbPoolManager.getPoolRead, DbPoolManager.getPoolWrite);
+    this.bot = new DbBotStats(DbPoolManager.getPoolRead);
   }
 }
 
@@ -165,5 +165,6 @@ class DbBotStats {
   }
 }
 
-const dbStats = new DbStatsWrapper(DBPoolManager.getPoolRead, DBPoolManager.getPoolWrite);
+const dbStats = new DbStatsWrapper(DBPoolManager);
 export default dbStats;
+export { DbStatsWrapper };
