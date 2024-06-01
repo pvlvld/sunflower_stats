@@ -1,5 +1,5 @@
 import type { IGroupTextContext } from "../types/context";
-import DBPoolManager from "../db/db";
+import { DBPoolManager } from "../db/poolManager";
 import isChatOwner from "../utils/isChatOwner";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import chatCleanup_menu from "../ui/menus/chatCleanup";

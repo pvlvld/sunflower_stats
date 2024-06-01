@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date";
 import type { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
-import DBPoolManager, { type IPgSQLPoolManager } from "./db";
+import { DBPoolManager, IDBPoolManager } from "./poolManager";
 
 type IDateRanges = keyof IFormattedRangeDateGetters | [from: string, to: string];
 
@@ -10,7 +10,7 @@ class DbStatsWrapper {
   public user;
   public bot;
 
-  constructor(DbPoolManager: IPgSQLPoolManager) {
+  constructor(DbPoolManager: IDBPoolManager) {
     this.chat = new DbChatStats(DbPoolManager.getPoolRead);
     this.user = new DbUserStats(DbPoolManager.getPoolRead, DbPoolManager.getPoolWrite);
     this.bot = new DbBotStats(DbPoolManager.getPoolRead);

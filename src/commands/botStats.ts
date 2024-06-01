@@ -1,7 +1,7 @@
 import bot from "../bot";
 import moment from "moment";
 import type { IContext } from "../types/context";
-import DBPoolManager from "../db/db";
+import { DBPoolManager } from "../db/poolManager";
 
 type IBotStats = {
   commands: { [key: string]: number };

@@ -1,4 +1,4 @@
-import DBPoolManager, { IPgSQLPoolManager } from "./db/db";
+import { DBPoolManager, IDBPoolManager } from "./db/poolManager";
 DBPoolManager.createPool();
 
 import bot from "./bot";
@@ -104,7 +104,7 @@ async function main() {
 
   let isShuttingDown = false;
 
-  async function shutdown(DBPoolManager: IPgSQLPoolManager) {
+  async function shutdown(DBPoolManager: IDBPoolManager) {
     if (isShuttingDown) return;
     console.log("Shutting down.");
     isShuttingDown = true;

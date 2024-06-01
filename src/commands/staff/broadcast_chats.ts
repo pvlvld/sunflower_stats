@@ -1,7 +1,7 @@
 import type { IGroupHearsContext } from "../../types/context";
 import { autoRetry } from "@grammyjs/auto-retry";
 import { active } from "../../data/active";
-import DBPoolManager from "../../db/db";
+import { DBPoolManager } from "../../db/poolManager";
 import { GrammyError } from "grammy";
 import cfg from "../../config";
 import moment from "moment";

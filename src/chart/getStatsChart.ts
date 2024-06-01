@@ -1,7 +1,7 @@
 //@ts-expect-error
 import { Chart, ChartConfiguration } from "chart.js";
 import { bgImagePlugin } from "./plugins/bgImagePlugin";
-import DBPoolManager from "../db/db";
+import { DBPoolManager } from "../db/poolManager";
 import { InputFile } from "grammy";
 import { ChartCanvasManager } from "./chartCanvas";
 import formattedDate from "../utils/date";

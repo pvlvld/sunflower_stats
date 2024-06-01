@@ -1,10 +1,10 @@
 import { IChatSettings } from "../types/settings";
-import { PgSQLPoolManager } from "./poolManager";
+import { IDBPoolManager } from "./poolManager";
 
 class DbChatSettingWrapper {
-  private _poolManager: PgSQLPoolManager;
+  private _poolManager: IDBPoolManager;
 
-  constructor(poolManager: PgSQLPoolManager) {
+  constructor(poolManager: IDBPoolManager) {
     this._poolManager = poolManager;
   }
 
