@@ -1,9 +1,9 @@
 import Escape from "./escape";
-import type { IDbChatUserStatsPeriods } from "../types/stats";
+import type { IDBChatUserStatsPeriods } from "../types/stats";
 import moment from "moment";
 import { active } from "../data/active";
 
-function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDbChatUserStatsPeriods) {
+function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatUserStatsPeriods) {
   const nickname = active.data[chat_id]?.[user_id]?.nickname;
 
   return Escape.html(`

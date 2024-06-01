@@ -3,7 +3,7 @@ import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import { getStatsChart } from "../chart/getStatsChart";
 import { botStatsManager } from "./botStats";
 import cacheManager from "../cache/cache";
-import dbStats from "../db/stats";
+import { DBStats } from "../db/stats";
 const Big = require("big-js");
 
 const cmdToDateRangeMap = {
@@ -35,7 +35,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
   const start = String(process.hrtime.bigint());
   const chat_id = ctx.chat.id;
-  const stats = await dbStats.chat.inRage(chat_id, dateRange);
+  const stats = await DBStats.chat.inRage(chat_id, dateRange);
   const queryTime = String(process.hrtime.bigint());
 
   if (stats.length === 0) {

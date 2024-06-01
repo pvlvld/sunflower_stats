@@ -1,5 +1,5 @@
 import type { IGroupTextContext } from "../types/context";
-import DbStats from "../db/stats";
+import { DBStats } from "../db/stats";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import isValidNumbers from "../utils/isValidNumbers";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
@@ -17,7 +17,7 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
     return void (await ctx.reply(
       `📊 Статистика чату за ${dateRange[0]} - ${dateRange[1]}:\n\n` +
         getStatsRatingPlusToday(
-          await DbStats.chat.inRage(ctx.chat.id, [dateRange[0], dateRange[1]]),
+          await DBStats.chat.inRage(ctx.chat.id, [dateRange[0], dateRange[1]]),
           ctx.chat.id
         ),
       {
@@ -29,7 +29,7 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
 
   return void (await ctx.reply(
     `📊 Статистика чату за ${dateRange[0]}:\n\n` +
-      getStatsRatingPlusToday(await DbStats.chat.date(ctx.chat.id, dateRange[0]), ctx.chat.id),
+      getStatsRatingPlusToday(await DBStats.chat.date(ctx.chat.id, dateRange[0]), ctx.chat.id),
     {
       disable_notification: true,
       link_preview_options: { is_disabled: true },

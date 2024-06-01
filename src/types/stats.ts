@@ -17,7 +17,7 @@ export interface IStats {
     | undefined;
 }
 
-export interface IDbChatUserStatsPeriods {
+export interface IDBChatUserStatsPeriods {
   total: number;
   year: number;
   month: number;
@@ -25,7 +25,7 @@ export interface IDbChatUserStatsPeriods {
   today: number;
 }
 
-export interface IDbChatUserStats {
+export interface IDBChatUserStats {
   user_id: number;
   count: number;
 }

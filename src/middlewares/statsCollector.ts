@@ -1,6 +1,6 @@
 import { botStatsManager } from "../commands/botStats";
 import { type Context, type NextFunction } from "grammy";
-import dbStats from "../db/stats";
+import { DBStats } from "../db/stats";
 
 export function StatsCollectorWrapper() {
   return async function statsCollector(ctx: Context, next: NextFunction) {
@@ -16,7 +16,7 @@ export function StatsCollectorWrapper() {
     ) {
       return await next();
     } else {
-      dbStats.user.countUserMessage(ctx.chat.id, ctx.from.id);
+      DBStats.user.countUserMessage(ctx.chat.id, ctx.from.id);
     }
 
     return await next();

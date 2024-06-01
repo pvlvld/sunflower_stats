@@ -3,7 +3,7 @@ import getUserStatsMessage from "../utils/getUserStatsMessage";
 import type { IGroupTextContext } from "../types/context";
 import { getStatsChart } from "../chart/getStatsChart";
 import cacheManager from "../cache/cache";
-import dbStats from "../db/stats";
+import { DBStats } from "../db/stats";
 import cfg from "../config";
 
 async function stats_their(ctx: IGroupTextContext) {
@@ -28,7 +28,7 @@ async function stats_their(ctx: IGroupTextContext) {
             caption: getUserStatsMessage(
               chat_id,
               user_id,
-              await dbStats.user.all(chat_id, user_id)
+              await DBStats.user.all(chat_id, user_id)
             ),
             disable_notification: true,
           });
@@ -43,12 +43,12 @@ async function stats_their(ctx: IGroupTextContext) {
         return;
       case "ok":
         return void (await ctx.replyWithPhoto(cachedChart.file_id, {
-          caption: getUserStatsMessage(chat_id, user_id, await dbStats.user.all(chat_id, user_id)),
+          caption: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
           disable_notification: true,
         }));
       case "skip":
         return void (await ctx.reply(
-          getUserStatsMessage(chat_id, user_id, await dbStats.user.all(chat_id, user_id)),
+          getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
           { disable_notification: true, link_preview_options: { is_disabled: true } }
         ));
     }

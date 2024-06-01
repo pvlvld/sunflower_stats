@@ -1,29 +1,29 @@
 import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date";
-import type { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
+import type { IDBChatUserStatsPeriods, IDBChatUserStats } from "../types/stats";
 import { DBPoolManager, IDBPoolManager } from "./poolManager";
 
 type IDateRanges = keyof IFormattedRangeDateGetters | [from: string, to: string];
 
-class DbStatsWrapper {
+class DBStatsWrapper {
   public chat;
   public user;
   public bot;
 
-  constructor(DbPoolManager: IDBPoolManager) {
-    this.chat = new DbChatStats(DbPoolManager);
-    this.user = new DbUserStats(DbPoolManager);
-    this.bot = new DbBotStats(DbPoolManager);
+  constructor(DBPoolManager: IDBPoolManager) {
+    this.chat = new DBChatStats(DBPoolManager);
+    this.user = new DBUserStats(DBPoolManager);
+    this.bot = new DBBotStats(DBPoolManager);
   }
 }
 
-class DbUserStats {
+class DBUserStats {
   private _dbPooolManager: IDBPoolManager;
 
   constructor(dbPoolManager: IDBPoolManager) {
     this._dbPooolManager = dbPoolManager;
   }
 
-  async all(chat_id: number, user_id: number): Promise<IDbChatUserStatsPeriods> {
+  async all(chat_id: number, user_id: number): Promise<IDBChatUserStatsPeriods> {
     const query = `
     SELECT
     SUM(count) AS total,
@@ -37,10 +37,10 @@ class DbUserStats {
 
     try {
       return (await this._dbPooolManager.getPoolRead.query(query))
-        .rows[0] as IDbChatUserStatsPeriods;
+        .rows[0] as IDBChatUserStatsPeriods;
     } catch (error) {
       console.error(error);
-      return {} as IDbChatUserStatsPeriods;
+      return {} as IDBChatUserStatsPeriods;
     }
   }
 
@@ -55,14 +55,14 @@ class DbUserStats {
   }
 }
 
-class DbChatStats {
+class DBChatStats {
   private _dbPoolManager: IDBPoolManager;
 
   constructor(dbPoolManager: IDBPoolManager) {
     this._dbPoolManager = dbPoolManager;
   }
 
-  async today(chat_id: number): Promise<IDbChatUserStats[]> {
+  async today(chat_id: number): Promise<IDBChatUserStats[]> {
     try {
       const query = `
       SELECT user_id, SUM(count)  AS count
@@ -71,14 +71,14 @@ class DbChatStats {
       GROUP BY user_id
       ORDER BY count DESC;
         `;
-      return (await this._dbPoolManager.getPoolRead.query(query)).rows as IDbChatUserStats[];
+      return (await this._dbPoolManager.getPoolRead.query(query)).rows as IDBChatUserStats[];
     } catch (error) {
       console.error(error);
-      return [] as IDbChatUserStats[];
+      return [] as IDBChatUserStats[];
     }
   }
 
-  async yesterday(chat_id: number): Promise<IDbChatUserStats[]> {
+  async yesterday(chat_id: number): Promise<IDBChatUserStats[]> {
     try {
       const query = `
       SELECT user_id, SUM(count)  AS count
@@ -87,10 +87,10 @@ class DbChatStats {
       GROUP BY user_id
       ORDER BY count DESC;
         `;
-      return (await this._dbPoolManager.getPoolRead.query(query)).rows as IDbChatUserStats[];
+      return (await this._dbPoolManager.getPoolRead.query(query)).rows as IDBChatUserStats[];
     } catch (error) {
       console.error(error);
-      return [] as IDbChatUserStats[];
+      return [] as IDBChatUserStats[];
     }
   }
 
@@ -106,7 +106,7 @@ class DbChatStats {
         GROUP BY user_id
         ORDER BY count DESC;
           `)
-        ).rows as IDbChatUserStats[];
+        ).rows as IDBChatUserStats[];
       } else {
         return (
           await this._dbPoolManager.getPoolRead.query(`
@@ -116,11 +116,11 @@ class DbChatStats {
         GROUP BY user_id
         ORDER BY count DESC;
           `)
-        ).rows as IDbChatUserStats[];
+        ).rows as IDBChatUserStats[];
       }
     } catch (error) {
       console.error(error);
-      return [] as IDbChatUserStats[];
+      return [] as IDBChatUserStats[];
     }
   }
 
@@ -134,14 +134,14 @@ class DbChatStats {
         GROUP BY user_id
         ORDER BY count DESC;
           `)
-      ).rows as IDbChatUserStats[];
+      ).rows as IDBChatUserStats[];
     } catch (error) {
       console.error(error);
-      return [] as IDbChatUserStats[];
+      return [] as IDBChatUserStats[];
     }
   }
 
-  async all(chat_id: number): Promise<IDbChatUserStats[]> {
+  async all(chat_id: number): Promise<IDBChatUserStats[]> {
     const query = `
     SELECT user_id, SUM(count) AS count
     FROM stats_daily
@@ -149,15 +149,15 @@ class DbChatStats {
     GROUP BY user_id
     ORDER BY count DESC;`;
     try {
-      return (await this._dbPoolManager.getPoolRead.query(query)).rows as IDbChatUserStats[];
+      return (await this._dbPoolManager.getPoolRead.query(query)).rows as IDBChatUserStats[];
     } catch (error) {
       console.error(error);
-      return [] as IDbChatUserStats[];
+      return [] as IDBChatUserStats[];
     }
   }
 }
 
-class DbBotStats {
+class DBBotStats {
   private _dbPoolManager: IDBPoolManager;
 
   constructor(dbPoolManager: IDBPoolManager) {
@@ -165,6 +165,5 @@ class DbBotStats {
   }
 }
 
-const dbStats = new DbStatsWrapper(DBPoolManager);
-export default dbStats;
-export { DbStatsWrapper };
+const DBStats = new DBStatsWrapper(DBPoolManager);
+export { DBStats, DBStatsWrapper };

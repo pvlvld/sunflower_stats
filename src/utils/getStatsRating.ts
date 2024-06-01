@@ -1,8 +1,8 @@
 import getUserNameLink from "./getUserNameLink";
-import type { IDbChatUserStats } from "../types/stats";
+import type { IDBChatUserStats } from "../types/stats";
 import { active } from "../data/active";
 
-export function getStatsRatingPlusToday(stats: IDbChatUserStats[], chat_id: number) {
+export function getStatsRatingPlusToday(stats: IDBChatUserStats[], chat_id: number) {
   const replyParts: string[] = [];
   let totalChatMessages = 0;
 
@@ -11,7 +11,7 @@ export function getStatsRatingPlusToday(stats: IDbChatUserStats[], chat_id: numb
 
   let statsRowsCount = 0;
   let displayRank = 1;
-  let user: IDbChatUserStats;
+  let user: IDBChatUserStats;
   let userData: any;
   let nickname = "";
 
