@@ -1,4 +1,3 @@
-import { Pool } from "pg";
 import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date";
 import type { IDbChatUserStatsPeriods, IDbChatUserStats } from "../types/stats";
 import { DBPoolManager, IDBPoolManager } from "./poolManager";
@@ -11,19 +10,17 @@ class DbStatsWrapper {
   public bot;
 
   constructor(DbPoolManager: IDBPoolManager) {
-    this.chat = new DbChatStats(DbPoolManager.getPoolRead);
-    this.user = new DbUserStats(DbPoolManager.getPoolRead, DbPoolManager.getPoolWrite);
-    this.bot = new DbBotStats(DbPoolManager.getPoolRead);
+    this.chat = new DbChatStats(DbPoolManager);
+    this.user = new DbUserStats(DbPoolManager);
+    this.bot = new DbBotStats(DbPoolManager);
   }
 }
 
 class DbUserStats {
-  private poolRead: Pool;
-  private poolWrite: Pool;
+  private _dbPooolManager: IDBPoolManager;
 
-  constructor(poolRead: Pool, poolWrite: Pool) {
-    this.poolRead = poolRead;
-    this.poolWrite = poolWrite;
+  constructor(dbPoolManager: IDBPoolManager) {
+    this._dbPooolManager = dbPoolManager;
   }
 
   async all(chat_id: number, user_id: number): Promise<IDbChatUserStatsPeriods> {
@@ -39,7 +36,8 @@ class DbUserStats {
     `;
 
     try {
-      return (await this.poolRead.query(query)).rows[0] as IDbChatUserStatsPeriods;
+      return (await this._dbPooolManager.getPoolRead.query(query))
+        .rows[0] as IDbChatUserStatsPeriods;
     } catch (error) {
       console.error(error);
       return {} as IDbChatUserStatsPeriods;
@@ -48,7 +46,9 @@ class DbUserStats {
 
   async countUserMessage(chat_id: number, user_id: number) {
     try {
-      return void (await this.poolWrite.query(`SELECT update_stats_daily(${chat_id}, ${user_id})`));
+      return void (await this._dbPooolManager.getPoolWrite.query(
+        `SELECT update_stats_daily(${chat_id}, ${user_id})`
+      ));
     } catch (error) {
       console.error(error);
     }
@@ -56,10 +56,10 @@ class DbUserStats {
 }
 
 class DbChatStats {
-  private dbPool: Pool;
+  private _dbPoolManager: IDBPoolManager;
 
-  constructor(dbPool: Pool) {
-    this.dbPool = dbPool;
+  constructor(dbPoolManager: IDBPoolManager) {
+    this._dbPoolManager = dbPoolManager;
   }
 
   async today(chat_id: number): Promise<IDbChatUserStats[]> {
@@ -71,7 +71,7 @@ class DbChatStats {
       GROUP BY user_id
       ORDER BY count DESC;
         `;
-      return (await this.dbPool.query(query)).rows as IDbChatUserStats[];
+      return (await this._dbPoolManager.getPoolRead.query(query)).rows as IDbChatUserStats[];
     } catch (error) {
       console.error(error);
       return [] as IDbChatUserStats[];
@@ -87,7 +87,7 @@ class DbChatStats {
       GROUP BY user_id
       ORDER BY count DESC;
         `;
-      return (await this.dbPool.query(query)).rows as IDbChatUserStats[];
+      return (await this._dbPoolManager.getPoolRead.query(query)).rows as IDbChatUserStats[];
     } catch (error) {
       console.error(error);
       return [] as IDbChatUserStats[];
@@ -99,7 +99,7 @@ class DbChatStats {
       if (typeof rawRange === "string") {
         const range = formattedDate[rawRange];
         return (
-          await this.dbPool.query(`
+          await this._dbPoolManager.getPoolRead.query(`
         SELECT user_id, SUM(count) AS count
         FROM stats_daily
         WHERE chat_id = ${chat_id} AND date BETWEEN '${range[0]}' AND '${range[1]}'
@@ -109,7 +109,7 @@ class DbChatStats {
         ).rows as IDbChatUserStats[];
       } else {
         return (
-          await this.dbPool.query(`
+          await this._dbPoolManager.getPoolRead.query(`
         SELECT user_id, SUM(count) AS count
         FROM stats_daily
         WHERE chat_id = ${chat_id} AND date BETWEEN '${rawRange[0]}' AND '${rawRange[1]}'
@@ -127,7 +127,7 @@ class DbChatStats {
   async date(chat_id: number, date: string) {
     try {
       return (
-        await this.dbPool.query(`
+        await this._dbPoolManager.getPoolRead.query(`
         SELECT user_id, SUM(count) AS count
         FROM stats_daily
         WHERE chat_id = ${chat_id} AND date = '${date}'
@@ -149,7 +149,7 @@ class DbChatStats {
     GROUP BY user_id
     ORDER BY count DESC;`;
     try {
-      return (await this.dbPool.query(query)).rows as IDbChatUserStats[];
+      return (await this._dbPoolManager.getPoolRead.query(query)).rows as IDbChatUserStats[];
     } catch (error) {
       console.error(error);
       return [] as IDbChatUserStats[];
@@ -158,10 +158,10 @@ class DbChatStats {
 }
 
 class DbBotStats {
-  private dbPool: Pool;
+  private _dbPoolManager: IDBPoolManager;
 
-  constructor(dbPool: Pool) {
-    this.dbPool = dbPool;
+  constructor(dbPoolManager: IDBPoolManager) {
+    this._dbPoolManager = dbPoolManager;
   }
 }
 
