@@ -1,6 +1,6 @@
-import type { Writeable } from "./writeable";
+import type { FixBooleanProperties } from "./utilityTypes";
 import { DefaultChatSettings } from "../cache/chatSettingsCache";
 
-type IChatSettings = Writeable<typeof DefaultChatSettings>;
+type IChatSettings = FixBooleanProperties<typeof DefaultChatSettings>;
 
 export { IChatSettings };
