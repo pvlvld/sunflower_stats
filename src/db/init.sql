@@ -3,7 +3,14 @@ CREATE DATABASE soniashnyk_bot /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE ut
 -------------------------------------
 
 CREATE TABLE
-  public.chats (chat_id bigint NOT NULL);
+  public.chats (
+    chat_id bigint NOT NULL,
+    is_premium boolean NOT NULL DEFAULT false,
+    stats_bot_in boolean NOT NULL DEFAULT true,
+    charts boolean NOT NULL DEFAULT true,
+    statsadminsonly boolean NOT NULL DEFAULT false,
+    usechatbgforall boolean NOT NULL DEFAULT false,
+    );
 ALTER TABLE
   public.chats
 ADD
@@ -12,7 +19,10 @@ ADD
 -------------------------------------
 
 CREATE TABLE
-  public.users (user_id bigint NOT NULL);
+  public.users (
+    user_id bigint NOT NULL,
+    is_premium boolean NOT NULL DEFAULT false
+    );
 ALTER TABLE
   public.users
 ADD
