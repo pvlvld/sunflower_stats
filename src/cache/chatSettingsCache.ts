@@ -15,7 +15,7 @@ class ChatSettingsCache {
     this._settingsCache = {};
   }
 
-  public async get(chat_id: number): Promise<IChatSettings | undefined> {
+  public get(chat_id: number): IChatSettings | undefined {
     return this._settingsCache[chat_id];
   }
 
