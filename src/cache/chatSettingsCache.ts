@@ -1,17 +1,15 @@
 import type { IChatSettings } from "../types/settings";
 
-class ChatSettingsCache {
-  private _defaultChatSettings: IChatSettings;
+const DefaultChatSettings = Object.freeze({
+  charts: true,
+  statsadminsonly: false,
+  usechatbgforall: false,
+});
 
+class ChatSettingsCache {
   private _settingsCache: Record<number, IChatSettings | undefined>;
 
   constructor() {
-    this._defaultChatSettings = {
-      charts: true,
-      statsadminsonly: false,
-      usechatbgforall: false,
-    };
-
     this._settingsCache = {};
   }
 
@@ -21,7 +19,7 @@ class ChatSettingsCache {
 
   public set(chat_id: number, settings: Partial<IChatSettings> | undefined): void {
     if (this._settingsCache[chat_id] === undefined) {
-      this._settingsCache[chat_id] = { ...this._defaultChatSettings };
+      this._settingsCache[chat_id] = { ...DefaultChatSettings };
     }
 
     if (settings) {
@@ -33,4 +31,4 @@ class ChatSettingsCache {
   }
 }
 
-export { ChatSettingsCache };
+export { ChatSettingsCache, DefaultChatSettings };
