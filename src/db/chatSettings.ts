@@ -9,7 +9,7 @@ class DbChatSettingWrapper {
   }
 
   public async get(chat_id: number) {
-    (
+    return (
       await this._poolManager.getPoolRead.query(
         `SELECT charts, statsadminsonly, usechatbgforall FROM chats WHERE chat_id = ${chat_id};`
       )

@@ -17,7 +17,7 @@ class ChatSettingsCache {
     return this._settingsCache[chat_id];
   }
 
-  public set(chat_id: number, settings: Partial<IChatSettings> | undefined): void {
+  public set(chat_id: number, settings: Partial<IChatSettings> | undefined): IChatSettings {
     if (this._settingsCache[chat_id] === undefined) {
       this._settingsCache[chat_id] = { ...DefaultChatSettings };
     }
@@ -28,6 +28,8 @@ class ChatSettingsCache {
         ...settings,
       };
     }
+
+    return this._settingsCache[chat_id]!;
   }
 }
 
