@@ -18,10 +18,10 @@ class PgSQLPoolManager {
 
   async createPool() {
     if (this._isReady) return;
+    this._isReady = true;
     this.poolRead = new Pool(this.config);
     this.poolWrite = new Pool(this.config);
     await this.poolRead.query("SELECT 1");
-    this._isReady = true;
   }
 
   get getPoolRead() {
