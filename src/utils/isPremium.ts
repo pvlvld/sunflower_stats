@@ -1,5 +1,6 @@
 import { FieldPacket } from "mysql2";
 import { getOldDbPool } from "../db/oldDb";
+import cacheManager from "../cache/cache";
 import cfg from "../config";
 
 type IQueryResult =
@@ -12,6 +13,11 @@ type IQueryResult =
 async function isPremium(id: number) {
   if (cfg.ADMINS.includes(id)) {
     return true;
+  }
+
+  let cachedStatus = cacheManager.PremiumStatusCache.get(id);
+  if (cachedStatus.cached) {
+    return cachedStatus.status;
   }
 
   const pool = await getOldDbPool();
@@ -28,7 +34,10 @@ async function isPremium(id: number) {
     );
   }
 
-  return Boolean(queryResult[0]?.[0]?.isPremium ?? 0);
+  const dbStatus = Boolean(queryResult[0]?.[0]?.isPremium ?? false);
+  cacheManager.PremiumStatusCache.set(id, dbStatus);
+
+  return dbStatus;
 }
 
 export { isPremium };
