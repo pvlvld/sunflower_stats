@@ -17,7 +17,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     ));
   }
 
-  if (!(await isChatOwner(ctx))) {
+  if (!(await isChatOwner(ctx.chat.id, ctx.from.id))) {
     return;
   }
 

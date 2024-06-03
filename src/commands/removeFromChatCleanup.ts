@@ -6,7 +6,7 @@ import getUserId from "../utils/getUserId";
 import isChatOwner from "../utils/isChatOwner";
 
 async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
-  if (!(await isChatOwner(ctx))) return;
+  if (!(await isChatOwner(ctx.chat.id, ctx.from.id))) return;
 
   if ((ctx.msg.text || ctx.msg.caption) === "!рест") {
     return void (await ctx

@@ -23,7 +23,7 @@ const chatCleanup_menu = new Menu<IGroupContext>("chatCleanup-menu", {
     range.text("Видалити ✅", async (ctx) => {
       ctx.answerCallbackQuery().catch((e) => {});
 
-      if (!(await isChatOwner(ctx))) {
+      if (!(await isChatOwner(ctx.chat.id, ctx.from.id))) {
         return;
       }
 
@@ -56,7 +56,10 @@ const chatCleanup_menu = new Menu<IGroupContext>("chatCleanup-menu", {
     range.text("Скасувати ❌", async (ctx) => {
       ctx.answerCallbackQuery().catch((e) => {});
 
-      if (!(await isChatOwner(ctx)) || (await destroyMenuIfOutdated(ctx, targetMembers))) {
+      if (
+        !(await isChatOwner(ctx.chat.id, ctx.from.id)) ||
+        (await destroyMenuIfOutdated(ctx, targetMembers))
+      ) {
         return;
       }
 
@@ -68,7 +71,7 @@ const chatCleanup_menu = new Menu<IGroupContext>("chatCleanup-menu", {
     range.row().text("Список 🔍", async (ctx) => {
       ctx.answerCallbackQuery().catch((e) => {});
 
-      if (!(await isChatOwner(ctx))) {
+      if (!(await isChatOwner(ctx.chat.id, ctx.from.id))) {
         return;
       }
 

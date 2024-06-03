@@ -120,12 +120,12 @@ function regCommands() {
   });
 
   group.hears("!стата фон чат", async (ctx) => {
-    if (await isChatOwner(ctx)) {
+    if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
       setChartBg_Chat(ctx);
     }
   });
   group.command("setChatBg", async (ctx) => {
-    if (await isChatOwner(ctx)) {
+    if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
       setChartBg_Chat(ctx);
     }
   });
