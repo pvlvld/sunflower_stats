@@ -42,4 +42,4 @@ class ChatAdminsCache {
   }
 }
 
-export { ChatAdminsCache };
+export { ChatAdminsCache, IChatAdmin };
