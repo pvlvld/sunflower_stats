@@ -33,6 +33,10 @@ async function stats_my(ctx: IGroupTextContext) {
           );
         } else {
           cacheManager.ChartCache_User.set(chat_id, user_id, "");
+          return void (await ctx.reply(
+            getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+            { disable_notification: true, link_preview_options: { is_disabled: true } }
+          ));
         }
         return;
       case "ok":
