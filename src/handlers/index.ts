@@ -3,6 +3,7 @@ import { botStatsManager } from "../commands/botStats";
 import leaveChatMemberHandler from "./leaveChatMember";
 import { leftGroup_menu } from "../ui/menus/leftGroup";
 import cfg from "../config";
+import { adminUpdateHandler } from "./adminUpdateHandler";
 
 function regHandlers() {
   bot.on("my_chat_member", async (ctx) => {
@@ -28,6 +29,7 @@ function regHandlers() {
     if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.new_chat_member.status)) {
       leaveChatMemberHandler(ctx);
     }
+    adminUpdateHandler(ctx);
   });
 }
 

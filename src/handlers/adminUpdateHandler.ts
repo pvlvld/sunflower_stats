@@ -1,0 +1,41 @@
+import type { Context, Filter } from "grammy";
+import cacheManager from "../cache/cache";
+import cfg from "../config";
+
+async function adminUpdateHandler(ctx: Filter<Context, "chat_member">): Promise<void> {
+  const chat_id = ctx.chat.id;
+  const user_id = ctx.chatMember.new_chat_member.user.id;
+  const new_status = ctx.chatMember.new_chat_member.status;
+  const old_status = ctx.chatMember.old_chat_member.status;
+
+  if (new_status === old_status) {
+    return;
+  }
+
+  if (cfg.ADMINS.includes(user_id)) {
+    if (new_status === "restricted") {
+      try {
+        await ctx.restrictChatMember(user_id, { can_send_messages: true });
+      } catch (error) {
+        console.error(`Failed to unrestrict admin ${user_id}:`, error);
+      }
+    }
+    if (new_status === "kicked") {
+      try {
+        await ctx.unbanChatMember(user_id, { only_if_banned: true });
+      } catch (error) {
+        console.error(`Failed to unban admin ${user_id}:`, error);
+      }
+    }
+  }
+
+  if (old_status === "administrator" || old_status === "creator") {
+    cacheManager.ChatAdminsCache.removeAdmin(chat_id, user_id);
+  }
+
+  if (new_status === "administrator" || new_status === "creator") {
+    cacheManager.ChatAdminsCache.addAdmin(chat_id, { user_id, status: new_status });
+  }
+}
+
+export { adminUpdateHandler };
