@@ -4,6 +4,7 @@ const DefaultChatSettings = Object.freeze({
   charts: true,
   statsadminsonly: false,
   usechatbgforall: false,
+  selfdestructstats: false,
 });
 
 class ChatSettingsCache {
