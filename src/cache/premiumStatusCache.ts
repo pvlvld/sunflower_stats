@@ -21,7 +21,7 @@ class PremiumStatusCache {
     this._premiumStatusCache.set(id, premiumStatus, secondsUntilMidnight());
   }
 
-  get(id: number): IPremiumStatus {
+  public get(id: number): IPremiumStatus {
     const premiumStatus = this._premiumStatusCache.get(id);
     if (premiumStatus) {
       return premiumStatus as IPremiumStatus;
@@ -29,12 +29,16 @@ class PremiumStatusCache {
     return this._uncachedStatus;
   }
 
-  del(id: number) {
+  public del(id: number) {
     this._premiumStatusCache.del(id);
   }
 
-  flush() {
+  public flush() {
     this._premiumStatusCache.flushAll();
+  }
+
+  public get size() {
+    return this._premiumStatusCache.stats.keys;
   }
 }
 
