@@ -30,8 +30,9 @@ import { setChartBg_Chat, setChartBg_Personal } from "./chartBg";
 import isChatOwner from "../utils/isChatOwner";
 import broadcast_chats_cmd from "./staff/broadcast_chats";
 import { donate_cmd, refreshDonate_cmd } from "./donate";
-import { getCachedOrDBChatSettings, getChatSettingsMessageText } from "../utils/chatSettingsUtils";
+import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
 import { isChatAdmin } from "../utils/isChatAdmin";
+import { chatSettings_cmd } from "./chatSettings";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -144,6 +145,16 @@ function regCommands() {
     if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
       setChartBg_Chat(ctx);
     }
+  });
+
+  group.hears("!settings", async (ctx) => {
+    chatSettings_cmd(ctx);
+  });
+  group.hears("!налаштування", async (ctx) => {
+    chatSettings_cmd(ctx);
+  });
+  group.command("settings", async (ctx) => {
+    chatSettings_cmd(ctx);
   });
 
   // -------- STAFF COMMANDS --------
