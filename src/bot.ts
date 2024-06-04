@@ -11,6 +11,7 @@ import chatCleanup_menu from "./ui/menus/chatCleanup";
 import { leftGroup_menu } from "./ui/menus/leftGroup";
 import { hydrateFiles } from "@grammyjs/files";
 import { donate_menu } from "./ui/menus/donate";
+import { settings_menu } from "./ui/menus/settings";
 
 const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 
@@ -52,5 +53,6 @@ bot.use(help_menu);
 bot.use(chatCleanup_menu);
 bot.use(leftGroup_menu);
 bot.use(donate_menu);
+bot.use(settings_menu);
 
 export default bot;
