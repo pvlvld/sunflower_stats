@@ -37,6 +37,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
     } else {
       message = await ctx.reply(data.text, {
         disable_notification: true,
+        link_preview_options: { is_disabled: true },
       });
     }
 
