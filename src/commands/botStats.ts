@@ -3,6 +3,7 @@ import moment from "moment";
 import type { IContext } from "../types/context";
 import { DBPoolManager } from "../db/poolManager";
 import cacheManager from "../cache/cache";
+import cfg from "../config";
 
 type IBotStats = {
   commands: { [key: string]: number };
@@ -78,8 +79,8 @@ export const botStatsManager = {
     BOT_STATS.joinGroups = 0;
     BOT_STATS.leftGroups = 0;
   },
-  sendToMainChat: async () => {
-    return await bot.api.sendMessage("-1001898242958", getStatsMsg()).catch(() => {});
+  sendToAnalyticsChat: async () => {
+    return await bot.api.sendMessage(cfg.ANALYTICS_CHAT, getStatsMsg()).catch(() => {});
   },
 };
 
