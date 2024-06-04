@@ -14,7 +14,7 @@ class ChartCache_User {
     this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered" });
   }
 
-  get(chat_id: number, user_id: number): IChartCache {
+  public get(chat_id: number, user_id: number): IChartCache {
     const chatCache = this._chartCache.get(chat_id);
     if (chatCache) {
       const chart = chatCache.get(user_id);
@@ -25,7 +25,7 @@ class ChartCache_User {
     return this._unrenderedChart;
   }
 
-  set(chat_id: number, user_id: number, file_id: string) {
+  public set(chat_id: number, user_id: number, file_id: string) {
     let chatCache = this._chartCache.get(chat_id);
     if (!chatCache) {
       chatCache = new Map();
@@ -46,7 +46,7 @@ class ChartCache_User {
     userChats.add(chat_id);
   }
 
-  remove(chat_id: number, user_id: number) {
+  public remove(chat_id: number, user_id: number) {
     const chatCache = this._chartCache.get(chat_id);
     if (chatCache) {
       chatCache.delete(user_id);
@@ -61,7 +61,7 @@ class ChartCache_User {
     }
   }
 
-  removeChat(chat_id: number) {
+  public removeChat(chat_id: number) {
     const chatCache = this._chartCache.get(chat_id);
     if (chatCache) {
       let userChats: Set<number> | undefined = undefined;
@@ -78,7 +78,7 @@ class ChartCache_User {
     }
   }
 
-  removeUser(user_id: number) {
+  public removeUser(user_id: number) {
     const userChats = this._userChats.get(user_id);
     if (userChats) {
       let chatCache: Map<number, IChartCache> | undefined = undefined;
@@ -95,9 +95,13 @@ class ChartCache_User {
     }
   }
 
-  flush() {
+  public flush() {
     this._chartCache.clear();
     this._userChats.clear();
+  }
+
+  public get size() {
+    return this._chartCache.size;
   }
 }
 
