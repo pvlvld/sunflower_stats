@@ -30,10 +30,23 @@ import { setChartBg_Chat, setChartBg_Personal } from "./chartBg";
 import isChatOwner from "../utils/isChatOwner";
 import broadcast_chats_cmd from "./staff/broadcast_chats";
 import { donate_cmd, refreshDonate_cmd } from "./donate";
+import { getCachedOrDBChatSettings, getChatSettingsMessageText } from "../utils/chatSettingsUtils";
+import { isChatAdmin } from "../utils/isChatAdmin";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
   const botAdmin = group.filter((ctx) => cfg.ADMINS.includes(ctx.from?.id || -1));
+  const groupStats = group.filter(async (ctx) => {
+    if ((await getCachedOrDBChatSettings(ctx.chat.id)).statsadminsonly) {
+      if (ctx.from?.id && (await isChatAdmin(ctx.chat.id, ctx.from.id))) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  });
 
   bot.command("donate", async (ctx) => donate_cmd(ctx));
 
@@ -54,25 +67,28 @@ function regCommands() {
     help_cmd(ctx);
   });
 
-  group.hears(/^(стата|статистика)$/i, async (ctx) => {
+  groupStats.hears(/^(стата|статистика)$/i, async (ctx) => {
     stats_chat(ctx);
   });
 
-  group.hears(/^(стата|статистика) (сьогодні|вся|тиждень|місяць|вчора|рік)$/i, async (ctx) => {
+  groupStats.hears(/^(стата|статистика) (сьогодні|вся|тиждень|місяць|вчора|рік)$/i, async (ctx) => {
     stats_chat(ctx);
   });
 
-  group.hears(/^(статистика|стата) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/, async (ctx) => {
-    botStatsManager.commandUse("стата дата");
-    stats_chat_range_cmd(ctx);
-  });
+  groupStats.hears(
+    /^(статистика|стата) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/,
+    async (ctx) => {
+      botStatsManager.commandUse("стата дата");
+      stats_chat_range_cmd(ctx);
+    }
+  );
 
-  group.hears(/^(!я|!йа)$/i, async (ctx) => {
+  groupStats.hears(/^(!я|!йа)$/i, async (ctx) => {
     botStatsManager.commandUse("я");
     stats_my(ctx);
   });
 
-  group.hears(/^(!ти)/i, async (ctx) => {
+  groupStats.hears(/^(!ти)/i, async (ctx) => {
     if (
       (!ctx.msg.reply_to_message && !ctx.msg?.text?.startsWith("!ти ")) ||
       (ctx.msg.reply_to_message && !(ctx.msg?.text === "!ти"))
@@ -93,7 +109,7 @@ function regCommands() {
     del_nickname(ctx);
   });
 
-  group.hears(/^(!інактив|!неактив)/i, async (ctx) => {
+  groupStats.hears(/^(!інактив|!неактив)/i, async (ctx) => {
     botStatsManager.commandUse("інактив");
     chatInactive_cmd(ctx);
   });
