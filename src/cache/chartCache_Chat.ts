@@ -11,7 +11,7 @@ class ChartCache_Chat {
     this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered" });
   }
 
-  get(chat_id: number, range: IDateRange): IChartCache {
+  public get(chat_id: number, range: IDateRange): IChartCache {
     const chatCache = this._chartCache.get(chat_id);
     if (chatCache) {
       const chart = chatCache.get(range);
@@ -23,7 +23,7 @@ class ChartCache_Chat {
     return this._unrenderedChart;
   }
 
-  set(chat_id: number, range: IDateRange, file_id: string) {
+  public set(chat_id: number, range: IDateRange, file_id: string) {
     let chatCache = this._chartCache.get(chat_id);
     if (!chatCache) {
       chatCache = new Map();
@@ -37,12 +37,16 @@ class ChartCache_Chat {
     }
   }
 
-  removeChat(chat_id: number) {
+  public removeChat(chat_id: number) {
     void this._chartCache.delete(chat_id);
   }
 
-  flush() {
+  public flush() {
     this._chartCache.clear();
+  }
+
+  public get size() {
+    return this._chartCache.size;
   }
 }
 
