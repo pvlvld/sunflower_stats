@@ -9,6 +9,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   IGNORE_IDS: number[];
   ANALYTICS_CHAT: number;
   MAIN_CHAT: number;
+  STATS_DEFAULT_TTL: number;
 };
 
 function getCfg(): ICfg {
@@ -27,6 +28,8 @@ function getCfg(): ICfg {
   cfg.IGNORE_IDS = [136817688, 777000, -1];
   cfg.ANALYTICS_CHAT = -1002144414380;
   cfg.MAIN_CHAT = -1001898242958;
+  /** 5m */
+  cfg.STATS_DEFAULT_TTL = 5 * 60;
 
   return Object.freeze(cfg);
 }
