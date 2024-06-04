@@ -40,6 +40,10 @@ class ChatAdminsCache {
   public getAdmin(chat_id: number, user_id: number): IChatAdmin | undefined {
     return this.getAdmins(chat_id).find((admin) => admin.user_id === user_id);
   }
+
+  public get size() {
+    return Object.keys(this._adminsCache).length;
+  }
 }
 
 export { ChatAdminsCache, IChatAdmin };
