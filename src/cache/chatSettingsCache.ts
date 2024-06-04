@@ -32,6 +32,10 @@ class ChatSettingsCache {
 
     return this._settingsCache[chat_id]!;
   }
+
+  public get size() {
+    return Object.keys(this._settingsCache).length;
+  }
 }
 
 export { ChatSettingsCache, DefaultChatSettings };
