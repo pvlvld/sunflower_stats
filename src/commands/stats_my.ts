@@ -1,10 +1,11 @@
-import getUserStatsMessage from "../utils/getUserStatsMessage";
 import type { IGroupTextContext } from "../types/context";
+import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage";
+import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
+import getUserStatsMessage from "../utils/getUserStatsMessage";
 import { getStatsChart } from "../chart/getStatsChart";
 import cacheManager from "../cache/cache";
 import { DBStats } from "../db/stats";
 import cfg from "../config";
-import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
 
 async function stats_my(ctx: IGroupTextContext) {
   const chat_id = ctx.chat.id;
@@ -15,9 +16,14 @@ async function stats_my(ctx: IGroupTextContext) {
 
   const chatSettings = await getCachedOrDBChatSettings(chat_id);
   if (!chatSettings.charts) {
-    return void (await ctx.reply(
-      getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
-      { disable_notification: true, link_preview_options: { is_disabled: true } }
+    return void (await sendSelfdestructMessage(
+      ctx,
+      {
+        isChart: false,
+        text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+        chart: undefined,
+      },
+      chatSettings.selfdestructstats
     ));
   }
 
@@ -28,14 +34,20 @@ async function stats_my(ctx: IGroupTextContext) {
       case "unrendered":
         const chart = await getStatsChart(chat_id, user_id, "user");
         if (chart) {
-          const msg = await ctx.replyWithPhoto(chart, {
-            caption: getUserStatsMessage(
-              chat_id,
-              user_id,
-              await DBStats.user.all(chat_id, user_id)
-            ),
-            disable_notification: true,
-          });
+          const msg = await sendSelfdestructMessage(
+            ctx,
+            {
+              isChart: true,
+              text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+              chart: chart,
+            },
+            chatSettings.selfdestructstats
+          );
+
+          if (!msg) {
+            return;
+          }
+
           cacheManager.ChartCache_User.set(
             chat_id,
             user_id,
@@ -43,33 +55,43 @@ async function stats_my(ctx: IGroupTextContext) {
           );
         } else {
           cacheManager.ChartCache_User.set(chat_id, user_id, "");
-          return void (await ctx.reply(
-            getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
-            { disable_notification: true, link_preview_options: { is_disabled: true } }
+          return void (await sendSelfdestructMessage(
+            ctx,
+            {
+              isChart: false,
+              text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+              chart: undefined,
+            },
+            chatSettings.selfdestructstats
           ));
         }
         return;
       case "ok":
-        return void (await ctx.replyWithPhoto(cachedChart.file_id, {
-          caption: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
-          disable_notification: true,
-        }));
+        return void (await sendSelfdestructMessage(
+          ctx,
+          {
+            isChart: true,
+            text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+            chart: cachedChart.file_id,
+          },
+          chatSettings.selfdestructstats
+        ));
+
       case "skip":
-        return void (await ctx.reply(
-          getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
-          { disable_notification: true, link_preview_options: { is_disabled: true } }
+        return void (await sendSelfdestructMessage(
+          ctx,
+          {
+            isChart: false,
+            text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+            chart: undefined,
+          },
+          chatSettings.selfdestructstats
         ));
       default:
         throw new Error("Unknown cachedChart status!");
     }
   } catch (error: any) {
-    if (error.description.includes("not enough rights to send photos to the chat")) {
-      await ctx.reply(
-        "⚠️ Помилка! Як я маю надсилати вам графіки статистики без права на надсилання зображень?!"
-      );
-    } else {
-      console.error(error);
-    }
+    console.error(error);
   }
 }
 

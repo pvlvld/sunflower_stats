@@ -1,4 +1,6 @@
 import type { IGroupTextContext } from "../types/context";
+import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage";
+import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
 import { getStatsChart } from "../chart/getStatsChart";
 import { botStatsManager } from "./botStats";
@@ -28,6 +30,8 @@ const allowedChartStatsRanges: IAllowedChartStatsRanges[] = [
 // TODO: use await Promise.all() for chart + msg
 
 async function stats_chat(ctx: IGroupTextContext): Promise<void> {
+  const chat_id = ctx.chat.id;
+  const chatSettings = await getCachedOrDBChatSettings(chat_id);
   const rawCmdDateRange = (
     (ctx.msg.text ?? ctx.msg.caption).split(" ")[1] ?? "сьогодні"
   ).toLowerCase() as keyof typeof cmdToDateRangeMap;
@@ -59,9 +63,16 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
     if (cachedChart.status === "ok") {
       chartTime = String(process.hrtime.bigint());
-      return void (await ctx
-        .replyWithPhoto(cachedChart.file_id, { caption: statsMessage, disable_notification: true })
-        .catch((e) => {}));
+
+      return void (await sendSelfdestructMessage(
+        ctx,
+        {
+          isChart: true,
+          text: statsMessage,
+          chart: cachedChart.file_id,
+        },
+        chatSettings.selfdestructstats
+      ));
     } else {
       const chartImage = await getStatsChart(
         chat_id,
@@ -72,14 +83,16 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
       if (chartImage) {
         chartTime = String(process.hrtime.bigint());
-        const msg = await ctx
-          .replyWithPhoto(chartImage, {
-            caption: statsMessage,
-            disable_notification: true,
-          })
-          .catch((e) => {
-            console.log(e);
-          });
+
+        const msg = await sendSelfdestructMessage(
+          ctx,
+          {
+            isChart: true,
+            text: statsMessage,
+            chart: chartImage,
+          },
+          chatSettings.selfdestructstats
+        );
 
         if (msg) {
           cacheManager.ChartCache_Chat.set(
@@ -94,10 +107,15 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     }
   }
 
-  await ctx.reply(statsMessage, {
-    disable_notification: true,
-    link_preview_options: { is_disabled: true },
-  });
+  void (await sendSelfdestructMessage(
+    ctx,
+    {
+      isChart: false,
+      text: statsMessage,
+      chart: undefined,
+    },
+    chatSettings.selfdestructstats
+  ));
 
   botStatsManager.commandUse(`стата ${rawCmdDateRange}`);
   if (chat_id === -1001898242958) {
