@@ -2,6 +2,7 @@ import bot from "../bot";
 import moment from "moment";
 import type { IContext } from "../types/context";
 import { DBPoolManager } from "../db/poolManager";
+import cacheManager from "../cache/cache";
 
 type IBotStats = {
   commands: { [key: string]: number };
@@ -45,6 +46,11 @@ function getStatsMsg() {
 
   const dbPoolsQueueStatus = DBPoolManager.getPoolsQueueStatus();
   statsMsg += `\n\nread queue: ${dbPoolsQueueStatus.read}\nwrite queue: ${dbPoolsQueueStatus.write}`;
+
+  statsMsg += "\n";
+  statsMsg += `Active premium: ${cacheManager.PremiumStatusCache.size}\n`;
+  statsMsg += `Active chats: ${cacheManager.ChartCache_Chat.size}\n`;
+  statsMsg += `Active users: ${cacheManager.ChartCache_User.size}\n`;
   return statsMsg;
 }
 
