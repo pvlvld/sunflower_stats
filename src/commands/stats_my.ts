@@ -4,6 +4,7 @@ import { getStatsChart } from "../chart/getStatsChart";
 import cacheManager from "../cache/cache";
 import { DBStats } from "../db/stats";
 import cfg from "../config";
+import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
 
 async function stats_my(ctx: IGroupTextContext) {
   const chat_id = ctx.chat.id;
@@ -11,6 +12,15 @@ async function stats_my(ctx: IGroupTextContext) {
   if (cfg.IGNORE_IDS.includes(user_id)) {
     return;
   }
+
+  const chatSettings = await getCachedOrDBChatSettings(chat_id);
+  if (!chatSettings.charts) {
+    return void (await ctx.reply(
+      getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+      { disable_notification: true, link_preview_options: { is_disabled: true } }
+    ));
+  }
+
   const cachedChart = cacheManager.ChartCache_User.get(chat_id, user_id);
 
   try {

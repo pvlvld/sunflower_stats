@@ -34,7 +34,6 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   const dateRange = cmdToDateRangeMap[rawCmdDateRange];
 
   const start = String(process.hrtime.bigint());
-  const chat_id = ctx.chat.id;
   const stats = await DBStats.chat.inRage(chat_id, dateRange);
   const queryTime = String(process.hrtime.bigint());
 
@@ -49,7 +48,10 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   const msgTime = String(process.hrtime.bigint());
   let chartTime = "";
 
-  if (allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges)) {
+  if (
+    allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges) &&
+    chatSettings.charts
+  ) {
     const cachedChart = cacheManager.ChartCache_Chat.get(
       chat_id,
       dateRange as IAllowedChartStatsRanges
