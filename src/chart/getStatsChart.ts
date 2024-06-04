@@ -145,7 +145,8 @@ export async function getStatsChart(
     }
   }
 
-  if (data.length < 7) {
+  // do not render chart if data points count less than 5
+  if (data.length < 5) {
     return undefined;
   }
 
