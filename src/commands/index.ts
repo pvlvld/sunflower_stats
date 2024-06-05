@@ -132,7 +132,7 @@ function regCommands() {
   group.hears("!стата фон я", (ctx) => {
     setChartBg_Personal(ctx);
   });
-  group.command("setMyBg", (ctx) => {
+  group.command("setmybg", (ctx) => {
     setChartBg_Personal(ctx);
   });
 
@@ -141,7 +141,7 @@ function regCommands() {
       setChartBg_Chat(ctx);
     }
   });
-  group.command("setChatBg", async (ctx) => {
+  group.command("setchatbg", async (ctx) => {
     if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
       setChartBg_Chat(ctx);
     }
