@@ -24,7 +24,6 @@ import removeFromChatCleanup from "./removeFromChatCleanup";
 import stats_chat_range_cmd from "./stats_chat_range";
 import memes from "./memes";
 import stats_chat from "./stats_chat";
-import { monomorphic_active } from "./staff/monomorphic_active";
 import { removeChatData_cmd } from "./staff/removeChatData";
 import { setChartBg_Chat, setChartBg_Personal } from "./chartBg";
 import isChatOwner from "../utils/isChatOwner";
@@ -197,8 +196,6 @@ function regCommands() {
   botAdmin.hears(/^!ssbdb/, (ctx) => bench_db_cmd(ctx));
 
   botAdmin.hears("!ssmem", async (ctx) => botMemoryUsage(ctx));
-
-  botAdmin.hears("!monoactive", async () => monomorphic_active());
 
   botAdmin.hears(/^!ssrc/, async (ctx) => removeChatData_cmd(ctx));
   // Etc.
