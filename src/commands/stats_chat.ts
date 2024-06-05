@@ -47,7 +47,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
   const statsMessage =
     `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
-    getStatsRatingPlusToday(stats, chat_id);
+    getStatsRatingPlusToday(stats, chat_id, chatSettings.charts ? "caption" : "text");
 
   const msgTime = String(process.hrtime.bigint());
   let chartTime = "";
@@ -119,6 +119,9 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
   botStatsManager.commandUse(`стата ${rawCmdDateRange}`);
   if (chat_id === -1001898242958) {
+    if (!chartTime) {
+      chartTime = msgTime;
+    }
     ctx.reply(
       `DB: ${new Big(queryTime).minus(start).div(1000000)}ms\nGen: ${new Big(msgTime)
         .minus(queryTime)
