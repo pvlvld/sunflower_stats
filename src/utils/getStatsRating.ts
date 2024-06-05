@@ -2,11 +2,15 @@ import getUserNameLink from "./getUserNameLink";
 import type { IDBChatUserStats } from "../types/stats";
 import { active } from "../data/active";
 
-export function getStatsRatingPlusToday(stats: IDBChatUserStats[], chat_id: number) {
+export function getStatsRatingPlusToday(
+  stats: IDBChatUserStats[],
+  chat_id: number,
+  type?: "caption" | "text"
+) {
   const replyParts: string[] = [];
   let totalChatMessages = 0;
 
-  const statsRowLimit = Math.min(25, stats.length);
+  const statsRowLimit = Math.min(type === "text" ? 50 : 25, stats.length);
   const activeData = active.data[chat_id];
 
   let statsRowsCount = 0;
