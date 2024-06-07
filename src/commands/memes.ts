@@ -7,6 +7,10 @@ async function memes(ctx: Context) {
     if (text?.match(/^смерть р(у|о)сні(!|.)?$/)) {
       return void (await ctx.react("🔥"));
     }
+
+    if (text?.includes("hamster_kombat_bot")) {
+      return void (await ctx.react("💩"));
+    }
   } catch (e) {}
 }
 
