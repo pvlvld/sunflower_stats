@@ -23,8 +23,8 @@ import { run } from "@grammyjs/runner";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
+  console.error("Node NOT Exiting...");
   console.error(err);
-  console.log("Node NOT Exiting...");
 });
 
 bot.catch((err) => {
