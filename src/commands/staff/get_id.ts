@@ -20,11 +20,11 @@ async function getId_cmd(
   void (await ctx
     .reply(
       `
-  chat id: ${chat_id}
-  user id: ${sender_id}
-  ${reply_to_id ? `reply to user id: ${reply_to_id}` : ""}
-  ${photo_id ? `photo id: ${photo_id}` : ""}
-  ${animation_id ? `gif id: ${animation_id}` : ""}`
+chat id: ${chat_id}
+user id: ${sender_id}
+${reply_to_id ? `reply to user id: ${reply_to_id}` : ""}
+${photo_id ? `photo id: ${photo_id}` : ""}
+${animation_id ? `gif id: ${animation_id}` : ""}`
     )
     .catch((e) => {}));
 }
