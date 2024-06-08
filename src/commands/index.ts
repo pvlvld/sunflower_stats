@@ -32,6 +32,7 @@ import { donate_cmd, refreshDonate_cmd } from "./donate";
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
 import { isChatAdmin } from "../utils/isChatAdmin";
 import { chatSettings_cmd } from "./chatSettings";
+import { getId_cmd } from "./staff/get_id";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -202,6 +203,10 @@ function regCommands() {
 
   bot.on("message", async (ctx) => {
     memes(ctx);
+  });
+
+  group.hears("/getid", async (ctx) => {
+    getId_cmd(ctx);
   });
 }
 export default regCommands;
