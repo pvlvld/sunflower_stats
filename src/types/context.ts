@@ -21,4 +21,6 @@ export type IGroupCaptionContext = Filter<IGroupContext, ":caption">;
 
 export type IGroupPhotoCaptionContext = Filter<IGroupCaptionContext, ":photo">;
 
+export type IGroupAnimationCaptionContext = Filter<IGroupCaptionContext, ":animation">;
+
 export type IUpdates = ReadonlyArray<Exclude<keyof Update, "update_id">>;
