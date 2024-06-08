@@ -10,8 +10,12 @@ async function getId_cmd(
   const chat_id = ctx.chat.id;
   const sender_id = ctx.from?.id;
   const reply_to_id = ctx.msg.reply_to_message?.from?.id;
-  const photo_id = ctx.msg.photo ? ctx.msg.photo[ctx.msg.photo.length - 1] : undefined;
-  const animation_id = ctx.msg.animation ? ctx.msg.animation.file_id : undefined;
+  const photo_id = ctx.msg.reply_to_message?.photo
+    ? ctx.msg.reply_to_message.photo[ctx.msg.reply_to_message.photo.length - 1]
+    : undefined;
+  const animation_id = ctx.msg.reply_to_message?.animation
+    ? ctx.msg.reply_to_message.animation.file_id
+    : undefined;
 
   void (await ctx
     .reply(
