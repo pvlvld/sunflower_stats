@@ -16,19 +16,15 @@ function regHandlers() {
         try {
           const membersCount = await ctx.getChatMemberCount();
           if (membersCount >= 50) {
-            await ctx.api
-              .sendMessage(
-                "-1002144414380",
-                `#Join @${ctx.chat.username}\nID: ${ctx.chat.id}\nMembers count: ${membersCount}`,
-                {
-                  reply_markup: leftGroup_menu,
-                  reply_parameters: { message_id: -1, allow_sending_without_reply: true },
-                  disable_notification: true,
-                }
-              )
-              .catch((e) => {
-                console.log(e);
-              });
+            await ctx.api.sendMessage(
+              "-1002144414380",
+              `#Join @${ctx.chat.username}\nID: ${ctx.chat.id}\nMembers count: ${membersCount}`,
+              {
+                reply_markup: leftGroup_menu,
+                reply_parameters: { message_id: -1, allow_sending_without_reply: true },
+                disable_notification: true,
+              }
+            );
           }
         } catch (e) {}
       }
@@ -41,9 +37,7 @@ function regHandlers() {
             reply_parameters: { message_id: -1, allow_sending_without_reply: true },
             disable_notification: true,
           })
-          .catch((e) => {
-            console.log(e);
-          });
+          .catch((e) => {});
       }
     }
   });
