@@ -49,9 +49,8 @@ function getStatsMsg() {
   statsMsg += `\n\nread queue: ${dbPoolsQueueStatus.read}\nwrite queue: ${dbPoolsQueueStatus.write}`;
 
   statsMsg += "\n";
-  statsMsg += `Active premium: ${cacheManager.PremiumStatusCache.size}\n`;
-  statsMsg += `Active chats: ${cacheManager.ChartCache_Chat.size}\n`;
-  statsMsg += `Active users: ${cacheManager.ChartCache_User.size}\n`;
+  statsMsg += `Chat charts: ${cacheManager.ChartCache_Chat.size}\n`;
+  statsMsg += `User charts: ${cacheManager.ChartCache_User.size}\n`;
   return statsMsg;
 }
 
