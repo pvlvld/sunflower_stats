@@ -30,6 +30,10 @@ async function help_cmd(ctx: IContext) {
         disable_notification: true,
         reply_markup: help_menu,
         link_preview_options: { is_disabled: true },
+        reply_parameters: {
+          allow_sending_without_reply: true,
+          message_id: ctx.msg?.message_id ?? -1,
+        },
       }
     )
     .catch((e) => {});
