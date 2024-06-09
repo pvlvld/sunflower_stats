@@ -2,8 +2,9 @@ import help_menu from "../ui/menus/help";
 import type { IContext } from "../types/context";
 
 async function help_cmd(ctx: IContext) {
-  await ctx.reply(
-    `
+  await ctx
+    .reply(
+      `
 🌻Бот статистики Соняшник.
 <b>Дізнайтесь статистику та активність у вашому чаті:</b>
     
@@ -25,12 +26,13 @@ async function help_cmd(ctx: IContext) {
 
 Слідкувати за оновленнями можна у мене в каналі: soniashnyk.t.me
 `,
-    {
-      disable_notification: true,
-      reply_markup: help_menu,
-      link_preview_options: { is_disabled: true },
-    }
-  );
+      {
+        disable_notification: true,
+        reply_markup: help_menu,
+        link_preview_options: { is_disabled: true },
+      }
+    )
+    .catch((e) => {});
 }
 
 export default help_cmd;
