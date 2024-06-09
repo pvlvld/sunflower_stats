@@ -6,6 +6,7 @@ import { getStatsChart } from "../chart/getStatsChart";
 import { botStatsManager } from "./botStats";
 import cacheManager from "../cache/cache";
 import { DBStats } from "../db/stats";
+import { IDBChatUserStats } from "../types/stats";
 const Big = require("big-js");
 
 const cmdToDateRangeMap = {
@@ -40,17 +41,13 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   const start = String(process.hrtime.bigint());
   const stats = await DBStats.chat.inRage(chat_id, dateRange);
   const queryTime = String(process.hrtime.bigint());
+  let msgTime = "";
+  let chartTime = "";
+  let reply: Awaited<ReturnType<typeof sendSelfdestructMessage>> = undefined;
 
   if (stats.length === 0) {
     // TODO: meme
   }
-
-  const statsMessage =
-    `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
-    getStatsRatingPlusToday(stats, chat_id, chatSettings.charts ? "caption" : "text");
-
-  const msgTime = String(process.hrtime.bigint());
-  let chartTime = "";
 
   if (
     allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges) &&
@@ -62,9 +59,11 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     );
 
     if (cachedChart.status === "ok") {
-      chartTime = String(process.hrtime.bigint());
+      const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, true);
+      msgTime = String(process.hrtime.bigint());
+      chartTime = msgTime;
 
-      return void (await sendSelfdestructMessage(
+      reply = await sendSelfdestructMessage(
         ctx,
         {
           isChart: true,
@@ -72,8 +71,11 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
           chart: cachedChart.file_id,
         },
         chatSettings.selfdestructstats
-      ));
-    } else {
+      );
+    } else if (cachedChart.status === "unrendered") {
+      const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, true);
+      msgTime = String(process.hrtime.bigint());
+
       const chartImage = await getStatsChart(
         chat_id,
         chat_id,
@@ -84,7 +86,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
       if (chartImage) {
         chartTime = String(process.hrtime.bigint());
 
-        const msg = await sendSelfdestructMessage(
+        reply = await sendSelfdestructMessage(
           ctx,
           {
             isChart: true,
@@ -94,28 +96,31 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
           chatSettings.selfdestructstats
         );
 
-        if (msg) {
+        if (reply) {
           cacheManager.ChartCache_Chat.set(
             chat_id,
             dateRange as IAllowedChartStatsRanges,
-            msg.photo[msg.photo.length - 1].file_id
+            reply.photo[reply.photo.length - 1].file_id
           );
         }
-
-        return;
       }
     }
   }
 
-  void (await sendSelfdestructMessage(
-    ctx,
-    {
-      isChart: false,
-      text: statsMessage,
-      chart: undefined,
-    },
-    chatSettings.selfdestructstats
-  ));
+  if (reply === undefined) {
+    const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, false);
+    msgTime = String(process.hrtime.bigint());
+
+    reply = await sendSelfdestructMessage(
+      ctx,
+      {
+        isChart: false,
+        text: statsMessage,
+        chart: undefined,
+      },
+      chatSettings.selfdestructstats
+    );
+  }
 
   botStatsManager.commandUse(`стата ${rawCmdDateRange}`);
   if (chat_id === -1001898242958) {
@@ -127,9 +132,22 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         .minus(queryTime)
         .div(1000000)}ms\nChart: ${new Big(chartTime)
         .minus(msgTime)
-        .div(1000000)}ms}\nTotal: ${new Big(chartTime).minus(start).div(1000000)}ms`
+        .div(1000000)}ms\nTotal: ${new Big(chartTime).minus(start).div(1000000)}ms`
     );
   }
+}
+
+function getStatsMessage(
+  chat_id: number,
+  dateRange: IDateRange,
+  rawCmdDateRange: keyof typeof cmdToDateRangeMap,
+  stats: IDBChatUserStats[],
+  chart: boolean
+) {
+  return (
+    `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
+    getStatsRatingPlusToday(stats, chat_id, chart ? "caption" : "text")
+  );
 }
 
 export default stats_chat;
