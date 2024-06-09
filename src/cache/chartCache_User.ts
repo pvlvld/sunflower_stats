@@ -29,34 +29,34 @@ class ChartCache_User {
     let chatCache = this._chartCache.get(chat_id);
     if (!chatCache) {
       chatCache = new Map();
-      this._chartCache.set(chat_id, chatCache);
+      void this._chartCache.set(chat_id, chatCache);
     }
 
     if (file_id.length === 0) {
-      chatCache.set(user_id, this._skipChart);
+      void chatCache.set(user_id, this._skipChart);
     } else {
-      chatCache.set(user_id, Object.freeze({ file_id, status: "ok" }));
+      void chatCache.set(user_id, Object.freeze({ file_id, status: "ok" }));
     }
 
     let userChats = this._userChats.get(user_id);
     if (!userChats) {
       userChats = new Set();
-      this._userChats.set(user_id, userChats);
+      void this._userChats.set(user_id, userChats);
     }
-    userChats.add(chat_id);
+    void userChats.add(chat_id);
   }
 
   public remove(chat_id: number, user_id: number) {
     const chatCache = this._chartCache.get(chat_id);
     if (chatCache) {
-      chatCache.delete(user_id);
+      void chatCache.delete(user_id);
     }
 
     const userChats = this._userChats.get(user_id);
     if (userChats) {
-      userChats.delete(chat_id);
+      void userChats.delete(chat_id);
       if (userChats.size === 0) {
-        this._userChats.delete(user_id);
+        void this._userChats.delete(user_id);
       }
     }
   }
@@ -68,13 +68,13 @@ class ChartCache_User {
       for (const user_id of chatCache.keys()) {
         userChats = this._userChats.get(user_id);
         if (userChats) {
-          userChats.delete(chat_id);
+          void userChats.delete(chat_id);
           if (userChats.size === 0) {
-            this._userChats.delete(user_id);
+            void this._userChats.delete(user_id);
           }
         }
       }
-      this._chartCache.delete(chat_id);
+      void this._chartCache.delete(chat_id);
     }
   }
 
@@ -85,13 +85,13 @@ class ChartCache_User {
       for (const chat_id of userChats) {
         chatCache = this._chartCache.get(chat_id);
         if (chatCache) {
-          chatCache.delete(user_id);
+          void chatCache.delete(user_id);
           if (chatCache.size === 0) {
-            this._chartCache.delete(chat_id);
+            void this._chartCache.delete(chat_id);
           }
         }
       }
-      this._userChats.delete(user_id);
+      void this._userChats.delete(user_id);
     }
   }
 
