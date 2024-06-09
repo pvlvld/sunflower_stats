@@ -4,11 +4,13 @@ import leaveChatMemberHandler from "./leaveChatMember";
 import { leftGroup_menu } from "../ui/menus/leftGroup";
 import cfg from "../config";
 import { adminUpdateHandler } from "./adminUpdateHandler";
+import help_cmd from "../commands/help";
 
 function regHandlers() {
   bot.on("my_chat_member", async (ctx) => {
     if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.myChatMember.old_chat_member.status)) {
       botStatsManager.joinGroup();
+      await help_cmd(ctx);
     } else if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.myChatMember.new_chat_member.status)) {
       botStatsManager.leftGroup();
       if (ctx.chat.type === "supergroup" && ctx.chat.username) {
