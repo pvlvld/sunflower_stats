@@ -20,12 +20,14 @@ async function stats_their(ctx: IGroupTextContext) {
   }
 
   const chatSettings = await getCachedOrDBChatSettings(chat_id);
+  const stats = await DBStats.user.all(chat_id, user_id);
+
   if (!chatSettings.charts) {
     return void (await sendSelfdestructMessage(
       ctx,
       {
         isChart: false,
-        text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+        text: getUserStatsMessage(chat_id, user_id, stats),
         chart: undefined,
       },
       chatSettings.selfdestructstats
@@ -43,7 +45,7 @@ async function stats_their(ctx: IGroupTextContext) {
             ctx,
             {
               isChart: true,
-              text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+              text: getUserStatsMessage(chat_id, user_id, stats),
               chart: chart,
             },
             chatSettings.selfdestructstats
@@ -64,7 +66,7 @@ async function stats_their(ctx: IGroupTextContext) {
             ctx,
             {
               isChart: false,
-              text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+              text: getUserStatsMessage(chat_id, user_id, stats),
               chart: undefined,
             },
             chatSettings.selfdestructstats
@@ -76,7 +78,7 @@ async function stats_their(ctx: IGroupTextContext) {
           ctx,
           {
             isChart: true,
-            text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+            text: getUserStatsMessage(chat_id, user_id, stats),
             chart: cachedChart.file_id,
           },
           chatSettings.selfdestructstats
@@ -86,7 +88,7 @@ async function stats_their(ctx: IGroupTextContext) {
           ctx,
           {
             isChart: false,
-            text: getUserStatsMessage(chat_id, user_id, await DBStats.user.all(chat_id, user_id)),
+            text: getUserStatsMessage(chat_id, user_id, stats),
             chart: undefined,
           },
           chatSettings.selfdestructstats
