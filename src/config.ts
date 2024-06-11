@@ -3,6 +3,14 @@ dotenv.config();
 
 const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE"] as const;
 
+const ANIMATIONS = Object.freeze({
+  no_stats: "CgACAgQAAx0Cf9EqrAACDUJmaJE8Jw9eTnlvmTG_GLslPqJJ8gACeQMAAr3JBFN7f2AJi52nTTUE",
+});
+
+const MEDIA = Object.freeze({
+  ANIMATIONS,
+});
+
 type ICfg = Record<(typeof requiredEnv)[number], string> & {
   ADMINS: number[];
   STATUSES: { LEFT_STATUSES: string[] };
@@ -10,6 +18,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   ANALYTICS_CHAT: number;
   MAIN_CHAT: number;
   STATS_DEFAULT_TTL: number;
+  MEDIA: typeof MEDIA;
 };
 
 function getCfg(): ICfg {
@@ -30,6 +39,7 @@ function getCfg(): ICfg {
   cfg.MAIN_CHAT = -1001898242958;
   /** 5m */
   cfg.STATS_DEFAULT_TTL = 5 * 60;
+  cfg.MEDIA = MEDIA;
 
   return Object.freeze(cfg);
 }
