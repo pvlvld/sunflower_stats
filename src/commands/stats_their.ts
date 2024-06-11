@@ -16,7 +16,7 @@ async function stats_their(ctx: IGroupTextContext) {
     -1;
 
   if (cfg.IGNORE_IDS.includes(user_id) || ctx.msg.reply_to_message?.from?.is_bot) {
-    void (await ctx.reply("Користувача не знайдено."));
+    return void (await ctx.reply("Користувача не знайдено."));
   }
 
   const chatSettings = await getCachedOrDBChatSettings(chat_id);
