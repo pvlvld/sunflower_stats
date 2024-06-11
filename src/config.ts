@@ -5,6 +5,7 @@ const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATAB
 
 const ANIMATIONS = Object.freeze({
   no_stats: "CgACAgQAAx0Cf9EqrAACDUJmaJE8Jw9eTnlvmTG_GLslPqJJ8gACeQMAAr3JBFN7f2AJi52nTTUE",
+  ThePrimeagen: "CgACAgQAAx0Cf9EqrAACDU1maJUfleSUmeFFT8YYGIC5FzrIDgACxAQAAvRCfVMq7ofhhIVE6zUE",
 });
 
 const MEDIA = Object.freeze({
