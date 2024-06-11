@@ -3,6 +3,8 @@ import type { IDBChatUserStatsPeriods } from "../types/stats";
 import moment from "moment";
 import { active } from "../data/active";
 
+// TODO: do not add wider period if msg count same as previous = user in chat less that next period
+
 function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatUserStatsPeriods) {
   const nickname = active.data[chat_id]?.[user_id]?.nickname;
 
