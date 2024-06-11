@@ -90,13 +90,9 @@ async function main() {
       console.log("Bot is started using long polling.");
     }
 
-    bot.api.sendAnimation(
-      "-1001898242958",
-      "CgACAgQAAx0CcSTjjgABAiHYZd_RHo6J7FddO7xoh3ZjD--DEZEAAsQEAAL0Qn1T8YKWwZ59DLs0BA",
-      {
-        caption: "Бота запущено!",
-      }
-    );
+    bot.api.sendAnimation(cfg.ANALYTICS_CHAT, cfg.MEDIA.ANIMATIONS.ThePrimeagen, {
+      caption: "Бота запущено!",
+    });
   });
 
   process.on("SIGINT", async () => await shutdown(DBPoolManager));
