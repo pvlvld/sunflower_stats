@@ -26,7 +26,7 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
     if (targetMembers) {
       cacheManager.TTLCache.set(`cleanup_${ctx.chat.id}`, targetMembers, 60 * 5);
     }
-    return void (await ctx.reply("❌ Користувача не знайдено"));
+    return void (await ctx.reply("❌ Користувача не знайдено").catch((e) => {}));
   }
 
   if (!targetMembers) {

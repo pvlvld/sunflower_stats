@@ -15,28 +15,28 @@ async function stats_their(ctx: IGroupTextContext) {
     getUserId((ctx.msg.text ?? ctx.msg.caption).slice(4), chat_id) ||
     -1;
 
-  if (cfg.IGNORE_IDS.includes(user_id) || ctx.msg.reply_to_message?.from?.is_bot) {
-    return void (await ctx.reply("Користувача не знайдено."));
-  }
-
-  const chatSettings = await getCachedOrDBChatSettings(chat_id);
-  const stats = await DBStats.user.all(chat_id, user_id);
-
-  if (!chatSettings.charts) {
-    return void (await sendSelfdestructMessage(
-      ctx,
-      {
-        isChart: false,
-        text: getUserStatsMessage(chat_id, user_id, stats),
-        chart: undefined,
-      },
-      chatSettings.selfdestructstats
-    ));
-  }
-
-  const cachedChart = cacheManager.ChartCache_User.get(chat_id, user_id);
-
   try {
+    if (cfg.IGNORE_IDS.includes(user_id) || ctx.msg.reply_to_message?.from?.is_bot) {
+      return void (await ctx.reply("Користувача не знайдено."));
+    }
+
+    const chatSettings = await getCachedOrDBChatSettings(chat_id);
+    const stats = await DBStats.user.all(chat_id, user_id);
+
+    if (!chatSettings.charts) {
+      return void (await sendSelfdestructMessage(
+        ctx,
+        {
+          isChart: false,
+          text: getUserStatsMessage(chat_id, user_id, stats),
+          chart: undefined,
+        },
+        chatSettings.selfdestructstats
+      ));
+    }
+
+    const cachedChart = cacheManager.ChartCache_User.get(chat_id, user_id);
+
     switch (cachedChart.status) {
       case "unrendered":
         const chart = await getStatsChart(chat_id, user_id, "user");

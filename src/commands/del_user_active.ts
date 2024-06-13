@@ -23,7 +23,7 @@ async function del_user_active(ctx: IGroupHearsContext) {
         .catch((e) => console.error(e));
       return;
     } else {
-      await ctx.reply("❌ Користувача не знайдено");
+      await ctx.reply("❌ Користувача не знайдено").catch((e) => {});
       return;
     }
   }
