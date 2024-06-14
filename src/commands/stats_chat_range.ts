@@ -2,14 +2,14 @@ import type { IGroupTextContext } from "../types/context";
 import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage";
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
 import { getStatsRatingPlusToday } from "../utils/getStatsRating";
-import isValidNumbers from "../utils/isValidNumbers";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import { DBStats } from "../db/stats";
+import { isValidDateOrDateRange } from "../utils/isValidDateOrDateRange";
 
 async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true) {
   const dateRange = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string[];
 
-  if (dateRange.length > 2 || (validateDate && !isValidDateRange(dateRange))) {
+  if (dateRange.length > 2 || (validateDate && !isValidDateOrDateRange(dateRange))) {
     return void (await sendSelfdestructMessage(
       ctx,
       {
@@ -52,24 +52,6 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
     },
     chatSettings.selfdestructstats
   ));
-}
-
-function isValidDateRange(dateRange: string[]) {
-  if (dateRange.length === 1) {
-    return (
-      dateRange[0].length === 10 &&
-      dateRange[0].split(".").length === 3 &&
-      isValidNumbers(dateRange[0].split("."))
-    );
-  }
-  return (
-    dateRange[0].length === 10 &&
-    dateRange[1].length === 10 &&
-    dateRange[0].split(".").length === 3 &&
-    dateRange[1].split(".").length === 3 &&
-    isValidNumbers(dateRange[0].split(".")) &&
-    isValidNumbers(dateRange[1].split("."))
-  );
 }
 
 export default stats_chat_range_cmd;
