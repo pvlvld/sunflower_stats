@@ -2,6 +2,7 @@ import type { IGroupTextContext } from "../types/context";
 import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage";
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
 import getUserStatsMessage from "../utils/getUserStatsMessage";
+import { isUserStatsEmpty } from "../utils/isUserStatsEmpty";
 import { getStatsChart } from "../chart/getStatsChart";
 import getUserId from "../utils/getUserId";
 import cacheManager from "../cache/cache";
@@ -22,15 +23,23 @@ async function stats_their(ctx: IGroupTextContext) {
       }));
     }
 
-    const chatSettings = await getCachedOrDBChatSettings(chat_id);
     const stats = await DBStats.user.all(chat_id, user_id);
+
+    if (isUserStatsEmpty(stats)) {
+      return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats, {
+        caption: "Я не знайшов статистики цього користувача.",
+      }));
+    }
+
+    const chatSettings = await getCachedOrDBChatSettings(chat_id);
+    const statsMessage = getUserStatsMessage(chat_id, user_id, stats);
 
     if (!chatSettings.charts) {
       return void (await sendSelfdestructMessage(
         ctx,
         {
           isChart: false,
-          text: getUserStatsMessage(chat_id, user_id, stats),
+          text: statsMessage,
           chart: undefined,
         },
         chatSettings.selfdestructstats
@@ -47,7 +56,7 @@ async function stats_their(ctx: IGroupTextContext) {
             ctx,
             {
               isChart: true,
-              text: getUserStatsMessage(chat_id, user_id, stats),
+              text: statsMessage,
               chart: chart,
             },
             chatSettings.selfdestructstats
@@ -68,7 +77,7 @@ async function stats_their(ctx: IGroupTextContext) {
             ctx,
             {
               isChart: false,
-              text: getUserStatsMessage(chat_id, user_id, stats),
+              text: statsMessage,
               chart: undefined,
             },
             chatSettings.selfdestructstats
@@ -80,7 +89,7 @@ async function stats_their(ctx: IGroupTextContext) {
           ctx,
           {
             isChart: true,
-            text: getUserStatsMessage(chat_id, user_id, stats),
+            text: statsMessage,
             chart: cachedChart.file_id,
           },
           chatSettings.selfdestructstats
@@ -90,7 +99,7 @@ async function stats_their(ctx: IGroupTextContext) {
           ctx,
           {
             isChart: false,
-            text: getUserStatsMessage(chat_id, user_id, stats),
+            text: statsMessage,
             chart: undefined,
           },
           chatSettings.selfdestructstats
