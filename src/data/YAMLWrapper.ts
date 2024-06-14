@@ -54,12 +54,16 @@ class YAMLWrapper<T> {
       }
     }
     console.log(`${custom_filepath || this.filename()} saved.`);
-    bot.api.sendMessage(cfg.ANALYTICS_CHAT, `${custom_filepath || this.filename()} saved.`);
+    bot.api.sendMessage(cfg.ANALYTICS_CHAT, `${custom_filepath || this.filename()} saved.`, {
+      message_thread_id: 3123,
+    });
   }
 
   clear() {
     this.data = {} as T;
-    bot.api.sendMessage(cfg.ANALYTICS_CHAT, `${this.filename()} cleared.`);
+    bot.api.sendMessage(cfg.ANALYTICS_CHAT, `${this.filename()} cleared.`, {
+      message_thread_id: 3123,
+    });
   }
 }
 
