@@ -7,6 +7,7 @@ import { botStatsManager } from "./botStats";
 import cacheManager from "../cache/cache";
 import { DBStats } from "../db/stats";
 import { IDBChatUserStats } from "../types/stats";
+import cfg from "../config";
 const Big = require("big-js");
 
 const cmdToDateRangeMap = {
@@ -46,7 +47,9 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   let reply: Awaited<ReturnType<typeof sendSelfdestructMessage>> = undefined;
 
   if (stats.length === 0) {
-    // TODO: meme
+    return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats, {
+      caption: "👀 Схоже, що повідомлень за сьогодні ще немає.",
+    }));
   }
 
   if (
