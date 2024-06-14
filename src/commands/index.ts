@@ -33,6 +33,7 @@ import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
 import { isChatAdmin } from "../utils/isChatAdmin";
 import { chatSettings_cmd } from "./chatSettings";
 import { getId_cmd } from "./staff/get_id";
+import { setUserJoinDate_cmd } from "./staff/setUserJoinDate";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -158,6 +159,10 @@ function regCommands() {
   });
   group.command("settings", async (ctx) => {
     chatSettings_cmd(ctx);
+  });
+
+  group.hears(/^!дата вступу/, (ctx) => {
+    setUserJoinDate_cmd(ctx);
   });
 
   // -------- STAFF COMMANDS --------
