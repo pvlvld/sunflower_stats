@@ -44,7 +44,7 @@ class PgSQLPoolManager {
   }
 
   public getPoolsQueueStatus() {
-    return { read: this.poolRead.idleCount, write: this.poolWrite.idleCount };
+    return { read: this.poolRead.waitingCount, write: this.poolWrite.waitingCount };
   }
 }
 
