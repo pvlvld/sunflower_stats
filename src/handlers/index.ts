@@ -5,6 +5,7 @@ import { leftGroup_menu } from "../ui/menus/leftGroup";
 import cfg from "../config";
 import { adminUpdateHandler } from "./adminUpdateHandler";
 import help_cmd from "../commands/help";
+import { joinChatMember } from "./joinChatMember";
 
 function regHandlers() {
   bot.on("my_chat_member", async (ctx) => {
