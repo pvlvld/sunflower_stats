@@ -68,16 +68,19 @@ function regCommands() {
     help_cmd(ctx);
   });
 
-  groupStats.hears(/^(стата|статистика)$/i, async (ctx) => {
-    stats_chat(ctx);
-  });
-
-  groupStats.hears(/^(стата|статистика) (сьогодні|вся|тиждень|місяць|вчора|рік)$/i, async (ctx) => {
+  groupStats.hears(/^(!?)(стата|статистика)$/i, async (ctx) => {
     stats_chat(ctx);
   });
 
   groupStats.hears(
-    /^(статистика|стата) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/,
+    /^(!?)(стата|статистика) (сьогодні|вся|тиждень|місяць|вчора|рік)$/i,
+    async (ctx) => {
+      stats_chat(ctx);
+    }
+  );
+
+  groupStats.hears(
+    /^(!?)(стата|статистика) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/,
     async (ctx) => {
       botStatsManager.commandUse("стата дата");
       stats_chat_range_cmd(ctx);
