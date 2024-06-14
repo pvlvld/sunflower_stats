@@ -2,6 +2,7 @@ import formattedDate from "../utils/date";
 import { active } from "../data/active";
 import { type Context, type NextFunction } from "grammy";
 import removeNonspacingMarkUTF from "../utils/removeNonspacingMarkUTF";
+import cfg from "../config";
 
 function ActiveCollectorWrapper() {
   return async function activeCollector(ctx: Context, next: NextFunction) {
@@ -12,15 +13,17 @@ function ActiveCollectorWrapper() {
       ctx.chat.id === ctx.from.id ||
       ctx.msg?.reply_to_message?.is_automatic_forward ||
       ctx.msg?.new_chat_members ||
-      [136817688, 777000].includes(ctx.from.id) // anonimous users
+      cfg.IGNORE_IDS.includes(ctx.from.id) // anonimous users
     ) {
       return await next();
     } else {
-      active.data[ctx.chat.id] ??= {};
+      const chat_id = ctx.chat.id;
+      const user_id = ctx.from.id;
+      active.data[chat_id] ??= {};
 
       const today = formattedDate.today[0];
-      if (active.data[ctx.chat.id]?.[ctx.from.id] === undefined) {
-        active.data[ctx.chat.id]![ctx.from.id] = {
+      if (active.data[chat_id]?.[user_id] === undefined) {
+        active.data[chat_id]![user_id] = {
           active_first: today,
           active_last: today,
           name: ctx.from.first_name,
@@ -28,11 +31,11 @@ function ActiveCollectorWrapper() {
           username: ctx.from.username || null,
         };
       } else {
-        active.data[ctx.chat.id]![ctx.from.id]!.active_last = today;
-        active.data[ctx.chat.id]![ctx.from.id]!.name = removeNonspacingMarkUTF(ctx.from.first_name)
+        active.data[chat_id]![user_id]!.active_last = today;
+        active.data[chat_id]![user_id]!.name = removeNonspacingMarkUTF(ctx.from.first_name)
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;");
-        active.data[ctx.chat.id]![ctx.from.id]!.username = ctx.from.username || null;
+        active.data[chat_id]![user_id]!.username = ctx.from.username || null;
       }
     }
 
