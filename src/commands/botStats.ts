@@ -79,7 +79,9 @@ export const botStatsManager = {
     BOT_STATS.leftGroups = 0;
   },
   sendToAnalyticsChat: async () => {
-    return await bot.api.sendMessage(cfg.ANALYTICS_CHAT, getStatsMsg()).catch(() => {});
+    return await bot.api
+      .sendMessage(cfg.ANALYTICS_CHAT, getStatsMsg(), { message_thread_id: 3126 })
+      .catch(() => {});
   },
 };
 

@@ -3,6 +3,7 @@ import path from "path";
 import bot from "../bot";
 import * as YAML from "js-yaml";
 import { isNodeError } from "../types/typeGuards";
+import cfg from "../config";
 
 class YAMLWrapper<T> {
   readonly filename: () => string;
@@ -53,12 +54,12 @@ class YAMLWrapper<T> {
       }
     }
     console.log(`${custom_filepath || this.filename()} saved.`);
-    bot.api.sendMessage("-1001898242958", `${custom_filepath || this.filename()} saved.`);
+    bot.api.sendMessage(cfg.ANALYTICS_CHAT, `${custom_filepath || this.filename()} saved.`);
   }
 
   clear() {
     this.data = {} as T;
-    bot.api.sendMessage("-1001898242958", `${this.filename()} cleared.`);
+    bot.api.sendMessage(cfg.ANALYTICS_CHAT, `${this.filename()} cleared.`);
   }
 }
 
