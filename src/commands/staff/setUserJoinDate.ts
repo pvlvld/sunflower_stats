@@ -2,7 +2,6 @@ import type { IGroupTextContext } from "../../types/context";
 import { isValidDateOrDateRange } from "../../utils/isValidDateOrDateRange";
 import parseCmdArgs from "../../utils/parseCmdArgs";
 import isChatOwner from "../../utils/isChatOwner";
-import getUserId from "../../utils/getUserId";
 import { active } from "../../data/active";
 
 async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
