@@ -6,7 +6,7 @@ import getUserId from "../../utils/getUserId";
 import { active } from "../../data/active";
 
 async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
-  let date = (parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string[])[1];
+  let date = (parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string | undefined[])[1];
   const chat_id = ctx.chat.id;
   const target_id =
     ctx.msg.reply_to_message?.from?.id ||
@@ -16,6 +16,9 @@ async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
   if (!(await isChatOwner(chat_id, ctx.from.id))) {
     return void (await ctx.reply("Ця команда доступна лише власнику чату!"));
   }
+
+  date ??= "";
+  date = date.split(".").join("-");
 
   if (!date || isValidDateOrDateRange([date])) {
     return void (await ctx
@@ -27,7 +30,7 @@ async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
     return void (await ctx.reply("Користувача не знайдено."));
   }
 
-  active.data[chat_id]![target_id]!.active_first = date.split(".").join("-");
+  active.data[chat_id]![target_id]!.active_first = date;
 
   return void (await ctx.reply(
     `Успішно змінено дату першої появи в чаті ${active.data[chat_id]![target_id]?.name}!`
