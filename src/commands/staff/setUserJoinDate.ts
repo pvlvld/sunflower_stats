@@ -13,14 +13,14 @@ async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
     getUserId((ctx.msg.text ?? ctx.msg.caption).slice(13), chat_id) ||
     -1;
 
-  if (!date || isValidDateOrDateRange([date])) {
-    return void (await ctx
-      .reply("Щось пішло не так.\nПриклад використання команди !дата вступу 2024.01.01")
-      .catch((e) => {}));
-  }
-
   if (!(await isChatOwner(chat_id, ctx.from.id))) {
     return void (await ctx.reply("Ця команда доступна лише власнику чату!"));
+  }
+
+  if (!date || isValidDateOrDateRange([date])) {
+    return void (await ctx
+      .reply("Щось пішло не так.\nПриклад використання команди: !дата вступу 2024.01.01")
+      .catch((e) => {}));
   }
 
   if (!active.data[chat_id]![target_id]) {
