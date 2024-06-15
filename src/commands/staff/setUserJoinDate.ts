@@ -8,10 +8,7 @@ import { active } from "../../data/active";
 async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
   let date = (parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string | undefined[])[1];
   const chat_id = ctx.chat.id;
-  const target_id =
-    ctx.msg.reply_to_message?.from?.id ||
-    getUserId((ctx.msg.text ?? ctx.msg.caption).slice(13), chat_id) ||
-    -1;
+  const target_id = ctx.msg.reply_to_message?.from?.id || ctx.from.id;
 
   if (!(await isChatOwner(chat_id, ctx.from.id))) {
     return void (await ctx.reply("Ця команда доступна лише власнику чату!"));
