@@ -33,7 +33,7 @@ function ActiveCollectorWrapper() {
         );
       } else {
         active.data[chat_id]![user_id]!.active_last = today;
-        active.data[chat_id]![user_id]!.name = removeNonspacingMarkUTF(ctx.from.first_name)
+        active.data[chat_id]![user_id]!.name = ctx.from.first_name
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;");
         active.data[chat_id]![user_id]!.username = ctx.from.username || "";
