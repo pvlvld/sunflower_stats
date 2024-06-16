@@ -12,8 +12,8 @@ export interface IActiveUser {
   active_first: string;
   active_last: string;
   name: string;
-  nickname: string | null;
-  username: string | null;
+  nickname: string | undefined;
+  username: string | undefined;
 }
 
 export const active = new YAMLWrapper<IActive>(() => "active", "data/active");

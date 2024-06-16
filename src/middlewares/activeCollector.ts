@@ -28,15 +28,15 @@ function ActiveCollectorWrapper() {
           active_first: today,
           active_last: today,
           name: ctx.from.first_name,
-          nickname: null,
-          username: ctx.from.username || null,
+          nickname: "",
+          username: ctx.from.username || "",
         };
       } else {
         active.data[chat_id]![user_id]!.active_last = today;
         active.data[chat_id]![user_id]!.name = removeNonspacingMarkUTF(ctx.from.first_name)
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;");
-        active.data[chat_id]![user_id]!.username = ctx.from.username || null;
+        active.data[chat_id]![user_id]!.username = ctx.from.username || "";
       }
     }
 

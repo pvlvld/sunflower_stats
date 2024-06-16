@@ -3,7 +3,7 @@ import { active } from "../data/active";
 
 async function del_nickname(ctx: IGroupTextContext) {
   try {
-    active.data[ctx.chat.id]![ctx.from.id]!.nickname = null;
+    active.data[ctx.chat.id]![ctx.from.id]!.nickname = "";
     await ctx.reply(`✅ Нікнейм успішно видалено.`, {
       disable_notification: true,
       link_preview_options: { is_disabled: true },
