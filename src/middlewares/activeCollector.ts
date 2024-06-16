@@ -1,7 +1,6 @@
 import formattedDate from "../utils/date";
 import { active } from "../data/active";
 import { type Context, type NextFunction } from "grammy";
-import removeNonspacingMarkUTF from "../utils/removeNonspacingMarkUTF";
 import cfg from "../config";
 
 function ActiveCollectorWrapper() {
@@ -59,7 +58,7 @@ class UserActive {
   ) {
     this.active_first = active_first;
     this.active_last = active_last;
-    this.name = name;
+    this.name = name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     this.nickname = nickname;
     this.username = username;
   }
