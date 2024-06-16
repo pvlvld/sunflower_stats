@@ -24,13 +24,13 @@ function ActiveCollectorWrapper() {
 
       const today = formattedDate.today[0];
       if (active.data[chat_id]?.[user_id] === undefined) {
-        active.data[chat_id]![user_id] = {
-          active_first: today,
-          active_last: today,
-          name: ctx.from.first_name,
-          nickname: "",
-          username: ctx.from.username || "",
-        };
+        active.data[chat_id]![user_id] = new UserActive(
+          today,
+          today,
+          ctx.from.first_name,
+          "",
+          ctx.from.username || ""
+        );
       } else {
         active.data[chat_id]![user_id]!.active_last = today;
         active.data[chat_id]![user_id]!.name = removeNonspacingMarkUTF(ctx.from.first_name)
@@ -42,6 +42,27 @@ function ActiveCollectorWrapper() {
 
     return await next();
   };
+}
+
+class UserActive {
+  active_first = "";
+  active_last = "";
+  name = "";
+  nickname = "";
+  username = "";
+  constructor(
+    active_first: string,
+    active_last: string,
+    name: string,
+    nickname: string,
+    username: string
+  ) {
+    this.active_first = active_first;
+    this.active_last = active_last;
+    this.name = name;
+    this.nickname = nickname;
+    this.username = username;
+  }
 }
 
 export default ActiveCollectorWrapper;
