@@ -26,9 +26,9 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
     void (await ctx.editMessageReplyMarkup({ reply_markup: undefined }).catch((e) => {}));
   });
 
-async function parseTargetUserId(ctx: IContext) {
+async function parseTargetUserId(ctx: IContext, start_mark = "User id: ") {
   const message_text = ctx.msg?.caption;
-  const user_id = message_text?.slice(message_text.indexOf("User id: "));
+  const user_id = message_text?.slice(message_text.indexOf(start_mark) + start_mark.length);
   if (user_id) {
     return Number(user_id);
   } else {
