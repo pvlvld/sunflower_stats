@@ -19,11 +19,11 @@ function regHandlers() {
           if (membersCount >= 50) {
             await ctx.api.sendMessage(
               cfg.ANALYTICS_CHAT,
-              `#Join @${ctx.chat.username}\nID: ${ctx.chat.id}\nMembers count: ${membersCount}`,
+              `📈 #Join @${ctx.chat.username}\nID: ${ctx.chat.id}\nMembers count: ${membersCount}`,
               {
                 reply_parameters: { message_id: -1, allow_sending_without_reply: true },
                 disable_notification: true,
-                message_thread_id: 3126,
+                message_thread_id: 3984,
               }
             );
           }
@@ -33,11 +33,11 @@ function regHandlers() {
       botStatsManager.leftGroup();
       if (ctx.chat.type === "supergroup" && ctx.chat.username) {
         await ctx.api
-          .sendMessage(cfg.ANALYTICS_CHAT, `#Left @${ctx.chat.username}\nID: ${ctx.chat.id}`, {
+          .sendMessage(cfg.ANALYTICS_CHAT, `📉 #Left @${ctx.chat.username}\nID: ${ctx.chat.id}`, {
             reply_markup: leftGroup_menu,
             reply_parameters: { message_id: -1, allow_sending_without_reply: true },
             disable_notification: true,
-            message_thread_id: 3126,
+            message_thread_id: 3984,
           })
           .catch((e) => {});
       }
