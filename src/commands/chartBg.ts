@@ -58,6 +58,18 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
       await (await ctx.api.getFile(image.file_id)).download(`${baseBgPath}${ctx.chat.id}.jpg`);
     } else {
       await (await ctx.api.getFile(image.file_id)).download(`${baseBgPath}${ctx.from.id}.jpg`);
+      ctx.api
+        .sendPhoto(
+          cfg.ANALYTICS_CHAT,
+          new InputFile(`${baseBgPath}${ctx.from.id}.jpg`, "chart.jpg"),
+          {
+            caption: `<a href="tg://user?id=${ctx.from.id}">${ctx.from.first_name}</a> new chart bg.`,
+            disable_notification: true,
+            message_thread_id: 3992,
+            reply_markup: personalChartBgControl_menu,
+          }
+        )
+        .catch((e) => {});
     }
   } catch (error) {
     void (await ctx.reply("Не вдалося зберегти зображення. Спробуйте знову.").catch((e) => {}));
