@@ -5,6 +5,7 @@ import { ChartCache_User } from "./chartCache_User";
 import { ChartCache_Chat } from "./chartCache_Chat";
 import { ChatSettingsCache } from "./chatSettingsCache";
 import { ChatAdminsCache } from "./chatAdminsCache";
+import { RestrictedUsersCache } from "./restrictedUsersCache";
 
 class CacheManager {
   public LRUCache: LRUCache<{}, {}, unknown>;
@@ -14,6 +15,7 @@ class CacheManager {
   public PremiumStatusCache: PremiumStatusCache;
   public ChatSettingsCache: ChatSettingsCache;
   public ChatAdminsCache: ChatAdminsCache;
+  public RestrictedUsersCache: RestrictedUsersCache;
 
   constructor() {
     this.LRUCache = new LRUCache({
@@ -32,6 +34,8 @@ class CacheManager {
     this.ChatSettingsCache = new ChatSettingsCache();
 
     this.ChatAdminsCache = new ChatAdminsCache();
+
+    this.RestrictedUsersCache = new RestrictedUsersCache();
   }
 }
 
