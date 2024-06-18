@@ -1,8 +1,8 @@
 import type { IChatSettings } from "../types/settings";
+import type { IContext } from "../types/context";
 import { DefaultChatSettings } from "../cache/chatSettingsCache";
 import cacheManager from "../cache/cache";
 import { Database } from "../db/db";
-import { IGroupContext } from "../types/context";
 
 async function getCachedOrDBChatSettings(chat_id: number): Promise<IChatSettings> {
   let chatSettings = cacheManager.ChatSettingsCache.get(chat_id);
@@ -20,11 +20,11 @@ async function getCachedOrDBChatSettings(chat_id: number): Promise<IChatSettings
   return chatSettings;
 }
 
-async function getChatSettingsMessageText(ctx: IGroupContext) {
-  const chatSettings = await getCachedOrDBChatSettings(ctx.chat.id);
+async function getChatSettingsMessageText(ctx: IContext) {
+  const chatSettings = await getCachedOrDBChatSettings(ctx.chat!.id);
 
   return `
-${ctx.chat.title}
+${ctx.chat!.title}
 Налаштування Соняшник | Статистика
 
 Графіки статистики ${chatSettings.charts ? "✅" : "❌"}

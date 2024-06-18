@@ -1,5 +1,5 @@
 import type { IChatSettings } from "../../types/settings";
-import type { IGroupContext } from "../../types/context";
+import type { IContext } from "../../types/context";
 import { Menu, type MenuFlavor } from "@grammyjs/menu";
 import { isPremium } from "../../utils/isPremium";
 import isChatOwner from "../../utils/isChatOwner";
@@ -42,7 +42,7 @@ function getSettingButtonsText(setting: keyof IChatSettings, status: boolean) {
 }
 
 async function toggleSetting(
-  ctx: IGroupContext & MenuFlavor,
+  ctx: IContext & MenuFlavor,
   chat_id: number,
   chatSettings: IChatSettings,
   parametr: keyof IChatSettings
@@ -54,9 +54,13 @@ async function toggleSetting(
   void Database.chatSettings.set(chat_id, cacheManager.ChatSettingsCache.get(chat_id)!);
 }
 
-const settings_menu = new Menu<IGroupContext>("settings-menu", { autoAnswer: true }).dynamic(
+const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).dynamic(
   async (ctx, range) => {
-    const chat_id = ctx.chat.id;
+    const chat_id = ctx.chat?.id;
+    if (!chat_id) {
+      return;
+    }
+
     const chatSettings = await getCachedOrDBChatSettings(chat_id);
 
     range

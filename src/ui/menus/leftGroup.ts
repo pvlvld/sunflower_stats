@@ -1,9 +1,9 @@
-import type { IGroupContext } from "../../types/context";
+import type { IContext } from "../../types/context";
 import { removeChatData } from "../../utils/removeChatData";
 import { Menu } from "@grammyjs/menu";
 import cfg from "../../config";
 
-const leftGroup_menu = new Menu<IGroupContext>("leftGroup-menu", {
+const leftGroup_menu = new Menu<IContext>("leftGroup-menu", {
   autoAnswer: true,
 })
   .text("Видалити дані чату", async (ctx) => {

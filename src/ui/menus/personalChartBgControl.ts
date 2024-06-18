@@ -1,9 +1,9 @@
-import type { IGroupContext } from "../../types/context";
+import type { IContext } from "../../types/context";
 import cacheManager from "../../cache/cache";
 import { Menu } from "@grammyjs/menu";
 import { unlink } from "fs";
 
-const personalChartBgControl_menu = new Menu<IGroupContext>("personalChartBgControl-menu")
+const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-menu")
   .text("🗑", async (ctx) => {
     const user_id = await parseTargetUserId(ctx);
     if (user_id === undefined) {
@@ -26,7 +26,7 @@ const personalChartBgControl_menu = new Menu<IGroupContext>("personalChartBgCont
     void (await ctx.editMessageReplyMarkup({ reply_markup: undefined }).catch((e) => {}));
   });
 
-async function parseTargetUserId(ctx: IGroupContext) {
+async function parseTargetUserId(ctx: IContext) {
   const message_text = ctx.msg?.caption;
   const user_id = message_text?.slice(message_text.indexOf("User id: "));
   if (user_id) {
