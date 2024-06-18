@@ -1,12 +1,21 @@
 import { IGroupHearsCommandContext, IGroupPhotoCaptionContext } from "../types/context";
 import cacheManager from "../cache/cache";
 import { isPremium } from "../utils/isPremium";
+import cfg from "../config";
+import { InputFile } from "grammy";
+import { personalChartBgControl_menu } from "../ui/menus/personalChartBgControl";
 
 const baseBgPath = "./data/chartBg/";
 
 async function setChartBg_Personal(ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext) {
   if (!ctx.has(":photo")) {
     return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
+  }
+
+  if (cacheManager.RestrictedUsersCache.isRestricted(ctx.from.id, "chartBg")) {
+    return void (await ctx
+      .reply("Вам тимчасово заборонено змінювати власний фон.")
+      .catch((e) => {}));
   }
 
   //TODO: don't forget reenable it
