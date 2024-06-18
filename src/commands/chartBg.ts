@@ -4,6 +4,7 @@ import { isPremium } from "../utils/isPremium";
 import cfg from "../config";
 import { InputFile } from "grammy";
 import { personalChartBgControl_menu } from "../ui/menus/personalChartBgControl";
+import getUserNameLink from "../utils/getUserNameLink";
 
 const baseBgPath = "./data/chartBg/";
 
@@ -57,18 +58,19 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
     if (type === "chat") {
       await (await ctx.api.getFile(image.file_id)).download(`${baseBgPath}${ctx.chat.id}.jpg`);
     } else {
-      await (await ctx.api.getFile(image.file_id)).download(`${baseBgPath}${ctx.from.id}.jpg`);
+      const user_id = ctx.from.id;
+      await (await ctx.api.getFile(image.file_id)).download(`${baseBgPath}${user_id}.jpg`);
       ctx.api
-        .sendPhoto(
-          cfg.ANALYTICS_CHAT,
-          new InputFile(`${baseBgPath}${ctx.from.id}.jpg`, "chart.jpg"),
-          {
-            caption: `<a href="tg://user?id=${ctx.from.id}">${ctx.from.first_name}</a> new chart bg.`,
-            disable_notification: true,
-            message_thread_id: 3992,
-            reply_markup: personalChartBgControl_menu,
-          }
-        )
+        .sendPhoto(cfg.ANALYTICS_CHAT, new InputFile(`${baseBgPath}${user_id}.jpg`, "chart.jpg"), {
+          caption: `${getUserNameLink.html(
+            ctx.from.first_name,
+            ctx.from.username,
+            user_id
+          )} new chart bg.\nGroup: ${ctx.chat.title} @${ctx.chat.username}\nUser id: ${user_id}`,
+          disable_notification: true,
+          message_thread_id: 3992,
+          reply_markup: personalChartBgControl_menu,
+        })
         .catch((e) => {});
     }
   } catch (error) {
