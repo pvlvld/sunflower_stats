@@ -31,7 +31,7 @@ const leftGroup_menu = new Menu<IGroupContext>("leftGroup-menu", {
   })
   .row()
   .text("Відмінити", async (ctx) => {
-    void (await ctx.editMessageReplyMarkup().catch((e) => {}));
+    void (await ctx.editMessageReplyMarkup({ reply_markup: undefined }).catch((e) => {}));
   });
 
 export { leftGroup_menu };
