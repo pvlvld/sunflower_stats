@@ -66,7 +66,9 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
             ctx.from.first_name,
             ctx.from.username,
             user_id
-          )} new chart bg.\nGroup: ${ctx.chat.title} @${ctx.chat.username}\nUser id: ${user_id}`,
+          )} new chart bg.\nGroup: ${ctx.chat.title}  | @${ctx.chat.username} | ${
+            ctx.chat.id
+          }\nUser id: ${user_id}`,
           disable_notification: true,
           message_thread_id: 3992,
           reply_markup: personalChartBgControl_menu,
