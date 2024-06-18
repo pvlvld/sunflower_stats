@@ -27,10 +27,10 @@ const personalChartBgControl_menu = new Menu<IGroupContext>("personalChartBgCont
   });
 
 async function parseTargetUserId(ctx: IGroupContext) {
-  //@ts-expect-error
-  const user_id = ctx.msg?.caption_entities?.[0]?.user?.id as number | undefined;
+  const message_text = ctx.msg?.caption;
+  const user_id = message_text?.slice(message_text.indexOf("User id: "));
   if (user_id) {
-    return user_id;
+    return Number(user_id);
   } else {
     return void (await ctx.reply("Не вдалося визначити айді користувача.").catch((e) => {}));
   }
