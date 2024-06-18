@@ -62,12 +62,13 @@ async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType)
       return createPlugin(pluginBgImage);
     }
 
-    if (await isPremium(user_id)) {
-      pluginBgImage = await loadBgImage(user_id);
-      return createPlugin(pluginBgImage);
-    }
+    //TODO: don't forget to reenable it
+    // if (await isPremium(user_id)) {
+    pluginBgImage = await loadBgImage(user_id);
+    return createPlugin(pluginBgImage);
+    // }
 
-    pluginBgImage = await getDefaultBg();
+    // pluginBgImage = await getDefaultBg();
   }
 
   return createPlugin(pluginBgImage);

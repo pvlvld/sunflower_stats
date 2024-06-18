@@ -9,13 +9,14 @@ async function setChartBg_Personal(ctx: IGroupHearsCommandContext | IGroupPhotoC
     return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
   }
 
-  if (!(await isPremium(ctx.from.id))) {
-    return void (await ctx
-      .reply(
-        "Власний фон можуть встановити лише донатери Соняха /donate.\nЯкщо ви нещодавно задонатити, викличте команду /refreshDonate"
-      )
-      .catch((e) => {}));
-  }
+  //TODO: don't forget reenable it
+  // if (!(await isPremium(ctx.from.id))) {
+  //   return void (await ctx
+  //     .reply(
+  //       "Власний фон можуть встановити лише донатери Соняха /donate.\nЯкщо ви нещодавно задонатити, викличте команду /refreshDonate"
+  //     )
+  //     .catch((e) => {}));
+  // }
 
   const isDownloaded = await downloadBg(ctx, "user");
   if (!isDownloaded) return;
