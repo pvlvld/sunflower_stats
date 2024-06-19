@@ -34,6 +34,7 @@ import { isChatAdmin } from "../utils/isChatAdmin";
 import { chatSettings_cmd } from "./chatSettings";
 import { getId_cmd } from "./staff/get_id";
 import { setUserJoinDate_cmd } from "./staff/setUserJoinDate";
+import { delMessage } from "./staff/del";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -215,6 +216,12 @@ function regCommands() {
 
   group.hears("/getid", async (ctx) => {
     getId_cmd(ctx);
+  });
+
+  group.hears("!sdel", async (ctx) => {
+    if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
+      await delMessage(ctx);
+    }
   });
 }
 export default regCommands;
