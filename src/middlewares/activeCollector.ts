@@ -2,6 +2,7 @@ import formattedDate from "../utils/date";
 import { active } from "../data/active";
 import { type Context, type NextFunction } from "grammy";
 import cfg from "../config";
+import Escape from "../utils/escape";
 
 function ActiveCollectorWrapper() {
   return async function activeCollector(ctx: Context, next: NextFunction) {
@@ -26,16 +27,13 @@ function ActiveCollectorWrapper() {
         active.data[chat_id]![user_id] = new UserActive(
           today,
           today,
-          ctx.from.first_name,
+          Escape.html(ctx.from.first_name),
           "",
           ctx.from.username || ""
         );
       } else {
         active.data[chat_id]![user_id]!.active_last = today;
-        active.data[chat_id]![user_id]!.name = ctx.from.first_name
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/&/g, "&amp");
+        active.data[chat_id]![user_id]!.name = Escape.html(ctx.from.first_name);
         active.data[chat_id]![user_id]!.username = ctx.from.username || "";
       }
     }
