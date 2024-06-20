@@ -145,14 +145,14 @@ export async function getStatsChart(
     }
   }
 
-  // do not render chart if data points count less than 5
-  if (data.length < 5) {
-    return undefined;
-  }
-
   // remove 2023-12-31 data point, it's compiled stats for whole 2023 so it breaks chart
   if (data[0].x === "2023-12-31") {
     void data.shift();
+  }
+
+  // do not render chart if data points count less than 3
+  if (data.length < 3) {
+    return undefined;
   }
 
   const configuration = await getChartConfig(chat_id, user_id, type);
