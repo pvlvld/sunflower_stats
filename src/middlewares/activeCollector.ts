@@ -34,7 +34,8 @@ function ActiveCollectorWrapper() {
         active.data[chat_id]![user_id]!.active_last = today;
         active.data[chat_id]![user_id]!.name = ctx.from.first_name
           .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;");
+          .replace(/>/g, "&gt;")
+          .replace(/&/g, "&amp");
         active.data[chat_id]![user_id]!.username = ctx.from.username || "";
       }
     }

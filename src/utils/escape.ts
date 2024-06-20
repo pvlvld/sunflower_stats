@@ -13,7 +13,7 @@ function escapeMarkdownV1(str: string): string {
 }
 
 function escapeHTML(str: string): string {
-  return str.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return str.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/&/g, "&amp");
 }
 
 export default Escape;
