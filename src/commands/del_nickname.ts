@@ -2,13 +2,15 @@ import type { IGroupTextContext } from "../types/context";
 import { active } from "../data/active";
 
 async function del_nickname(ctx: IGroupTextContext) {
-  try {
+  if (active.data[ctx.chat.id]![ctx.from.id]) {
     active.data[ctx.chat.id]![ctx.from.id]!.nickname = "";
-    await ctx.reply(`✅ Нікнейм успішно видалено.`, {
+  }
+  await ctx
+    .reply(`✅ Нікнейм успішно видалено.`, {
       disable_notification: true,
       link_preview_options: { is_disabled: true },
-    });
-  } catch (e) {}
+    })
+    .catch((e) => {});
 }
 
 export default del_nickname;

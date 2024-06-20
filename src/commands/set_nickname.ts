@@ -3,7 +3,9 @@ import type { IGroupTextContext } from "../types/context";
 import { active } from "../data/active";
 
 async function set_nickname(ctx: IGroupTextContext) {
-  if (!active.data[ctx.chat.id]![ctx.from.id]) {
+  const chat_id = ctx.chat.id;
+  const user_id = ctx.from.id;
+  if (active.data[chat_id]![user_id] === undefined) {
     return;
   }
 
@@ -20,7 +22,7 @@ async function set_nickname(ctx: IGroupTextContext) {
     return;
   }
 
-  active.data[ctx.chat.id]![ctx.from.id]!.nickname = nickname;
+  active.data[chat_id]![user_id]!.nickname = nickname;
   await ctx.reply(`✅ Успішно встановлено нікнейм: ${nickname}`, {
     disable_notification: true,
     link_preview_options: { is_disabled: true },

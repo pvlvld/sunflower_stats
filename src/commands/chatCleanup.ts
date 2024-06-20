@@ -17,11 +17,14 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     ));
   }
 
-  if (!(await isChatOwner(ctx.chat.id, ctx.from.id))) {
+  const chat_id = ctx.chat.id;
+  const user_id = ctx.from.id;
+
+  if (!(await isChatOwner(chat_id, user_id))) {
     return;
   }
 
-  if (cacheManager.TTLCache.get(`cleanup_${ctx.chat.id}`) !== undefined) {
+  if (cacheManager.TTLCache.get(`cleanup_${chat_id}`) !== undefined) {
     return void (await ctx.reply(
       "В чаті вже запущено іншу чистку. Відмініть її або зачекайте хвилину."
     ));
@@ -35,9 +38,9 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
       WITH chat_activity AS (
         SELECT user_id, SUM(count) AS total_count
         FROM public.stats_daily
-        WHERE date >= current_date - INTERVAL '${parseInt(targetDaysCount)} DAY' AND chat_id = ${
-        ctx.chat.id
-      }
+        WHERE date >= current_date - INTERVAL '${parseInt(
+          targetDaysCount
+        )} DAY' AND chat_id = ${chat_id}
         GROUP BY user_id
       )
       SELECT user_id
@@ -51,8 +54,8 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
   const beforeTargetDaysCount = moment().subtract(targetDaysCount + 1, "days");
   targetMembers = targetMembers.filter((m) => {
     return (
-      active.data[ctx.chat.id]?.[m.user_id]?.active_first &&
-      beforeTargetDaysCount.isSameOrBefore(active.data[ctx.chat.id]![m.user_id]!.active_first)
+      active.data[chat_id]?.[m.user_id]?.active_first &&
+      beforeTargetDaysCount.isSameOrBefore(active.data[chat_id][m.user_id]!.active_first)
     );
   });
 
@@ -60,7 +63,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     return void (await ctx.reply("За вказаними параметрами знайдено 0 учасників."));
   }
 
-  cacheManager.TTLCache.set(`cleanup_${ctx.chat.id}`, targetMembers, 60 * 5);
+  cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
   void (await ctx.reply(
     getChatCleanupText(String(targetMembers.length), targetDaysCount, targetMessagesCount),
     { reply_markup: chatCleanup_menu }

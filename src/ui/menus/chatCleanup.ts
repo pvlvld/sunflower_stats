@@ -4,7 +4,7 @@ import getUserNameLink from "../../utils/getUserNameLink";
 import isChatOwner from "../../utils/isChatOwner";
 import { autoRetry } from "@grammyjs/auto-retry";
 import cacheManager from "../../cache/cache";
-import { active } from "../../data/active";
+import { active, IActiveUser } from "../../data/active";
 import { GrammyError } from "grammy";
 
 const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
@@ -17,7 +17,8 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
 })
   .dynamic(async (ctx, range) => {
     const chat_id = ctx.chat?.id;
-    if (!chat_id) {
+    const from_id = ctx.from?.id;
+    if (!chat_id || !from_id) {
       return;
     }
 
@@ -28,7 +29,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
     range.text("Видалити ✅", async (ctx) => {
       ctx.answerCallbackQuery().catch((e) => {});
 
-      if (!(await isChatOwner(chat_id, ctx.from.id))) {
+      if (!(await isChatOwner(chat_id, from_id))) {
         return;
       }
 
@@ -66,7 +67,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
       ctx.answerCallbackQuery().catch((e) => {});
 
       if (
-        !(await isChatOwner(chat_id, ctx.from.id)) ||
+        !(await isChatOwner(chat_id, from_id)) ||
         (await destroyMenuIfOutdated(ctx, targetMembers))
       ) {
         return;
@@ -80,27 +81,31 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
     range.row().text("Список 🔍", async (ctx) => {
       ctx.answerCallbackQuery().catch((e) => {});
 
-      if (!(await isChatOwner(chat_id, ctx.from.id))) {
+      if (!(await isChatOwner(chat_id, from_id))) {
         return;
       }
 
       if (await destroyMenuIfOutdated(ctx, targetMembers)) {
         return void (await ctx.reply("Ця чистка застаріла. Створіть нову.").catch((e) => {}));
       }
+      let messageText = ctx.msg?.text;
+      if (!messageText) {
+        return;
+      }
 
-      const targetMembersListIndex = ctx.msg?.text?.indexOf("Список:");
+      const targetMembersListIndex = messageText.indexOf("Список:");
 
-      if (targetMembersListIndex === -1) {
-        let msg = `${ctx.msg!.text!.replace(
+      if (targetMembersListIndex && targetMembersListIndex === -1) {
+        messageText = `${messageText.replace(
           /\d+/,
           String(targetMembers!.length)
         )}\n\nСписок:\n${getTargetMembersList(chat_id, targetMembers as { user_id: number }[])}`;
 
-        await ctx.editMessageText(msg, {
+        await ctx.editMessageText(messageText, {
           link_preview_options: { is_disabled: true },
         });
       } else {
-        ctx.editMessageText(ctx.msg!.text!.slice(0, targetMembersListIndex));
+        ctx.editMessageText(messageText.slice(0, targetMembersListIndex));
       }
     });
 
@@ -130,16 +135,11 @@ const targetMembersListMaxSize = 100;
 
 function getTargetMembersList(chat_id: number, targetMembers: { user_id: number }[]): string {
   const targetMemberNames: string[] = [];
-
+  let user: IActiveUser | undefined;
   for (let i = 0; i < Math.min(targetMembersListMaxSize, targetMembers.length); i++) {
-    if (active.data[chat_id]?.[targetMembers[i]?.user_id]) {
-      targetMemberNames.push(
-        getUserNameLink.html(
-          active.data[chat_id]![targetMembers[i].user_id]!.name as string,
-          active.data[chat_id]?.[targetMembers[i].user_id]?.username,
-          targetMembers[i].user_id
-        )
-      );
+    user = active.data[chat_id]?.[targetMembers[i].user_id];
+    if (user) {
+      targetMemberNames.push(getUserNameLink.html(user.name, undefined, targetMembers[i].user_id));
     }
   }
 

@@ -18,12 +18,12 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
 
   for (let chat in active.data) {
     if (!chat.startsWith("-")) {
-      active.data[chat] = undefined;
+      delete active.data[chat];
       continue;
     }
 
     for (let user in active.data[chat]) {
-      if (moment().diff(moment(active.data[chat]![user]!.active_last), "days") < 3) {
+      if (moment().diff(moment(active.data[chat][user]!.active_last), "days") < 3) {
         try {
           totalAttemptsSent++;
           void (await ctx.api.forwardMessage(

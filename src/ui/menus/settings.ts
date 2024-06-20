@@ -57,7 +57,8 @@ async function toggleSetting(
 const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).dynamic(
   async (ctx, range) => {
     const chat_id = ctx.chat?.id;
-    if (!chat_id) {
+    const from_id = ctx.from?.id;
+    if (!chat_id || !from_id) {
       return;
     }
 
@@ -65,7 +66,7 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
 
     range
       .text(`${getSettingButtonsText("charts", chatSettings.charts)}`, async (ctx) => {
-        if (await isChatOwner(chat_id, ctx.from.id)) {
+        if (await isChatOwner(chat_id, from_id)) {
           toggleSetting(ctx, chat_id, chatSettings, "charts");
         }
       })
@@ -73,7 +74,7 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
       .text(
         `${getSettingButtonsText("usechatbgforall", chatSettings.usechatbgforall)}`,
         async (ctx) => {
-          if (await isChatOwner(chat_id, ctx.from.id)) {
+          if (await isChatOwner(chat_id, from_id)) {
             if (await isPremium(chat_id)) {
               toggleSetting(ctx, chat_id, chatSettings, "usechatbgforall");
               cacheManager.ChartCache_User.removeChat(chat_id);
@@ -89,7 +90,7 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
       .text(
         `${getSettingButtonsText("statsadminsonly", chatSettings.statsadminsonly)}`,
         async (ctx) => {
-          if (await isChatOwner(chat_id, ctx.from.id)) {
+          if (await isChatOwner(chat_id, from_id)) {
             toggleSetting(ctx, chat_id, chatSettings, "statsadminsonly");
           }
         }
@@ -98,7 +99,7 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
       .text(
         `${getSettingButtonsText("selfdestructstats", chatSettings.selfdestructstats)}`,
         async (ctx) => {
-          if (await isChatOwner(chat_id, ctx.from.id)) {
+          if (await isChatOwner(chat_id, from_id)) {
             toggleSetting(ctx, chat_id, chatSettings, "selfdestructstats");
           }
         }

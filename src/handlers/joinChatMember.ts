@@ -10,8 +10,8 @@ async function joinChatMember(ctx: Filter<IContext, "chat_member">) {
 
   if (active_first) {
     active.data[chat_id] ??= {};
-    active.data[chat_id]![user_id] ??= {} as IActiveUser;
-    active.data[chat_id]![user_id]!.active_first = active_first;
+    active.data[chat_id][user_id] ??= {} as IActiveUser;
+    active.data[chat_id][user_id].active_first = active_first;
   }
 }
 export { joinChatMember };

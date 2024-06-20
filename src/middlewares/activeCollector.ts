@@ -23,8 +23,8 @@ function ActiveCollectorWrapper() {
       active.data[chat_id] ??= {};
 
       const today = formattedDate.today[0];
-      if (active.data[chat_id]?.[user_id] === undefined) {
-        active.data[chat_id]![user_id] = new UserActive(
+      if (active.data[chat_id][user_id] === undefined) {
+        active.data[chat_id][user_id] = new UserActive(
           today,
           today,
           ctx.from.first_name,

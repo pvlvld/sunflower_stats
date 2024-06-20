@@ -19,7 +19,7 @@ async function broadcast_owners_cmd(ctx: IGroupHearsContext): Promise<void> {
 
   for (let chat in active.data) {
     for (let user in active.data[chat]) {
-      if (moment().diff(moment(active.data[chat]![user]!.active_last), "days") < 3) {
+      if (moment().diff(moment(active.data[chat][user]!.active_last), "days") < 3) {
         admins = await ctx.api.getChatAdministrators(chat);
         owner = admins.filter((a) => a.status === "creator")[0] as any;
         if (!owner) {

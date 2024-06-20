@@ -25,12 +25,12 @@ class ChatSettingsCache {
 
     if (settings) {
       this._settingsCache[chat_id] = {
-        ...this._settingsCache[chat_id]!,
+        ...this._settingsCache[chat_id],
         ...settings,
       };
     }
 
-    return this._settingsCache[chat_id]!;
+    return this._settingsCache[chat_id];
   }
 
   public get size() {

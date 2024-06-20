@@ -22,14 +22,14 @@ async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
       .catch((e) => {}));
   }
 
-  if (!active.data[chat_id]![target_id]) {
+  if (!active.data[chat_id]?.[target_id]) {
     return void (await ctx.reply("Користувача не знайдено."));
   }
 
-  active.data[chat_id]![target_id]!.active_first = date;
+  active.data[chat_id][target_id].active_first = date;
 
   return void (await ctx.reply(
-    `Успішно змінено дату першої появи в чаті ${active.data[chat_id]![target_id]?.name}!`
+    `Успішно змінено дату першої появи в чаті ${active.data[chat_id][target_id].name}!`
   ));
 }
 
