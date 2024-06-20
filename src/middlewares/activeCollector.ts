@@ -27,14 +27,14 @@ function ActiveCollectorWrapper() {
         active.data[chat_id]![user_id] = new UserActive(
           today,
           today,
-          Escape.html(ctx.from.first_name),
+          ctx.from.first_name,
           "",
           ctx.from.username || ""
         );
       } else {
-        active.data[chat_id]![user_id]!.active_last = today;
-        active.data[chat_id]![user_id]!.name = Escape.html(ctx.from.first_name);
-        active.data[chat_id]![user_id]!.username = ctx.from.username || "";
+        active.data[chat_id][user_id].active_last = today;
+        active.data[chat_id][user_id].name = Escape.html(ctx.from.first_name);
+        active.data[chat_id][user_id].username = ctx.from.username || "";
       }
     }
 
@@ -57,7 +57,7 @@ class UserActive {
   ) {
     this.active_first = active_first;
     this.active_last = active_last;
-    this.name = name.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    this.name = Escape.html(name);
     this.nickname = nickname;
     this.username = username;
   }
