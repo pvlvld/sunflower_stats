@@ -16,7 +16,6 @@ import getUserId from "../utils/getUserId";
 import parseCmdArgs from "../utils/parseCmdArgs";
 import { removeAnonimousActive } from "./staff/utils_cmd";
 import broadcast_owners_cmd from "./staff/broadcast_owners";
-import bench_db_cmd from "./staff/bench_db";
 import cfg from "../config";
 import botMemoryUsage from "./staff/botMemoryUsage";
 import { chatCleanup } from "./chatCleanup";
@@ -202,8 +201,6 @@ function regCommands() {
   botAdmin.hears("!ssbroadcast_owners", (ctx) => broadcast_owners_cmd(ctx));
 
   botAdmin.hears("!ssbroadcast_chats", (ctx) => broadcast_chats_cmd(ctx));
-
-  botAdmin.hears(/^!ssbdb/, (ctx) => bench_db_cmd(ctx));
 
   botAdmin.hears("!ssmem", async (ctx) => botMemoryUsage(ctx));
 
