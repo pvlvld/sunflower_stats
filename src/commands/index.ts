@@ -88,12 +88,12 @@ function regCommands() {
     }
   );
 
-  groupStats.hears(/^(!я|!йа)$/i, async (ctx) => {
+  groupStats.hears(/^(!я|!йа|хто я)$/i, async (ctx) => {
     botStatsManager.commandUse("я");
     stats_my(ctx);
   });
 
-  groupStats.hears(/^(!ти)/i, async (ctx) => {
+  groupStats.hears(/^!ти|хто ти/i, async (ctx) => {
     if (
       (!ctx.msg.reply_to_message && !ctx.msg?.text?.startsWith("!ти ")) ||
       (ctx.msg.reply_to_message && !(ctx.msg?.text === "!ти"))
