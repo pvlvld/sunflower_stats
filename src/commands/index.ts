@@ -33,6 +33,7 @@ import { getId_cmd } from "./staff/get_id";
 import { setUserJoinDate_cmd } from "./staff/setUserJoinDate";
 import { delMessage } from "./staff/del";
 import { stats_user } from "./stats_user";
+import { hello } from "./hello";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -218,6 +219,10 @@ function regCommands() {
     if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
       await delMessage(ctx);
     }
+  });
+
+  bot.hears("!hello", async (ctx) => {
+    await hello(ctx);
   });
 }
 export default regCommands;
