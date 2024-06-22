@@ -6,10 +6,12 @@ import cfg from "../config";
 import { adminUpdateHandler } from "./adminUpdateHandler";
 import help_cmd from "../commands/help";
 import { joinChatMember } from "./joinChatMember";
+import { hello } from "../commands/hello";
 
 function regHandlers() {
   bot.on("my_chat_member", async (ctx) => {
     if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.myChatMember.old_chat_member.status)) {
+      await hello(ctx);
       await help_cmd(ctx);
       botStatsManager.joinGroup();
 
