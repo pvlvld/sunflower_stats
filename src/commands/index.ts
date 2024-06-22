@@ -34,6 +34,7 @@ import { setUserJoinDate_cmd } from "./staff/setUserJoinDate";
 import { delMessage } from "./staff/del";
 import { stats_user } from "./stats_user";
 import { hello } from "./hello";
+import { ban_cmd } from "./staff/ban";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -219,6 +220,12 @@ function regCommands() {
 
   bot.hears("!hello", async (ctx) => {
     await hello(ctx);
+  });
+
+  group.hears("!sban", async (ctx) => {
+    if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
+      ban_cmd(ctx);
+    }
   });
 
   // MUST BE THE LAST ONE
