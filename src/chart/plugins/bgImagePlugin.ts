@@ -12,11 +12,12 @@ const baseBgPath = "./data/chartBg";
 let defaultBg: Image;
 
 async function getDefaultBg() {
-  if (defaultBg) {
-    return defaultBg;
+  if (defaultBg === undefined) {
+    defaultBg = await loadImage("data/chartBg/!default.jpg");
   }
+  return defaultBg;
+}
 
-  defaultBg = await loadImage("data/chartBg/!default.jpg");
   return defaultBg;
 }
 
