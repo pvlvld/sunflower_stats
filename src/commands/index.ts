@@ -207,10 +207,6 @@ function regCommands() {
   botAdmin.hears(/^!ssrc/, async (ctx) => removeChatData_cmd(ctx));
   // Etc.
 
-  bot.on("message", async (ctx) => {
-    memes(ctx);
-  });
-
   group.hears("/getid", async (ctx) => {
     getId_cmd(ctx);
   });
@@ -223,6 +219,11 @@ function regCommands() {
 
   bot.hears("!hello", async (ctx) => {
     await hello(ctx);
+  });
+
+  // MUST BE THE LAST ONE
+  bot.on("message", async (ctx) => {
+    memes(ctx);
   });
 }
 export default regCommands;
