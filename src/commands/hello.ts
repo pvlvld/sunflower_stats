@@ -14,7 +14,15 @@ async function hello(ctx: IContext) {
 Збирає статистику, малює її графіки з вашим особистим фоном, а також дуже допомагає в автоматизації чистки!
 
 <a href="https://soniashnyk_call_bot.t.me">Соняшник | Заклик</a>
-Швидко збере всіх учасників чату`
+Швидко збере всіх учасників чату`,
+      {
+        disable_notification: true,
+        link_preview_options: { is_disabled: true },
+        reply_parameters: {
+          allow_sending_without_reply: true,
+          message_id: ctx.msg?.message_id ?? -1,
+        },
+      }
     )
     .catch((e) => {}));
 }
