@@ -13,7 +13,7 @@ async function hello(ctx: IContext) {
 <a href="https://soniashnyk_statistics_bot.t.me">Соняшник | Статистика</a>
 Збирає статистику, малює її графіки з вашим особистим фоном, а також дуже допомагає в автоматизації чистки!
 
-<a href="https://soniashnyk_call_bot.t.me>Соняшник | Заклик</a>
+<a href="https://soniashnyk_call_bot.t.me">Соняшник | Заклик</a>
 Швидко збере всіх учасників чату`
     )
     .catch((e) => {}));
