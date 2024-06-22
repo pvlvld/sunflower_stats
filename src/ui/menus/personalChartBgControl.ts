@@ -10,7 +10,9 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       return;
     }
     removeBgAndOptionallyBlock(user_id, false);
-    await ctx.deleteMessage().catch((e) => {});
+    await ctx
+      .editMessageCaption({ caption: `${ctx.msg?.caption ?? ""}\n\nВидалено!` })
+      .catch((e) => {});
   })
   .row()
   .text("🗑 + ⏳⛔️", async (ctx) => {
@@ -19,7 +21,9 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       return;
     }
     removeBgAndOptionallyBlock(user_id, true);
-    await ctx.deleteMessage().catch((e) => {});
+    await ctx
+      .editMessageCaption({ caption: `${ctx.msg?.caption ?? ""}\n\nВидалено та обмежено!` })
+      .catch((e) => {});
   })
   .row()
   .text("🔞", async (ctx) => {
@@ -28,6 +32,9 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       return;
     }
     removeBgAndOptionallyBlock(user_id, true, true);
+    await ctx
+      .editMessageCaption({ caption: `${ctx.msg?.caption ?? ""}\n\nАнтихорні!` })
+      .catch((e) => {});
   })
   .row()
   .text("👌🏻", async (ctx) => {
