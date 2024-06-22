@@ -7,20 +7,40 @@ import { getStatsChart } from "../chart/getStatsChart";
 import cacheManager from "../cache/cache";
 import { DBStats } from "../db/stats";
 import cfg from "../config";
+import getUserId from "../utils/getUserId";
 
-async function stats_my(ctx: IGroupTextContext) {
+async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
   const chat_id = ctx.chat.id;
-  const user_id = ctx.from.id;
+  let user_id = 0;
+  if (type === "я") {
+    user_id = ctx.from.id;
+  } else {
+    if (ctx.msg.reply_to_message?.from?.is_bot) {
+      return void (await ctx.reply("🤖 біп-буп"));
+    }
+    user_id =
+      ctx.msg.reply_to_message?.from?.id ||
+      getUserId((ctx.msg.text ?? ctx.msg.caption).slice(type.length + 2), chat_id) ||
+      -1;
+  }
+
   if (cfg.IGNORE_IDS.includes(user_id)) {
-    return;
+    return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats, {
+      caption: "Користувача не знайдено 🤷🏻‍♀️",
+    }));
   }
 
   const chatSettings = await getCachedOrDBChatSettings(chat_id);
   const user_stats = await DBStats.user.all(chat_id, user_id);
 
   if (isUserStatsEmpty(user_stats)) {
-    return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats),
-    { caption: "Схоже, що це ваше перше повідомлення в цьому чаті." });
+    if (type === "я") {
+      return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats),
+      { caption: "Схоже, що це ваше перше повідомлення в цьому чаті 🎉" });
+    } else {
+      return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats),
+      { caption: "Вперше бачу 🤔" });
+    }
   }
 
   const statsMessage = getUserStatsMessage(chat_id, user_id, user_stats);
@@ -105,4 +125,4 @@ async function stats_my(ctx: IGroupTextContext) {
   }
 }
 
-export default stats_my;
+export { stats_user };

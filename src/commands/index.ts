@@ -2,8 +2,6 @@ import bot from "../bot";
 import botTest_cmd from "./botTets";
 import chatInactive_cmd from "./chat_inactive";
 import help_cmd from "./help";
-import stats_my from "./stats_my";
-import stats_their from "./stats_their";
 import set_nickname from "./set_nickname";
 import del_nickname from "./del_nickname";
 import del_user_active from "./del_user_active";
@@ -34,6 +32,7 @@ import { chatSettings_cmd } from "./chatSettings";
 import { getId_cmd } from "./staff/get_id";
 import { setUserJoinDate_cmd } from "./staff/setUserJoinDate";
 import { delMessage } from "./staff/del";
+import { stats_user } from "./stats_user";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -90,7 +89,7 @@ function regCommands() {
 
   groupStats.hears(/^(!я|!йа|хто я)$/i, async (ctx) => {
     botStatsManager.commandUse("я");
-    stats_my(ctx);
+    stats_user(ctx, "я");
   });
 
   groupStats.hears(/^!ти|хто ти/i, async (ctx) => {
@@ -101,7 +100,7 @@ function regCommands() {
       return;
     }
     botStatsManager.commandUse("ти");
-    stats_their(ctx);
+    stats_user(ctx, "ти");
   });
 
   group.hears(/^(\+нік|\+нікнейм)/i, async (ctx) => {
