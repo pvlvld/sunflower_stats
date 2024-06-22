@@ -22,6 +22,14 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
     await ctx.deleteMessage().catch((e) => {});
   })
   .row()
+  .text("🔞", async (ctx) => {
+    const user_id = await parseTargetUserId(ctx);
+    if (user_id === undefined) {
+      return;
+    }
+    removeBgAndOptionallyBlock(user_id, true, true);
+  })
+  .row()
   .text("👌🏻", async (ctx) => {
     void (await ctx.editMessageReplyMarkup({ reply_markup: undefined }).catch((e) => {}));
   });
@@ -36,11 +44,14 @@ async function parseTargetUserId(ctx: IContext, start_mark = "User id: ") {
   }
 }
 
-function removeBgAndOptionallyBlock(user_id: number, block: boolean) {
+function removeBgAndOptionallyBlock(user_id: number, block: boolean, horny = false) {
   unlink(`./data/chartBg/${user_id}.jpg`, (e) => {
     cacheManager.ChartCache_User.removeUser(user_id);
     if (block) {
       cacheManager.RestrictedUsersCache.restrict(user_id, "chartBg", 24 * 60 * 60);
+    }
+    if (horny) {
+      cacheManager.RestrictedUsersCache.restrict(user_id, "horny", 24 * 60 * 60);
     }
   });
 }
