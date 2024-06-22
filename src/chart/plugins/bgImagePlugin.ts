@@ -18,11 +18,17 @@ async function getDefaultBg() {
   return defaultBg;
 }
 
-  return defaultBg;
-}
+async function loadBgImage(id: number, specific?: "horny"): Promise<Image> {
+  let path = "";
+  switch (specific) {
+    case "horny":
+      path = `${baseBgPath}/!horny.jpg`;
+      break;
+    default:
+      path = `${baseBgPath}/${id}.jpg`;
+      break;
+  }
 
-async function loadBgImage(id: number): Promise<Image> {
-  const path = `${baseBgPath}/${id}.jpg`;
   if (fs.existsSync(path)) {
     return loadImage(path);
   }
@@ -65,7 +71,11 @@ async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType)
 
     //TODO: don't forget to reenable it
     // if (await isPremium(user_id)) {
-    pluginBgImage = await loadBgImage(user_id);
+    if (cacheManager.RestrictedUsersCache.isRestricted(user_id, "horny")) {
+      pluginBgImage = await loadBgImage(user_id, "horny");
+    } else {
+      pluginBgImage = await loadBgImage(user_id);
+    }
     return createPlugin(pluginBgImage);
     // }
 
