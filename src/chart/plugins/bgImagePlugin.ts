@@ -53,7 +53,7 @@ async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType)
       if (await isPremium(chat_id)) {
         pluginBgImage = await loadBgImage(chat_id);
       } else {
-        pluginBgImage = await getDefaultBg();
+        pluginBgImage = await loadBgImage(user_id);
         Database.chatSettings.set(
           chat_id,
           cacheManager.ChatSettingsCache.set(chat_id, { usechatbgforall: false })
