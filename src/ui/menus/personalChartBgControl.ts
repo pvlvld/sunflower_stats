@@ -11,7 +11,10 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
     }
     removeBgAndOptionallyBlock(user_id, false);
     await ctx
-      .editMessageCaption({ caption: `${ctx.msg?.caption ?? ""}\n\nВидалено!` })
+      .editMessageCaption({
+        caption: `${ctx.msg?.caption ?? ""}\n\nВидалено!`,
+        reply_markup: undefined,
+      })
       .catch((e) => {});
   })
   .row()
@@ -22,7 +25,10 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
     }
     removeBgAndOptionallyBlock(user_id, true);
     await ctx
-      .editMessageCaption({ caption: `${ctx.msg?.caption ?? ""}\n\nВидалено та обмежено!` })
+      .editMessageCaption({
+        caption: `${ctx.msg?.caption ?? ""}\n\nВидалено та обмежено!`,
+        reply_markup: undefined,
+      })
       .catch((e) => {});
   })
   .row()
@@ -33,7 +39,10 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
     }
     removeBgAndOptionallyBlock(user_id, true, true);
     await ctx
-      .editMessageCaption({ caption: `${ctx.msg?.caption ?? ""}\n\nАнтихорні!` })
+      .editMessageCaption({
+        caption: `${ctx.msg?.caption ?? ""}\n\nАнтихорні!`,
+        reply_markup: undefined,
+      })
       .catch((e) => {});
   })
   .row()
