@@ -1,6 +1,6 @@
 import NodeCache from "node-cache";
 
-type IReason = "chartBg";
+type IReason = "chartBg" | "horny";
 
 class RestrictedUsersCache {
   private _restrictedUsersCache: NodeCache;
