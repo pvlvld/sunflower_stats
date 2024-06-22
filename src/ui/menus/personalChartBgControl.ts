@@ -17,7 +17,6 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       })
       .catch((e) => {});
   })
-  .row()
   .text("🗑 + ⏳⛔️", async (ctx) => {
     const user_id = await parseTargetUserId(ctx);
     if (user_id === undefined) {
@@ -31,7 +30,6 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       })
       .catch((e) => {});
   })
-  .row()
   .text("🔞", async (ctx) => {
     const user_id = await parseTargetUserId(ctx);
     if (user_id === undefined) {
