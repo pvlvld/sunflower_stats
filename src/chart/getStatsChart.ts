@@ -146,7 +146,7 @@ export async function getStatsChart(
   }
 
   // remove 2023-12-31 data point, it's compiled stats for whole 2023 so it breaks chart
-  if (data[0].x === "2023-12-31") {
+  if (data.length !== 0 && data[0].x === "2023-12-31") {
     void data.shift();
   }
 
