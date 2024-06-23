@@ -168,7 +168,7 @@ function regCommands() {
 
   // -------- STAFF COMMANDS --------
 
-  bot.hears(/^бот\?$/i, async (ctx) => botTest_cmd(ctx));
+  bot.hears(/^бот(\??)$/i, async (ctx) => botTest_cmd(ctx));
 
   botAdmin.hears("!ssstats", async (ctx) => bot_stats_cmd(ctx));
 
