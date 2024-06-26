@@ -150,8 +150,8 @@ export async function getStatsChart(
     void data.shift();
   }
 
-  // do not render chart if data points count less than 3
-  if (data.length < 3) {
+  // do not render chart if data points count less than 2
+  if (data.length < 2) {
     return undefined;
   }
 
