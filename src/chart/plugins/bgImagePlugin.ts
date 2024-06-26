@@ -18,12 +18,14 @@ async function getDefaultBg() {
   return defaultBg;
 }
 
-async function loadBgImage(id: number, specific?: "horny"): Promise<Image> {
+async function loadBgImage(id: number, specific?: "horny" | "uk"): Promise<Image> {
   let path = "";
   switch (specific) {
     case "horny":
       path = `${baseBgPath}/!horny.jpg`;
       break;
+    case "uk":
+      path = `${baseBgPath}/!ДЕРЖАВНОЮ.jpg`;
     default:
       path = `${baseBgPath}/${id}.jpg`;
       break;
@@ -73,6 +75,8 @@ async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType)
     // if (await isPremium(user_id)) {
     if (cacheManager.RestrictedUsersCache.isRestricted(user_id, "horny")) {
       pluginBgImage = await loadBgImage(user_id, "horny");
+    } else if (cacheManager.RestrictedUsersCache.isRestricted(user_id, "uk")) {
+      pluginBgImage = await loadBgImage(user_id, "uk");
     } else {
       pluginBgImage = await loadBgImage(user_id);
     }

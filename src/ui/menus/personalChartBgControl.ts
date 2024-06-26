@@ -44,6 +44,19 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       .catch((e) => {});
   })
   .row()
+  .text("ЧОМУ НЕ ДЕРЖАВНОЮ?", async (ctx) => {
+    const user_id = await parseTargetUserId(ctx);
+    if (user_id === undefined) {
+      return;
+    }
+    removeBgAndOptionallyBlock(user_id, true, false, true);
+    await ctx
+      .editMessageCaption({
+        caption: `${ctx.msg?.caption ?? ""}\n\nДЕРЖАВНОЮ!`,
+        reply_markup: undefined,
+      })
+      .catch((e) => {});
+  })
   .text("👌🏻", async (ctx) => {
     void (await ctx.editMessageReplyMarkup({ reply_markup: undefined }).catch((e) => {}));
   });
@@ -58,7 +71,7 @@ async function parseTargetUserId(ctx: IContext, start_mark = "User id: ") {
   }
 }
 
-function removeBgAndOptionallyBlock(user_id: number, block: boolean, horny = false) {
+function removeBgAndOptionallyBlock(user_id: number, block: boolean, horny = false, uk = false) {
   unlink(`./data/chartBg/${user_id}.jpg`, (e) => {
     cacheManager.ChartCache_User.removeUser(user_id);
     if (block) {
@@ -66,6 +79,9 @@ function removeBgAndOptionallyBlock(user_id: number, block: boolean, horny = fal
     }
     if (horny) {
       cacheManager.RestrictedUsersCache.restrict(user_id, "horny", 24 * 60 * 60);
+    }
+    if (uk) {
+      cacheManager.RestrictedUsersCache.restrict(user_id, "uk", 24 * 60 * 60);
     }
   });
 }
