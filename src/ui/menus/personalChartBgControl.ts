@@ -61,6 +61,7 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       })
       .catch((e) => {});
   })
+  .row()
   .text("👌🏻", async (ctx) => {
     void (await ctx.editMessageReplyMarkup({ reply_markup: undefined }).catch((e) => {}));
   });
