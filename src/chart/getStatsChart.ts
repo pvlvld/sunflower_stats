@@ -134,17 +134,15 @@ export async function getStatsChart(
   let data: any[];
   if (type === "user") {
     data = await getUserData(chat_id, user_id);
-    void data.pop();
   } else {
     if (rawDateRange) {
       data = await getChatData(chat_id, rawDateRange);
-      void data.pop();
     } else {
       console.error("No date range is provided for the chat chart");
       data = await getChatData(chat_id, "all");
     }
   }
-
+  void data.pop();
   // remove 2023-12-31 data point, it's compiled stats for whole 2023 so it breaks chart
   if (data.length !== 0 && data[0].x === "2023-12-31") {
     void data.shift();
