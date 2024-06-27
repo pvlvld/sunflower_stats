@@ -44,10 +44,16 @@ CREATE TABLE
 CREATE OR REPLACE FUNCTION update_stats_daily(
   IN input_chat_id BIGINT,
   IN input_user_id BIGINT,
-  INCREMENT_BY INTEGER DEFAULT 1
+  IN INCREMENT_BY INTEGER DEFAULT 1,
+  IN input_date DATE DEFAULT NULL
 )
 RETURNS VOID AS $$
 BEGIN
+  -- Set the date to the current date if input_date is NULL
+  IF input_date IS NULL THEN
+    input_date := current_date;
+  END IF;
+
   -- Check for existing chat and user, and insert if not exists
   INSERT INTO public.chats (chat_id)
   VALUES (input_chat_id)
@@ -59,7 +65,7 @@ BEGIN
 
   -- Update or insert stats_daily
   INSERT INTO public.stats_daily (chat_id, user_id, count, date)
-  VALUES (input_chat_id, input_user_id, INCREMENT_BY, current_date)
+  VALUES (input_chat_id, input_user_id, INCREMENT_BY, input_date)
   ON CONFLICT (chat_id, user_id, date)
   DO UPDATE SET count = public.stats_daily.count + INCREMENT_BY;
 END;
