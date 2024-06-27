@@ -44,19 +44,25 @@ class DBUserStats {
     }
   }
 
-  async countUserMessage(chat_id: number, user_id: number, count?: number) {
+  async countUserMessage(chat_id: number, user_id: number, count?: number, date?: string) {
+    let query = "SELECT update_stats_daily($1, $2";
+    const values: (number | string)[] = [chat_id, user_id];
+
+    if (count !== undefined) {
+      query += ", $3";
+      values.push(count);
+    }
+
+    if (date) {
+      query += ", $4";
+      values.push(date);
+    }
+
+    query += ")";
     try {
-      if (count) {
-        return void (await this._dbPooolManager.getPoolWrite.query(
-          `SELECT update_stats_daily(${chat_id}, ${user_id}, ${count})`
-        ));
-      } else {
-        return void (await this._dbPooolManager.getPoolWrite.query(
-          `SELECT update_stats_daily(${chat_id}, ${user_id})`
-        ));
-      }
+      await this._dbPooolManager.getPoolWrite.query(query, values);
     } catch (error) {
-      console.error(error);
+      console.error("Error executing query:", query, "\n", error);
     }
   }
 }
