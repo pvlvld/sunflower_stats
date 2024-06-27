@@ -45,6 +45,10 @@ export class FormattedDate {
   get all(): IFormattedRangeDateGetters["all"] {
     return ["2023-12-31", moment().format("YYYY-MM-DD")];
   }
+
+  public dateToYYYMMDD(date: Date) {
+    return date.toISOString().split("T")[0];
+  }
 }
 
 const formattedDate = new FormattedDate();
