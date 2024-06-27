@@ -46,7 +46,7 @@ export class FormattedDate {
     return ["2023-12-31", moment().format("YYYY-MM-DD")];
   }
 
-  public dateToYYYMMDD(date: Date) {
+  public dateToYYYYMMDD(date: Date) {
     return date.toISOString().split("T")[0];
   }
 }
