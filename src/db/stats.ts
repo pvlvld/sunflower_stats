@@ -44,11 +44,17 @@ class DBUserStats {
     }
   }
 
-  async countUserMessage(chat_id: number, user_id: number) {
+  async countUserMessage(chat_id: number, user_id: number, count?: number) {
     try {
-      return void (await this._dbPooolManager.getPoolWrite.query(
-        `SELECT update_stats_daily(${chat_id}, ${user_id})`
-      ));
+      if (count) {
+        return void (await this._dbPooolManager.getPoolWrite.query(
+          `SELECT update_stats_daily(${chat_id}, ${user_id}, ${count})`
+        ));
+      } else {
+        return void (await this._dbPooolManager.getPoolWrite.query(
+          `SELECT update_stats_daily(${chat_id}, ${user_id})`
+        ));
+      }
     } catch (error) {
       console.error(error);
     }
