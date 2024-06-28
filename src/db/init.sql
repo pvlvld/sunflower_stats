@@ -30,14 +30,21 @@ ADD
 
 -------------------------------------
 
-CREATE TABLE
-  public.stats_daily (
-    chat_id bigint NOT NULL REFERENCES public.chats(chat_id),
-    user_id bigint NOT NULL REFERENCES public.users(user_id),
+CREATE TABLE public.stats_daily (
+    chat_id bigint NOT NULL,
+    user_id bigint NOT NULL,
     count integer NOT NULL DEFAULT 1,
     date date NOT NULL DEFAULT (now())::date,
-    CONSTRAINT stats_daily_pk PRIMARY KEY (chat_id, user_id, date)
-  );
+    CONSTRAINT stats_daily_pk PRIMARY KEY (chat_id, user_id, date),
+    CONSTRAINT stats_daily_chat_id_fkey FOREIGN KEY (chat_id)
+        REFERENCES public.chats (chat_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    CONSTRAINT stats_daily_user_id_fkey FOREIGN KEY (user_id)
+        REFERENCES public.users (user_id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
 
 -------------------------------------
 
