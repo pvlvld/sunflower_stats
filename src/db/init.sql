@@ -45,15 +45,10 @@ CREATE OR REPLACE FUNCTION update_stats_daily(
   IN input_chat_id BIGINT,
   IN input_user_id BIGINT,
   IN INCREMENT_BY INTEGER DEFAULT 1,
-  IN input_date DATE DEFAULT NULL
+  IN input_date DATE DEFAULT CURRENT_DATE
 )
 RETURNS VOID AS $$
 BEGIN
-  -- Set the date to the current date if input_date is NULL
-  IF input_date IS NULL THEN
-    input_date := current_date;
-  END IF;
-
   -- Check for existing chat and user, and insert if not exists
   INSERT INTO public.chats (chat_id)
   VALUES (input_chat_id)
