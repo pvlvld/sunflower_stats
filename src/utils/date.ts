@@ -43,7 +43,7 @@ export class FormattedDate {
   }
 
   get all(): IFormattedRangeDateGetters["all"] {
-    return ["2023-12-31", moment().format("YYYY-MM-DD")];
+    return ["2013-08-14", moment().format("YYYY-MM-DD")];
   }
 
   public dateToYYYYMMDD(date: Date) {
