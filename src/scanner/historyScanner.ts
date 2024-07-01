@@ -15,24 +15,19 @@ class HistoryScanner extends MTProtoClient {
     super(cfg.API_ID, cfg.API_HASH);
   }
 
-  public async scanChat(chatIdentifier: string | number, chat_id?: number): Promise<ScanReport> {
-    if (typeof chatIdentifier === "number") {
-      // don't need to join, called via cmd with id arg
-      chat_id = chatIdentifier;
-    } else {
-      const chatInfo = await this.getBaseChatInfo(chatIdentifier as string);
+  public async scanChat(chatIdentifier: string, chat_id?: number): Promise<ScanReport> {
+    const chatInfo = await this.getBaseChatInfo(chatIdentifier as string);
 
-      if (chatInfo.needToJoin) {
-        try {
-          const chat_info = await this.joinChat(chatIdentifier);
-          chat_id = chat_info.id;
-        } catch (error) {
-          return new ScanReport(false, 0, "Не вдалось доєднатися до чату.");
-        }
-      } else {
-        if (chatInfo.chatInfo) {
-          chat_id = chatInfo.chatInfo.id;
-        }
+    if (chatInfo.needToJoin) {
+      try {
+        const chat_info = await this.joinChat(chatIdentifier);
+        chat_id = chat_info.id;
+      } catch (error) {
+        return new ScanReport(false, 0, "Не вдалось доєднатися до чату.");
+      }
+    } else {
+      if (chatInfo.chatInfo) {
+        chat_id = chatInfo.chatInfo.id;
       }
     }
 
