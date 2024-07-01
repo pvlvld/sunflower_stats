@@ -15,15 +15,15 @@ class HistoryScanner extends MTProtoClient {
     super(cfg.API_ID, cfg.API_HASH);
   }
 
-  public async scanChat(chatIdentifier: string, chat_id?: number): Promise<ScanReport> {
-    const chatInfo = await this.getBaseChatInfo(chatIdentifier as string);
+  public async scanChat(chat_identifier: string, chat_id?: number): Promise<ScanReport> {
+    const chatInfo = await this.getBaseChatInfo(chat_identifier as string);
 
     if (chatInfo.needToJoin) {
       try {
-        const chat_info = await this.joinChat(chatIdentifier);
+        const chat_info = await this.joinChat(chat_identifier);
         chat_id = chat_info.id;
       } catch (error) {
-        return new ScanReport(false, 0, "Не вдалось доєднатися до чату.");
+        return new ScanReport(chat_id || -1, false, 0, "Не вдалось доєднатися до чату.");
       }
     } else {
       if (chatInfo.chatInfo) {
@@ -32,31 +32,41 @@ class HistoryScanner extends MTProtoClient {
     }
 
     if (!chat_id) {
-      return new ScanReport(false, 0, `Не вдалось отримати інформацію про чат ${chatIdentifier}`);
+      return new ScanReport(
+        chat_id || -1,
+        false,
+        0,
+        `Не вдалось отримати інформацію про чат ${chat_identifier}`
+      );
     }
 
     const endDate = await DBStats.chat.firstRecordDate(chat_id);
 
     if (endDate === undefined) {
-      return new ScanReport(false, 0, "Не вдалось отримати дату першого повідомлення в чаті.");
+      return new ScanReport(
+        chat_id,
+        false,
+        0,
+        "Не вдалось отримати дату першого повідомлення в чаті."
+      );
     }
 
-    return this._scanner(chatIdentifier, chat_id, endDate);
+    return this._scanner(chat_identifier, chat_id, endDate);
   }
 
-  private async _scanner(chatIdentifier: number | string, chatId: number, endDate: Date) {
+  private async _scanner(chat_identifier: number | string, chat_id: number, endDate: Date) {
     const stats = new Map<number, number>();
-    let iterator = this._client.iterHistory(chatIdentifier, { reverse: true });
+    let iterator = this._client.iterHistory(chat_identifier, { reverse: true });
     let message: Message | undefined;
     let totalCount = 0;
     let userMsgCount = 0;
-    const firstMessageDate = await this._getFirstMessageDate(chatIdentifier);
+    const firstMessageDate = await this._getFirstMessageDate(chat_identifier);
     let currentMsgDate = firstMessageDate!;
     let previousMsgDate = firstMessageDate!;
     let lastScannedMsgId = 0;
 
     if (firstMessageDate === undefined) {
-      return new ScanReport(false, 0, "Не вдалося отримати історію чату.");
+      return new ScanReport(chat_id, false, 0, "Не вдалося отримати історію чату.");
     }
 
     main_loop: while (true) {
@@ -83,7 +93,7 @@ class HistoryScanner extends MTProtoClient {
           // Each new day perform stats writing
           if (this._isDifferentDay(currentMsgDate, previousMsgDate)) {
             previousMsgDate = currentMsgDate;
-            await this._writeHistoryStats(chatId, stats, message.date);
+            await this._writeHistoryStats(chat_id, stats, message.date);
           }
 
           userMsgCount = stats.get(message.sender.id) || 0;
@@ -95,17 +105,17 @@ class HistoryScanner extends MTProtoClient {
         if ("seconds" in error) {
           console.info(`HistoryScanner: Sleeping for ${error.seconds} seconds.`);
           await new Promise((resolve) => setTimeout(resolve, error.seconds * 1000));
-          iterator = this._client.iterHistory(chatIdentifier, {
+          iterator = this._client.iterHistory(chat_identifier, {
             reverse: true,
             offset: { id: lastScannedMsgId, date: currentMsgDate.getTime() },
           });
         } else {
-          return new ScanReport(false, totalCount, error);
+          return new ScanReport(chat_id, false, totalCount, error);
         }
       }
     }
 
-    return new ScanReport(true, totalCount);
+    return new ScanReport(chat_id, true, totalCount);
   }
 
   public async joinChat(chat: string | number) {
@@ -140,9 +150,9 @@ class HistoryScanner extends MTProtoClient {
     return await this._client.leaveChat(chat);
   }
 
-  private async _getFirstMessageDate(chatId: string | number) {
+  private async _getFirstMessageDate(chat_id: string | number) {
     return (
-      await this._client.getHistory(chatId, { reverse: true, limit: 1 }).catch((e) => {})
+      await this._client.getHistory(chat_id, { reverse: true, limit: 1 }).catch((e) => {})
     )?.[0]?.date;
   }
 
@@ -169,10 +179,12 @@ class HistoryScanner extends MTProtoClient {
 }
 
 class ScanReport {
+  public chat_id: number;
   public status: boolean;
   public count: number;
   public error: string;
-  constructor(status: boolean, count: number, error?: Error | string) {
+  constructor(chat_id: number, status: boolean, count: number, error?: Error | string) {
+    this.chat_id = chat_id;
     this.status = status;
     this.count = count;
     this.error = "";
