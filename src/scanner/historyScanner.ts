@@ -111,26 +111,6 @@ class HistoryScanner extends MTProtoClient {
     return await this._client.joinChat(chat);
   }
 
-  public async getChatInvitePreview(chat: string) {
-    const preview = await this._client.getChatPreview(chat).catch((e) => {
-      if (e instanceof MtPeerNotFoundError) {
-        if (e.message.includes("already joined")) {
-          return "already joined";
-        }
-      }
-    });
-
-    if (preview === "already joined") {
-      return { status: true, chat_id: -1, preview: undefined };
-    }
-
-    if (preview) {
-      return { status: true, chat_id: -1, preview };
-    }
-
-    return { status: false };
-  }
-
   public async getBaseChatInfo(chat: string | number) {
     if (typeof chat === "number") {
       return { needToJoin: false, chatInfo: undefined } as const;
