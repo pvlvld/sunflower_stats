@@ -6,7 +6,7 @@ async function scanChatHistory_cmd(ctx: IGroupHearsContext) {
   let chatIdentifier: string | number | undefined = ctx.msg.text?.split(" ")[1];
 
   if (!chatIdentifier) {
-    chatIdentifier = ctx.chat.username || (await ctx.getChat()).invite_link;
+    chatIdentifier = ctx.chat.username || (await ctx.getChat().catch((e) => {}))?.invite_link;
   }
 
   if (!chatIdentifier) {
