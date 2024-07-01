@@ -35,6 +35,7 @@ import { delMessage } from "./staff/del";
 import { stats_user } from "./stats_user";
 import { hello } from "./hello";
 import { ban_cmd } from "./staff/ban";
+import { scanChatHistory_cmd } from "./staff/scanChatHistory";
 
 function regCommands() {
   const group = bot.chatType(["supergroup", "group"]);
@@ -226,6 +227,14 @@ function regCommands() {
     if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
       ban_cmd(ctx);
     }
+  });
+
+  group.hears(/^!sscanh/, async (ctx) => {
+    if (!cfg.ADMINS.includes(ctx.from.id)) {
+      return;
+    }
+
+    scanChatHistory_cmd(ctx);
   });
 
   // MUST BE THE LAST ONE
