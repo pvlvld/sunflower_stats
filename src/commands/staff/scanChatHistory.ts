@@ -5,15 +5,7 @@ import { getChatUsernameOrInvite } from "../../utils/getChatUsernameOrInviteLink
 async function scanChatHistory_cmd(ctx: IGroupHearsContext) {
   let chatIdentifier: string | number | undefined = ctx.msg.text?.split(" ")[1];
 
-  if (!chatIdentifier) {
-    chatIdentifier = ctx.chat.username || (await ctx.getChat().catch((e) => {}))?.invite_link;
-  }
-
-  if (!chatIdentifier) {
-    return ctx.reply("Не вдалося отримати юзернейм чи запрошення в чат.");
-  }
-
-  if (chatIdentifier.startsWith("-")) {
+  if (!chatIdentifier || chatIdentifier.startsWith("-")) {
     const usernameOrInvite = await getChatUsernameOrInvite(Number(chatIdentifier));
 
     if (usernameOrInvite.type === "username") {
