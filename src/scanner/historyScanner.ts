@@ -23,8 +23,12 @@ class HistoryScanner extends MTProtoClient {
       const chatInfo = await this.getBaseChatInfo(chatIdentifier as string);
 
       if (chatInfo.needToJoin) {
-        const chat_info = await this.joinChat(chatIdentifier);
-        chat_id = chat_info.id;
+        try {
+          const chat_info = await this.joinChat(chatIdentifier);
+          chat_id = chat_info.id;
+        } catch (error) {
+          return new ScanReport(false, 0, "Не вдалось доєднатися до чату.");
+        }
       } else {
         if (chatInfo.chatInfo) {
           chat_id = chatInfo.chatInfo.id;
