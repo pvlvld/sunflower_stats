@@ -1,7 +1,14 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE"] as const;
+const requiredEnv = [
+  "BOT_TOKEN",
+  "DB_HOST",
+  "DB_USER",
+  "DB_PASSWORD",
+  "DB_DATABASE",
+  "API_HASH",
+] as const;
 
 const ANIMATIONS = Object.freeze({
   no_stats: "CgACAgQAAx0Cf9EqrAACDUJmaJE8Jw9eTnlvmTG_GLslPqJJ8gACeQMAAr3JBFN7f2AJi52nTTUE",
@@ -20,6 +27,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   MAIN_CHAT: number;
   STATS_DEFAULT_TTL: number;
   MEDIA: typeof MEDIA;
+  API_ID: number;
 };
 
 function getCfg(): ICfg {
@@ -41,6 +49,7 @@ function getCfg(): ICfg {
   /** 5m */
   cfg.STATS_DEFAULT_TTL = 5 * 60;
   cfg.MEDIA = MEDIA;
+  cfg.API_ID = Number(process.env.API_ID || -1);
 
   return Object.freeze(cfg);
 }
