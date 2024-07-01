@@ -15,11 +15,7 @@ class HistoryScanner extends MTProtoClient {
     super(cfg.API_ID, cfg.API_HASH);
   }
 
-  public async scanChat(
-    chatIdentifier: string | number,
-    endDate: Date,
-    chat_id?: number
-  ): Promise<ScanReport> {
+  public async scanChat(chatIdentifier: string | number, chat_id?: number): Promise<ScanReport> {
     if (typeof chatIdentifier === "number") {
       // don't need to join, called via cmd with id arg
       chat_id = chatIdentifier;
@@ -38,6 +34,12 @@ class HistoryScanner extends MTProtoClient {
 
     if (!chat_id) {
       return new ScanReport(false, 0, `Не вдалось отримати інформацію про чат ${chatIdentifier}`);
+    }
+
+    const endDate = await DBStats.chat.firstRecordDate(chat_id);
+
+    if (endDate === undefined) {
+      return new ScanReport(false, 0, "Не вдалось отримати дату першого повідомлення в чаті.");
     }
 
     return this._scanner(chatIdentifier, chat_id, endDate);
