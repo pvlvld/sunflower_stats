@@ -2,10 +2,10 @@ import type { IMyChatMemberContext } from "../types/context";
 import { botStatsManager } from "../commands/botStats";
 import { leftGroup_menu } from "../ui/menus/leftGroup";
 import { hello } from "../commands/hello";
-import help_cmd from "../commands/help";
-import cfg from "../config";
 import cacheManager from "../cache/cache";
 import { active } from "../data/active";
+import help_cmd from "../commands/help";
+import cfg from "../config";
 
 async function updateChatBotStatus_handler(ctx: IMyChatMemberContext) {
   // Bot join chat
@@ -50,20 +50,18 @@ async function updateChatBotStatus_handler(ctx: IMyChatMemberContext) {
       admins_text = "Admins:\n" + admins_text;
     }
 
-    if (ctx.chat.type === "supergroup" && ctx.chat.username) {
-      await ctx.api
-        .sendMessage(
-          cfg.ANALYTICS_CHAT,
-          `❌📉 #Left @${ctx.chat.username}\nID: ${ctx.chat.id}\n${admins_text}`,
-          {
-            reply_markup: leftGroup_menu,
-            reply_parameters: { message_id: -1, allow_sending_without_reply: true },
-            disable_notification: true,
-            message_thread_id: 3984,
-          }
-        )
-        .catch((e) => {});
-    }
+    await ctx.api
+      .sendMessage(
+        cfg.ANALYTICS_CHAT,
+        `❌📉 #Left @${ctx.chat.username}\nID: ${ctx.chat.id}\n${admins_text}`,
+        {
+          reply_markup: leftGroup_menu,
+          reply_parameters: { message_id: -1, allow_sending_without_reply: true },
+          disable_notification: true,
+          message_thread_id: 3984,
+        }
+      )
+      .catch((e) => {});
   }
 }
 
