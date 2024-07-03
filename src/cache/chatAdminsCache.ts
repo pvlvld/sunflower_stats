@@ -41,6 +41,10 @@ class ChatAdminsCache {
     return this.getAdmins(chat_id).find((admin) => admin.user_id === user_id);
   }
 
+  public isCached(chat_id: number) {
+    return this._adminsCache[chat_id] !== undefined;
+  }
+
   public get size() {
     return Object.keys(this._adminsCache).length;
   }
