@@ -53,12 +53,16 @@ async function updateChatBotStatus_handler(ctx: IMyChatMemberContext) {
 
     if (ctx.chat.type === "supergroup" && ctx.chat.username) {
       await ctx.api
-        .sendMessage(cfg.ANALYTICS_CHAT, `❌📉 #Left @${ctx.chat.username}\nID: ${ctx.chat.id}`, {
-          reply_markup: leftGroup_menu,
-          reply_parameters: { message_id: -1, allow_sending_without_reply: true },
-          disable_notification: true,
-          message_thread_id: 3984,
-        })
+        .sendMessage(
+          cfg.ANALYTICS_CHAT,
+          `❌📉 #Left @${ctx.chat.username}\nID: ${ctx.chat.id}\n${admins_text}`,
+          {
+            reply_markup: leftGroup_menu,
+            reply_parameters: { message_id: -1, allow_sending_without_reply: true },
+            disable_notification: true,
+            message_thread_id: 3984,
+          }
+        )
         .catch((e) => {});
     }
   }
