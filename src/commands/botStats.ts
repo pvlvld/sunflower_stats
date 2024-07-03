@@ -29,6 +29,7 @@ function getStatsMsg() {
   let statsMsg = `
 Нових чатів: ${BOT_STATS.joinGroups}
 Покинуто чатів: ${BOT_STATS.leftGroups}
+Загалом: ${BOT_STATS.joinGroups - BOT_STATS.leftGroups}
   
 Повідомлень за ${moment
     .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
