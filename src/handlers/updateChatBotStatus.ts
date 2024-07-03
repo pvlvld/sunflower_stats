@@ -16,7 +16,7 @@ async function updateChatBotStatus_handler(ctx: IMyChatMemberContext) {
 
     if (ctx.chat.type === "supergroup") {
       try {
-        const membersCount = await ctx.getChatMemberCount();
+        const membersCount = (await ctx.getChatMemberCount().catch((e) => {})) || 0;
         const invite = (await ctx.getChat().catch((e) => {}))?.invite_link || "-";
 
         await ctx.api.sendMessage(
