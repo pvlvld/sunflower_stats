@@ -15,13 +15,16 @@ function regHandlers() {
       await help_cmd(ctx);
       botStatsManager.joinGroup();
 
-      if (ctx.chat.type === "supergroup" && ctx.chat.username) {
+      if (ctx.chat.type === "supergroup") {
         try {
           const membersCount = await ctx.getChatMemberCount();
+          const usernameOtInvite = ctx.chat.username
+            ? `@${ctx.chat.username}`
+            : (await ctx.getChat().catch((e) => {}))?.invite_link || "-";
           if (membersCount >= 50) {
             await ctx.api.sendMessage(
               cfg.ANALYTICS_CHAT,
-              `✅📈 #Join @${ctx.chat.username}\nID: ${ctx.chat.id}\nMembers count: ${membersCount}`,
+              `✅📈 #Join ${ctx.chat.title}\n${usernameOtInvite}\nID: ${ctx.chat.id}\nMembers count: ${membersCount}`,
               {
                 reply_parameters: { message_id: -1, allow_sending_without_reply: true },
                 disable_notification: true,
