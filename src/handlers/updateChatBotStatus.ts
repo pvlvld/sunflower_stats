@@ -21,7 +21,7 @@ async function updateChatBotStatus_handler(ctx: IMyChatMemberContext) {
         if (membersCount >= 50) {
           await ctx.api.sendMessage(
             cfg.ANALYTICS_CHAT,
-            `✅📈 #Join ${ctx.chat.title}\n@${ctx.chat.username} ${invite}\nID: ${ctx.chat.id}\nMembers count: <b>${membersCount}</b>`,
+            `✅📈 #Join ${ctx.chat.title}\n@${ctx.chat.username} ${invite}\nMembers count: <b>${membersCount}</b>\nID: ${ctx.chat.id}`,
             {
               reply_parameters: { message_id: -1, allow_sending_without_reply: true },
               disable_notification: true,
