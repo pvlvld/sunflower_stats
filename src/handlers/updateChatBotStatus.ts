@@ -18,17 +18,16 @@ async function updateChatBotStatus_handler(ctx: IMyChatMemberContext) {
       try {
         const membersCount = await ctx.getChatMemberCount();
         const invite = (await ctx.getChat().catch((e) => {}))?.invite_link || "-";
-        if (membersCount >= 50) {
-          await ctx.api.sendMessage(
-            cfg.ANALYTICS_CHAT,
-            `✅📈 #Join ${ctx.chat.title}\n@${ctx.chat.username} ${invite}\nMembers count: <b>${membersCount}</b>\nID: ${ctx.chat.id}`,
-            {
-              reply_parameters: { message_id: -1, allow_sending_without_reply: true },
-              disable_notification: true,
-              message_thread_id: 3984,
-            }
-          );
-        }
+
+        await ctx.api.sendMessage(
+          cfg.ANALYTICS_CHAT,
+          `✅📈 #Join ${ctx.chat.title}\n@${ctx.chat.username} ${invite}\nMembers count: <b>${membersCount}</b>\nID: ${ctx.chat.id}`,
+          {
+            reply_parameters: { message_id: -1, allow_sending_without_reply: true },
+            disable_notification: true,
+            message_thread_id: 3984,
+          }
+        );
       } catch (e) {}
     }
 
