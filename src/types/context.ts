@@ -5,6 +5,8 @@ import type { Update } from "grammy/types";
 
 export type IContext = FileFlavor<ParseModeFlavor<Context>>;
 
+export type IMyChatMemberContext = Filter<IContext, "my_chat_member">;
+
 export type IGroupContext = ChatTypeContext<IContext, "supergroup" | "group">;
 
 export type IGroupHearsContext = HearsContext<IGroupContext>;
