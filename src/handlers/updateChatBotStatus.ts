@@ -1,4 +1,4 @@
-import type { IMyChatMemberContext } from "../types/context";
+import type { IGroupMyChatMemberContext } from "../types/context";
 import { botStatsManager } from "../commands/botStats";
 import { leftGroup_menu } from "../ui/menus/leftGroup";
 import { hello } from "../commands/hello";
@@ -7,7 +7,7 @@ import { active } from "../data/active";
 import help_cmd from "../commands/help";
 import cfg from "../config";
 
-async function updateChatBotStatus_handler(ctx: IMyChatMemberContext) {
+async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
   // Bot join chat
   if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.myChatMember.old_chat_member.status)) {
     await hello(ctx);
