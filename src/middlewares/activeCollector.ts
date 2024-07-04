@@ -11,7 +11,6 @@ function ActiveCollectorWrapper() {
       !ctx.chat ||
       ctx.from.is_bot ||
       ctx.chat.id === ctx.from.id ||
-      ctx.msg?.reply_to_message?.is_automatic_forward ||
       ctx.chatMember ||
       ctx.msg?.left_chat_member ||
       cfg.IGNORE_IDS.includes(ctx.from.id) // anonimous users
