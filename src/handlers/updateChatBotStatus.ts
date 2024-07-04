@@ -23,9 +23,10 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
 
         await ctx.api.sendMessage(
           cfg.ANALYTICS_CHAT,
-          `✅📈 #Join ${ctx.chat.title}\n@${ctx.chat.username} ${invite}\nMembers count: <b>${membersCount}</b>\nID: ${ctx.chat.id}`,
+          `✅📈 #Join ${ctx.chat.title}\nMembers count: <b>${membersCount}</b>\nID: ${ctx.chat.id}\nusername: @${ctx.chat.username}\ninvite:${invite}`,
           {
             reply_parameters: { message_id: -1, allow_sending_without_reply: true },
+            link_preview_options: { is_disabled: true },
             disable_notification: true,
             message_thread_id: 3984,
           }
@@ -55,10 +56,11 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     await ctx.api
       .sendMessage(
         cfg.ANALYTICS_CHAT,
-        `❌📉 #Left @${ctx.chat.username}\nID: ${ctx.chat.id}\n${admins_text}`,
+        `❌📉 #Left ${ctx.chat.title}\nID: ${ctx.chat.id}\nusername: @${ctx.chat.username}\n${admins_text}`,
         {
           reply_markup: leftGroup_menu,
           reply_parameters: { message_id: -1, allow_sending_without_reply: true },
+          link_preview_options: { is_disabled: true },
           disable_notification: true,
           message_thread_id: 3984,
         }
