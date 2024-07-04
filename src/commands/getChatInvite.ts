@@ -11,8 +11,11 @@ async function getChatInvite_cmd(ctx: IContext) {
   let reply = "";
   try {
     const chat_info = await getChatUsernameOrInvite(chat_id);
-    if (chat_info.type === "error") return;
-    reply += `${chat_info.rawChatInfo.title}\n@${
+    if (chat_info.type === "error") {
+      await ctx.reply("Не вдалось отримати юзернейм або запрошення.");
+      return;
+    }
+    reply += `${chat_info.rawChatInfo.title}\n${
       chat_info.type === "username" ? chat_info.username : chat_info.invite
     }`;
     await ctx.reply(reply, {
