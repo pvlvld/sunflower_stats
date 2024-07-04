@@ -6,6 +6,7 @@ import cacheManager from "../cache/cache";
 import { active } from "../data/active";
 import help_cmd from "../commands/help";
 import cfg from "../config";
+import { sleepAsync } from "../utils/sleep";
 
 async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
   // Bot join chat
@@ -16,6 +17,7 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
 
     if (ctx.chat.type === "supergroup") {
       try {
+        await sleepAsync(1000);
         const membersCount = (await ctx.getChatMemberCount().catch((e) => {})) || 0;
         const invite = (await ctx.getChat().catch((e) => {}))?.invite_link || "-";
 
