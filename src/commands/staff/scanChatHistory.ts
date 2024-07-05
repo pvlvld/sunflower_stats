@@ -4,7 +4,7 @@ import { getChatUsernameOrInvite } from "../../utils/getChatUsernameOrInviteLink
 import cacheManager from "../../cache/cache";
 
 async function scanChatHistory_cmd(ctx: IGroupHearsContext) {
-  let chatIdentifier: string | number | undefined = ctx.msg.text?.split(" ")[1];
+  let chatIdentifier: string | number = ctx.msg.text?.split(" ")[1] || String(ctx.chat.id);
 
   if (!chatIdentifier || chatIdentifier.startsWith("-")) {
     const usernameOrInvite = await getChatUsernameOrInvite(Number(chatIdentifier));
