@@ -40,7 +40,6 @@ class MessagesStatsBatchStore {
   }
 
   public writeBatch() {
-    console.log("write");
     let stats = {} as UserStats;
     for (stats of this._writeIterator()) {
       DBStats.user.countUserMessage(stats.chat_id, stats.user_id, stats.count);
