@@ -71,7 +71,6 @@ async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType)
       return createPlugin(pluginBgImage);
     }
 
-    //TODO: don't forget to reenable it
     // if (await isPremium(user_id)) {
     if (cacheManager.RestrictedUsersCache.isRestricted(user_id, "horny")) {
       pluginBgImage = await loadBgImage(user_id, "horny");

@@ -19,7 +19,6 @@ async function setChartBg_Personal(ctx: IGroupHearsCommandContext | IGroupPhotoC
       .catch((e) => {}));
   }
 
-  //TODO: don't forget reenable it
   // if (!(await isPremium(ctx.from.id))) {
   //   return void (await ctx
   //     .reply(
