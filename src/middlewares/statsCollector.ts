@@ -1,6 +1,6 @@
+import { messagesStatsBatchStore } from "../data/messagesStatsBatchStore";
+import type { Context, NextFunction } from "grammy";
 import { botStatsManager } from "../commands/botStats";
-import { type Context, type NextFunction } from "grammy";
-import { DBStats } from "../db/stats";
 import cfg from "../config";
 
 export function StatsCollectorWrapper() {
@@ -17,7 +17,7 @@ export function StatsCollectorWrapper() {
     ) {
       return await next();
     } else {
-      DBStats.user.countUserMessage(ctx.chat.id, ctx.from.id);
+      messagesStatsBatchStore.count(ctx.chat.id, ctx.from.id);
     }
 
     return await next();
