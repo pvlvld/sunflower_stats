@@ -15,7 +15,7 @@ class HistoryScanner extends MTProtoClient {
     super(cfg.API_ID, cfg.API_HASH);
   }
 
-  public async scanChat(chat_identifier: string, chat_id?: number): Promise<ScanReport> {
+  public async scanChat(chat_identifier: string | number, chat_id?: number): Promise<ScanReport> {
     const chatInfo = await this.getBaseChatInfo(chat_identifier as string);
 
     if (chatInfo.needToJoin) {
