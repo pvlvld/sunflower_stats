@@ -22,17 +22,29 @@ async function scanChatHistory_cmd(ctx: IGroupHearsContext) {
   await ctx.reply(`Сканування ${chatIdentifier} запущено!`);
   const result = await historyScanner.scanChat(chatIdentifier);
 
-  if (!result.status) {
-    console.error(result.error);
-    return ctx.reply(`
-Щось пішло не так під час сканування ${chatIdentifier}
-Відскановано: ${result.count} повідомлень.`);
-  } else {
+  if (result.status) {
     cacheManager.ChartCache_Chat.removeChat(result.chat_id);
     cacheManager.ChartCache_User.removeChat(result.chat_id);
-    return ctx.reply(`
-Успішно відскановано ${result.count} повідомлень в ${chatIdentifier}
-`);
+    return ctx
+      .reply(
+        `
+    Успішно відскановано ${result.count} повідомлень в ${chatIdentifier}
+    `
+      )
+      .catch((e) => {
+        console.error(e);
+      });
+  } else {
+    console.error(result.error);
+    return ctx
+      .reply(
+        `
+Щось пішло не так під час сканування ${chatIdentifier}
+Відскановано: ${result.count} повідомлень.`
+      )
+      .catch((e) => {
+        console.error(e);
+      });
   }
 }
 
