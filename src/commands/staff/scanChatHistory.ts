@@ -13,9 +13,6 @@ async function scanChatHistory_cmd(ctx: IGroupHearsContext) {
       chatIdentifier = usernameOrInvite.username;
     } else if (usernameOrInvite.type === "invite") {
       chatIdentifier = usernameOrInvite.invite;
-    } else {
-      await ctx.reply("Не вдалось отримати юзернейм чи запрошення в чат.");
-      return;
     }
   }
 
