@@ -36,7 +36,7 @@ class MessagesStatsBatchStore {
     }
     this._isWriting = true;
 
-    setInterval(() => this.writeBatch(), 5 * 1000);
+    setInterval(() => this.writeBatch(), 10 * 1000);
   }
 
   public writeBatch() {
