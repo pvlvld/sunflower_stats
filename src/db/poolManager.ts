@@ -1,13 +1,12 @@
-import { Pool, PoolConfig } from "pg";
+import pg from "pg";
 import cfg from "../config.js";
-
 class PgSQLPoolManager {
-  private config: PoolConfig;
-  private poolRead!: Pool;
-  private poolWrite!: Pool;
+  private config: pg.PoolConfig;
+  private poolRead!: pg.Pool;
+  private poolWrite!: pg.Pool;
   private _isReady: boolean;
 
-  constructor(config: PoolConfig) {
+  constructor(config: pg.PoolConfig) {
     this.config = config;
     this._isReady = false;
   }
@@ -19,8 +18,8 @@ class PgSQLPoolManager {
   async createPool() {
     if (this._isReady) return;
     this._isReady = true;
-    this.poolRead = new Pool(this.config);
-    this.poolWrite = new Pool(this.config);
+    this.poolRead = new pg.Pool(this.config);
+    this.poolWrite = new pg.Pool(this.config);
     await this.poolRead.query("SELECT 1");
   }
 
