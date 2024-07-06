@@ -20,14 +20,6 @@ async function setChartBg_Personal(ctx: IGroupHearsCommandContext | IGroupPhotoC
       .catch((e) => {}));
   }
 
-  // if (!(await isPremium(ctx.from.id))) {
-  //   return void (await ctx
-  //     .reply(
-  //       "Власний фон можуть встановити лише донатери Соняха /donate.\nЯкщо ви нещодавно задонатити, викличте команду /refreshDonate"
-  //     )
-  //     .catch((e) => {}));
-  // }
-
   const isDownloaded = await downloadBg(ctx, "user");
   if (!isDownloaded) return;
   cacheManager.ChartCache_User.removeUser(ctx.from.id);
