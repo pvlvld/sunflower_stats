@@ -69,6 +69,24 @@ class HistoryScanner extends MTProtoClient {
       return new ScanReport(chat_id, false, 0, "Не вдалося отримати історію чату.");
     }
 
+    if (!this._isDifferentDay(firstMessageDate, endDate)) {
+      return new ScanReport(
+        chat_id,
+        false,
+        0,
+        "Дата першого запису статистики чату збігається з датою першого повідомлення в чаті."
+      );
+    }
+
+    if (firstMessageDate > endDate) {
+      return new ScanReport(
+        chat_id,
+        false,
+        0,
+        "Перше збережене в статистиці повідомлення старіше за перше доступне в чаті."
+      );
+    }
+
     main_loop: while (true) {
       try {
         for await (message of iterator) {
