@@ -9,34 +9,31 @@ import cfg from "../config.js";
 
 const baseBgPath = "./data/chartBg/";
 
-async function setChartBg_Personal(ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext) {
+async function setChartBg(
+  ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext,
+  type: "chat" | "user"
+) {
   if (!ctx.has(":photo")) {
     return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
+  }
+  let target_id = -1;
+
+  if (type === "chat") {
+    target_id = ctx.chat.id;
+    cacheManager.ChartCache_Chat.removeChat(target_id);
+  } else {
+    target_id = ctx.from.id;
+    cacheManager.ChartCache_User.removeUser(target_id);
   }
 
   if (cacheManager.RestrictedUsersCache.isRestricted(ctx.from.id, "chartBg")) {
-    return void (await ctx
-      .reply("Вам тимчасово заборонено змінювати власний фон.")
-      .catch((e) => {}));
+    return void (await ctx.reply("Вам тимчасово заборонено змінювати фони.").catch((e) => {}));
   }
 
-  const isDownloaded = await downloadBg(ctx, "user");
+  const isDownloaded = await downloadBg(ctx, type);
   if (!isDownloaded) return;
-  cacheManager.ChartCache_User.removeUser(ctx.from.id);
 
-  void (await ctx.reply("💅🏻 Персональний фон успішно оновлено!").catch((e) => {}));
-}
-
-async function setChartBg_Chat(ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext) {
-  if (!ctx.has(":photo")) {
-    return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
-  }
-
-  const isDownloaded = await downloadBg(ctx, "chat");
-  if (!isDownloaded) return;
-  cacheManager.ChartCache_Chat.removeChat(ctx.chat.id);
-
-  void (await ctx.reply("💅🏻 Фон статистики чату успішно оновлено!").catch((e) => {}));
+  void (await ctx.reply("💅🏻 Фон успішно оновлено!").catch((e) => {}));
 }
 
 async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat") {
@@ -102,4 +99,4 @@ async function cantSaveImageError(ctx: IGroupHearsCommandContext | IGroupPhotoCa
   return false;
 }
 
-export { setChartBg_Personal, setChartBg_Chat };
+export { setChartBg };

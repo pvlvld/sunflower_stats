@@ -1,5 +1,4 @@
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
-import { setChartBg_Chat, setChartBg_Personal } from "./chartBg.js";
 import { setUserJoinDate_cmd } from "./staff/setUserJoinDate.js";
 import { scanChatHistory_cmd } from "./staff/scanChatHistory.js";
 import bot_stats_cmd, { botStatsManager } from "./botStats.js";
@@ -28,6 +27,7 @@ import del_nickname from "./del_nickname.js";
 import { stats_user } from "./stats_user.js";
 import { delMessage } from "./staff/del.js";
 import leaveChat_cmd from "./leaveChat.js";
+import { setChartBg } from "./chartBg.js";
 import stats_chat from "./stats_chat.js";
 import { ban_cmd } from "./staff/ban.js";
 import botTest_cmd from "./botTets.js";
@@ -136,20 +136,20 @@ function regCommands() {
   });
 
   group.hears("!стата фон я", (ctx) => {
-    setChartBg_Personal(ctx);
+    setChartBg(ctx, "user");
   });
   group.hears(/^\/setmybg/i, (ctx) => {
-    setChartBg_Personal(ctx);
+    setChartBg(ctx, "user");
   });
 
   group.hears("!стата фон чат", async (ctx) => {
     if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
-      setChartBg_Chat(ctx);
+      setChartBg(ctx, "chat");
     }
   });
   group.hears(/^\/setchatbg/i, async (ctx) => {
     if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
-      setChartBg_Chat(ctx);
+      setChartBg(ctx, "chat");
     }
   });
 
