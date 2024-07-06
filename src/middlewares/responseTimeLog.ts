@@ -1,5 +1,6 @@
 import type { Context, NextFunction } from "grammy";
-const Big = require("big-js");
+//@ts-expect-error
+import Big from "big-js";
 
 export async function responseTimeLog(ctx: Context, next: NextFunction) {
   const start = String(process.hrtime.bigint());

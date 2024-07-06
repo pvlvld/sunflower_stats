@@ -8,7 +8,8 @@ import { botStatsManager } from "./botStats.js";
 import cacheManager from "../cache/cache.js";
 import { DBStats } from "../db/stats.js";
 import cfg from "../config.js";
-const Big = require("big-js");
+//@ts-expect-error
+import Big from "big-js";
 
 const cmdToDateRangeMap = {
   сьогодні: "today",

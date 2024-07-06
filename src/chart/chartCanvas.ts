@@ -1,6 +1,6 @@
 import { CanvasRenderingContext2D, createCanvas } from "canvas";
-
-const deePool = require("deepool");
+//@ts-expect-error
+import deePool from "deepool";
 
 function makeCanvas() {
   return createCanvas(1280, 640).getContext("2d");
