@@ -1,4 +1,4 @@
-import type { IContext } from "../../types/context";
+import type { IContext } from "../../types/context.js";
 
 function botMemoryUsage(ctx: IContext) {
   ctx.reply(

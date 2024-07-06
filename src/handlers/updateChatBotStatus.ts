@@ -1,12 +1,12 @@
-import type { IGroupMyChatMemberContext } from "../types/context";
-import { botStatsManager } from "../commands/botStats";
-import { leftGroup_menu } from "../ui/menus/leftGroup";
-import { hello } from "../commands/hello";
-import cacheManager from "../cache/cache";
-import { active } from "../data/active";
-import help_cmd from "../commands/help";
-import cfg from "../config";
-import { sleepAsync } from "../utils/sleep";
+import type { IGroupMyChatMemberContext } from "../types/context.js";
+import { botStatsManager } from "../commands/botStats.js";
+import { leftGroup_menu } from "../ui/menus/leftGroup.js";
+import { sleepAsync } from "../utils/sleep.js";
+import { hello } from "../commands/hello.js";
+import cacheManager from "../cache/cache.js";
+import { active } from "../data/active.js";
+import help_cmd from "../commands/help.js";
+import cfg from "../config.js";
 
 async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
   // Bot join chat

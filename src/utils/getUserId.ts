@@ -1,4 +1,4 @@
-import { active } from "../data/active";
+import { active } from "../data/active.js";
 
 /** Returns user_id or -1 on fail*/
 function getUserId(wantedUser: string | undefined, chat_id: number | string): number {

@@ -1,6 +1,6 @@
-import getUserNameLink from "./getUserNameLink";
-import type { IDBChatUserStats } from "../types/stats";
-import { active } from "../data/active";
+import type { IDBChatUserStats } from "../types/stats.js";
+import getUserNameLink from "./getUserNameLink.js";
+import { active } from "../data/active.js";
 
 export function getStatsRatingPlusToday(
   stats: IDBChatUserStats[],

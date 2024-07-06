@@ -1,25 +1,25 @@
-import { DBPoolManager, IDBPoolManager } from "./db/poolManager";
+import { DBPoolManager, IDBPoolManager } from "./db/poolManager.js";
 DBPoolManager.createPool();
 
-import bot from "./bot";
-import { GrammyError, HttpError, webhookCallback } from "grammy";
-import * as http from "http";
-import process from "node:process";
-import { active } from "./data/active";
-import regCommands from "./commands";
-import ActiveCollectorWrapper from "./middlewares/activeCollector";
-import StatsCollectorWrapper from "./middlewares/statsCollector";
-import createScheduler from "./utils/scheduler";
-import regHandlers from "./handlers";
+import ActiveCollectorWrapper from "./middlewares/activeCollector.js";
+import StatsCollectorWrapper from "./middlewares/statsCollector.js";
 import { autoQuote } from "@roziscoding/grammy-autoquote";
-import { autoThread } from "./middlewares/autoThreads";
-import moment from "moment";
-import { botStatsManager } from "./commands/botStats";
-import collectGarbage from "./utils/collectGarbage";
+import { autoThread } from "./middlewares/autoThreads.js";
+import { botStatsManager } from "./commands/botStats.js";
+import collectGarbage from "./utils/collectGarbage.js";
+import createScheduler from "./utils/scheduler.js";
+import { GrammyError, HttpError } from "grammy";
+import regCommands from "./commands/index.js";
+import regHandlers from "./handlers/index.js";
 import { limit } from "@grammyjs/ratelimiter";
-import cfg from "./config";
-import createServer from "./server";
+import { active } from "./data/active.js";
+import createServer from "./server.js";
 import { run } from "@grammyjs/runner";
+import process from "node:process";
+import cfg from "./config.js";
+import * as http from "http";
+import moment from "moment";
+import bot from "./bot.js";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {

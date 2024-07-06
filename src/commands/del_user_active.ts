@@ -1,8 +1,8 @@
-import getUserId from "../utils/getUserId";
-import type { IGroupHearsContext } from "../types/context";
-import cfg from "../config";
-import Escape from "../utils/escape";
-import { active } from "../data/active";
+import type { IGroupHearsContext } from "../types/context.js";
+import getUserId from "../utils/getUserId.js";
+import { active } from "../data/active.js";
+import Escape from "../utils/escape.js";
+import cfg from "../config.js";
 
 async function del_user_active(ctx: IGroupHearsContext) {
   const chatMember = await ctx.getChatMember(ctx.from?.id || -1).catch(() => {});

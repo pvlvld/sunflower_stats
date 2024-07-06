@@ -1,13 +1,13 @@
-import type { IGroupTextContext } from "../types/context";
-import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage";
-import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
-import getUserStatsMessage from "../utils/getUserStatsMessage";
-import { isUserStatsEmpty } from "../utils/isUserStatsEmpty";
-import { getStatsChart } from "../chart/getStatsChart";
-import cacheManager from "../cache/cache";
-import { DBStats } from "../db/stats";
-import cfg from "../config";
-import getUserId from "../utils/getUserId";
+import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage.js";
+import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
+import getUserStatsMessage from "../utils/getUserStatsMessage.js";
+import { isUserStatsEmpty } from "../utils/isUserStatsEmpty.js";
+import type { IGroupTextContext } from "../types/context.js";
+import { getStatsChart } from "../chart/getStatsChart.js";
+import getUserId from "../utils/getUserId.js";
+import cacheManager from "../cache/cache.js";
+import { DBStats } from "../db/stats.js";
+import cfg from "../config.js";
 
 async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
   const chat_id = ctx.chat.id;

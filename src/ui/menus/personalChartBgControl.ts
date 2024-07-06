@@ -1,5 +1,5 @@
-import type { IContext } from "../../types/context";
-import cacheManager from "../../cache/cache";
+import type { IContext } from "../../types/context.js";
+import cacheManager from "../../cache/cache.js";
 import { Menu } from "@grammyjs/menu";
 import { unlink } from "fs";
 

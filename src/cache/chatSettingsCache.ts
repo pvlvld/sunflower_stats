@@ -1,4 +1,4 @@
-import type { IChatSettings } from "../types/settings";
+import type { IChatSettings } from "../types/settings.js";
 
 const DefaultChatSettings = Object.freeze({
   charts: true,

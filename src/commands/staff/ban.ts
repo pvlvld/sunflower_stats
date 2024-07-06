@@ -1,5 +1,5 @@
-import { IGroupHearsContext } from "../../types/context";
-import getUserId from "../../utils/getUserId";
+import type { IGroupHearsContext } from "../../types/context.js";
+import getUserId from "../../utils/getUserId.js";
 
 async function ban_cmd(ctx: IGroupHearsContext) {
   const chat_id = ctx.chat.id;

@@ -1,7 +1,8 @@
+import { DBPoolManager, IDBPoolManager } from "./poolManager.js";
+import { DbChatSettingWrapper } from "./chatSettings.js";
+import { DBStatsWrapper } from "./stats.js";
 import pg from "pg";
-import { DBStatsWrapper } from "./stats";
-import { DbChatSettingWrapper } from "./chatSettings";
-import { DBPoolManager, IDBPoolManager } from "./poolManager";
+
 pg.types.setTypeParser(pg.types.builtins.INT8, parseInt);
 pg.types.setTypeParser(pg.types.builtins.INT4, parseInt);
 

@@ -1,5 +1,5 @@
-import type { IGroupTextContext } from "../types/context";
-import { active } from "../data/active";
+import type { IGroupTextContext } from "../types/context.js";
+import { active } from "../data/active.js";
 
 async function del_nickname(ctx: IGroupTextContext) {
   if (active.data[ctx.chat.id]![ctx.from.id]) {

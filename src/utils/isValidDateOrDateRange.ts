@@ -1,4 +1,4 @@
-import isValidNumbers from "./isValidNumbers";
+import isValidNumbers from "./isValidNumbers.js";
 
 function isValidDateOrDateRange(dateRange: string[]) {
   if (dateRange.length === 1) {

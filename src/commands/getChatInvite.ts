@@ -1,6 +1,6 @@
-import parseCmdArgs from "../utils/parseCmdArgs";
-import type { IContext } from "../types/context";
-import { getChatUsernameOrInvite } from "../utils/getChatUsernameOrInviteLink";
+import { getChatUsernameOrInvite } from "../utils/getChatUsernameOrInviteLink.js";
+import type { IContext } from "../types/context.js";
+import parseCmdArgs from "../utils/parseCmdArgs.js";
 
 async function getChatInvite_cmd(ctx: IContext) {
   const chat_id = Number(parseCmdArgs(ctx.msg?.text || "")?.[0]);

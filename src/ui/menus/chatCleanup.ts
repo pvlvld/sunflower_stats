@@ -1,10 +1,10 @@
-import type { IContext } from "../../types/context";
+import getUserNameLink from "../../utils/getUserNameLink.js";
+import { active, IActiveUser } from "../../data/active.js";
+import type { IContext } from "../../types/context.js";
 import { Menu, type MenuFlavor } from "@grammyjs/menu";
-import getUserNameLink from "../../utils/getUserNameLink";
-import isChatOwner from "../../utils/isChatOwner";
+import isChatOwner from "../../utils/isChatOwner.js";
 import { autoRetry } from "@grammyjs/auto-retry";
-import cacheManager from "../../cache/cache";
-import { active, IActiveUser } from "../../data/active";
+import cacheManager from "../../cache/cache.js";
 import { GrammyError } from "grammy";
 
 const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {

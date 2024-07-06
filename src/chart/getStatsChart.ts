@@ -1,12 +1,11 @@
-//@ts-expect-error
+import { IAllowedChartStatsRanges } from "../commands/stats_chat.js";
+import { bgImagePlugin } from "./plugins/bgImagePlugin.js";
+import { ChartCanvasManager } from "./chartCanvas.js";
 import { Chart, ChartConfiguration } from "chart.js";
-import { bgImagePlugin } from "./plugins/bgImagePlugin";
-import { DBPoolManager } from "../db/poolManager";
+import { DBPoolManager } from "../db/poolManager.js";
+import formattedDate from "../utils/date.js";
+import chartJs from "chart.js/auto";
 import { InputFile } from "grammy";
-import { ChartCanvasManager } from "./chartCanvas";
-import formattedDate from "../utils/date";
-import { IAllowedChartStatsRanges } from "../commands/stats_chat";
-const chartJs: typeof Chart = require("chart.js/auto");
 
 export type IChartType = "user" | "chat";
 

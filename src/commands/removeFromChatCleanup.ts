@@ -1,9 +1,9 @@
-import type { IGroupTextContext } from "../types/context";
+import type { IGroupTextContext } from "../types/context.js";
+import isChatOwner from "../utils/isChatOwner.js";
+import getUserId from "../utils/getUserId.js";
+import cacheManager from "../cache/cache.js";
+import { active } from "../data/active.js";
 import { GrammyError } from "grammy";
-import { active } from "../data/active";
-import cacheManager from "../cache/cache";
-import getUserId from "../utils/getUserId";
-import isChatOwner from "../utils/isChatOwner";
 
 async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
   const chat_id = ctx.chat.id;

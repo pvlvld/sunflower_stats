@@ -1,11 +1,11 @@
+import { RestrictedUsersCache } from "./restrictedUsersCache.js";
+import { PremiumStatusCache } from "./premiumStatusCache.js";
+import { ChatSettingsCache } from "./chatSettingsCache.js";
+import { ChartCache_User } from "./chartCache_User.js";
+import { ChartCache_Chat } from "./chartCache_Chat.js";
+import { ChatAdminsCache } from "./chatAdminsCache.js";
 import { LRUCache } from "lru-cache";
 import NodeCache from "node-cache";
-import { PremiumStatusCache } from "./premiumStatusCache";
-import { ChartCache_User } from "./chartCache_User";
-import { ChartCache_Chat } from "./chartCache_Chat";
-import { ChatSettingsCache } from "./chatSettingsCache";
-import { ChatAdminsCache } from "./chatAdminsCache";
-import { RestrictedUsersCache } from "./restrictedUsersCache";
 
 class CacheManager {
   public LRUCache: LRUCache<{}, {}, unknown>;

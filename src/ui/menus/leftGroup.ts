@@ -1,7 +1,7 @@
-import type { IContext } from "../../types/context";
-import { removeChatData } from "../../utils/removeChatData";
+import { removeChatData } from "../../utils/removeChatData.js";
+import type { IContext } from "../../types/context.js";
 import { Menu } from "@grammyjs/menu";
-import cfg from "../../config";
+import cfg from "../../config.js";
 
 const leftGroup_menu = new Menu<IContext>("leftGroup-menu", {
   autoAnswer: true,

@@ -1,5 +1,5 @@
-import type { IChatSettings } from "../types/settings";
-import { IDBPoolManager } from "./poolManager";
+import type { IChatSettings } from "../types/settings.js";
+import { IDBPoolManager } from "./poolManager.js";
 
 class DbChatSettingWrapper {
   private _poolManager: IDBPoolManager;

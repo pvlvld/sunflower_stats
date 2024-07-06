@@ -1,5 +1,5 @@
-import type { FixBooleanProperties } from "./utilityTypes";
-import { DefaultChatSettings } from "../cache/chatSettingsCache";
+import { DefaultChatSettings } from "../cache/chatSettingsCache.js";
+import type { FixBooleanProperties } from "./utilityTypes.js";
 
 type IChatSettings = FixBooleanProperties<typeof DefaultChatSettings>;
 

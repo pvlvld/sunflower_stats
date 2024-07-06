@@ -1,8 +1,8 @@
-import formattedDate from "../utils/date";
-import { active } from "../data/active";
 import { type Context, type NextFunction } from "grammy";
-import cfg from "../config";
-import Escape from "../utils/escape";
+import formattedDate from "../utils/date.js";
+import { active } from "../data/active.js";
+import Escape from "../utils/escape.js";
+import cfg from "../config.js";
 
 function ActiveCollectorWrapper() {
   return async function activeCollector(ctx: Context, next: NextFunction) {

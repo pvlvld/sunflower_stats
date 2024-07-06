@@ -1,6 +1,6 @@
-import parseCmdArgs from "../utils/parseCmdArgs";
-import type { IGroupHearsContext } from "../types/context";
-import { removeChatData } from "../utils/removeChatData";
+import type { IGroupHearsContext } from "../types/context.js";
+import { removeChatData } from "../utils/removeChatData.js";
+import parseCmdArgs from "../utils/parseCmdArgs.js";
 
 export async function leaveChat_cmd(ctx: IGroupHearsContext) {
   const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);

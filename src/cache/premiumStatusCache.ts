@@ -1,5 +1,5 @@
 import NodeCache from "node-cache";
-import { secondsUntilMidnight } from "../utils/secondsUntilMidnight";
+import { secondsUntilMidnight } from "../utils/secondsUntilMidnight.js";
 
 type IPremiumStatus = Readonly<{ status: boolean; cached: boolean }>;
 

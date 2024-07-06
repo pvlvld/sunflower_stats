@@ -1,7 +1,7 @@
+import type { ICommandContext, IContext } from "../types/context.js";
+import { donate_menu } from "../ui/menus/donate.js";
+import cacheManager from "../cache/cache.js";
 import type { Filter } from "grammy";
-import type { ICommandContext, IContext, IGroupCommandContext } from "../types/context";
-import { donate_menu } from "../ui/menus/donate";
-import cacheManager from "../cache/cache";
 
 async function donate_cmd(ctx: Filter<IContext, ":text">) {
   if (ctx.chat.type == "private") {

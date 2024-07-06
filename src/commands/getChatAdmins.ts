@@ -1,5 +1,5 @@
-import parseCmdArgs from "../utils/parseCmdArgs";
-import type { IContext } from "../types/context";
+import type { IContext } from "../types/context.js";
+import parseCmdArgs from "../utils/parseCmdArgs.js";
 
 async function getChatAdmins_cmd(ctx: IContext) {
   const chat_id = parseCmdArgs(ctx.msg?.text || "")?.[0];

@@ -1,9 +1,9 @@
-import { updateChatBotStatus_handler } from "./updateChatBotStatus";
-import { adminUpdateHandler } from "./adminUpdateHandler";
-import leaveChatMemberHandler from "./leaveChatMember";
-import { joinChatMember } from "./joinChatMember";
-import cfg from "../config";
-import bot from "../bot";
+import { updateChatBotStatus_handler } from "./updateChatBotStatus.js";
+import { adminUpdateHandler } from "./adminUpdateHandler.js";
+import leaveChatMemberHandler from "./leaveChatMember.js";
+import { joinChatMember } from "./joinChatMember.js";
+import cfg from "../config.js";
+import bot from "../bot.js";
 
 function regHandlers() {
   const group = bot.chatType(["group", "supergroup"]);

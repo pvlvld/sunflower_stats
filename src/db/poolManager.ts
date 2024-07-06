@@ -1,5 +1,5 @@
 import { Pool, PoolConfig } from "pg";
-import cfg from "../config";
+import cfg from "../config.js";
 
 class PgSQLPoolManager {
   private config: PoolConfig;

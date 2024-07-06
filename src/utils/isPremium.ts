@@ -1,7 +1,7 @@
+import { getOldDbPool } from "../db/oldDb.js";
+import cacheManager from "../cache/cache.js";
 import { FieldPacket } from "mysql2";
-import { getOldDbPool } from "../db/oldDb";
-import cacheManager from "../cache/cache";
-import cfg from "../config";
+import cfg from "../config.js";
 
 type IQueryResult =
   | []

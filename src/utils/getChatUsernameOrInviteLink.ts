@@ -1,5 +1,5 @@
 import type { ChatFullInfo } from "@grammyjs/types";
-import bot from "../bot";
+import bot from "../bot.js";
 
 type IResult =
   | { type: "error" }

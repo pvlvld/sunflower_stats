@@ -1,11 +1,11 @@
-import type { IGroupTextContext } from "../types/context";
-import { DBPoolManager } from "../db/poolManager";
-import isChatOwner from "../utils/isChatOwner";
-import parseCmdArgs from "../utils/parseCmdArgs";
-import chatCleanup_menu from "../ui/menus/chatCleanup";
-import cacheManager from "../cache/cache";
-import isValidNumbers from "../utils/isValidNumbers";
-import { active } from "../data/active";
+import type { IGroupTextContext } from "../types/context.js";
+import chatCleanup_menu from "../ui/menus/chatCleanup.js";
+import isValidNumbers from "../utils/isValidNumbers.js";
+import { DBPoolManager } from "../db/poolManager.js";
+import parseCmdArgs from "../utils/parseCmdArgs.js";
+import isChatOwner from "../utils/isChatOwner.js";
+import cacheManager from "../cache/cache.js";
+import { active } from "../data/active.js";
 import moment from "moment";
 
 export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {

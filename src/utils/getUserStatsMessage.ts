@@ -1,7 +1,7 @@
-import Escape from "./escape";
-import type { IDBChatUserStatsPeriods } from "../types/stats";
+import type { IDBChatUserStatsPeriods } from "../types/stats.js";
+import { active } from "../data/active.js";
+import Escape from "./escape.js";
 import moment from "moment";
-import { active } from "../data/active";
 
 function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatUserStatsPeriods) {
   const nickname = active.data[chat_id]?.[user_id]?.nickname;

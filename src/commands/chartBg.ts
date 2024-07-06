@@ -1,10 +1,9 @@
-import { IGroupHearsCommandContext, IGroupPhotoCaptionContext } from "../types/context";
-import cacheManager from "../cache/cache";
-import { isPremium } from "../utils/isPremium";
-import cfg from "../config";
+import { IGroupHearsCommandContext, IGroupPhotoCaptionContext } from "../types/context.js";
+import { personalChartBgControl_menu } from "../ui/menus/personalChartBgControl.js";
+import getUserNameLink from "../utils/getUserNameLink.js";
+import cacheManager from "../cache/cache.js";
 import { InputFile } from "grammy";
-import { personalChartBgControl_menu } from "../ui/menus/personalChartBgControl";
-import getUserNameLink from "../utils/getUserNameLink";
+import cfg from "../config.js";
 
 const baseBgPath = "./data/chartBg/";
 

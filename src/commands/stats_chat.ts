@@ -1,13 +1,13 @@
-import type { IGroupTextContext } from "../types/context";
-import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage";
-import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
-import { getStatsRatingPlusToday } from "../utils/getStatsRating";
-import { getStatsChart } from "../chart/getStatsChart";
-import { botStatsManager } from "./botStats";
-import cacheManager from "../cache/cache";
-import { DBStats } from "../db/stats";
-import { IDBChatUserStats } from "../types/stats";
-import cfg from "../config";
+import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage.js";
+import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
+import { getStatsRatingPlusToday } from "../utils/getStatsRating.js";
+import type { IGroupTextContext } from "../types/context.js";
+import { getStatsChart } from "../chart/getStatsChart.js";
+import { IDBChatUserStats } from "../types/stats.js";
+import { botStatsManager } from "./botStats.js";
+import cacheManager from "../cache/cache.js";
+import { DBStats } from "../db/stats.js";
+import cfg from "../config.js";
 const Big = require("big-js");
 
 const cmdToDateRangeMap = {

@@ -1,5 +1,5 @@
+import type { IContext } from "../../types/context.js";
 import { Menu } from "@grammyjs/menu";
-import type { IContext } from "../../types/context";
 
 const help_menu = new Menu<IContext>("help-menu", {
   autoAnswer: true,

@@ -1,7 +1,7 @@
-import type { IGroupTextContext } from "../types/context";
-import parseCmdArgs from "../utils/parseCmdArgs";
-import getUserNameLink from "../utils/getUserNameLink";
-import { active } from "../data/active";
+import type { IGroupTextContext } from "../types/context.js";
+import getUserNameLink from "../utils/getUserNameLink.js";
+import parseCmdArgs from "../utils/parseCmdArgs.js";
+import { active } from "../data/active.js";
 
 const PAGE_LENGTH = 25;
 

@@ -1,6 +1,6 @@
-import parseCmdArgs from "../utils/parseCmdArgs";
-import type { IGroupTextContext } from "../types/context";
-import { active } from "../data/active";
+import type { IGroupTextContext } from "../types/context.js";
+import parseCmdArgs from "../utils/parseCmdArgs.js";
+import { active } from "../data/active.js";
 
 async function set_nickname(ctx: IGroupTextContext) {
   const chat_id = ctx.chat.id;

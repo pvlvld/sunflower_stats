@@ -1,8 +1,8 @@
-import moment from "moment";
-import { autoRetry } from "@grammyjs/auto-retry";
-import type { IGroupHearsContext } from "../../types/context";
+import type { IGroupHearsContext } from "../../types/context.js";
 import type { ChatMemberOwner } from "@grammyjs/types";
-import { active } from "../../data/active";
+import { autoRetry } from "@grammyjs/auto-retry";
+import { active } from "../../data/active.js";
+import moment from "moment";
 
 async function broadcast_owners_cmd(ctx: IGroupHearsContext): Promise<void> {
   if (!ctx.msg.reply_to_message) {

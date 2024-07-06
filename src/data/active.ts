@@ -1,4 +1,4 @@
-import YAMLWrapper from "./YAMLWrapper";
+import YAMLWrapper from "./YAMLWrapper.js";
 
 export interface IActive {
   [chat_id: string | number]:

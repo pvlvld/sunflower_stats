@@ -2,7 +2,7 @@ import type {
   IGroupAnimationCaptionContext,
   IGroupHearsContext,
   IGroupPhotoCaptionContext,
-} from "../../types/context";
+} from "../../types/context.js";
 
 async function getId_cmd(
   ctx: IGroupHearsContext | IGroupPhotoCaptionContext | IGroupAnimationCaptionContext

@@ -1,9 +1,9 @@
-import type { IGroupContext } from "../types/context";
+import type { IGroupContext } from "../types/context.js";
 import { GrammyError, type InputFile } from "grammy";
-import cacheManager from "../cache/cache";
+import cacheManager from "../cache/cache.js";
 import { Message } from "@grammyjs/types";
-import { Database } from "../db/db";
-import cfg from "../config";
+import { Database } from "../db/db.js";
+import cfg from "../config.js";
 
 type ISelfdestructMsgChartData = {
   isChart: true;

@@ -1,10 +1,10 @@
-import path from "path";
+import { botStatsManager } from "../commands/botStats.js";
+import collectGarbage from "./collectGarbage.js";
+import cacheManager from "../cache/cache.js";
+import { active } from "../data/active.js";
+import formattedDate from "./date.js";
 import * as cron from "node-cron";
-import formattedDate from "./date";
-import collectGarbage from "./collectGarbage";
-import { botStatsManager } from "../commands/botStats";
-import { active } from "../data/active";
-import cacheManager from "../cache/cache";
+import path from "path";
 
 function createScheduler() {
   return cron.schedule(

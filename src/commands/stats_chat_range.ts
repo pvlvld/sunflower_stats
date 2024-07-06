@@ -1,10 +1,10 @@
-import type { IGroupTextContext } from "../types/context";
-import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage";
-import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils";
-import { getStatsRatingPlusToday } from "../utils/getStatsRating";
-import parseCmdArgs from "../utils/parseCmdArgs";
-import { DBStats } from "../db/stats";
-import { isValidDateOrDateRange } from "../utils/isValidDateOrDateRange";
+import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage.js";
+import { isValidDateOrDateRange } from "../utils/isValidDateOrDateRange.js";
+import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
+import { getStatsRatingPlusToday } from "../utils/getStatsRating.js";
+import type { IGroupTextContext } from "../types/context.js";
+import parseCmdArgs from "../utils/parseCmdArgs.js";
+import { DBStats } from "../db/stats.js";
 
 async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true) {
   const dateRange = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string[];

@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
-import bot from "../bot";
+import { isNodeError } from "../types/typeGuards.js";
 import * as YAML from "js-yaml";
-import { isNodeError } from "../types/typeGuards";
-import cfg from "../config";
+import cfg from "../config.js";
+import bot from "../bot.js";
+import path from "path";
+import fs from "fs";
 
 class YAMLWrapper<T> {
   readonly filename: () => string;

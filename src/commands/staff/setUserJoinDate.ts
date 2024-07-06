@@ -1,8 +1,8 @@
-import type { IGroupTextContext } from "../../types/context";
-import { isValidDateOrDateRange } from "../../utils/isValidDateOrDateRange";
-import parseCmdArgs from "../../utils/parseCmdArgs";
-import isChatOwner from "../../utils/isChatOwner";
-import { active } from "../../data/active";
+import { isValidDateOrDateRange } from "../../utils/isValidDateOrDateRange.js";
+import type { IGroupTextContext } from "../../types/context.js";
+import parseCmdArgs from "../../utils/parseCmdArgs.js";
+import isChatOwner from "../../utils/isChatOwner.js";
+import { active } from "../../data/active.js";
 
 async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
   let date = (parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string | undefined[])[1];

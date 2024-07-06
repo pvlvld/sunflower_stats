@@ -1,14 +1,14 @@
-import type { IChatSettings } from "../../types/settings";
-import type { IContext } from "../../types/context";
+import type { IChatSettings } from "../../types/settings.js";
+import type { IContext } from "../../types/context.js";
 import { Menu, type MenuFlavor } from "@grammyjs/menu";
-import { isPremium } from "../../utils/isPremium";
-import isChatOwner from "../../utils/isChatOwner";
-import cacheManager from "../../cache/cache";
-import { Database } from "../../db/db";
+import { isPremium } from "../../utils/isPremium.js";
+import isChatOwner from "../../utils/isChatOwner.js";
+import cacheManager from "../../cache/cache.js";
+import { Database } from "../../db/db.js";
 import {
   getCachedOrDBChatSettings,
   getChatSettingsMessageText,
-} from "../../utils/chatSettingsUtils";
+} from "../../utils/chatSettingsUtils.js";
 
 function getSettingButtonsText(setting: keyof IChatSettings, status: boolean) {
   switch (setting) {

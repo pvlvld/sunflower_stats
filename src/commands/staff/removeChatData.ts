@@ -1,5 +1,5 @@
-import { IGroupTextContext } from "../../types/context";
-import { removeChatData } from "../../utils/removeChatData";
+import type { IGroupTextContext } from "../../types/context.js";
+import { removeChatData } from "../../utils/removeChatData.js";
 
 async function removeChatData_cmd(ctx: IGroupTextContext) {
   const chat_id = (ctx.msg.text ?? ctx.msg.caption).split(" ")[1];

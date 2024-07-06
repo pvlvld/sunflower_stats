@@ -1,6 +1,6 @@
-import fastify from "fastify";
 import { webhookCallback } from "grammy";
-import bot from "./bot";
+import fastify from "fastify";
+import bot from "./bot.js";
 
 function createServer() {
   const server = fastify();

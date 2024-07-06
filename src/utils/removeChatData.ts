@@ -1,5 +1,5 @@
-import { active } from "../data/active";
-import { DBPoolManager } from "../db/poolManager";
+import { DBPoolManager } from "../db/poolManager.js";
+import { active } from "../data/active.js";
 import { QueryResult } from "pg";
 
 /** Returns -1 on db error */

@@ -1,5 +1,5 @@
-import { active } from "../../data/active";
-import type { IContext } from "../../types/context";
+import type { IContext } from "../../types/context.js";
+import { active } from "../../data/active.js";
 
 export function removeAnonimousActive(ctx: IContext) {
   let hidedCount = 0;

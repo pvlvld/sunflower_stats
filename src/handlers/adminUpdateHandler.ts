@@ -1,6 +1,6 @@
 import type { Context, Filter } from "grammy";
-import cacheManager from "../cache/cache";
-import cfg from "../config";
+import cacheManager from "../cache/cache.js";
+import cfg from "../config.js";
 
 async function adminUpdateHandler(ctx: Filter<Context, "chat_member">): Promise<void> {
   const chat_id = ctx.chat.id;

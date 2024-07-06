@@ -1,7 +1,7 @@
-import { messagesStatsBatchStore } from "../data/messagesStatsBatchStore";
+import { messagesStatsBatchStore } from "../data/messagesStatsBatchStore.js";
+import { botStatsManager } from "../commands/botStats.js";
 import type { Context, NextFunction } from "grammy";
-import { botStatsManager } from "../commands/botStats";
-import cfg from "../config";
+import cfg from "../config.js";
 
 export function StatsCollectorWrapper() {
   return async function statsCollector(ctx: Context, next: NextFunction) {

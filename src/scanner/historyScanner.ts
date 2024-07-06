@@ -1,8 +1,8 @@
 import { Message, MtPeerNotFoundError } from "@mtcute/node";
-import { MTProtoClient } from "./MTProtoClient";
-import formattedDate from "../utils/date";
-import { DBStats } from "../db/stats";
-import cfg from "../config";
+import { MTProtoClient } from "./MTProtoClient.js";
+import formattedDate from "../utils/date.js";
+import { DBStats } from "../db/stats.js";
+import cfg from "../config.js";
 
 //TODO:
 // - implement queue

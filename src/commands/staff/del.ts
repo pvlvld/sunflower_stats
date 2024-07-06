@@ -1,4 +1,4 @@
-import { IGroupHearsContext } from "../../types/context";
+import type { IGroupHearsContext } from "../../types/context.js";
 
 async function delMessage(ctx: IGroupHearsContext) {
   if (ctx.msg.reply_to_message?.message_id) {

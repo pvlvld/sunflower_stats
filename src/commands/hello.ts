@@ -1,4 +1,4 @@
-import type { IContext } from "../types/context";
+import type { IContext } from "../types/context.js";
 
 async function hello(ctx: IContext) {
   return void (await ctx

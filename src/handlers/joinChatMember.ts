@@ -1,7 +1,7 @@
-import { type IActiveUser, active } from "../data/active";
-import type { IContext } from "../types/context";
+import { getUserFirstStatsDate } from "../utils/getUserFirstStatsDate.js";
+import { type IActiveUser, active } from "../data/active.js";
+import type { IContext } from "../types/context.js";
 import type { Filter } from "grammy";
-import { getUserFirstStatsDate } from "../utils/getUserFirstStatsDate";
 
 async function joinChatMember(ctx: Filter<IContext, "chat_member">) {
   const chat_id = ctx.chat.id;

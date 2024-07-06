@@ -6,7 +6,7 @@
   "compilerOptions": {
     "lib": ["ES2023", "ESNext"],
     "module": "NodeNext",
-    "target": "ES2022",
+    "target": "ESNext",
 
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

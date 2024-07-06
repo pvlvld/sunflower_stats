@@ -1,18 +1,17 @@
-import help_menu from "./ui/menus/help";
-import { Bot, matchFilter } from "grammy";
-import { autoRetry } from "@grammyjs/auto-retry";
-import { autoThread } from "./middlewares/autoThreads";
+import { personalChartBgControl_menu } from "./ui/menus/personalChartBgControl.js";
+import { ignoreOldMessages } from "./middlewares/ignoreOldMessages.js";
 import { hydrateReply, parseMode } from "@grammyjs/parse-mode";
-import { ignoreOldMessages } from "./middlewares/ignoreOldMessages";
-import type { IContext } from "./types/context";
-import type { ParseModeFlavor } from "@grammyjs/parse-mode";
-import cfg from "./config";
-import chatCleanup_menu from "./ui/menus/chatCleanup";
-import { leftGroup_menu } from "./ui/menus/leftGroup";
+import { autoThread } from "./middlewares/autoThreads.js";
+import { leftGroup_menu } from "./ui/menus/leftGroup.js";
+import chatCleanup_menu from "./ui/menus/chatCleanup.js";
+import { settings_menu } from "./ui/menus/settings.js";
+import type { IContext } from "./types/context.js";
+import { donate_menu } from "./ui/menus/donate.js";
+import { autoRetry } from "@grammyjs/auto-retry";
 import { hydrateFiles } from "@grammyjs/files";
-import { donate_menu } from "./ui/menus/donate";
-import { settings_menu } from "./ui/menus/settings";
-import { personalChartBgControl_menu } from "./ui/menus/personalChartBgControl";
+import help_menu from "./ui/menus/help.js";
+import { Bot, matchFilter } from "grammy";
+import cfg from "./config.js";
 
 const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 

@@ -1,4 +1,4 @@
-import { DBStats } from "../db/stats";
+import { DBStats } from "../db/stats.js";
 
 class MessagesStatsBatchStore {
   private _store = new Map<number, Map<number, number>>();

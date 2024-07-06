@@ -1,7 +1,7 @@
-import type { IGroupHearsContext } from "../../types/context";
-import { historyScanner } from "../../scanner/historyScanner";
-import { getChatUsernameOrInvite } from "../../utils/getChatUsernameOrInviteLink";
-import cacheManager from "../../cache/cache";
+import { getChatUsernameOrInvite } from "../../utils/getChatUsernameOrInviteLink.js";
+import type { IGroupHearsContext } from "../../types/context.js";
+import { historyScanner } from "../../scanner/historyScanner.js";
+import cacheManager from "../../cache/cache.js";
 
 async function scanChatHistory_cmd(ctx: IGroupHearsContext) {
   let chatIdentifier: string | number = ctx.msg.text?.split(" ")[1] || String(ctx.chat.id);

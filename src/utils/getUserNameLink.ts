@@ -1,4 +1,4 @@
-import Escape from "./escape";
+import Escape from "./escape.js";
 
 const getUserNameLink = {
   markdown: (name: string, username: string | undefined | null, user_id: number | string) => {

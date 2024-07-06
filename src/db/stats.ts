@@ -1,6 +1,6 @@
-import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date";
-import type { IDBChatUserStatsPeriods, IDBChatUserStats } from "../types/stats";
-import { DBPoolManager, IDBPoolManager } from "./poolManager";
+import type { IDBChatUserStatsPeriods, IDBChatUserStats } from "../types/stats.js";
+import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date.js";
+import { DBPoolManager, IDBPoolManager } from "./poolManager.js";
 
 type IDateRanges = keyof IFormattedRangeDateGetters | [from: string, to: string];
 

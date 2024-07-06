@@ -1,5 +1,5 @@
-import help_menu from "../ui/menus/help";
-import type { IContext } from "../types/context";
+import type { IContext } from "../types/context.js";
+import help_menu from "../ui/menus/help.js";
 
 async function help_cmd(ctx: IContext) {
   await ctx

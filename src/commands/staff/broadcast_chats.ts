@@ -1,9 +1,9 @@
-import type { IGroupHearsContext } from "../../types/context";
+import type { IGroupHearsContext } from "../../types/context.js";
+import { DBPoolManager } from "../../db/poolManager.js";
 import { autoRetry } from "@grammyjs/auto-retry";
-import { active } from "../../data/active";
-import { DBPoolManager } from "../../db/poolManager";
+import { active } from "../../data/active.js";
 import { GrammyError } from "grammy";
-import cfg from "../../config";
+import cfg from "../../config.js";
 import moment from "moment";
 
 async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {

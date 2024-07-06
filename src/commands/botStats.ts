@@ -1,9 +1,9 @@
-import bot from "../bot";
+import type { IContext } from "../types/context.js";
+import { DBPoolManager } from "../db/poolManager.js";
+import cacheManager from "../cache/cache.js";
+import cfg from "../config.js";
+import bot from "../bot.js";
 import moment from "moment";
-import type { IContext } from "../types/context";
-import { DBPoolManager } from "../db/poolManager";
-import cacheManager from "../cache/cache";
-import cfg from "../config";
 
 type IBotStats = {
   commands: { [key: string]: number };

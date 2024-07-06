@@ -1,11 +1,10 @@
+import { isPremium } from "../../utils/isPremium.js";
+import { IChartType } from "../getStatsChart.js";
+import cacheManager from "../../cache/cache.js";
+import { Database } from "../../db/db.js";
 import { Image, loadImage } from "canvas";
-//@ts-expect-error
 import { Chart } from "chart.js/auto";
-import { isPremium } from "../../utils/isPremium";
 import fs from "fs";
-import { IChartType } from "../getStatsChart";
-import cacheManager from "../../cache/cache";
-import { Database } from "../../db/db";
 
 const baseBgPath = "./data/chartBg";
 
