@@ -1,6 +1,4 @@
 import { DBPoolManager, IDBPoolManager } from "./db/poolManager.js";
-DBPoolManager.createPool();
-
 import ActiveCollectorWrapper from "./middlewares/activeCollector.js";
 import StatsCollectorWrapper from "./middlewares/statsCollector.js";
 import { autoQuote } from "@roziscoding/grammy-autoquote";
@@ -41,14 +39,10 @@ bot.catch((err) => {
 });
 
 async function main() {
-  await DBPoolManager.createPool();
-
   let server: http.Server | ReturnType<typeof createServer>;
   let runner: ReturnType<typeof run>;
 
   const allowed_updates = ["message", "chat_member", "my_chat_member", "callback_query"] as const;
-
-  await DBPoolManager.createPool();
 
   active.load();
 

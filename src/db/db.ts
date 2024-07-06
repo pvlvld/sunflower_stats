@@ -6,6 +6,7 @@ import pg from "pg";
 pg.types.setTypeParser(pg.types.builtins.INT8, parseInt);
 pg.types.setTypeParser(pg.types.builtins.INT4, parseInt);
 
+await DBPoolManager.createPool();
 class DatabaseWrapper {
   public poolManager: IDBPoolManager;
   public stats: DBStatsWrapper;
