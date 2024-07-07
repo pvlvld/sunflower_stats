@@ -37,10 +37,9 @@ async function setChartBg(
     return void (await ctx.reply("Вам тимчасово заборонено змінювати фони.").catch((e) => {}));
   }
 
-  const isDownloaded = await downloadBg(ctx, type);
-  if (!isDownloaded) return;
+  const donwloadRes = await downloadBg(ctx, type);
 
-  void (await ctx.reply("💅🏻 Фон успішно оновлено!").catch((e) => {}));
+  void (await ctx.reply(donwloadRes.message).catch((e) => {}));
 }
 
 async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat") {
@@ -98,12 +97,22 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
     })
     .catch((e) => {});
 
-  return true;
+  if (needToResize) {
+    return {
+      status: true,
+      message:
+        "💅🏻 Фон успішно оновлено!\nЩоб отримати найкращу якість, надсилайте зображення з розширенням 1280*640 (2 до 1)",
+    };
+  } else {
+    return { status: true, message: "💅🏻 Фон успішно оновлено!" };
+  }
 }
 
 async function cantSaveImageError(ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext) {
-  void (await ctx.reply("Не вдалося зберегти зображення. Спробуйте знову.").catch((e) => {}));
-  return false;
+  return {
+    status: false,
+    message: "Не вдалося зберегти зображення. Спробуйте знову.",
+  };
 }
 
 export { setChartBg };
