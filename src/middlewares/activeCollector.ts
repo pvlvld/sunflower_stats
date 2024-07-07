@@ -1,3 +1,4 @@
+import { getUserFirstStatsDate } from "../utils/getUserFirstStatsDate.js";
 import { type Context, type NextFunction } from "grammy";
 import formattedDate from "../utils/date.js";
 import { active } from "../data/active.js";
@@ -23,8 +24,11 @@ function ActiveCollectorWrapper() {
 
       const today = formattedDate.today[0];
       if (active.data[chat_id][user_id] === undefined) {
+        let active_first = (await getUserFirstStatsDate(chat_id, user_id)) || today;
+
+        active_first ??= today;
         active.data[chat_id][user_id] = new UserActive(
-          today,
+          active_first,
           today,
           ctx.from.first_name,
           "",
