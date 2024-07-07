@@ -6,6 +6,7 @@ import { readFile, writeFile } from "node:fs";
 import cacheManager from "../cache/cache.js";
 import { InputFile } from "grammy";
 import cfg from "../config.js";
+import { sleepAsync } from "../utils/sleep.js";
 
 const baseBgPath = "./data/chartBg/";
 
@@ -17,6 +18,12 @@ async function setChartBg(
     return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
   }
   let target_id = -1;
+
+  // Temporary. Need for advertisement video
+  if (ctx.from.id === 6102695950) {
+    await sleepAsync(100);
+    return void (await ctx.reply("💅🏻 Фон успішно оновлено!").catch((e) => {}));
+  }
 
   if (type === "chat") {
     target_id = ctx.chat.id;
