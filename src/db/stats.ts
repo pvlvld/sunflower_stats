@@ -65,6 +65,16 @@ class DBUserStats {
       console.error("Error executing query:", query, "\n", error);
     }
   }
+
+  async firstRecordDate(chat_id: number, user_id: number) {
+    const query = `SELECT min(date) FROM stats_daily WHERE chat_id = ${chat_id} AND user_id = ${user_id}`;
+
+    try {
+      return new Date((await this._dbPooolManager.getPoolRead.query(query)).rows[0] as string);
+    } catch (error) {
+      return undefined;
+    }
+  }
 }
 
 class DBChatStats {
