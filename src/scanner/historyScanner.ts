@@ -1,4 +1,4 @@
-import { Message, MtPeerNotFoundError } from "@mtcute/node";
+import { Chat, Message, MtPeerNotFoundError } from "@mtcute/node";
 import { MTProtoClient } from "./MTProtoClient.js";
 import formattedDate from "../utils/date.js";
 import { DBStats } from "../db/stats.js";
@@ -25,10 +25,8 @@ class HistoryScanner extends MTProtoClient {
       } catch (error) {
         return new ScanReport(chat_id || -1, false, 0, "Не вдалось доєднатися до чату.");
       }
-    } else {
-      if (chatInfo.chatInfo) {
-        chat_id = chatInfo.chatInfo.id;
-      }
+    } else if (chatInfo.chatInfo) {
+      chat_id = chatInfo.chatInfo.id;
     }
 
     if (!chat_id) {
@@ -42,7 +40,7 @@ class HistoryScanner extends MTProtoClient {
 
     const endDate = await DBStats.chat.firstRecordDate(chat_id);
 
-    if (endDate === undefined) {
+    if (!endDate) {
       return new ScanReport(
         chat_id,
         false,
@@ -51,19 +49,18 @@ class HistoryScanner extends MTProtoClient {
       );
     }
 
-    return this._scanner(chat_identifier, chat_id, endDate);
+    return this._scanHistory(chat_identifier, chat_id, endDate);
   }
 
-  private async _scanner(chat_identifier: number | string, chat_id: number, endDate: Date) {
-    const stats = new Map<number, number>();
+  private async _scanHistory(
+    chat_identifier: number | string,
+    chat_id: number,
+    endDate: Date
+  ): Promise<ScanReport> {
+    const stats: IStats = new Map<number, number>();
     let iterator = this._client.iterHistory(chat_identifier, { reverse: true });
-    let message: Message | undefined;
     let totalCount = 0;
-    let userMsgCount = 0;
     const firstMessageDate = await this._getFirstMessageDate(chat_identifier);
-    let currentMsgDate = firstMessageDate!;
-    let previousMsgDate = firstMessageDate!;
-    let lastScannedMsgId = 0;
 
     if (firstMessageDate === undefined) {
       return new ScanReport(chat_id, false, 0, "Не вдалося отримати історію чату.");
@@ -87,6 +84,10 @@ class HistoryScanner extends MTProtoClient {
       );
     }
 
+    let message: Message | undefined;
+    let currentMsgDate = firstMessageDate!;
+    let previousMsgDate = firstMessageDate!;
+    let lastScannedMsgId = 0;
     main_loop: while (true) {
       try {
         for await (message of iterator) {
@@ -98,7 +99,7 @@ class HistoryScanner extends MTProtoClient {
           }
 
           // Reached end
-          if (message === undefined) {
+          if (!message) {
             break main_loop;
           }
 
@@ -114,8 +115,7 @@ class HistoryScanner extends MTProtoClient {
             await this._writeHistoryStats(chat_id, stats, message.date);
           }
 
-          userMsgCount = stats.get(message.sender.id) || 0;
-          stats.set(message.sender.id, ++userMsgCount);
+          stats.set(message.sender.id, (stats.get(message.sender.id) || 0) + 1);
           totalCount++;
         }
         break main_loop;
@@ -136,7 +136,7 @@ class HistoryScanner extends MTProtoClient {
     return new ScanReport(chat_id, true, totalCount);
   }
 
-  public async joinChat(chat: string | number) {
+  public async joinChat(chat: string | number): Promise<Chat> {
     return await this._client.joinChat(chat);
   }
 
@@ -150,18 +150,16 @@ class HistoryScanner extends MTProtoClient {
     }
 
     const preview = await this._client.getChatPreview(chat).catch((e) => {
-      if (e instanceof MtPeerNotFoundError) {
-        if (e.message.includes("already joined")) {
-          return "already joined";
-        }
+      if (e instanceof MtPeerNotFoundError && e.message.includes("already joined")) {
+        return "already joined";
       }
     });
 
     if (preview === "already joined") {
       return { needToJoin: false, chatInfo: undefined } as const;
+    } else {
+      return { needToJoin: true, chatInfo: preview } as const;
     }
-
-    return { needToJoin: true, chatInfo: preview } as const;
   }
 
   public async leaveChat(chat: string | number) {
@@ -174,7 +172,7 @@ class HistoryScanner extends MTProtoClient {
     )?.[0]?.date;
   }
 
-  private _isDifferentDay(date1: Date, date2: Date) {
+  private _isDifferentDay(date1: Date, date2: Date): boolean {
     return (
       date1.getDate() !== date2.getDate() ||
       date1.getMonth() !== date2.getMonth() ||
@@ -187,9 +185,8 @@ class HistoryScanner extends MTProtoClient {
       return;
     }
 
-    const yyyymmddDate = formattedDate.dateToYYYYMMDD(date);
     for (const [id, count] of stats) {
-      await DBStats.user.countUserMessage(chat_id, id, count, yyyymmddDate);
+      await DBStats.user.countUserMessage(chat_id, id, count, formattedDate.dateToYYYYMMDD(date));
     }
 
     stats.clear();
