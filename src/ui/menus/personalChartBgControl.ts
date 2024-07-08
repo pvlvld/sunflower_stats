@@ -52,7 +52,7 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
     if (user_id === undefined) {
       return;
     }
-    removeBgAndOptionallyBlock(user_id, true, false, true);
+    removeBgAndOptionallyBlock(user_id, false, false, true);
     await ctx
       .editMessageCaption({
         caption: `${ctx.msg?.caption ?? ""}\n\nДЕРЖАВНОЮ!`,
