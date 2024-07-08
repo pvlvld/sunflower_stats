@@ -19,12 +19,6 @@ async function setChartBg(
   }
   let target_id = -1;
 
-  // Temporary. Need for advertisement video
-  if (ctx.from.id === 6102695950) {
-    await sleepAsync(100);
-    return void (await ctx.reply("💅🏻 Фон успішно оновлено!").catch((e) => {}));
-  }
-
   if (type === "chat") {
     target_id = ctx.chat.id;
     cacheManager.ChartCache_Chat.removeChat(target_id);
