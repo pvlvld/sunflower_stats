@@ -1,3 +1,5 @@
+import cfg from "../config.js";
+
 type IChartStatuses = "ok" | "skip" | "unrendered";
 type IChartCache = Readonly<{ file_id: string; status: IChartStatuses }>;
 type IDateRange = "weekRange" | "monthRange" | "yearRange" | "all";
@@ -14,6 +16,10 @@ class ChartCache_Chat {
   }
 
   public get(chat_id: number, range: IDateRange): IChartCache {
+    if (!cfg.SETTINGS.charts) {
+      return this._skipChart;
+    }
+
     const chatCache = this._chartCache.get(chat_id);
     if (chatCache) {
       const chart = chatCache.get(range);

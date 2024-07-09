@@ -57,6 +57,7 @@ function getCfg(): ICfg {
   cfg.STATS_DEFAULT_TTL = 5 * 60;
   cfg.MEDIA = MEDIA;
   cfg.API_ID = Number(process.env.API_ID || -1);
+  cfg.SETTINGS = DefaultConfigSettings;
 
   return Object.freeze(cfg);
 }

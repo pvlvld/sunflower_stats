@@ -1,3 +1,5 @@
+import cfg from "../config.js";
+
 type IChartStatuses = "ok" | "skip" | "unrendered";
 type IChartCache = Readonly<{ file_id: string; status: IChartStatuses }>;
 
@@ -15,6 +17,10 @@ class ChartCache_User {
   }
 
   public get(chat_id: number, user_id: number): IChartCache {
+    if (!cfg.SETTINGS.charts) {
+      return this._skipChart;
+    }
+
     const chatCache = this._chartCache.get(chat_id);
     if (chatCache) {
       const chart = chatCache.get(user_id);

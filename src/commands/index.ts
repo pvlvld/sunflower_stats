@@ -10,6 +10,7 @@ import broadcast_chats_cmd from "./staff/broadcast_chats.js";
 import { donate_cmd, refreshDonate_cmd } from "./donate.js";
 import stats_chat_range_cmd from "./stats_chat_range.js";
 import collectGarbage from "../utils/collectGarbage.js";
+import { toggleCharts } from "./staff/toggleCharts.js";
 import botMemoryUsage from "./staff/botMemoryUsage.js";
 import { isChatAdmin } from "../utils/isChatAdmin.js";
 import { chatSettings_cmd } from "./chatSettings.js";
@@ -236,6 +237,8 @@ function regCommands() {
 
     scanChatHistory_cmd(ctx);
   });
+
+  group.hears("!toggleCharts", async (ctx) => toggleCharts(ctx));
 
   // MUST BE THE LAST ONE
   bot.on("message", async (ctx) => {
