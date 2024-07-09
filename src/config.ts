@@ -1,6 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+const DefaultConfigSettings = {
+  charts: true,
+};
+
+type IConfigSettings = typeof DefaultConfigSettings;
+
 const requiredEnv = [
   "BOT_TOKEN",
   "DB_HOST",
@@ -28,6 +34,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   STATS_DEFAULT_TTL: number;
   MEDIA: typeof MEDIA;
   API_ID: number;
+  SETTINGS: IConfigSettings;
 };
 
 function getCfg(): ICfg {
