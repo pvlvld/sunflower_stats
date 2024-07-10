@@ -66,6 +66,11 @@ class HistoryScanner extends MTProtoClient {
       return new ScanReport(chat_id, false, 0, "Не вдалося отримати історію чату.");
     }
 
+    if (formattedDate.dateToYYYYMMDD(endDate) === "2023-12-31") {
+      await DBStats.chat.removeCompiled2023Stats(chat_id);
+      endDate = new Date("2024-01-01");
+    }
+
     if (!this._isDifferentDay(firstMessageDate, endDate)) {
       return new ScanReport(
         chat_id,
