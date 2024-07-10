@@ -187,6 +187,17 @@ class DBChatStats {
       return undefined;
     }
   }
+
+  async removeCompiled2023Stats(chat_id: number) {
+    const query = `DELETE FROM stats_daily WHERE chat_id = ${chat_id} AND date = '2023-12-31'`;
+
+    try {
+      void (await this._dbPoolManager.getPoolWrite.query(query));
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
 }
 
 class DBBotStats {
