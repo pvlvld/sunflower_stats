@@ -182,7 +182,9 @@ class DBChatStats {
     const query = `SELECT min(date) FROM stats_daily WHERE chat_id = ${chat_id}`;
 
     try {
-      return new Date((await this._dbPoolManager.getPoolRead.query(query)).rows[0].min as string);
+      return new Date(
+        ((await this._dbPoolManager.getPoolRead.query(query)).rows[0].min as string) || new Date()
+      );
     } catch (error) {
       return undefined;
     }
