@@ -53,14 +53,14 @@ class HistoryScanner extends MTProtoClient {
   }
 
   private async _scanHistory(
-    chat_identifier: number | string,
+    identifier: number | string,
     chat_id: number,
     endDate: Date
   ): Promise<ScanReport> {
     const stats: IStats = new Map<number, number>();
-    let iterator = this._client.iterHistory(chat_identifier, { reverse: true });
+    let iterator = this._client.iterHistory(identifier, { reverse: true });
     let totalCount = 0;
-    const firstMessageDate = await this._getFirstMessageDate(chat_identifier);
+    const firstMessageDate = await this._getFirstMessageDate(identifier);
 
     if (firstMessageDate === undefined) {
       return new ScanReport(chat_id, false, 0, "Не вдалося отримати історію чату.");
@@ -128,7 +128,7 @@ class HistoryScanner extends MTProtoClient {
         if ("seconds" in error) {
           console.info(`HistoryScanner: Sleeping for ${error.seconds} seconds.`);
           await new Promise((resolve) => setTimeout(resolve, error.seconds * 1000));
-          iterator = this._client.iterHistory(chat_identifier, {
+          iterator = this._client.iterHistory(identifier, {
             reverse: true,
             offset: { id: lastScannedMsgId, date: currentMsgDate.getTime() },
           });
@@ -141,36 +141,36 @@ class HistoryScanner extends MTProtoClient {
     return new ScanReport(chat_id, true, totalCount);
   }
 
-  public async joinChat(chat: string | number): Promise<Chat> {
-    return await this._client.joinChat(chat);
+  public async joinChat(identifier: string | number): Promise<Chat> {
+    return await this._client.joinChat(identifier);
   }
 
-  private async getBaseChatInfo(chat: string | number) {
-    if (typeof chat === "number") {
+  private async getBaseChatInfo(identifier: string | number) {
+    if (typeof identifier === "number") {
       return { needToJoin: false, chatInfo: undefined } as const;
     }
 
-    if (chat.startsWith("@")) {
-      return { needToJoin: false, chatInfo: await this._client.getChat(chat) } as const;
+    if (identifier.startsWith("@")) {
+      return { needToJoin: false, chatInfo: await this._client.getChat(identifier) } as const;
     }
 
-    const preview = await this.getChatPreview(chat);
+    const preview = await this.getChatPreview(identifier);
 
     if (preview.status) {
       return { needToJoin: false, chatInfo: undefined } as const;
     } else {
-      console.error(`Error getChatPrewiew ${chat}`, preview.errorMessage);
+      console.error(`Error getChatPrewiew ${identifier}`, preview.errorMessage);
       return { needToJoin: true, chatInfo: preview } as const;
     }
   }
 
-  public async leaveChat(chat: string | number) {
-    return await this._client.leaveChat(chat);
+  public async leaveChat(identifier: string | number) {
+    return await this._client.leaveChat(identifier);
   }
 
-  private async _getFirstMessageDate(chat_id: string | number) {
+  private async _getFirstMessageDate(identifier: string | number) {
     return (
-      await this._client.getHistory(chat_id, { reverse: true, limit: 1 }).catch((e) => {})
+      await this._client.getHistory(identifier, { reverse: true, limit: 1 }).catch((e) => {})
     )?.[0]?.date;
   }
 
