@@ -151,7 +151,8 @@ class HistoryScanner extends MTProtoClient {
     }
 
     if (identifier.startsWith("@")) {
-      return { needToJoin: false, chatInfo: await this._client.getChat(identifier) } as const;
+      const chat = await this.getChat(identifier);
+      return { needToJoin: false, chatInfo: chat.chat } as const;
     }
 
     const preview = await this.getChatPreview(identifier);
