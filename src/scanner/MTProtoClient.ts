@@ -33,6 +33,23 @@ class MTProtoClient {
 
     return { status: true, chat: chat, errorMessage } as const;
   }
+
+  public async getChatPreview(invite: string) {
+    let preview: ChatPreview | undefined;
+    let errorMessage: string = "";
+
+    try {
+      preview = await this._client.getChatPreview(invite);
+    } catch (e) {
+      if (e instanceof MtPeerNotFoundError && e.message.includes("already joined")) {
+        errorMessage = "already joined";
+      }
+
+      return { status: false, preview: undefined, errorMessage } as const;
+    }
+
+    return { status: true, preview, errorMessage } as const;
+  }
 }
 
 export { MTProtoClient };
