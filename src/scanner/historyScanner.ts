@@ -147,21 +147,29 @@ class HistoryScanner extends MTProtoClient {
 
   private async getBaseChatInfo(identifier: string | number) {
     if (typeof identifier === "number") {
-      return { needToJoin: false, chatInfo: undefined } as const;
+      return { needToJoin: false, chatInfo: undefined, errorMessage: "" } as const;
     }
 
     if (identifier.startsWith("@")) {
       const chat = await this.getChat(identifier);
-      return { needToJoin: false, chatInfo: chat.chat } as const;
+      if (chat.status) {
+        return { needToJoin: true, chatInfo: chat.chat, errorMessage: chat.errorMessage } as const;
+      } else {
+        return { needToJoin: false, chatInfo: chat.chat, errorMessage: chat.errorMessage } as const;
+      }
     }
 
     const preview = await this.getChatPreview(identifier);
 
     if (preview.status) {
-      return { needToJoin: false, chatInfo: preview } as const;
+      return {
+        needToJoin: false,
+        chatInfo: preview.preview,
+        errorMessage: preview.errorMessage,
+      } as const;
     } else {
       console.error(`Error getChatPrewiew ${identifier}`, preview.errorMessage);
-      return { needToJoin: true, chatInfo: undefined } as const;
+      return { needToJoin: true, chatInfo: undefined, errorMessage: preview.errorMessage } as const;
     }
   }
 
