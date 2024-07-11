@@ -1,4 +1,4 @@
-import { TelegramClient } from "@mtcute/node";
+import { Chat, ChatPreview, MtPeerNotFoundError, TelegramClient } from "@mtcute/node";
 
 class MTProtoClient {
   protected _client: TelegramClient;
@@ -35,20 +35,21 @@ class MTProtoClient {
   }
 
   public async getChatPreview(invite: string) {
+    let alreadyJoined = false;
     let preview: ChatPreview | undefined;
-    let errorMessage: string = "";
+    let errorMessage = "";
 
     try {
       preview = await this._client.getChatPreview(invite);
     } catch (e) {
       if (e instanceof MtPeerNotFoundError && e.message.includes("already joined")) {
-        errorMessage = "already joined";
+        alreadyJoined = true;
+      } else {
+        errorMessage = (e as Error).message;
       }
-
-      return { status: false, preview: undefined, errorMessage } as const;
     }
 
-    return { status: true, preview, errorMessage } as const;
+    return { preview, alreadyJoined, errorMessage };
   }
 }
 
