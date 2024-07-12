@@ -148,7 +148,7 @@ class HistoryScanner extends MTProtoClient {
   }
 
   public async leaveChat(identifier: string | number) {
-    return await this._client.leaveChat(identifier);
+    return await this._client.leaveChat(identifier).catch((e) => {});
   }
 
   private async _getFirstMessageDate(identifier: string | number) {
