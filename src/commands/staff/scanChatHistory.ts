@@ -20,8 +20,10 @@ async function scanChatHistory_cmd(ctx: IGroupHearsContext) {
   const result = await historyScanner.scanChat(chatIdentifier);
 
   if (result.status) {
-    cacheManager.ChartCache_Chat.removeChat(result.chat_id);
-    cacheManager.ChartCache_User.removeChat(result.chat_id);
+    if (typeof result.identifier === "number") {
+      cacheManager.ChartCache_Chat.removeChat(result.identifier);
+      cacheManager.ChartCache_User.removeChat(result.identifier);
+    }
     return ctx
       .reply(
         `
