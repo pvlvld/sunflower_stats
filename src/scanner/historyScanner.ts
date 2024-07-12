@@ -141,8 +141,14 @@ class HistoryScanner extends MTProtoClient {
     return new ScanReport(chat_id, true, totalCount);
   }
 
-  public async joinChat(identifier: string | number): Promise<Chat> {
-    return await this._client.joinChat(identifier);
+  public async joinChat(identifier: string | number): Promise<number | undefined> {
+    let chat: Chat;
+    try {
+      chat = await this._client.joinChat(identifier);
+      return chat.id;
+    } catch (e) {
+      return undefined;
+    }
   }
 
   public async leaveChat(identifier: string | number) {
