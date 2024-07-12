@@ -39,7 +39,8 @@ async function scanChatHistory_cmd(ctx: IGroupHearsContext) {
       .reply(
         `
 Щось пішло не так під час сканування ${chatIdentifier}
-Відскановано: ${result.count} повідомлень.`
+Відскановано: ${result.count} повідомлень.
+Помилка: ${result.error}`
       )
       .catch((e) => {
         console.error(e);
