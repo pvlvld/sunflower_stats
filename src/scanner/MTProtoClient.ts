@@ -1,4 +1,4 @@
-import { Chat, ChatPreview, MtPeerNotFoundError, TelegramClient } from "@mtcute/node";
+import { Chat, TelegramClient } from "@mtcute/node";
 
 class MTProtoClient {
   protected _client: TelegramClient;
@@ -15,41 +15,22 @@ class MTProtoClient {
     });
   }
 
-  public async getChat(id: number | string) {
+  public async getPrejoinChatInfo(id: number | string) {
     let chat: Chat | undefined;
-    let errorMessage: string = "";
+    let errorMessage: string | undefined = undefined;
 
     try {
       chat = await this._client.getChat(id);
+      return { success: true, needToJoin: false, chat_id: chat.id, errorMessage } as const;
     } catch (e) {
+      console.error(e);
       if ((e as Error).message?.includes("haven't joined")) {
-        errorMessage = "Сканер не зміг отримати інформацію про чат. Можливо він заблокований.";
+        return { success: true, needToJoin: true, chat_id: undefined, errorMessage } as const;
       } else {
         errorMessage = (e as Error).message;
-      }
-
-      return { status: false, chat: undefined, errorMessage } as const;
-    }
-
-    return { status: true, chat: chat, errorMessage } as const;
-  }
-
-  public async getChatPreview(invite: string) {
-    let alreadyJoined = false;
-    let preview: ChatPreview | undefined;
-    let errorMessage = "";
-
-    try {
-      preview = await this._client.getChatPreview(invite);
-    } catch (e) {
-      if (e instanceof MtPeerNotFoundError && e.message.includes("already joined")) {
-        alreadyJoined = true;
-      } else {
-        errorMessage = (e as Error).message;
+        return { success: false, needToJoin: true, chat_id: undefined, errorMessage } as const;
       }
     }
-
-    return { preview, alreadyJoined, errorMessage };
   }
 }
 
