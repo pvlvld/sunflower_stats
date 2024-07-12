@@ -1,4 +1,4 @@
-import { Chat, Message, MtPeerNotFoundError } from "@mtcute/node";
+import { Chat, Message } from "@mtcute/node";
 import { MTProtoClient } from "./MTProtoClient.js";
 import formattedDate from "../utils/date.js";
 import { DBStats } from "../db/stats.js";
@@ -16,17 +16,13 @@ class HistoryScanner extends MTProtoClient {
   }
 
   public async scanChat(chat_identifier: string | number, chat_id?: number): Promise<ScanReport> {
-    const chatInfo = await this.getBaseChatInfo(chat_identifier as string);
+    const chatInfo = await this.getPrejoinChatInfo(chat_identifier);
+    if (!chatInfo.success) {
+      return new ScanReport(chat_id || -1, false, 0, chatInfo.errorMessage);
+    }
 
     if (chatInfo.needToJoin) {
-      try {
-        const chat_info = await this.joinChat(chat_identifier);
-        chat_id = chat_info.id;
-      } catch (error) {
-        return new ScanReport(chat_id || -1, false, 0, "Не вдалось доєднатися до чату.");
-      }
-    } else if (chatInfo.chatInfo) {
-      chat_id = chatInfo.chatInfo.id;
+      chat_id = await this.joinChat(chat_identifier);
     }
 
     if (!chat_id) {
@@ -138,7 +134,7 @@ class HistoryScanner extends MTProtoClient {
       }
     }
 
-    return new ScanReport(chat_id, true, totalCount);
+    return new ScanReport(chat_id, true, totalCount, "");
   }
 
   public async joinChat(identifier: string | number): Promise<number | undefined> {
