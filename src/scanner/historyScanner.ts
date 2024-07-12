@@ -177,16 +177,12 @@ class HistoryScanner extends MTProtoClient {
 }
 
 class ScanReport {
-  public chat_id: number;
-  public status: boolean;
-  public count: number;
-  public error: string | Error | undefined;
-  constructor(chat_id: number, status: boolean, count: number, error?: Error | string) {
-    this.chat_id = chat_id;
-    this.status = status;
-    this.count = count;
-    this.error = error;
-  }
+  constructor(
+    public identifier: number | string,
+    public status: boolean,
+    public count: number,
+    public error: Error | string
+  ) {}
 }
 
 const historyScanner = new HistoryScanner();
