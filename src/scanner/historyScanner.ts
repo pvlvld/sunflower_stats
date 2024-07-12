@@ -45,7 +45,11 @@ class HistoryScanner extends MTProtoClient {
       );
     }
 
-    return this._scanHistory(chat_identifier, chat_id, endDate);
+    const scanReport = await this._scanHistory(chat_identifier, chat_id, endDate);
+    if (chatInfo.needToJoin) {
+      this.leaveChat(chat_id);
+    }
+    return scanReport;
   }
 
   private async _scanHistory(
