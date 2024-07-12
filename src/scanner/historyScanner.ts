@@ -47,6 +47,10 @@ class HistoryScanner extends MTProtoClient {
       );
     }
 
+    if (typeof chat_identifier === "string" && !chat_identifier.startsWith("@")) {
+      chat_identifier = chat_id;
+    }
+
     const scanReport = await this._scanHistory(chat_identifier, chat_id, endDate);
     if (chatInfo.needToJoin) {
       this.leaveChat(chat_id);
