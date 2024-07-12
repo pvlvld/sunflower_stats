@@ -33,6 +33,7 @@ class ChatAdminsCache {
 
   public addAdmin(chat_id: number, admin: IChatAdmin): void {
     const admins = this.getAdmins(chat_id);
+    this.removeAdmin(chat_id, admin.user_id);
     admins.push(admin);
     this._adminsCache[chat_id] = admins;
   }
