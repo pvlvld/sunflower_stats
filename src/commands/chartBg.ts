@@ -28,7 +28,7 @@ async function setChartBg(
     target_id = ctx.from.id;
   }
 
-  if (cfg.IGNORE_IDS.includes(target_id)) {
+  if (ctx.from.id === ctx.chat.id || cfg.IGNORE_IDS.includes(target_id)) {
     return void (await ctx
       .reply("Схоже, що у вас увімкнено режим анонімного адміну або ви пишете від імені каналу.")
       .catch((e) => {}));
