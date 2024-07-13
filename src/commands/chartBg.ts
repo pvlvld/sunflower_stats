@@ -78,7 +78,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
       if (err) {
         return await cantSaveImageError(ctx);
       }
-      data = await resizeImage(data);
+      data = resizeImage(data);
       writeFile(path, data, async (err) => {
         if (err) {
           return await cantSaveImageError(ctx);
