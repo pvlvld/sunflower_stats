@@ -50,7 +50,7 @@ function getCfg(): ICfg {
   cfg.ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
   cfg.STATUSES ??= {} as any;
   cfg.STATUSES.LEFT_STATUSES = ["kicked", "left"];
-  cfg.IGNORE_IDS = [136817688, 777000, -1];
+  cfg.IGNORE_IDS = [1087968824, 136817688, 777000, -1];
   cfg.ANALYTICS_CHAT = -1002144414380;
   cfg.MAIN_CHAT = -1001898242958;
   /** 5m */
