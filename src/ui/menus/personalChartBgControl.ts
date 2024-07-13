@@ -14,7 +14,7 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       .editMessageCaption({
         caption: `${ctx.msg?.caption ?? ""}\n\nВидалено!`,
         reply_markup: undefined,
-        caption_entities: ctx.msg?.entities,
+        caption_entities: ctx.msg?.caption_entities,
       })
       .catch((e) => {});
   })
@@ -28,7 +28,7 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       .editMessageCaption({
         caption: `${ctx.msg?.caption ?? ""}\n\nВидалено та обмежено!`,
         reply_markup: undefined,
-        caption_entities: ctx.msg?.entities,
+        caption_entities: ctx.msg?.caption_entities,
       })
       .catch((e) => {});
   })
@@ -42,7 +42,7 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       .editMessageCaption({
         caption: `${ctx.msg?.caption ?? ""}\n\nАнтихорні!`,
         reply_markup: undefined,
-        caption_entities: ctx.msg?.entities,
+        caption_entities: ctx.msg?.caption_entities,
       })
       .catch((e) => {});
   })
@@ -57,7 +57,7 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
       .editMessageCaption({
         caption: `${ctx.msg?.caption ?? ""}\n\nДЕРЖАВНОЮ!`,
         reply_markup: undefined,
-        caption_entities: ctx.msg?.entities,
+        caption_entities: ctx.msg?.caption_entities,
       })
       .catch((e) => {});
   })
