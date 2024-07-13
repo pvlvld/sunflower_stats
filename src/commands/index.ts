@@ -84,14 +84,14 @@ function regCommands() {
   );
 
   groupStats.hears(
-    /^(!?)(стата|статистика) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/,
+    /^(!?)(стата|статистика) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/i,
     async (ctx) => {
       botStatsManager.commandUse("стата дата");
       stats_chat_range_cmd(ctx);
     }
   );
 
-  groupStats.hears(/^(!я|!йа|хто я)$/i, async (ctx) => {
+  groupStats.hears(/^(!я|!йа|хто я|!хто я)$/i, async (ctx) => {
     botStatsManager.commandUse("я");
     stats_user(ctx, "я");
   });

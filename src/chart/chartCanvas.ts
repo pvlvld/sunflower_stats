@@ -1,9 +1,9 @@
-import { CanvasRenderingContext2D, createCanvas } from "canvas";
+import { Canvas, createCanvas } from "canvas";
 //@ts-expect-error
 import deePool from "deepool";
 
 function makeCanvas() {
-  return createCanvas(1280, 640).getContext("2d");
+  return createCanvas(1280, 640);
 }
 
 const canvasPool = deePool.create(makeCanvas);
@@ -15,11 +15,11 @@ class _ChartCanvasManager {
     this._canvasPool = canvasPool;
   }
 
-  get get(): CanvasRenderingContext2D {
+  get get(): Canvas {
     return this._canvasPool.use();
   }
 
-  public recycle(canvas: CanvasRenderingContext2D): void {
+  public recycle(canvas: Canvas): void {
     this._canvasPool.recycle(canvas);
   }
 }
