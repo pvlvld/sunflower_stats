@@ -25,6 +25,18 @@ async function setChartBg(
 
   if (type === "chat") {
     target_id = ctx.chat.id;
+  } else {
+    target_id = ctx.from.id;
+  }
+
+  if (cfg.IGNORE_IDS.includes(target_id)) {
+    return void (await ctx
+      .reply("Схоже, що у вас увімкнено режим анонімного адміну або ви пишете від імені каналу.")
+      .catch((e) => {}));
+  }
+
+  if (type === "chat") {
+    target_id = ctx.chat.id;
     cacheManager.ChartCache_Chat.removeChat(target_id);
   } else {
     target_id = ctx.from.id;
