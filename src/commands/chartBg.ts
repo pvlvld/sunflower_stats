@@ -19,16 +19,16 @@ async function setChartBg(
   }
   let target_id = -1;
 
+  if (cacheManager.RestrictedUsersCache.isRestricted(ctx.from.id, "chartBg")) {
+    return void (await ctx.reply("Вам тимчасово заборонено змінювати фони.").catch((e) => {}));
+  }
+
   if (type === "chat") {
     target_id = ctx.chat.id;
     cacheManager.ChartCache_Chat.removeChat(target_id);
   } else {
     target_id = ctx.from.id;
     cacheManager.ChartCache_User.removeUser(target_id);
-  }
-
-  if (cacheManager.RestrictedUsersCache.isRestricted(ctx.from.id, "chartBg")) {
-    return void (await ctx.reply("Вам тимчасово заборонено змінювати фони.").catch((e) => {}));
   }
 
   const donwloadRes = await downloadBg(ctx, type);
