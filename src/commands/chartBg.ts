@@ -2,7 +2,6 @@ import { IGroupHearsCommandContext, IGroupPhotoCaptionContext } from "../types/c
 import { personalChartBgControl_menu } from "../ui/menus/personalChartBgControl.js";
 import { resizeImage } from "../chart/processing/resizeImage.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
-import { sleepAsync } from "../utils/sleep.js";
 import { readFile, writeFile } from "node:fs";
 import cacheManager from "../cache/cache.js";
 import { InputFile } from "grammy";
