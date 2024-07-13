@@ -1,9 +1,10 @@
 import { Canvas, createCanvas } from "canvas";
+import cfg from "../config.js";
 //@ts-expect-error
 import deePool from "deepool";
 
 function makeCanvas() {
-  return createCanvas(1280, 640);
+  return createCanvas(cfg.CHART.width, cfg.CHART.height);
 }
 
 const canvasPool = deePool.create(makeCanvas);

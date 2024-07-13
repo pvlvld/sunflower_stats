@@ -50,7 +50,7 @@ async function setChartBg(
 async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat") {
   const image = ctx.msg.photo[ctx.msg.photo.length - 1];
   let needToResize = false;
-  if (image.width !== 1280 || image.height !== 640) {
+  if (image.width !== cfg.CHART.width || image.height !== cfg.CHART.height) {
     needToResize = true;
   }
 
@@ -105,8 +105,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
   if (needToResize) {
     return {
       status: true,
-      message:
-        "💅🏻 Фон успішно оновлено!\nЩоб отримати найкращу якість, використовуйте зображення з розширенням 1280*640 (2 до 1)",
+      message: `💅🏻 Фон успішно оновлено!\nЩоб отримати найкращу якість, використовуйте зображення з розширенням ${cfg.CHART.width}*${cfg.CHART.height} (2 до 1)`,
     };
   } else {
     return { status: true, message: "💅🏻 Фон успішно оновлено!" };
