@@ -35,7 +35,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   MEDIA: typeof MEDIA;
   API_ID: number;
   SETTINGS: IConfigSettings;
-  CHART: { height: number; width: number };
+  CHART: { width: number; height: number; ratio: number };
 };
 
 function getCfg(): ICfg {
@@ -59,7 +59,7 @@ function getCfg(): ICfg {
   cfg.MEDIA = MEDIA;
   cfg.API_ID = Number(process.env.API_ID || -1);
   cfg.SETTINGS = DefaultConfigSettings;
-  cfg.CHART = { height: 640, width: 1280 };
+  cfg.CHART = { width: 1280, height: 640, ratio: 1280 / 640 };
 
   return Object.freeze(cfg);
 }
