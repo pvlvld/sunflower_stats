@@ -1,5 +1,5 @@
-function hexToRGB(hex: string) {
-  if (hex.length !== 7) {
+function hexToRGB(hex: string | undefined) {
+  if (!hex || hex.length !== 7) {
     return undefined;
   }
 
