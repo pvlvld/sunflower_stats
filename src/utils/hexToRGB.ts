@@ -1,11 +1,14 @@
 function hexToRGB(hex: string | undefined) {
-  if (!hex || hex.length !== 7) {
+  const length = hex?.length;
+  if (!length || length > 7 || length < 6) {
     return undefined;
   }
 
-  const r = parseInt(hex.slice(1, 3), 16);
-  const g = parseInt(hex.slice(3, 5), 16);
-  const b = parseInt(hex.slice(5, 7), 16);
+  const offset = length === 7 ? 1 : 0;
+
+  const r = parseInt(hex.slice(0 + offset, 2 + offset), 16);
+  const g = parseInt(hex.slice(2 + offset, 4 + offset), 16);
+  const b = parseInt(hex.slice(4 + offset, 6 + offset), 16);
 
   if ([r, g, b].some(isNaN)) {
     return undefined;
