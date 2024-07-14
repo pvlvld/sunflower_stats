@@ -21,7 +21,9 @@ ADD
 CREATE TABLE
   public.users (
     user_id bigint NOT NULL,
-    is_premium boolean NOT NULL DEFAULT false
+    is_premium boolean NOT NULL DEFAULT false,
+    line_color char(6),
+    font_color char(6)
     );
 ALTER TABLE
   public.users
