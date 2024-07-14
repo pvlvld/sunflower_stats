@@ -11,7 +11,11 @@ function hexToRGB(hex: string | undefined) {
     return undefined;
   }
 
-  return { r, g, b };
+  return new RGB(r, g, b);
 }
 
-export { hexToRGB };
+class RGB {
+  constructor(public r: number, public g: number, public b: number) {}
+}
+
+export { hexToRGB, RGB };
