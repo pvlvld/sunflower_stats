@@ -1,9 +1,13 @@
+import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import { IAllowedChartStatsRanges } from "../commands/stats_chat.js";
 import { bgImagePlugin } from "./plugins/bgImagePlugin.js";
+import { IChartSettings } from "../db/chartSettings.js";
 import { ChartCanvasManager } from "./chartCanvas.js";
 import { Chart, ChartConfiguration } from "chart.js";
 import { DBPoolManager } from "../db/poolManager.js";
+import { hexToRGB } from "../utils/hexToRGB.js";
 import formattedDate from "../utils/date.js";
+import { Database } from "../db/db.js";
 import chartJs from "chart.js/auto";
 import { InputFile } from "grammy";
 
@@ -31,11 +35,25 @@ async function getUserData(chat_id: number, user_id: number) {
   ).rows;
 }
 
+async function getChartSettings(target_id: number): Promise<IChartSettings> {
+  if (Math.sign(target_id) === -1) {
+    // Chat
+    const chat_settings = await getCachedOrDBChatSettings(target_id);
+    return { line_color: chat_settings.line_color, font_color: chat_settings.font_color };
+  } else {
+    // User
+    return await Database.userSettings.get(target_id);
+  }
+}
+
 async function getChartConfig(
   chat_id: number,
   user_id: number,
   type: IChartType
 ): Promise<ChartConfiguration> {
+  const chart_settings = await getChartSettings(type === "chat" ? chat_id : user_id);
+  const rgbValuesString = getRGBValueString(chart_settings.line_color);
+
   return {
     type: "line",
     data: {
@@ -43,7 +61,7 @@ async function getChartConfig(
       datasets: [
         {
           data: [] as any[],
-          borderColor: "#f3d319",
+          borderColor: `rgb(${rgbValuesString})`,
           borderCapStyle: "round",
           fill: true,
           backgroundColor: (context: any) => {
@@ -52,9 +70,9 @@ async function getChartConfig(
             }
             const { ctx, chartArea } = context.chart;
             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-            gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
-            gradient.addColorStop(0.6, "rgba(233, 189, 7, 0.4)");
-            gradient.addColorStop(0, "rgba(233, 189, 7, 0.9)");
+            gradient.addColorStop(1, `rgba(${rgbValuesString}, 0)`);
+            gradient.addColorStop(0.6, `rgba(${rgbValuesString}, 0.4)`);
+            gradient.addColorStop(0, `rgba(${rgbValuesString}, 0.9)`);
             return gradient;
           },
           tension: 0.2,
@@ -166,4 +184,9 @@ function renderToBuffer(configuration: ChartConfiguration) {
 
 async function destroyChart_Async(chart: Chart) {
   chart.destroy();
+}
+
+function getRGBValueString(hex: string) {
+  const rgb = hexToRGB(hex)!;
+  return `${rgb.r}, ${rgb.g}, ${rgb.b}`;
 }
