@@ -86,10 +86,9 @@ async function getChartConfig(
             display: false,
             // color: "#161525",
           },
-          // border: {
-          //   dash: [8, 4],
-          //   width: 4,
-          // },
+          border: {
+            display: false,
+          },
           ticks: {
             color: "#e8e7ec",
             font: {
@@ -104,10 +103,9 @@ async function getChartConfig(
             display: false,
             // color: "#161525",
           },
-          // border: {
-          //   dash: [8, 4],
-          //   width: 4,
-          // },
+          border: {
+            display: false,
+          },
           ticks: {
             color: "#e8e7ec",
             font: {
