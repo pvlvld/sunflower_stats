@@ -29,16 +29,16 @@ class DbChatSettingWrapper {
     return { ...settings_db };
   }
 
-  public async set(chat_id: number, settings: Partial<IChatSettings>) {
-    const old_settings = getCachedOrDBChatSettings(chat_id);
-    const new_settings = Object.assign(old_settings, settings);
+  public async set(chat_id: number, new_settings: Partial<IChatSettings>) {
+    const settings = await getCachedOrDBChatSettings(chat_id);
+    Object.assign(settings, new_settings);
     try {
       void (await this._poolManager.getPoolWrite.query(`UPDATE chats
-      SET charts = ${new_settings.charts},
-          statsadminsonly = ${new_settings.statsadminsonly},
-          usechatbgforall = ${new_settings.usechatbgforall},
-          line_color = ${new_settings.line_color},
-          font_color = ${new_settings.font_color}
+      SET charts = ${settings.charts},
+          statsadminsonly = ${settings.statsadminsonly},
+          usechatbgforall = ${settings.usechatbgforall},
+          line_color = ${settings.line_color},
+          font_color = ${settings.font_color}
       WHERE chat_id = ${chat_id};
       `));
     } catch (error) {
