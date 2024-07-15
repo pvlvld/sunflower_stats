@@ -1,5 +1,6 @@
 import { DefaultChartSettings, IChartSettings } from "./chartSettings.js";
 import { IDBPoolManager } from "./poolManager.js";
+import { isPremium } from "../utils/isPremium.js";
 
 const _defaultUserSettings = { ...DefaultChartSettings };
 
@@ -15,7 +16,8 @@ class DbUserSettingWrapper {
   }
 
   public async get(user_id: number) {
-    let settings_db: any;
+    // TODO: reset to default in db if no premium
+    let settings_db: undefined | IChartSettings;
     try {
       settings_db = (
         await this._poolManager.getPoolRead.query(
@@ -24,11 +26,20 @@ class DbUserSettingWrapper {
       ).rows[0] as any;
     } catch (error) {}
 
-    if (settings_db && settings_db.line_color) {
-      return settings_db as IChartSettings;
-    } else {
-      return { ...DefaultChartSettings };
+    if (!settings_db) {
+      return DefaultChartSettings;
     }
+
+    if (
+      settings_db.line_color !== DefaultChartSettings.line_color ||
+      settings_db.font_color !== DefaultChartSettings.font_color
+    ) {
+      if (!(await isPremium(user_id))) {
+        await this.set(user_id, Object.assign(settings_db, { ...DefaultChartSettings }));
+        return DefaultChartSettings;
+      }
+    }
+    return settings_db;
   }
 
   public async set(user_id: number, settings: IUserSettings) {
