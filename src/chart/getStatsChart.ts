@@ -84,7 +84,6 @@ async function getChartConfig(
         x: {
           grid: {
             display: false,
-            // color: "#161525",
           },
           border: {
             display: false,
@@ -101,7 +100,6 @@ async function getChartConfig(
         y: {
           grid: {
             display: false,
-            // color: "#161525",
           },
           border: {
             display: false,
