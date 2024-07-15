@@ -1,8 +1,8 @@
 import { RGB } from "../utils/hexToRGB.js";
 
 const _defaultChartSettings = {
-  line_color: "#e9bd07",
-  font_color: "#eeeeee",
+  line_color: "e9bd07",
+  font_color: "eeeeee",
 };
 
 const DefaultChartSettings = Object.freeze(_defaultChartSettings);
