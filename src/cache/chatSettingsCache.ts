@@ -1,11 +1,17 @@
+import { DefaultChartSettings } from "../db/chartSettings.js";
 import type { IChatSettings } from "../types/settings.js";
 
-const DefaultChatSettings = Object.freeze({
-  charts: true,
-  statsadminsonly: false,
-  usechatbgforall: false,
-  selfdestructstats: false,
-});
+const DefaultChatSettings = Object.freeze(
+  Object.assign(
+    {
+      charts: true,
+      statsadminsonly: false,
+      usechatbgforall: false,
+      selfdestructstats: false,
+    },
+    DefaultChartSettings
+  )
+);
 
 class ChatSettingsCache {
   private _settingsCache: Record<number, IChatSettings | undefined>;
