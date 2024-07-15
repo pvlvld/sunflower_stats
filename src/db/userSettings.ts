@@ -27,15 +27,15 @@ class DbUserSettingWrapper {
     if (settings_db && settings_db.line_color) {
       return settings_db as IChartSettings;
     } else {
-      return DefaultChartSettings;
+      return { ...DefaultChartSettings };
     }
   }
 
   public async set(user_id: number, settings: IUserSettings) {
     try {
       void (await this._poolManager.getPoolWrite.query(`UPDATE users
-      SET line_color = ${settings.line_color},
-          font_color = ${settings.font_color}
+      SET line_color = '${settings.line_color}',
+          font_color = '${settings.font_color}'
       WHERE user_id = ${user_id};
       `));
     } catch (error) {
