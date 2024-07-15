@@ -1,4 +1,4 @@
-import ChartSettings, { DefaultChartSettings } from "./chartSettings.js";
+import { DefaultChartSettings, IChartSettings } from "./chartSettings.js";
 import { IDBPoolManager } from "./poolManager.js";
 
 const _defaultUserSettings = { ...DefaultChartSettings };
@@ -15,14 +15,19 @@ class DbUserSettingWrapper {
   }
 
   public async get(user_id: number) {
-    const settings_db = (
-      await this._poolManager.getPoolRead.query(
-        `SELECT line_color, font_color FROM users WHERE user_id = ${user_id};`
-      )
-    ).rows[0] as any;
+    let settings_db: any;
+    try {
+      settings_db = (
+        await this._poolManager.getPoolRead.query(
+          `SELECT line_color, font_color FROM users WHERE user_id = ${user_id};`
+        )
+      ).rows[0] as any;
+    } catch (error) {}
 
     if (settings_db && settings_db.line_color) {
-      return new ChartSettings(settings_db.line_color, settings_db.font_color);
+      return settings_db as IChartSettings;
+    } else {
+      return DefaultChartSettings;
     }
   }
 
