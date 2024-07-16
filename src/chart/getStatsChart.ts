@@ -52,7 +52,7 @@ async function getChartConfig(
   type: IChartType
 ): Promise<ChartConfiguration> {
   const chart_settings = await getChartSettings(type === "chat" ? chat_id : user_id);
-  const rgbValuesString = getRGBValueString(chart_settings.line_color);
+  const line_rgbValuesString = getRGBValueString(chart_settings.line_color);
 
   return {
     type: "line",
@@ -61,7 +61,7 @@ async function getChartConfig(
       datasets: [
         {
           data: [] as any[],
-          borderColor: `rgb(${rgbValuesString})`,
+          borderColor: `rgb(${line_rgbValuesString})`,
           borderCapStyle: "round",
           fill: true,
           backgroundColor: (context: any) => {
@@ -70,9 +70,9 @@ async function getChartConfig(
             }
             const { ctx, chartArea } = context.chart;
             const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
-            gradient.addColorStop(1, `rgba(${rgbValuesString}, 0)`);
-            gradient.addColorStop(0.6, `rgba(${rgbValuesString}, 0.4)`);
-            gradient.addColorStop(0, `rgba(${rgbValuesString}, 0.9)`);
+            gradient.addColorStop(1, `rgba(${line_rgbValuesString}, 0)`);
+            gradient.addColorStop(0.6, `rgba(${line_rgbValuesString}, 0.4)`);
+            gradient.addColorStop(0, `rgba(${line_rgbValuesString}, 0.9)`);
             return gradient;
           },
           tension: 0.2,
@@ -107,7 +107,7 @@ async function getChartConfig(
             display: false,
           },
           ticks: {
-            color: "#e8e7ec",
+            color: `#${chart_settings.font_color}`,
             font: {
               weight: "bold",
             },
@@ -123,7 +123,7 @@ async function getChartConfig(
             display: false,
           },
           ticks: {
-            color: "#e8e7ec",
+            color: `#${chart_settings.font_color}`,
             font: {
               weight: "bold",
             },
