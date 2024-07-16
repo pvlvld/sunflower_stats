@@ -48,8 +48,8 @@ class DbChatSettingWrapper {
       SET charts = ${settings.charts},
           statsadminsonly = ${settings.statsadminsonly},
           usechatbgforall = ${settings.usechatbgforall},
-          line_color = ${settings.line_color},
-          font_color = ${settings.font_color}
+          line_color = '${settings.line_color}',
+          font_color = '${settings.font_color}'
       WHERE chat_id = ${chat_id};
       `));
     } catch (error) {
