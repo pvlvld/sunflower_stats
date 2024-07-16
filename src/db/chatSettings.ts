@@ -2,6 +2,7 @@ import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import { DefaultChatSettings } from "../cache/chatSettingsCache.js";
 import { DefaultChartSettings } from "./chartSettings.js";
 import type { IChatSettings } from "../types/settings.js";
+import type { Writeable } from "../types/utilityTypes.js";
 import { IDBPoolManager } from "./poolManager.js";
 import { isPremium } from "../utils/isPremium.js";
 
@@ -13,7 +14,7 @@ class DbChatSettingWrapper {
   }
 
   public async get(chat_id: number) {
-    let settings_db: undefined | IChatSettings;
+    let settings_db: undefined | Writeable<IChatSettings>;
     try {
       settings_db = (
         await this._poolManager.getPoolRead.query(
@@ -29,11 +30,11 @@ class DbChatSettingWrapper {
     }
 
     if (!settings_db.line_color) {
-      settings_db.line_color = DefaultChartSettings.line_color
+      settings_db.line_color = DefaultChartSettings.line_color;
     }
 
     if (!settings_db.font_color) {
-      settings_db.font_color = DefaultChartSettings.font_color
+      settings_db.font_color = DefaultChartSettings.font_color;
     }
 
     // TODO: INFINITE LOOP!
