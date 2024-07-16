@@ -28,14 +28,16 @@ class DbChatSettingWrapper {
       return { ...DefaultChatSettings };
     }
 
-    if (
-      settings_db.line_color !== DefaultChartSettings.line_color ||
-      settings_db.font_color !== DefaultChartSettings.font_color
-    ) {
-      if (!(await isPremium(chat_id))) {
-        await this.set(chat_id, Object.assign(settings_db, { ...DefaultChartSettings }));
-      }
-    }
+    // TODO: INFINITE LOOP!
+    // - Realize donate features reset in donate service itself
+    // if (
+    //   settings_db.line_color !== DefaultChartSettings.line_color ||
+    //   settings_db.font_color !== DefaultChartSettings.font_color
+    // ) {
+    //   if (!(await isPremium(chat_id))) {
+    //     await this.set(chat_id, Object.assign(settings_db, { ...DefaultChartSettings }));
+    //   }
+    // }
 
     return { ...settings_db };
   }
