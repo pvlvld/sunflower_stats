@@ -73,6 +73,8 @@ function regCommands() {
     help_cmd(ctx);
   });
 
+  // STATS
+
   groupStats.hears(/^(!?)(стата|статистика)$/i, async (ctx) => {
     stats_chat(ctx);
   });
@@ -136,6 +138,8 @@ function regCommands() {
   group.hears(/^!рест/, async (ctx) => {
     removeFromChatCleanup(ctx);
   });
+
+  // CHARTS
 
   group.hears("!стата фон я", (ctx) => {
     setChartBg(ctx, "user");
