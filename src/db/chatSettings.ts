@@ -28,6 +28,14 @@ class DbChatSettingWrapper {
       return { ...DefaultChatSettings };
     }
 
+    if (!settings_db.line_color) {
+      settings_db.line_color = DefaultChartSettings.line_color
+    }
+
+    if (!settings_db.font_color) {
+      settings_db.font_color = DefaultChartSettings.font_color
+    }
+
     // TODO: INFINITE LOOP!
     // - Realize donate features reset in donate service itself
     // if (
