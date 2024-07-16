@@ -1,7 +1,9 @@
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import { DefaultChatSettings } from "../cache/chatSettingsCache.js";
+import { DefaultChartSettings } from "./chartSettings.js";
 import type { IChatSettings } from "../types/settings.js";
 import { IDBPoolManager } from "./poolManager.js";
+import { isPremium } from "../utils/isPremium.js";
 
 class DbChatSettingWrapper {
   private _poolManager: IDBPoolManager;
@@ -24,6 +26,15 @@ class DbChatSettingWrapper {
 
     if (!settings_db) {
       return { ...DefaultChatSettings };
+    }
+
+    if (
+      settings_db.line_color !== DefaultChartSettings.line_color ||
+      settings_db.font_color !== DefaultChartSettings.font_color
+    ) {
+      if (!(await isPremium(chat_id))) {
+        await this.set(chat_id, Object.assign(settings_db, { ...DefaultChartSettings }));
+      }
     }
 
     return { ...settings_db };
