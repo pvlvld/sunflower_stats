@@ -26,7 +26,7 @@ async function setChartColor(ctx: IGroupHearsContext) {
   if (!target) {
     void ctx
       .reply(
-        "Невірно вказано ціль. Доступні: графік / лінія та шрифт / текст.\nПриклад: стата колір <u>графік</u> я #066666"
+        'Невірно вказано ціль. Доступні: графік / лінія та шрифт / текст.\nПриклад: стата колір <u>графік</u> я <a href="https://g.co/kgs/5UEQqFv">#066666</a>'
       )
       .catch((e) => {});
     return;
@@ -35,7 +35,7 @@ async function setChartColor(ctx: IGroupHearsContext) {
   if (!type) {
     void ctx
       .reply(
-        "Невірно вказано тип. Доступні: чат / я.\nПриклад: стата колір графік <u>я</u> #066666"
+        'Невірно вказано тип. Доступні: чат / я.\nПриклад: стата колір графік <u>я</u> <a href="https://g.co/kgs/5UEQqFv">#066666</a>'
       )
       .catch((e) => {});
     return;
@@ -44,7 +44,7 @@ async function setChartColor(ctx: IGroupHearsContext) {
   if (!rgb || !hex) {
     void ctx
       .reply(
-        'Колір має бути в форматі <a href="https://g.co/kgs/wBbXegZ">HEX</a>\nПриклад: стата колір <u>графік</u> я <u>#066666</u>'
+        'Колір має бути в форматі <a href="https://g.co/kgs/5UEQqFv">HEX</a>\nПриклад: стата колір <u>графік</u> я <u>#066666</u>'
       )
       .catch((e) => {});
     return;
