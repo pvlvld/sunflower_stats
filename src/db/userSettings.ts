@@ -24,7 +24,9 @@ class DbUserSettingWrapper {
           `SELECT line_color, font_color FROM users WHERE user_id = ${user_id};`
         )
       ).rows[0] as any;
-    } catch (error) {}
+    } catch (e) {
+      console.error("Error fetching user settings:", e);
+    }
 
     if (!settings_db) {
       return DefaultChartSettings;
