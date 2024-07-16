@@ -18,6 +18,7 @@ import parseCmdArgs from "../utils/parseCmdArgs.js";
 import del_user_active from "./del_user_active.js";
 import getChatAdmins_cmd from "./getChatAdmins.js";
 import getChatInvite_cmd from "./getChatInvite.js";
+import { setChartColor } from "./setChartColor.js";
 import chatInactive_cmd from "./chat_inactive.js";
 import isChatOwner from "../utils/isChatOwner.js";
 import { chatCleanup } from "./chatCleanup.js";
@@ -152,6 +153,10 @@ function regCommands() {
     if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
       setChartBg(ctx, "chat");
     }
+  });
+
+  group.hears(/^(!?)стата колір/, async (ctx) => {
+    await setChartColor(ctx);
   });
 
   group.hears("!settings", async (ctx) => {
