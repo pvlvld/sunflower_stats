@@ -1,4 +1,4 @@
-import { Chat, Message } from "@mtcute/node";
+import { Chat, Message, TelegramClient } from "@mtcute/node";
 import { MTProtoClient } from "./MTProtoClient.js";
 import formattedDate from "../utils/date.js";
 import { DBStats } from "../db/stats.js";
@@ -18,7 +18,7 @@ class HistoryScanner extends MTProtoClient {
   public async scanChat(chat_identifier: string | number, chat_id?: number): Promise<ScanReport> {
     const chatInfo = await this.getPrejoinChatInfo(chat_identifier);
     if (!chatInfo.success) {
-      return new ScanReport(chat_id || -1, false, 0, chatInfo.errorMessage);
+      return createReportAndLeave(chat_id || -1, false, 0, chatInfo.errorMessage, this._client);
     } else {
       chat_id = chatInfo.chat_id;
     }
@@ -28,22 +28,24 @@ class HistoryScanner extends MTProtoClient {
     }
 
     if (!chat_id) {
-      return new ScanReport(
+      return createReportAndLeave(
         chat_id || -1,
         false,
         0,
-        `Не вдалось отримати інформацію про чат ${chat_identifier}`
+        `Не вдалось отримати інформацію про чат ${chat_identifier}`,
+        this._client
       );
     }
 
     const endDate = await DBStats.chat.firstRecordDate(chat_id);
 
     if (!endDate) {
-      return new ScanReport(
+      return createReportAndLeave(
         chat_id,
         false,
         0,
-        "Не вдалось отримати дату першого повідомлення в чаті."
+        "Не вдалось отримати дату першого повідомлення в чаті.",
+        this._client
       );
     }
 
@@ -52,9 +54,6 @@ class HistoryScanner extends MTProtoClient {
     }
 
     const scanReport = await this._scanHistory(chat_identifier, chat_id, endDate);
-    if (chatInfo.needToJoin) {
-      this.leaveChat(chat_id);
-    }
     return scanReport;
   }
 
@@ -69,7 +68,13 @@ class HistoryScanner extends MTProtoClient {
     const firstMessageDate = await this._getFirstMessageDate(identifier);
 
     if (firstMessageDate === undefined) {
-      return new ScanReport(chat_id, false, 0, "Не вдалося отримати історію чату.");
+      return createReportAndLeave(
+        chat_id,
+        false,
+        0,
+        "Не вдалося отримати історію чату.",
+        this._client
+      );
     }
 
     if (formattedDate.dateToYYYYMMDD(endDate) === "2023-12-31") {
@@ -78,20 +83,22 @@ class HistoryScanner extends MTProtoClient {
     }
 
     if (!this._isDifferentDay(firstMessageDate, endDate)) {
-      return new ScanReport(
+      return createReportAndLeave(
         chat_id,
         false,
         0,
-        "Немає потреби в скануванні.\nДата першого запису статистики чату збігається з датою першого повідомлення в чаті."
+        "Немає потреби в скануванні.\nДата першого запису статистики чату збігається з датою першого повідомлення в чаті.",
+        this._client
       );
     }
 
     if (firstMessageDate > endDate) {
-      return new ScanReport(
+      return createReportAndLeave(
         chat_id,
         false,
         0,
-        "Перше збережене в статистиці повідомлення старіше за перше доступне в чаті."
+        "Перше збережене в статистиці повідомлення старіше за перше доступне в чаті.",
+        this._client
       );
     }
 
@@ -139,12 +146,12 @@ class HistoryScanner extends MTProtoClient {
             offset: { id: lastScannedMsgId, date: currentMsgDate.getTime() },
           });
         } else {
-          return new ScanReport(chat_id, false, totalCount, error);
+          return createReportAndLeave(chat_id, false, totalCount, "", this._client);
         }
       }
     }
 
-    return new ScanReport(chat_id, true, totalCount, "");
+    return createReportAndLeave(chat_id, true, totalCount, "", this._client);
   }
 
   public async joinChat(identifier: string | number): Promise<number | undefined> {
@@ -186,6 +193,17 @@ class HistoryScanner extends MTProtoClient {
 
     stats.clear();
   }
+}
+
+function createReportAndLeave(
+  identifier: number | string,
+  status: boolean,
+  count: number,
+  error: Error | string,
+  client: TelegramClient
+) {
+  client.leaveChat(identifier).catch((e) => {});
+  return new ScanReport(identifier, status, count, error);
 }
 
 class ScanReport {
