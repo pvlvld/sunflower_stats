@@ -142,14 +142,14 @@ function regCommands() {
 
   // CHARTS
 
-  group.hears("!стата фон я", (ctx) => {
+  group.hears(/(!?)стата фон я/i, (ctx) => {
     setChartBg(ctx, "user");
   });
   group.hears(/^\/setmybg/i, (ctx) => {
     setChartBg(ctx, "user");
   });
 
-  group.hears("!стата фон чат", async (ctx) => {
+  group.hears(/(!?)стата фон чат/i, async (ctx) => {
     if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
       setChartBg(ctx, "chat");
     }
