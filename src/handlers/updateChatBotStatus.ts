@@ -15,7 +15,7 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     await help_cmd(ctx);
     botStatsManager.joinGroup();
 
-    if (ctx.chat.type === "supergroup") {
+    if (ctx.chat.type === "supergroup" || ctx.chat.type === "group") {
       try {
         await sleepAsync(1000);
         const membersCount = (await ctx.getChatMemberCount().catch((e) => {})) || 0;
