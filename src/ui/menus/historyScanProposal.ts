@@ -9,7 +9,7 @@ const historyScanProposal_menu = new Menu<IContext>("historyScanProposal-menu", 
 })
   .text("Так", async (ctx) => {
     if (["supergroup", "group"].includes(ctx.chat?.type!)) {
-      const res = scanNewChat(ctx as any);
+      const res = scanNewChat(ctx as any, false);
       await sleepAsync(100);
       //@ts-expect-error
       if (historyScanner.isQueued(ctx.chat?.id)) {
