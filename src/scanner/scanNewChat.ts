@@ -11,7 +11,6 @@ async function scanNewChat(ctx: IGroupContext, automatic = true) {
     try {
       const invite = await ctx.createChatInviteLink({
         creates_join_request: false,
-        member_limit: 1,
       });
       identifier = invite.invite_link;
     } catch (e) {
