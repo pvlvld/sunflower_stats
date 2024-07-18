@@ -52,6 +52,10 @@ class AsyncTaskQueue {
     return this._queue.delete(identifier);
   }
 
+  public has(identifier: string | number) {
+    return this._queue.has(identifier);
+  }
+
   get size() {
     return this._queue.size;
   }
