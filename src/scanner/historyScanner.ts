@@ -234,6 +234,10 @@ class HistoryScanner extends MTProtoClient {
       })
       .catch((e) => {});
   }
+
+  public isQueued(identifier: string | number, chat_id: number) {
+    return this._queue.has(chat_id || identifier);
+  }
 }
 
 function createReportAndLeave(
