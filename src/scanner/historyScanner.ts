@@ -219,9 +219,11 @@ class HistoryScanner extends MTProtoClient {
   }
 
   private async _log(message: string) {
-    bot.api.sendMessage(cfg.ANALYTICS_CHAT, message, {
-      message_thread_id: 3123,
-    });
+    bot.api
+      .sendMessage(cfg.ANALYTICS_CHAT, message, {
+        message_thread_id: 3123,
+      })
+      .catch((e) => {});
   }
 }
 
