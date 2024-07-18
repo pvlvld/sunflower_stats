@@ -37,7 +37,7 @@ class HistoryScanner extends MTProtoClient {
   }
 
   private async _scanChat(identifier: string | number, chat_id?: number): Promise<ScanReport> {
-    console.info(`HistoryScanner: scanning ${identifier}.`);
+    console.info(`HistoryScanner: scanning ${identifier}. Queue size: ${this._queue.size}`);
     const chatInfo = await this.getPrejoinChatInfo(identifier);
     if (!chatInfo.success) {
       return createReportAndLeave(chat_id || -1, false, 0, chatInfo.errorMessage, this._client);
