@@ -179,12 +179,11 @@ class DBChatStats {
   }
 
   async firstRecordDate(chat_id: number) {
-    const query = `SELECT min(date) FROM stats_daily WHERE chat_id = ${chat_id}`;
+    const query = `SELECT to_char(min(date), 'YYYY-MM-DD') as date FROM stats_daily WHERE chat_id = ${chat_id}`;
 
     try {
-      return new Date(
-        ((await this._dbPoolManager.getPoolRead.query(query)).rows[0].min as string) || new Date()
-      );
+      const date = (await this._dbPoolManager.getPoolRead.query(query)).rows[0].date;
+      return date ? new Date(date) : new Date();
     } catch (error) {
       return undefined;
     }
