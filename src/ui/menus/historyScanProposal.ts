@@ -1,5 +1,7 @@
+import { historyScanner } from "../../scanner/historyScanner.js";
 import { scanNewChat } from "../../scanner/scanNewChat.js";
 import type { IContext } from "../../types/context.js";
+import { sleepAsync } from "../../utils/sleep.js";
 import { Menu } from "@grammyjs/menu";
 
 const historyScanProposal_menu = new Menu<IContext>("historyScanProposal-menu", {
@@ -7,8 +9,14 @@ const historyScanProposal_menu = new Menu<IContext>("historyScanProposal-menu", 
 })
   .text("Так", async (ctx) => {
     if (["supergroup", "group"].includes(ctx.chat?.type!)) {
-      const res = await scanNewChat(ctx as any);
-      if (res === "not enough rights") {
+      const res = scanNewChat(ctx as any);
+      await sleepAsync(100);
+      //@ts-expect-error
+      if (historyScanner.isQueued(ctx.chat?.id)) {
+        ctx.deleteMessage().catch((e) => {});
+      }
+
+      if ((await res) === "not enough rights") {
         return;
       } else {
         ctx.deleteMessage().catch((e) => {});
