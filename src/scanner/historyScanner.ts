@@ -49,7 +49,13 @@ class HistoryScanner extends MTProtoClient {
 
     const chatInfo = await this.getPrejoinChatInfo(identifier);
     if (!chatInfo.success) {
-      return createReportAndLeave(chat_id || -1, false, 0, chatInfo.errorMessage, this._client);
+      return createReportAndLeave(
+        chat_id || -1,
+        false,
+        0,
+        chatInfo.errorMessage || "Prejoin failed",
+        this._client
+      );
     } else {
       chat_id = chatInfo.chat_id;
     }
