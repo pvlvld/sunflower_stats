@@ -15,8 +15,8 @@ class HistoryScanner extends MTProtoClient {
     super(cfg.API_ID, cfg.API_HASH);
   }
 
-  public async scanChat(chat_identifier: string | number, chat_id?: number): Promise<ScanReport> {
-    const chatInfo = await this.getPrejoinChatInfo(chat_identifier);
+  public async scanChat(identifier: string | number, chat_id?: number): Promise<ScanReport> {
+    const chatInfo = await this.getPrejoinChatInfo(identifier);
     if (!chatInfo.success) {
       return createReportAndLeave(chat_id || -1, false, 0, chatInfo.errorMessage, this._client);
     } else {
@@ -24,7 +24,7 @@ class HistoryScanner extends MTProtoClient {
     }
 
     if (chatInfo.needToJoin) {
-      chat_id = await this.joinChat(chat_identifier);
+      chat_id = await this.joinChat(identifier);
     }
 
     if (!chat_id) {
@@ -32,7 +32,7 @@ class HistoryScanner extends MTProtoClient {
         chat_id || -1,
         false,
         0,
-        `Не вдалось отримати інформацію про чат ${chat_identifier}`,
+        `Не вдалось отримати інформацію про чат ${identifier}`,
         this._client
       );
     }
@@ -49,11 +49,11 @@ class HistoryScanner extends MTProtoClient {
       );
     }
 
-    if (typeof chat_identifier === "string" && !chat_identifier.startsWith("@")) {
-      chat_identifier = chat_id;
+    if (typeof identifier === "string" && !identifier.startsWith("@")) {
+      identifier = chat_id;
     }
 
-    const scanReport = await this._scanHistory(chat_identifier, chat_id, endDate);
+    const scanReport = await this._scanHistory(identifier, chat_id, endDate);
     return scanReport;
   }
 
@@ -193,6 +193,12 @@ class HistoryScanner extends MTProtoClient {
 
     stats.clear();
   }
+
+  private async _log(message: string) {
+    bot.api.sendMessage(cfg.ANALYTICS_CHAT, message, {
+      message_thread_id: 3123,
+    });
+  }
 }
 
 function createReportAndLeave(
@@ -202,6 +208,11 @@ function createReportAndLeave(
   error: Error | string,
   client: TelegramClient
 ) {
+  bot.api
+    .sendMessage(cfg.ANALYTICS_CHAT, `Відскановано ${count} повідомлень в  ${identifier}`, {
+      message_thread_id: 3123,
+    })
+    .catch((e) => {});
   client.leaveChat(identifier).catch((e) => {});
   return new ScanReport(identifier, status, count, error);
 }
