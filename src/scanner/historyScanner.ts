@@ -25,13 +25,21 @@ class HistoryScanner extends MTProtoClient {
     }
 
     const scanTask = async () => {
-      return await this._scanChat(identifier, chat_id);
+      const res = await this._scanChat(identifier, chat_id);
+      console.info(
+        `HistoryScanner: finished scanning ${identifier}. ${res.count} messages${
+          res.error ? `, err: ${res.error}` : ""
+        }.`
+      );
+      return res;
     };
 
+    console.info(`HistoryScanner: queued ${identifier} scan.`);
     return await this._queue.enqueue(scanTask, identifier);
   }
 
   private async _scanChat(identifier: string | number, chat_id?: number): Promise<ScanReport> {
+    console.info(`HistoryScanner: scanning ${identifier}.`);
     const chatInfo = await this.getPrejoinChatInfo(identifier);
     if (!chatInfo.success) {
       return createReportAndLeave(chat_id || -1, false, 0, chatInfo.errorMessage, this._client);
@@ -155,7 +163,9 @@ class HistoryScanner extends MTProtoClient {
         break main_loop;
       } catch (error: any) {
         if ("seconds" in error) {
-          console.info(`HistoryScanner: Sleeping for ${error.seconds} seconds.`);
+          console.info(
+            `HistoryScanner: Sleeping for ${error.seconds} seconds. Target: ${identifier}`
+          );
           await new Promise((resolve) => setTimeout(resolve, error.seconds * 1000));
           iterator = this._client.iterHistory(identifier, {
             reverse: true,
