@@ -19,7 +19,12 @@ class HistoryScanner extends MTProtoClient {
 
   public async scanChat(identifier: string | number, chat_id?: number) {
     if (this._queue.has(chat_id || identifier)) {
-      return new ScanReport(identifier, false, 0, `Чат ${chat_id} / ${identifier} вже в черзі на сканування.`);
+      return new ScanReport(
+        identifier,
+        false,
+        0,
+        `Чат ${chat_id} / ${identifier} вже в черзі на сканування.`
+      );
     }
 
     const scanTask = async () => {
