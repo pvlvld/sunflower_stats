@@ -17,7 +17,7 @@ async function scanChatHistory_cmd(ctx: IGroupHearsContext) {
   }
 
   await ctx.reply(`Сканування ${chatIdentifier} запущено!`);
-  const result = await historyScanner.scanChat(chatIdentifier);
+  const result = await historyScanner.scanChat(chatIdentifier, -1);
 
   if (result.status) {
     if (typeof result.identifier === "number") {

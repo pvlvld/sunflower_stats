@@ -17,8 +17,8 @@ class HistoryScanner extends MTProtoClient {
     super(cfg.API_ID, cfg.API_HASH);
   }
 
-  public async scanChat(identifier: string | number, chat_id?: number) {
-    if (this._queue.has(chat_id || identifier)) {
+  public async scanChat(identifier: string | number, chat_id: number) {
+    if (this.isQueued(chat_id)) {
       return new ScanReport(
         identifier,
         false,
@@ -235,8 +235,8 @@ class HistoryScanner extends MTProtoClient {
       .catch((e) => {});
   }
 
-  public isQueued(identifier: string | number, chat_id: number) {
-    return this._queue.has(chat_id || identifier);
+  public isQueued(identifier: string | number) {
+    return this._queue.has(identifier);
   }
 }
 
