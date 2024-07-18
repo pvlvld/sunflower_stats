@@ -39,7 +39,7 @@ class HistoryScanner extends MTProtoClient {
     };
 
     console.info(`HistoryScanner: queued ${identifier} scan.`);
-    return await this._queue.enqueue(scanTask, identifier);
+    return await this._queue.enqueue(scanTask, chat_id);
   }
 
   private async _scanChat(identifier: string | number, chat_id?: number): Promise<ScanReport> {
