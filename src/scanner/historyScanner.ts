@@ -7,9 +7,7 @@ import cfg from "../config.js";
 import bot from "../bot.js";
 
 //TODO:
-// - implement queue
 // - use session pool
-// - add logs
 
 type IStats = Map<number, number>;
 class HistoryScanner extends MTProtoClient {
