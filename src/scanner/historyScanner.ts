@@ -1,8 +1,10 @@
 import { Chat, Message, TelegramClient } from "@mtcute/node";
+import { AsyncTaskQueue } from "../utils/asyncTaskQueue.js";
 import { MTProtoClient } from "./MTProtoClient.js";
 import formattedDate from "../utils/date.js";
 import { DBStats } from "../db/stats.js";
 import cfg from "../config.js";
+import bot from "../bot.js";
 
 //TODO:
 // - implement queue
@@ -11,11 +13,25 @@ import cfg from "../config.js";
 
 type IStats = Map<number, number>;
 class HistoryScanner extends MTProtoClient {
+  private _queue = new AsyncTaskQueue();
+
   constructor() {
     super(cfg.API_ID, cfg.API_HASH);
   }
 
-  public async scanChat(identifier: string | number, chat_id?: number): Promise<ScanReport> {
+  public async scanChat(identifier: string | number, chat_id?: number) {
+    if (this._queue.has(identifier)) {
+      return new ScanReport(identifier, false, 0, `Чат ${identifier} вже в черзі на сканування.`);
+    }
+
+    const scanTask = async () => {
+      return await this._scanChat(identifier, chat_id);
+    };
+
+    return await this._queue.enqueue(scanTask, identifier);
+  }
+
+  private async _scanChat(identifier: string | number, chat_id?: number): Promise<ScanReport> {
     const chatInfo = await this.getPrejoinChatInfo(identifier);
     if (!chatInfo.success) {
       return createReportAndLeave(chat_id || -1, false, 0, chatInfo.errorMessage, this._client);
