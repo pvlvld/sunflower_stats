@@ -25,11 +25,19 @@ class MTProtoClient {
     } catch (e) {
       console.error(e);
       if ((e as Error).message?.includes("haven't joined")) {
-        return { success: true, needToJoin: true, chat_id: undefined, errorMessage } as const;
-      } else {
-        errorMessage = (e as Error).message;
-        return { success: false, needToJoin: true, chat_id: undefined, errorMessage } as const;
+        return {
+          success: true,
+          needToJoin: true,
+          chat_id: undefined,
+          errorMessage: "haven't joined",
+        };
       }
+
+      if ((e as Error).message?.includes("link has expired")) {
+        return { success: false, needToJoin: true, chat_id: undefined, error: "link has expired" };
+      }
+      errorMessage = (e as Error).message;
+      return { success: false, needToJoin: true, chat_id: undefined, errorMessage } as const;
     }
   }
 }
