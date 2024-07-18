@@ -1,4 +1,5 @@
 import { personalChartBgControl_menu } from "./ui/menus/personalChartBgControl.js";
+import { historyScanProposal_menu } from "./ui/menus/historyScanProposal.js";
 import { ignoreOldMessages } from "./middlewares/ignoreOldMessages.js";
 import { hydrateReply, parseMode } from "@grammyjs/parse-mode";
 import { autoThread } from "./middlewares/autoThreads.js";
@@ -55,5 +56,5 @@ bot.use(leftGroup_menu);
 bot.use(donate_menu);
 bot.use(settings_menu);
 bot.use(personalChartBgControl_menu);
-
+bot.use(historyScanProposal_menu);
 export default bot;
