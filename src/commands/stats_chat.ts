@@ -33,10 +33,17 @@ const allowedChartStatsRanges: IAllowedChartStatsRanges[] = [
 // TODO: use await Promise.all() for chart + msg
 
 async function stats_chat(ctx: IGroupTextContext): Promise<void> {
-  const chat_id = ctx.chat.id;
+  const splittedCommand = (ctx.msg.text ?? ctx.msg.caption).split(" ");
+  const externalChatTarget = Number(splittedCommand[2]);
+  let chat_id = -1;
+  if (externalChatTarget && cfg.ADMINS.includes(ctx.from.id)) {
+    chat_id = externalChatTarget;
+  } else {
+    chat_id = ctx.chat.id;
+  }
   const chatSettings = await getCachedOrDBChatSettings(chat_id);
   const rawCmdDateRange = (
-    (ctx.msg.text ?? ctx.msg.caption).split(" ")[1] ?? "сьогодні"
+    splittedCommand[1] ?? "сьогодні"
   ).toLowerCase() as keyof typeof cmdToDateRangeMap;
   const dateRange = cmdToDateRangeMap[rawCmdDateRange];
 
