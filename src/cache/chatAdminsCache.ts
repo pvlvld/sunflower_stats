@@ -26,9 +26,10 @@ class ChatAdminsCache {
     );
   }
 
-  public removeAdmin(chat_id: number, user_id: number): void {
+  public removeAdmin(chat_id: number, user_id: number): IChatAdmin[] {
     const updatedAdmins = this.getAdmins(chat_id).filter((admin) => admin.user_id !== user_id);
     this._adminsCache[chat_id] = updatedAdmins;
+    return updatedAdmins;
   }
 
   public addAdmin(chat_id: number, admin: IChatAdmin): void {
