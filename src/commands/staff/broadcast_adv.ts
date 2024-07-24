@@ -83,6 +83,10 @@ async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string,
         reply_markup: adv.keyboard,
         caption: adv.text,
         disable_notification: true,
+        reply_parameters: {
+          message_id: -1,
+          allow_sending_without_reply: true,
+        },
       }).catch((e) => {
         if (e instanceof GrammyError) {
           if (e.description.includes("bot was kicked")) {
@@ -107,6 +111,10 @@ async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string,
           reply_markup: adv.keyboard,
           link_preview_options: { is_disabled: true },
           disable_notification: true,
+          reply_parameters: {
+            message_id: -1,
+            allow_sending_without_reply: true,
+          },
         })
         .catch((e) => {
           if (e instanceof GrammyError) {
