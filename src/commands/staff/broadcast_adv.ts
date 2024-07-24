@@ -1,6 +1,7 @@
 import { active } from "../../data/active.js";
 import { autoRetry } from "@grammyjs/auto-retry";
 import cfg from "../../config.js";
+import { Database } from "../../db/db.js";
 import { DBPoolManager } from "../../db/poolManager.js";
 import { GrammyError, InlineKeyboard } from "grammy";
 import moment from "moment";
@@ -153,7 +154,7 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
 
   const start = performance.now();
 
-  for (chat in active.data) {
+  chat_loop: for (chat in active.data) {
     if (!chat.startsWith("-")) {
       delete active.data[chat];
       continue;
@@ -162,8 +163,18 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
     for (user in active.data[chat]) {
       if (moment().diff(moment(active.data[chat]![user]!.active_last), "days") < 4) {
         totalAttempts++;
+        // Skip if bot joined less than 14 days ago
+        const botJoinDate = await Database.stats.chat.firstRecordDate(Number(chat));
+        if (moment().diff(botJoinDate, "days") < 14) {
+          console.log("Adv broadcast: ", chat, "Skip, first message less than 14 days ago");
+          continue chat_loop;
+        }
+
+        // Sending
         successfullySent += +(await sendAdvMessage(ctx, chat, adv));
         break;
+      } else {
+        console.log("Adv broadcast: ", chat, "Skip, last message more than 4 days ago");
       }
     }
   }
@@ -174,7 +185,7 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
   timeMinutes = Math.floor(timeMinutes);
 
   const logMsg = `Розсилку закінчено за ${timeMinutes}хв ${timeSeconds}с.\nУспішно надіслано ${successfullySent} повідомлень за ${totalAttempts} спроб.`;
-  console.info(logMsg);
+  console.log("Adv broadcast: ", logMsg);
   ctx.reply(logMsg).catch((e) => {});
 }
 
