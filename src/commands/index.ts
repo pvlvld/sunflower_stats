@@ -23,6 +23,7 @@ import getChatInvite_cmd from "./getChatInvite.js";
 import { setChartColor } from "./setChartColor.js";
 import chatInactive_cmd from "./chat_inactive.js";
 import isChatOwner from "../utils/isChatOwner.js";
+import { setLogLvl } from "./staff/setLogLvl.js";
 import { chatCleanup } from "./chatCleanup.js";
 import getUserId from "../utils/getUserId.js";
 import { getId_cmd } from "./staff/get_id.js";
@@ -253,6 +254,8 @@ function regCommands() {
   });
 
   group.hears("!toggleCharts", async (ctx) => toggleCharts(ctx));
+
+  group.hears(/^!loglvl/i, (ctx) => setLogLvl(ctx));
 
   group.hears(/^!ssadv/, async (ctx) => await broadcast_adv(ctx));
   bot
