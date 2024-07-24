@@ -12,7 +12,7 @@ class ChatAdminsCache {
 
   public getAdmins(chat_id: number): IChatAdmin[] {
     const admins = this._adminsCache[chat_id] ?? [];
-    if (cfg.LOG_LVL > 1) {
+    if (cfg.LOG_LVL.get() > 1) {
       console.log("Admins:", chat_id, admins);
     }
     return admins;

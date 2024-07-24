@@ -24,6 +24,16 @@ const ANIMATIONS = Object.freeze({
 const MEDIA = Object.freeze({
   ANIMATIONS,
 });
+let _log_lvl = 0;
+const LOG_LVL = {
+  get: () => {
+    return _log_lvl;
+  },
+  set: (lvl: number) => {
+    _log_lvl = lvl;
+    return _log_lvl;
+  },
+};
 
 type ICfg = Record<(typeof requiredEnv)[number], string> & {
   ADMINS: number[];
@@ -36,7 +46,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   API_ID: number;
   SETTINGS: IConfigSettings;
   CHART: { width: number; height: number; ratio: number };
-  LOG_LVL: number;
+  LOG_LVL: typeof LOG_LVL;
 };
 
 function getCfg() {
@@ -61,7 +71,7 @@ function getCfg() {
   cfg.API_ID = Number(process.env.API_ID || -1);
   cfg.SETTINGS = DefaultConfigSettings;
   cfg.CHART = { width: 1280, height: 640, ratio: 1280 / 640 };
-  cfg.LOG_LVL = 0;
+  cfg.LOG_LVL = LOG_LVL;
 
   return Object.freeze(cfg);
 }
