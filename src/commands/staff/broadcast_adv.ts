@@ -90,6 +90,8 @@ async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string,
             void DBPoolManager.getPoolWrite
               .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
               .catch((e) => {});
+          } else {
+            console.error("Broadcasting adv error: ", e);
           }
         } else {
           console.error("Broadcasting adv error: ", e);
@@ -113,6 +115,8 @@ async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string,
               void DBPoolManager.getPoolWrite
                 .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
                 .catch((e) => {});
+            } else {
+              console.error("Broadcasting adv error: ", e);
             }
           } else {
             console.error("Broadcasting adv error: ", e);
