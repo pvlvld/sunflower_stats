@@ -85,6 +85,7 @@ async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string,
       }).catch((e) => {
         if (e instanceof GrammyError) {
           if (e.description.includes("bot was kicked")) {
+            console.log(e.description, chat_id);
             delete active.data[chat_id];
             void DBPoolManager.getPoolWrite
               .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
@@ -107,6 +108,7 @@ async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string,
         .catch((e) => {
           if (e instanceof GrammyError) {
             if (e.description.includes("bot was kicked")) {
+              console.log(e.description, chat_id);
               delete active.data[chat_id];
               void DBPoolManager.getPoolWrite
                 .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
