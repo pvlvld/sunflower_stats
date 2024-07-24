@@ -9,6 +9,7 @@ import { removeAnonimousActive } from "./staff/utils_cmd.js";
 import broadcast_chats_cmd from "./staff/broadcast_chats.js";
 import { donate_cmd, refreshDonate_cmd } from "./donate.js";
 import stats_chat_range_cmd from "./stats_chat_range.js";
+import { broadcast_adv } from "./staff/broadcast_adv.js";
 import collectGarbage from "../utils/collectGarbage.js";
 import { toggleCharts } from "./staff/toggleCharts.js";
 import botMemoryUsage from "./staff/botMemoryUsage.js";
@@ -252,6 +253,19 @@ function regCommands() {
   });
 
   group.hears("!toggleCharts", async (ctx) => toggleCharts(ctx));
+
+  group.hears(/^!ssadv/, async (ctx) => await broadcast_adv(ctx));
+  bot
+    .filter((ctx) => !!(ctx.msg?.caption ?? ctx.msg?.text)?.startsWith("!ssadv"))
+    .on("edited_message", (ctx) => {
+      if ((ctx.msg.caption || ctx.msg.text)?.startsWith("!ssadvt")) {
+        // @ts-expect-error
+        broadcast_adv(ctx);
+      } else {
+        // @ts-expect-error
+        broadcast_adv(ctx, false);
+      }
+    });
 
   group.hears(/^!ssr /, async (ctx) => react_cmd(ctx));
   // MUST BE THE LAST ONE
