@@ -103,18 +103,14 @@ async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string,
         break;
     }
   } catch (e) {
+    console.error(e);
     if (e instanceof GrammyError) {
       if (e.description.includes("bot was kicked")) {
-        console.log(e.description, chat_id);
         delete active.data[chat_id];
         void DBPoolManager.getPoolWrite
           .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
           .catch((e) => {});
-      } else {
-        console.error("Broadcasting adv error: ", e);
       }
-    } else {
-      console.error("Broadcasting adv error: ", e);
     }
     return false;
   }
@@ -139,20 +135,18 @@ function getMessageMedia(ctx: IGroupHearsContext): IMedia {
 async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
   let successfullySent = 0;
   let totalAttempts = 0;
-  let chat = "";
-  let user = "";
 
   ctx.api.config.use(autoRetry());
 
   const start = performance.now();
 
-  chat_loop: for (chat in active.data) {
+  chat_loop: for (const chat in active.data) {
     if (!chat.startsWith("-")) {
       delete active.data[chat];
       continue;
     }
 
-    for (user in active.data[chat]) {
+    for (const user in active.data[chat]) {
       if (moment().diff(moment(active.data[chat]![user]!.active_last), "days") < 4) {
         // Skip if bot joined less than 14 days ago
         const botJoinDate = await Database.stats.chat.firstRecordDate(Number(chat));
