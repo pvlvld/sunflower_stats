@@ -78,42 +78,26 @@ async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string,
   if (counter < 5220) {
     return true;
   }
-  switch (adv.media.type) {
-    case "Photo":
-    case "Animation":
-    case "Document":
-    case "Video":
-    case "Audio":
-      const method: IMediaMethods = `send${adv.media.type}`;
-      await ctx.api[method](chat_id, adv.media.file_id, {
-        reply_markup: adv.keyboard,
-        caption: adv.text,
-        disable_notification: true,
-        reply_parameters: {
-          message_id: -1,
-          allow_sending_without_reply: true,
-        },
-      }).catch((e) => {
-        if (e instanceof GrammyError) {
-          if (e.description.includes("bot was kicked")) {
-            console.log(e.description, chat_id);
-            delete active.data[chat_id];
-            void DBPoolManager.getPoolWrite
-              .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
-              .catch((e) => {});
-          } else {
-            console.error("Broadcasting adv error: ", e);
-          }
-        } else {
-          console.error("Broadcasting adv error: ", e);
-        }
-
-        return false;
-      });
-      break;
-    default:
-      await ctx.api
-        .sendMessage(chat_id, adv.text, {
+  try {
+    switch (adv.media.type) {
+      case "Photo":
+      case "Animation":
+      case "Document":
+      case "Video":
+      case "Audio":
+        const method: IMediaMethods = `send${adv.media.type}`;
+        await ctx.api[method](chat_id, adv.media.file_id, {
+          reply_markup: adv.keyboard,
+          caption: adv.text,
+          disable_notification: true,
+          reply_parameters: {
+            message_id: -1,
+            allow_sending_without_reply: true,
+          },
+        });
+        break;
+      default:
+        await ctx.api.sendMessage(chat_id, adv.text, {
           reply_markup: adv.keyboard,
           link_preview_options: { is_disabled: true },
           disable_notification: true,
@@ -121,24 +105,24 @@ async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string,
             message_id: -1,
             allow_sending_without_reply: true,
           },
-        })
-        .catch((e) => {
-          if (e instanceof GrammyError) {
-            if (e.description.includes("bot was kicked")) {
-              console.log(e.description, chat_id);
-              delete active.data[chat_id];
-              void DBPoolManager.getPoolWrite
-                .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
-                .catch((e) => {});
-            } else {
-              console.error("Broadcasting adv error: ", e);
-            }
-          } else {
-            console.error("Broadcasting adv error: ", e);
-          }
-
-          return false;
         });
+        break;
+    }
+  } catch (e) {
+    if (e instanceof GrammyError) {
+      if (e.description.includes("bot was kicked")) {
+        console.log(e.description, chat_id);
+        delete active.data[chat_id];
+        void DBPoolManager.getPoolWrite
+          .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
+          .catch((e) => {});
+      } else {
+        console.error("Broadcasting adv error: ", e);
+      }
+    } else {
+      console.error("Broadcasting adv error: ", e);
+    }
+    return false;
   }
 
   return true;
