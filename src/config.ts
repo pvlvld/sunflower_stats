@@ -39,7 +39,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   LOG_LVL: number;
 };
 
-function getCfg(): ICfg {
+function getCfg() {
   const cfg = {} as ICfg;
 
   for (const e of requiredEnv) {
