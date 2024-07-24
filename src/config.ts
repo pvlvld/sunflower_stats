@@ -36,6 +36,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
   API_ID: number;
   SETTINGS: IConfigSettings;
   CHART: { width: number; height: number; ratio: number };
+  LOG_LVL: number;
 };
 
 function getCfg(): ICfg {
@@ -60,6 +61,7 @@ function getCfg(): ICfg {
   cfg.API_ID = Number(process.env.API_ID || -1);
   cfg.SETTINGS = DefaultConfigSettings;
   cfg.CHART = { width: 1280, height: 640, ratio: 1280 / 640 };
+  cfg.LOG_LVL = 0;
 
   return Object.freeze(cfg);
 }
