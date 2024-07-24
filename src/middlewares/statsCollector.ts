@@ -13,7 +13,9 @@ export function StatsCollectorWrapper() {
       ctx.chat.id === ctx.from.id ||
       ctx.chatMember ||
       ctx.msg?.left_chat_member ||
-      cfg.IGNORE_IDS.includes(ctx.from.id) // anonimous users
+      // anonimous users
+      cfg.IGNORE_IDS.includes(ctx.from.id) ||
+      ctx.editedMessage
     ) {
       return await next();
     } else {
