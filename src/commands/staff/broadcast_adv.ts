@@ -37,6 +37,7 @@ async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
     sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.btn, text });
     broadcastToChats(ctx, { media, keyboard: keyboard?.btn, text });
   }
+  counter = 0;
 }
 
 function extractKeyboard(
@@ -70,8 +71,13 @@ function extractKeyboard(
 
   return { isBtn, btn, text };
 }
-
+//TODO: remove
+let counter = 0;
 async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string, adv: IMessage) {
+  counter++;
+  if (counter < 5220) {
+    return true;
+  }
   switch (adv.media.type) {
     case "Photo":
     case "Animation":
