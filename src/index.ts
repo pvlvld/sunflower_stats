@@ -42,7 +42,13 @@ async function main() {
   let server: http.Server | ReturnType<typeof createServer>;
   let runner: ReturnType<typeof run>;
 
-  const allowed_updates = ["message", "chat_member", "my_chat_member", "callback_query"] as const;
+  const allowed_updates = [
+    "message",
+    "chat_member",
+    "my_chat_member",
+    "callback_query",
+    "edited_message",
+  ] as const;
 
   active.load();
 
