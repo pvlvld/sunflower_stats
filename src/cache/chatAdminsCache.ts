@@ -9,7 +9,9 @@ class ChatAdminsCache {
   private _adminsCache: Record<number, IChatAdmin[] | undefined> = {};
 
   public getAdmins(chat_id: number): IChatAdmin[] {
-    return this._adminsCache[chat_id] ?? [];
+    const admins = this._adminsCache[chat_id] ?? [];
+    console.log("Admins:", chat_id, admins);
+    return admins;
   }
 
   public setAdmins(chat_id: number, admins: IChatAdmin[]): void {
