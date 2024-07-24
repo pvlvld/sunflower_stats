@@ -173,8 +173,6 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
         // Sending
         successfullySent += +(await sendAdvMessage(ctx, chat, adv));
         break;
-      } else {
-        console.log("Adv broadcast: ", chat, "Skip, last message more than 4 days ago");
       }
     }
   }
