@@ -34,8 +34,8 @@ async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
     await sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.btn, text });
   } else {
     await ctx.reply("Починаю розсилку!").catch((e) => {});
-    sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.btn, text });
-    broadcastToChats(ctx, { media, keyboard: keyboard?.btn, text });
+    await sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.btn, text });
+    await broadcastToChats(ctx, { media, keyboard: keyboard?.btn, text });
   }
 }
 
