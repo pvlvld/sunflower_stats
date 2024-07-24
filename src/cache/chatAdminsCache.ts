@@ -1,3 +1,5 @@
+import cfg from "../config.js";
+
 type IChatAdminStatus = "administrator" | "creator";
 
 interface IChatAdmin {
@@ -10,12 +12,14 @@ class ChatAdminsCache {
 
   public getAdmins(chat_id: number): IChatAdmin[] {
     const admins = this._adminsCache[chat_id] ?? [];
-    console.log("Admins:", chat_id, admins);
+    if (cfg.LOG_LVL > 1) {
+      console.log("Admins:", chat_id, admins);
+    }
     return admins;
   }
 
-  public setAdmins(chat_id: number, admins: IChatAdmin[]): void {
-    this._adminsCache[chat_id] = admins;
+  public setAdmins(chat_id: number, admins: IChatAdmin[]) {
+    return (this._adminsCache[chat_id] = admins);
   }
 
   public isAdmin(chat_id: number, user_id: number): boolean {
@@ -29,15 +33,16 @@ class ChatAdminsCache {
   }
 
   public removeAdmin(chat_id: number, user_id: number): IChatAdmin[] {
-    const updatedAdmins = this.getAdmins(chat_id).filter((admin) => admin.user_id !== user_id);
-    this._adminsCache[chat_id] = updatedAdmins;
-    return updatedAdmins;
+    return this.setAdmins(
+      chat_id,
+      this.getAdmins(chat_id).filter((admin) => admin.user_id !== user_id)
+    );
   }
 
-  public addAdmin(chat_id: number, admin: IChatAdmin): void {
+  public addAdmin(chat_id: number, admin: IChatAdmin): IChatAdmin[] {
     const admins = this.removeAdmin(chat_id, admin.user_id);
     admins.push(admin);
-    this.setAdmins(chat_id, admins);
+    return this.setAdmins(chat_id, admins);
   }
 
   public getAdmin(chat_id: number, user_id: number): IChatAdmin | undefined {

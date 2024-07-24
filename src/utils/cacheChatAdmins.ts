@@ -15,9 +15,8 @@ async function cacheChatAdmins(chat_id: number) {
   for (const admin of apiAdmins) {
     admins.push({ user_id: admin.user.id, status: admin.status });
   }
-  cacheManager.ChatAdminsCache.setAdmins(chat_id, admins);
 
-  return admins;
+  return cacheManager.ChatAdminsCache.setAdmins(chat_id, admins);
 }
 
 export { cacheChatAdmins };
