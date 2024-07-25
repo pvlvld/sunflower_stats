@@ -3,7 +3,8 @@ import { autoRetry } from "@grammyjs/auto-retry";
 import cfg from "../../config.js";
 import { Database } from "../../db/db.js";
 import { DBPoolManager } from "../../db/poolManager.js";
-import { GrammyError, InlineKeyboard } from "grammy";
+import { extractAndMakeKeyboard, IKeyboard } from "../../utils/extractAndMakeKeyboard.js";
+import { GrammyError } from "grammy";
 import moment from "moment";
 import { IGroupHearsContext } from "../../types/context.js";
 
@@ -14,8 +15,7 @@ type IMedia = {
   file_id: string;
   type: IMediaMethodType;
 };
-type IMessage = { media: IMedia; keyboard: InlineKeyboard | undefined; text: string };
-type IKeyboard = InlineKeyboard | undefined;
+type IMessage = { media: IMedia; keyboard: IKeyboard | undefined; text: string };
 
 async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
   if (!cfg.ADMINS.includes(ctx.from.id)) {
@@ -24,51 +24,19 @@ async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
 
   const media = getMessageMedia(ctx);
   let text = (ctx.msg.text ?? ctx.msg.caption).slice("!ssadv ".length);
-  const keyboard = extractKeyboard(ctx, text);
+  const keyboard = extractAndMakeKeyboard(ctx, text);
   if (!keyboard) {
     return;
   }
   text = keyboard?.text ?? text;
   if (test) {
     // Echo for testing
-    await sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.btn, text });
+    await sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.keyboard, text });
   } else {
     await ctx.reply("Починаю розсилку!").catch((e) => {});
-    await sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.btn, text });
-    await broadcastToChats(ctx, { media, keyboard: keyboard?.btn, text });
+    await sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.keyboard, text });
+    await broadcastToChats(ctx, { media, keyboard: keyboard?.keyboard, text });
   }
-}
-
-function extractKeyboard(
-  ctx: IGroupHearsContext,
-  text: string
-): { isBtn: boolean; btn: IKeyboard; text: string } | undefined {
-  let isBtn = false;
-  let btn: IKeyboard = undefined;
-
-  if (text.includes("+btn ")) {
-    isBtn = true;
-    const text_parts = text.split("\n");
-    const raw_btn = text_parts.pop()!;
-    text = text_parts.join("\n");
-
-    // Syntax: +btn url text
-    const btn_parts = raw_btn.split(" ");
-    if (btn_parts.length < 3) {
-      return void ctx.reply("Помилка при створенні кнопки.").catch((e) => {});
-    }
-    void btn_parts.shift();
-    const btn_url = btn_parts.shift()!;
-    if (!btn_url.startsWith("https://")) {
-      return void ctx.reply(`Це не схоже на посилання: ${btn_url}`).catch((e) => {});
-    }
-    const btn_text = btn_parts.join(" ");
-    raw_btn;
-
-    btn = new InlineKeyboard().url(btn_text, btn_url);
-  }
-
-  return { isBtn, btn, text };
 }
 
 async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string, adv: IMessage) {
