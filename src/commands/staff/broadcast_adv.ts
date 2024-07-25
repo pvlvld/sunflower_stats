@@ -12,6 +12,7 @@ import {
   MediaTypes,
   sendMediaMessage,
 } from "../../utils/sendMediaMessage.js";
+import { getMessageMedia } from "../../utils/getMessageMedia.js";
 
 async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
   if (!cfg.ADMINS.includes(ctx.from.id)) {
@@ -33,20 +34,6 @@ async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
     await sendMediaMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.keyboard, text });
     await broadcastToChats(ctx, { media, keyboard: keyboard?.keyboard, text });
   }
-}
-
-function getMessageMedia(ctx: IGroupHearsContext): IMedia {
-  for (const type of MediaTypes) {
-    if (type in ctx.msg) {
-      if (Array.isArray(ctx.msg[type])) {
-        return { file_id: ctx.msg[type][0].file_id, type: toTitleCase(type) };
-      }
-      if (typeof ctx.msg[type] === "object") {
-        return { file_id: ctx.msg[type].file_id, type: toTitleCase(type) };
-      }
-    }
-  }
-  return { file_id: "", type: "Without" };
 }
 
 async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
@@ -88,10 +75,6 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
   const logMsg = `Розсилку закінчено за ${timeMinutes}хв ${timeSeconds}с.\nУспішно надіслано ${successfullySent} повідомлень за ${totalAttempts} спроб.`;
   console.log("Adv broadcast: ", logMsg);
   ctx.reply(logMsg).catch((e) => {});
-}
-
-function toTitleCase(type: (typeof MediaTypes)[number]) {
-  return (type[0].toUpperCase() + type.slice(1)) as IMediaMethodType;
 }
 
 export { broadcast_adv };
