@@ -2,20 +2,16 @@ import { active } from "../../data/active.js";
 import { autoRetry } from "@grammyjs/auto-retry";
 import cfg from "../../config.js";
 import { Database } from "../../db/db.js";
-import { DBPoolManager } from "../../db/poolManager.js";
-import { extractAndMakeKeyboard, IKeyboard } from "../../utils/extractAndMakeKeyboard.js";
-import { GrammyError } from "grammy";
+import { extractAndMakeKeyboard } from "../../utils/extractAndMakeKeyboard.js";
 import moment from "moment";
 import { IGroupHearsContext } from "../../types/context.js";
-
-const MediaTypes = ["photo", "animation", "video", "document", "audio"] as const;
-type IMediaMethodType = "Photo" | "Animation" | "Video" | "Audio" | "Document" | "Without";
-type IMediaMethods = "sendPhoto" | "sendAnimation" | "sendDocument" | "sendVideo" | "sendAudio";
-type IMedia = {
-  file_id: string;
-  type: IMediaMethodType;
-};
-type IMessage = { media: IMedia; keyboard: IKeyboard | undefined; text: string };
+import {
+  IMedia,
+  IMediaMethodType,
+  IMessage,
+  MediaTypes,
+  sendMediaMessage,
+} from "../../utils/sendMediaMessage.js";
 
 async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
   if (!cfg.ADMINS.includes(ctx.from.id)) {
@@ -31,59 +27,12 @@ async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
   text = keyboard?.text ?? text;
   if (test) {
     // Echo for testing
-    await sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.keyboard, text });
+    await sendMediaMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.keyboard, text });
   } else {
     await ctx.reply("Починаю розсилку!").catch((e) => {});
-    await sendAdvMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.keyboard, text });
+    await sendMediaMessage(ctx, ctx.chat.id, { media, keyboard: keyboard?.keyboard, text });
     await broadcastToChats(ctx, { media, keyboard: keyboard?.keyboard, text });
   }
-}
-
-async function sendAdvMessage(ctx: IGroupHearsContext, chat_id: number | string, adv: IMessage) {
-  try {
-    switch (adv.media.type) {
-      case "Photo":
-      case "Animation":
-      case "Document":
-      case "Video":
-      case "Audio":
-        const method: IMediaMethods = `send${adv.media.type}`;
-        await ctx.api[method](chat_id, adv.media.file_id, {
-          reply_markup: adv.keyboard,
-          caption: adv.text,
-          disable_notification: true,
-          reply_parameters: {
-            message_id: -1,
-            allow_sending_without_reply: true,
-          },
-        });
-        break;
-      default:
-        await ctx.api.sendMessage(chat_id, adv.text, {
-          reply_markup: adv.keyboard,
-          link_preview_options: { is_disabled: true },
-          disable_notification: true,
-          reply_parameters: {
-            message_id: -1,
-            allow_sending_without_reply: true,
-          },
-        });
-        break;
-    }
-  } catch (e) {
-    console.error(e);
-    if (e instanceof GrammyError) {
-      if (e.description.includes("bot was kicked")) {
-        delete active.data[chat_id];
-        void DBPoolManager.getPoolWrite
-          .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
-          .catch((e) => {});
-      }
-    }
-    return false;
-  }
-
-  return true;
 }
 
 function getMessageMedia(ctx: IGroupHearsContext): IMedia {
@@ -125,7 +74,7 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
         totalAttempts++;
 
         // Sending
-        successfullySent += +(await sendAdvMessage(ctx, chat, adv));
+        successfullySent += +(await sendMediaMessage(ctx, chat, adv));
         break;
       }
     }
