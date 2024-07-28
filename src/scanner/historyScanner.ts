@@ -208,9 +208,11 @@ class HistoryScanner extends MTProtoClient {
   }
 
   private async _getFirstMessageDate(identifier: string | number) {
-    return (
+    const date = (
       await this._client.getHistory(identifier, { reverse: true, limit: 1 }).catch((e) => {})
     )?.[0]?.date;
+    console.info(`HistoryScanner: _getFirstMessageDate: ${date}, ${identifier}`);
+    return date;
   }
 
   private _isDifferentDay(date1: Date, date2: Date): boolean {
