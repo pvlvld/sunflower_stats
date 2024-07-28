@@ -1,7 +1,7 @@
 import type { IContext } from "../types/context.js";
 
 async function hello(ctx: IContext) {
-  return void (await ctx
+  return await ctx
     .reply(
       `
 Привіт! Я неймовірно радий, що ви додали мене до свого чату ❤️
@@ -24,7 +24,7 @@ async function hello(ctx: IContext) {
         },
       }
     )
-    .catch((e) => {}));
+    .catch((e) => {});
 }
 
 export { hello };
