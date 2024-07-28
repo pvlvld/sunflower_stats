@@ -74,17 +74,17 @@ class HistoryScanner extends MTProtoClient {
       );
     }
 
-    const endDate = await DBStats.chat.firstRecordDate(chat_id);
+    const endDate = await DBStats.chat.firstRecordDate(chat_id) || new Date();
 
-    if (!endDate) {
-      return createReportAndLeave(
-        chat_id,
-        false,
-        0,
-        "Не вдалось отримати дату першого повідомлення в чаті.",
-        this._client
-      );
-    }
+    // if (!endDate) {
+    //   return createReportAndLeave(
+    //     chat_id,
+    //     false,
+    //     0,
+    //     "Не вдалось отримати дату першого повідомлення в чаті.",
+    //     this._client
+    //   );
+    // }
 
     if (typeof identifier === "string" && !identifier.startsWith("@")) {
       identifier = chat_id;
