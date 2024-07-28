@@ -15,11 +15,11 @@ function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatU
     
 📊 Актив: 
 
-- за день: ${dbStats.today || 0}
-- за тиждень: ${dbStats.week || 0}
-- за місяць: ${dbStats.month || 0}
-- за рік: ${dbStats.year || 0}
-- за весь час: ${dbStats.total || 0}
+- за день: ${(dbStats.today || 0).toLocaleString("fr-FR")}
+- за тиждень: ${(dbStats.week || 0).toLocaleString("fr-FR")}
+- за місяць: ${(dbStats.month || 0).toLocaleString("fr-FR")}
+- за рік: ${(dbStats.year || 0).toLocaleString("fr-FR")}
+- за весь час: ${(dbStats.total || 0).toLocaleString("fr-FR")}
 
 📅 Перша поява в чаті: ${
     active.data[chat_id]?.[user_id]?.active_first

@@ -27,9 +27,9 @@ export function getStatsRatingPlusToday(
       if (userData) {
         nickname = userData.nickname || userData.name || "Невідомо";
         replyParts.push(
-          `${displayRank}. ${getUserNameLink.html(nickname, userData.username, user.user_id)} — ${
+          `${displayRank}. ${getUserNameLink.html(nickname, userData.username, user.user_id)} — ${(
             user.count || 0
-          }\n`
+          ).toLocaleString("fr-FR")}\n`
         );
         statsRowsCount++;
         displayRank++;
