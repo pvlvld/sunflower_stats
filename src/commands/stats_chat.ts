@@ -56,7 +56,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
   if (stats.length === 0) {
     return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats, {
-      caption: "👀 Схоже, що повідомлень за сьогодні ще немає.",
+      caption: `👀 Схоже, що повідомлень за ${rawCmdDateRange} ще немає.`,
     }));
   }
 
