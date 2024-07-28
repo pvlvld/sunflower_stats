@@ -74,7 +74,7 @@ class HistoryScanner extends MTProtoClient {
       );
     }
 
-    const endDate = await DBStats.chat.firstRecordDate(chat_id) || new Date();
+    const endDate = (await DBStats.chat.firstRecordDate(chat_id)) || new Date();
 
     // if (!endDate) {
     //   return createReportAndLeave(
