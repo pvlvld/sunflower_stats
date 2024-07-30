@@ -11,6 +11,12 @@ async function memes(ctx: Context) {
     if (text?.match(/hamster_kombat_bot/i)) {
       return void (await ctx.react("💩"));
     }
+
+    if (ctx.msg?.text === "@pvlvld" || ctx.msg?.text === "@uli_sunflower") {
+      return void ctx.react("❤").catch((e) => {});
+    }
+    if (ctx.msg?.text?.includes("pvlvld") || ctx.msg?.text?.includes("uli_sunflower"))
+      ctx.react("👀").catch((e) => {});
   } catch (e) {}
 }
 
