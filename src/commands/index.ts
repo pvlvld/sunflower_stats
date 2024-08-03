@@ -93,7 +93,7 @@ function regCommands() {
     }
   );
 
-  groupStats.hears(/^(!я|!йа|хто я|!хто я)$/i, async (ctx) => {
+  groupStats.hears(/^(!?)(я|йа|хто я)$/i, async (ctx) => {
     botStatsManager.commandUse("я");
     stats_user(ctx, "я");
   });
