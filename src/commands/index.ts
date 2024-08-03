@@ -109,12 +109,12 @@ function regCommands() {
     stats_user(ctx, "ти");
   });
 
-  group.hears(/^(\+нік|\+нікнейм)/i, async (ctx) => {
+  group.hears(/^(\+(нік|нікнейм))/i, async (ctx) => {
     botStatsManager.commandUse("нік");
     set_nickname(ctx);
   });
 
-  group.hears(/^(-нік|-нікнейм)/i, async (ctx) => {
+  group.hears(/^-(нік|нікнейм)/i, async (ctx) => {
     botStatsManager.commandUse("нік");
     del_nickname(ctx);
   });
