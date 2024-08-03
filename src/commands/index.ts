@@ -98,7 +98,7 @@ function regCommands() {
     stats_user(ctx, "я");
   });
 
-  groupStats.hears(/^(!ти|хто ти)/i, async (ctx) => {
+  groupStats.hears(/^(!?)(ти|хто ти)/i, async (ctx) => {
     if (
       (!ctx.msg.reply_to_message && !ctx.msg?.text?.startsWith("!ти ")) ||
       (ctx.msg.reply_to_message && !["!ти", "хто ти"].includes(ctx.msg?.text || ""))
@@ -119,7 +119,7 @@ function regCommands() {
     del_nickname(ctx);
   });
 
-  groupStats.hears(/^(!інактив|!неактив)/i, async (ctx) => {
+  groupStats.hears(/^!(інактив|неактив)/i, async (ctx) => {
     botStatsManager.commandUse("інактив");
     chatInactive_cmd(ctx);
   });
