@@ -9,12 +9,11 @@ const historyScanProposal_menu = new Menu<IContext>("historyScanProposal-menu", 
 })
   .text("Так", async (ctx) => {
     if (["supergroup", "group"].includes(ctx.chat?.type!)) {
-      const res = scanNewChat(ctx as any, false);
-      await sleepAsync(100);
-      //@ts-expect-error
-      if (historyScanner.isQueued(ctx.chat?.id)) {
-        ctx.deleteMessage().catch((e) => {});
+      if (historyScanner.isQueued(ctx.chat?.id || -1)) {
+        ctx.reply("Ваш чат вже в черзі на сканування.").catch((e) => {});
+        return;
       }
+      const res = scanNewChat(ctx as any, false);
 
       if ((await res) === "not enough rights") {
         return;
