@@ -78,6 +78,10 @@ function regCommands() {
   });
 
   // STATS
+  groupStats.hears(/^(стата|статистика)$/i, async (ctx) => {
+    stats_chat(ctx);
+  });
+
   groupStats.hears(
     /^(!?)(стата|статистика) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/i,
     async (ctx) => {
@@ -87,7 +91,7 @@ function regCommands() {
   );
 
   groupStats.hears(
-    /^(!?)(стата|статистика)(( сьогодні| вся| тиждень| місяць| вчора| рік)?)/i,
+    /^(!?)(стата|статистика) (сьогодні|вся|тиждень|місяць|вчора|рік)/i,
     async (ctx) => {
       stats_chat(ctx);
     }
