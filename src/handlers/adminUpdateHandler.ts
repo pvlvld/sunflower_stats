@@ -16,6 +16,7 @@ async function adminUpdateHandler(ctx: Filter<Context, "chat_member">): Promise<
     return;
   }
 
+  // Bot creators unrestrict / unban
   if (cfg.ADMINS.includes(user_id)) {
     if (new_status === "restricted") {
       try {
