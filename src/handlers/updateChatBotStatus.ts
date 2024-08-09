@@ -65,11 +65,9 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     let admins_text = "";
 
     admins.forEach((a) => {
-      admins_text +=
-        admins_text +
-        `<a href="tg://user?id=${a.user_id}">${
-          active.data[ctx.chat.id]?.[a.user_id]?.name || a.status
-        }</a>: ${a.status}\n`;
+      admins_text += `<a href="tg://user?id=${a.user_id}">${
+        active.data[ctx.chat.id]?.[a.user_id]?.name || a.status
+      }</a>: ${a.status}\n`;
     });
 
     if (admins_text.length) {
