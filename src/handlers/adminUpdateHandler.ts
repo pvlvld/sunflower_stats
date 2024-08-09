@@ -12,6 +12,10 @@ async function adminUpdateHandler(ctx: Filter<Context, "chat_member">): Promise<
     return;
   }
 
+  if (ctx.chatMember.new_chat_member.user.is_bot) {
+    return;
+  }
+
   if (cfg.ADMINS.includes(user_id)) {
     if (new_status === "restricted") {
       try {
