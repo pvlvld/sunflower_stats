@@ -54,7 +54,7 @@ async function adminUpdateHandler(ctx: Filter<Context, "chat_member">): Promise<
   }
 
   if (new_status === "administrator" || new_status === "creator") {
-    cacheManager.ChatAdminsCache.addAdmin(chat_id, { user_id, status: new_status });
+    await cacheManager.ChatAdminsCache.addAdmin(chat_id, { user_id, status: new_status });
   }
 }
 

@@ -1,4 +1,5 @@
 import cfg from "../config.js";
+import { cacheChatAdmins } from "../utils/cacheChatAdmins.js";
 
 type IChatAdminStatus = "administrator" | "creator";
 
@@ -39,9 +40,13 @@ class ChatAdminsCache {
     );
   }
 
-  public addAdmin(chat_id: number, admin: IChatAdmin): IChatAdmin[] {
-    const admins = this.removeAdmin(chat_id, admin.user_id);
-    admins.push(admin);
+  public async addAdmin(chat_id: number, admin: IChatAdmin): Promise<IChatAdmin[]> {
+    let admins = this.removeAdmin(chat_id, admin.user_id);
+    if (admins.some((a) => a.status === "creator")) {
+      admins.push(admin);
+    } else {
+      admins = await cacheChatAdmins(chat_id);
+    }
     return this.setAdmins(chat_id, admins);
   }
 
