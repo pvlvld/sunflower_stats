@@ -1,4 +1,4 @@
-import { Chat, TelegramClient } from "@mtcute/node";
+import { Chat, networkMiddlewares, TelegramClient } from "@mtcute/node";
 
 class MTProtoClient {
   protected _client: TelegramClient;
@@ -7,8 +7,12 @@ class MTProtoClient {
     this._client = new TelegramClient({
       apiId,
       apiHash,
-      floodSleepThreshold: 0,
       logLevel: 1,
+      network: {
+        middlewares: networkMiddlewares.basic({
+          floodWaiter: { maxWait: Infinity, minStoredWait: 1 },
+        }),
+      },
     });
     this._client.run({}, async (self) => {
       console.log(`Scanner: Logged in as ${self.displayName}`);
