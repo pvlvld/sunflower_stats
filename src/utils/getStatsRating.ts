@@ -27,7 +27,6 @@ export function getStatsRatingPlusToday(
       userData = activeData?.[user.user_id];
 
       if (userData) {
-        nickname = userData.nickname || userData.name || "Невідомо";
         replyParts.push(
           `${displayRank}. ${getUserNameString(settings, userData, user.user_id)} — ${(
             user.count || 0
@@ -48,7 +47,11 @@ export function getStatsRatingPlusToday(
 
 function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_id: number) {
   if (settings.userstatslink) {
-    return getUserNameLink.html(userData.nickname || userData.name, userData.username, user_id);
+    return getUserNameLink.html(
+      userData.nickname || userData.name || "Невідомо",
+      userData.username,
+      user_id
+    );
   } else {
     if (userData.nickname) {
       return `${userData.nickname} (${userData.name})`;
