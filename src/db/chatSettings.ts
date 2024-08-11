@@ -18,7 +18,7 @@ class DbChatSettingWrapper {
     try {
       settings_db = (
         await this._poolManager.getPoolRead.query(
-          `SELECT charts, statsadminsonly, usechatbgforall, selfdestructstats, userstatslink FROM chats WHERE chat_id = ${chat_id};`
+          `SELECT charts, statsadminsonly, usechatbgforall, selfdestructstats, userstatslink, line_color, font_color FROM chats WHERE chat_id = ${chat_id};`
         )
       ).rows[0] as IChatSettings | undefined;
     } catch (e) {
