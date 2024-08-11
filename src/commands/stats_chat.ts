@@ -4,6 +4,7 @@ import { getStatsRatingPlusToday } from "../utils/getStatsRating.js";
 import type { IGroupTextContext } from "../types/context.js";
 import { getStatsChart } from "../chart/getStatsChart.js";
 import { IDBChatUserStats } from "../types/stats.js";
+import { IChatSettings } from "../types/settings.js";
 import { botStatsManager } from "./botStats.js";
 import cacheManager from "../cache/cache.js";
 import { DBStats } from "../db/stats.js";
@@ -70,7 +71,14 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     );
 
     if (cachedChart.status === "ok") {
-      const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, true);
+      const statsMessage = getStatsMessage(
+        chat_id,
+        dateRange,
+        rawCmdDateRange,
+        stats,
+        chatSettings,
+        true
+      );
       msgTime = String(process.hrtime.bigint());
       chartTime = msgTime;
 
@@ -84,7 +92,14 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         chatSettings.selfdestructstats
       );
     } else if (cachedChart.status === "unrendered") {
-      const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, true);
+      const statsMessage = getStatsMessage(
+        chat_id,
+        dateRange,
+        rawCmdDateRange,
+        stats,
+        chatSettings,
+        true
+      );
       msgTime = String(process.hrtime.bigint());
 
       const chartImage = await getStatsChart(
@@ -119,7 +134,14 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   }
 
   if (reply === undefined) {
-    const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, false);
+    const statsMessage = getStatsMessage(
+      chat_id,
+      dateRange,
+      rawCmdDateRange,
+      stats,
+      chatSettings,
+      false
+    );
     msgTime = String(process.hrtime.bigint());
 
     reply = await sendSelfdestructMessage(
@@ -153,11 +175,12 @@ function getStatsMessage(
   dateRange: IDateRange,
   rawCmdDateRange: keyof typeof cmdToDateRangeMap,
   stats: IDBChatUserStats[],
+  settings: IChatSettings,
   chart: boolean
 ) {
   return (
     `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
-    getStatsRatingPlusToday(stats, chat_id, chart ? "caption" : "text")
+    getStatsRatingPlusToday(stats, chat_id, settings, chart ? "caption" : "text")
   );
 }
 

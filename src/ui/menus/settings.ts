@@ -36,6 +36,12 @@ function getSettingButtonsText(setting: keyof IChatSettings, status: boolean) {
       } else {
         return "Увімкнути самознищення повіомлень";
       }
+    case "userstatslink":
+      if (status) {
+        return "Вимкнути покликання на акаунти в статі";
+      } else {
+        return "Увімкнути покликання на акаунти в статі";
+      }
     default:
       throw new Error("Unknown chat setting!");
   }
@@ -101,6 +107,15 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
         async (ctx) => {
           if (await isChatOwner(chat_id, from_id)) {
             toggleSetting(ctx, chat_id, chatSettings, "selfdestructstats");
+          }
+        }
+      )
+      .row()
+      .text(
+        `${getSettingButtonsText("userstatslink", chatSettings.userstatslink)}`,
+        async (ctx) => {
+          if (await isChatOwner(chat_id, from_id)) {
+            toggleSetting(ctx, chat_id, chatSettings, "userstatslink");
           }
         }
       );

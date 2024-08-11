@@ -1,10 +1,12 @@
 import type { IDBChatUserStats } from "../types/stats.js";
 import getUserNameLink from "./getUserNameLink.js";
-import { active } from "../data/active.js";
+import { active, IActiveUser } from "../data/active.js";
+import { IChatSettings } from "../types/settings.js";
 
 export function getStatsRatingPlusToday(
   stats: IDBChatUserStats[],
   chat_id: number,
+  settings: IChatSettings,
   type?: "caption" | "text"
 ) {
   const replyParts: string[] = [];
@@ -16,7 +18,7 @@ export function getStatsRatingPlusToday(
   let statsRowsCount = 0;
   let displayRank = 1;
   let user: IDBChatUserStats;
-  let userData: any;
+  let userData: IActiveUser | undefined;
   let nickname = "";
 
   for (let i = 0; i < stats.length; i++) {
@@ -27,7 +29,7 @@ export function getStatsRatingPlusToday(
       if (userData) {
         nickname = userData.nickname || userData.name || "Невідомо";
         replyParts.push(
-          `${displayRank}. ${getUserNameLink.html(nickname, userData.username, user.user_id)} — ${(
+          `${displayRank}. ${getUserNameString(settings, userData, user.user_id)} — ${(
             user.count || 0
           ).toLocaleString("fr-FR")}\n`
         );
@@ -42,4 +44,16 @@ export function getStatsRatingPlusToday(
   replyParts.push(`\nЗагальна кількість повідомлень: ${totalChatMessages.toLocaleString("fr-FR")}`);
 
   return replyParts.join("");
+}
+
+function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_id: number) {
+  if (settings.userstatslink) {
+    return getUserNameLink.html(userData.nickname || userData.name, userData.username, user_id);
+  } else {
+    if (userData.nickname) {
+      return `${userData.nickname} (${userData.name})`;
+    } else {
+      return userData.name;
+    }
+  }
 }

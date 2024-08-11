@@ -33,6 +33,7 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
           getStatsRatingPlusToday(
             await DBStats.chat.inRage(chat_id, [dateRange[0], dateRange[1]]),
             chat_id,
+            chatSettings,
             "text"
           ),
         chart: undefined,
@@ -47,7 +48,12 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
       isChart: false,
       text:
         `📊 Статистика чату за ${dateRange[0]}:\n\n` +
-        getStatsRatingPlusToday(await DBStats.chat.date(chat_id, dateRange[0]), chat_id, "text"),
+        getStatsRatingPlusToday(
+          await DBStats.chat.date(chat_id, dateRange[0]),
+          chat_id,
+          chatSettings,
+          "text"
+        ),
       chart: undefined,
     },
     chatSettings.selfdestructstats

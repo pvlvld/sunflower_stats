@@ -60,7 +60,8 @@ class DbChatSettingWrapper {
           statsadminsonly = ${settings.statsadminsonly},
           usechatbgforall = ${settings.usechatbgforall},
           line_color = '${settings.line_color}',
-          font_color = '${settings.font_color}'
+          font_color = '${settings.font_color}',
+          userstatslink = '${settings.userstatslink}'
       WHERE chat_id = ${chat_id};
       `));
     } catch (error) {
