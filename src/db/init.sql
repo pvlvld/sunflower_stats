@@ -10,6 +10,7 @@ CREATE TABLE
     charts boolean NOT NULL DEFAULT true,
     statsadminsonly boolean NOT NULL DEFAULT false,
     usechatbgforall boolean NOT NULL DEFAULT false,
+    userStatsLink  boolean NOT NULL DEFAULT true,
     line_color char(6),
     font_color char(6)
     );
