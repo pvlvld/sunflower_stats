@@ -31,6 +31,7 @@ ${ctx.chat!.title}
 Фон чату для команд !я та !ти ${chatSettings.usechatbgforall ? "✅" : "❌"}
 Команди статистики лише для адмінів ${chatSettings.statsadminsonly ? "✅" : "❌"}
 Самознищення повідомлень ${chatSettings.selfdestructstats ? "✅" : "❌"}
+Покликання на акаунти ${chatSettings.userstatslink ? "✅" : "❌"}
 `;
 }
 
