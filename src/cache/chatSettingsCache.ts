@@ -8,6 +8,7 @@ const DefaultChatSettings = Object.freeze(
       statsadminsonly: false,
       usechatbgforall: false,
       selfdestructstats: false,
+      userStatsLink: true,
     },
     DefaultChartSettings
   )
