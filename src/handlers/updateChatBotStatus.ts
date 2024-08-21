@@ -46,7 +46,13 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
 
         await ctx.api.sendMessage(
           cfg.ANALYTICS_CHAT,
-          `✅📈 #Join ${ctx.chat.title}\nMembers count: <b>${membersCount}</b>\nID: ${ctx.chat.id}\nusername: @${ctx.chat.username}\ninvite:${invite}`,
+          `✅📈 #Join ${ctx.chat.title}\nMembers count: <b>${membersCount}</b>\nID: ${
+            ctx.chat.id
+          }\nusername: @${ctx.chat.username}\ninvite:${invite}\nInvited by: ${getUserNameLink.html(
+            ctx.from.first_name,
+            ctx.from.username,
+            ctx.from.id
+          )} (id: ${ctx.from.id})`,
           {
             reply_parameters: { message_id: -1, allow_sending_without_reply: true },
             link_preview_options: { is_disabled: true },
