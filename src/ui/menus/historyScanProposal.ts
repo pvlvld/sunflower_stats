@@ -8,7 +8,11 @@ const historyScanProposal_menu = new Menu<IContext>("historyScanProposal-menu", 
   autoAnswer: true,
 })
   .text("Так", async (ctx) => {
-    if (["supergroup", "group"].includes(ctx.chat?.type!)) {
+    if (
+      ctx.chat?.id &&
+      ["supergroup", "group"].includes(ctx.chat?.type!) &&
+      (await isChatOwner(ctx.chat.id, ctx.from.id))
+    ) {
       if (historyScanner.isQueued(ctx.chat?.id || -1)) {
         ctx.reply("Ваш чат вже в черзі на сканування.").catch((e) => {});
         return;
