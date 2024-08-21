@@ -1,7 +1,7 @@
 import { historyScanner } from "../../scanner/historyScanner.js";
 import { scanNewChat } from "../../scanner/scanNewChat.js";
 import type { IContext } from "../../types/context.js";
-import { sleepAsync } from "../../utils/sleep.js";
+import isChatOwner from "../../utils/isChatOwner.js";
 import { Menu } from "@grammyjs/menu";
 
 const historyScanProposal_menu = new Menu<IContext>("historyScanProposal-menu", {
