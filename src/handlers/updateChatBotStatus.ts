@@ -83,7 +83,13 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     await ctx.api
       .sendMessage(
         cfg.ANALYTICS_CHAT,
-        `❌📉 #Left ${ctx.chat.title}\nID: ${ctx.chat.id}\nusername: @${ctx.chat.username}\n${admins_text}`,
+        `❌📉 #Left ${ctx.chat.title}\nID: ${ctx.chat.id}\nusername: @${
+          ctx.chat.username
+        }\nKicked by: ${getUserNameLink.html(
+          ctx.from.first_name,
+          ctx.from.username,
+          ctx.from.id
+        )} (id: ${ctx.from.id})\n${admins_text}`,
         {
           reply_markup: leftGroup_menu,
           reply_parameters: { message_id: -1, allow_sending_without_reply: true },
