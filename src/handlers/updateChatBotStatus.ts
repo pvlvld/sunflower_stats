@@ -11,6 +11,7 @@ import { active } from "../data/active.js";
 import help_cmd from "../commands/help.js";
 import { DBStats } from "../db/stats.js";
 import cfg from "../config.js";
+import getUserNameLink from "../utils/getUserNameLink.js";
 
 async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
   // Bot join chat
