@@ -17,6 +17,10 @@ async function memes(ctx: Context) {
     }
     if (ctx.msg?.text?.includes("pvlvld") || ctx.msg?.text?.includes("uli_sunflower"))
       ctx.react("👀").catch((e) => {});
+
+    if (ctx.msg?.caption?.includes("екомендації по збору дикоросів")) {
+      ctx.deleteMessage();
+    }
   } catch (e) {}
 }
 
