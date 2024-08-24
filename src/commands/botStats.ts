@@ -52,6 +52,9 @@ function getStatsMsg() {
   statsMsg += "\n";
   statsMsg += `Chat charts: ${cacheManager.ChartCache_Chat.size}\n`;
   statsMsg += `User charts: ${cacheManager.ChartCache_User.size}\n`;
+  statsMsg += `Total messages: ${DBPoolManager.getPoolRead.query(
+    "SELECT SUM(count) FROM stats_daily;"
+  )}`;
   return statsMsg;
 }
 
