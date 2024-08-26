@@ -25,7 +25,7 @@ const BOT_STATS: IBotStats = {
   },
 };
 
-function getStatsMsg() {
+async function getStatsMsg() {
   let statsMsg = `
 Нових чатів: ${BOT_STATS.joinGroups}
 Покинуто чатів: ${BOT_STATS.leftGroups}
@@ -52,14 +52,16 @@ function getStatsMsg() {
   statsMsg += "\n";
   statsMsg += `Chat charts: ${cacheManager.ChartCache_Chat.size}\n`;
   statsMsg += `User charts: ${cacheManager.ChartCache_User.size}\n`;
-  statsMsg += `Total messages: ${DBPoolManager.getPoolRead.query(
-    "SELECT SUM(count) FROM stats_daily;"
-  )}`;
+  const totalMessagesInDB = (
+    await DBPoolManager.getPoolRead.query("SELECT SUM(count) FROM stats_daily;").catch((e) => {})
+  )?.rows[0]?.sum;
+  console.log(totalMessagesInDB);
+  statsMsg += `Total messages: ${totalMessagesInDB}`;
   return statsMsg;
 }
 
 async function bot_stats_cmd(ctx: IContext) {
-  await ctx.reply(getStatsMsg(), {
+  await ctx.reply(await getStatsMsg(), {
     link_preview_options: { is_disabled: true },
   });
 }
@@ -84,7 +86,7 @@ export const botStatsManager = {
   },
   sendToAnalyticsChat: async () => {
     return await bot.api
-      .sendMessage(cfg.ANALYTICS_CHAT, getStatsMsg(), { message_thread_id: 3126 })
+      .sendMessage(cfg.ANALYTICS_CHAT, await getStatsMsg(), { message_thread_id: 3126 })
       .catch(() => {});
   },
 };
