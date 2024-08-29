@@ -127,6 +127,7 @@ async function main() {
     await botStatsManager.sendToAnalyticsChat();
 
     console.log("Done.");
+    console.log(`Running NodeJS ${process.version}`);
     process.exit();
   }
 }
