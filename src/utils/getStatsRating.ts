@@ -19,7 +19,6 @@ export function getStatsRatingPlusToday(
   let displayRank = 1;
   let user: IDBChatUserStats;
   let userData: IActiveUser | undefined;
-  let nickname = "";
 
   for (let i = 0; i < stats.length; i++) {
     user = stats[i];
