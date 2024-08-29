@@ -156,7 +156,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
   }
 
   botStatsManager.commandUse(`стата ${rawCmdDateRange}`);
-  if (chat_id === -1001898242958) {
+  if ([-1001898242958, -1002144414380].includes(ctx.chat.id)) {
     if (!chartTime) {
       chartTime = msgTime;
     }
