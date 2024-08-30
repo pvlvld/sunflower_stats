@@ -22,7 +22,7 @@ const cmdToDateRangeMap = {
   undefined: "today",
 } as const;
 
-type IDateRange = (typeof cmdToDateRangeMap)[keyof typeof cmdToDateRangeMap];
+export type IDateRange = (typeof cmdToDateRangeMap)[keyof typeof cmdToDateRangeMap];
 export type IAllowedChartStatsRanges = Exclude<IDateRange, "today" | "yesterday" | "weekRange">;
 
 const allowedChartStatsRanges: IAllowedChartStatsRanges[] = [
