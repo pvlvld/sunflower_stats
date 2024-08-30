@@ -13,6 +13,7 @@ import { hydrateFiles } from "@grammyjs/files";
 import help_menu from "./ui/menus/help.js";
 import { Bot, matchFilter } from "grammy";
 import cfg from "./config.js";
+import { chatStatsPagination_menu } from "./ui/menus/statsPagination.js";
 
 const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 
@@ -57,4 +58,5 @@ bot.use(donate_menu);
 bot.use(settings_menu);
 bot.use(personalChartBgControl_menu);
 bot.use(historyScanProposal_menu);
+bot.use(chatStatsPagination_menu);
 export default bot;
