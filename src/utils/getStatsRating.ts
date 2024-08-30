@@ -2,11 +2,14 @@ import type { IDBChatUserStats } from "../types/stats.js";
 import getUserNameLink from "./getUserNameLink.js";
 import { active, IActiveUser } from "../data/active.js";
 import { IChatSettings } from "../types/settings.js";
+import { IDateRange } from "../commands/stats_chat.js";
 
 export function getStatsRatingPlusToday(
   stats: IDBChatUserStats[],
   chat_id: number,
   settings: IChatSettings,
+  page: number,
+  dateRange: IDateRange | "date",
   type?: "caption" | "text"
 ) {
   const replyParts: string[] = [];
@@ -16,9 +19,11 @@ export function getStatsRatingPlusToday(
   const activeData = active.data[chat_id];
 
   let statsRowsCount = 0;
-  let displayRank = 1;
+  const offset = statsRowLimit * page - statsRowLimit;
+  let displayRank = page === 1 ? 1 : offset + 1;
   let user: IDBChatUserStats;
   let userData: IActiveUser | undefined;
+  let validUsersCount = 0;
 
   for (let i = 0; i < stats.length; i++) {
     user = stats[i];
@@ -26,21 +31,31 @@ export function getStatsRatingPlusToday(
       userData = activeData?.[user.user_id];
 
       if (userData) {
-        replyParts.push(
-          `${displayRank}. ${getUserNameString(settings, userData, user.user_id)} — ${(
-            user.count || 0
-          ).toLocaleString("fr-FR")}\n`
-        );
-        statsRowsCount++;
-        displayRank++;
+        validUsersCount++;
+        if (validUsersCount > offset) {
+          replyParts.push(
+            `${displayRank}. ${getUserNameString(settings, userData, user.user_id)} — ${(
+              user.count || 0
+            ).toLocaleString("fr-FR")}\n`
+          );
+          statsRowsCount++;
+          displayRank++;
+        }
       }
     }
 
     totalChatMessages += user.count || 0;
   }
 
-  replyParts.push(`\nЗагальна кількість повідомлень: ${totalChatMessages.toLocaleString("fr-FR")}`);
-
+  replyParts.push(
+    `\nЗагальна кількість повідомлень<a href="${encodeStatsMetadata(
+      chat_id,
+      stats,
+      statsRowLimit,
+      dateRange,
+      page
+    )}">:</a> ${totalChatMessages.toLocaleString("fr-FR")}`
+  );
   return replyParts.join("");
 }
 

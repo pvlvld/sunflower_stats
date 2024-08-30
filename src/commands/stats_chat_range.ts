@@ -34,6 +34,8 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
             await DBStats.chat.inRage(chat_id, [dateRange[0], dateRange[1]]),
             chat_id,
             chatSettings,
+            1,
+            "date",
             "text"
           ),
         chart: undefined,
@@ -52,6 +54,8 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
           await DBStats.chat.date(chat_id, dateRange[0]),
           chat_id,
           chatSettings,
+          1,
+          "date",
           "text"
         ),
       chart: undefined,
