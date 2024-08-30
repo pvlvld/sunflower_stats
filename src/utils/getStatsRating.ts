@@ -59,3 +59,16 @@ function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_
     }
   }
 }
+
+
+function getStatsUsersCount(chat_id: number, stats: IDBChatUserStats[]) {
+  let user: IDBChatUserStats;
+  let activeData = active.data[chat_id];
+  let counter = 0;
+  for (user of stats) {
+    if (activeData?.[user.user_id]) {
+      counter++;
+    }
+  }
+  return counter;
+}
