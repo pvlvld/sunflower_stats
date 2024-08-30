@@ -60,6 +60,18 @@ function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_
   }
 }
 
+function encodeStatsMetadata(
+  chat_id: number,
+  stats: IDBChatUserStats[],
+  statsRowLimit: number,
+  dateRange: IDateRange | "date",
+  page: number
+) {
+  return `t.me/meta?u=${getStatsUsersCount(
+    chat_id,
+    stats
+  )}?l=${statsRowLimit}?r=${dateRange}?p=${page}`;
+}
 
 function getStatsUsersCount(chat_id: number, stats: IDBChatUserStats[]) {
   let user: IDBChatUserStats;
