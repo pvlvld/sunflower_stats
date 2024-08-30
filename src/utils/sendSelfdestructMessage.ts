@@ -4,6 +4,7 @@ import cacheManager from "../cache/cache.js";
 import { Message } from "@grammyjs/types";
 import { Database } from "../db/db.js";
 import cfg from "../config.js";
+import { Menu } from "@grammyjs/menu";
 
 type ISelfdestructMsgChartData = {
   isChart: true;
@@ -22,7 +23,8 @@ type ISelfdestructMsgData = ISelfdestructMsgChartData | ISelfdestructMsgWithoutC
 async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
   ctx: IGroupContext,
   data: T,
-  selfdestructstats: boolean
+  selfdestructstats: boolean,
+  reply_markup?: Menu<any>
 ): Promise<
   (T extends ISelfdestructMsgChartData ? Message.PhotoMessage : Message.TextMessage) | undefined
 > {
@@ -33,11 +35,13 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
       message = await ctx.replyWithPhoto(data.chart, {
         caption: data.text,
         disable_notification: true,
+        reply_markup,
       });
     } else {
       message = await ctx.reply(data.text, {
         disable_notification: true,
         link_preview_options: { is_disabled: true },
+        reply_markup,
       });
     }
 
