@@ -22,9 +22,6 @@ const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").
       text: "↝",
       middleware: [
         async (ctx: IContext) => {
-          if (baseInfo.pagesCount < baseInfo.currentPage + 1) {
-            return;
-          }
           changePage(ctx as IGroupTextContext, baseInfo, "next");
         },
       ],
@@ -33,9 +30,6 @@ const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").
       text: "↜",
       middleware: [
         async (ctx: IContext) => {
-          if (baseInfo.currentPage === 1) {
-            return;
-          }
           changePage(ctx as IGroupTextContext, baseInfo, "previous");
         },
       ],
@@ -115,6 +109,22 @@ async function getPage(
   direction: "previous" | "next"
 ) {
   const stats = await DBStats.chat.inRage(baseInfo.chat_id, baseInfo.dateRange as IDateRange);
+  let target_page = 1;
+  if (direction === "next") {
+    if (baseInfo.currentPage + 1 > baseInfo.pagesCount) {
+      target_page = 1;
+    } else {
+      target_page = baseInfo.currentPage + 1;
+    }
+  } else {
+    if (baseInfo.currentPage - 1 === 0) {
+      target_page = baseInfo.pagesCount;
+    } else {
+      target_page = baseInfo.currentPage - 1;
+    }
+  }
+
+  console.log(target_page);
   const statsMsesage = getStatsRatingPlusToday(
     stats,
     baseInfo.chat_id,
