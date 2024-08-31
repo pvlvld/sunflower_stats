@@ -22,6 +22,9 @@ const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").
       text: "↝",
       middleware: [
         async (ctx: IContext) => {
+          if (baseInfo.pagesCount < baseInfo.currentPage + 1) {
+            return;
+          }
           changePage(ctx as IGroupTextContext, baseInfo, "next");
         },
       ],
@@ -30,6 +33,9 @@ const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").
       text: "↜",
       middleware: [
         async (ctx: IContext) => {
+          if (baseInfo.currentPage === 1) {
+            return;
+          }
           changePage(ctx as IGroupTextContext, baseInfo, "previous");
         },
       ],
