@@ -1,6 +1,7 @@
 import type { IGroupTextContext } from "../types/context.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
 import { active } from "../data/active.js";
+import Escape from "../utils/escape.js";
 
 async function set_nickname(ctx: IGroupTextContext) {
   const chat_id = ctx.chat.id;
@@ -22,7 +23,7 @@ async function set_nickname(ctx: IGroupTextContext) {
     return;
   }
 
-  active.data[chat_id]![user_id]!.nickname = nickname;
+  active.data[chat_id]![user_id]!.nickname = Escape.html(nickname);
   await ctx.reply(`✅ Успішно встановлено нікнейм: ${nickname}`, {
     disable_notification: true,
     link_preview_options: { is_disabled: true },
