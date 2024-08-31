@@ -124,12 +124,11 @@ async function getPage(
     }
   }
 
-  console.log(target_page);
   const statsMsesage = getStatsRatingPlusToday(
     stats,
     baseInfo.chat_id,
     baseInfo.settings,
-    direction === "next" ? baseInfo.currentPage + 1 : baseInfo.currentPage - 1,
+    target_page,
     baseInfo.dateRange as IDateRange,
     "caption"
   );
