@@ -97,7 +97,7 @@ async function changePage(
   baseInfo: Awaited<ReturnType<typeof getBaseInfo>>,
   direction: "previous" | "next"
 ) {
-  if (baseInfo.settings.charts) {
+  if (ctx.msg.caption) {
     ctx.editMessageCaption({ caption: await getPage(baseInfo, direction) });
   } else {
     ctx.editMessageText(await getPage(baseInfo, direction));
