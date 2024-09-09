@@ -21,7 +21,7 @@ import bot from "./bot.js";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
-  console.error("Node NOT Exiting...");
+  console.error("You Shall Not Pass!");
   console.error(err);
 });
 
