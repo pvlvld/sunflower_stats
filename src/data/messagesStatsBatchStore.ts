@@ -1,63 +1,63 @@
 import { DBStats } from "../db/stats.js";
 
 class MessagesStatsBatchStore {
-  private _store = new Map<number, Map<number, number>>();
-  private _isWriting: boolean = false;
+    private _store = new Map<number, Map<number, number>>();
+    private _isWriting: boolean = false;
 
-  constructor() {
-    this._enableWriting();
-  }
-
-  public count(chat_id: number, user_id: number, count = 1) {
-    let chat = this._store.get(chat_id);
-
-    if (chat === undefined) {
-      chat = new Map();
-      this._store.set(chat_id, chat);
+    constructor() {
+        this._enableWriting();
     }
 
-    chat.set(user_id, (chat.get(user_id) || 0) + count);
-  }
+    public count(chat_id: number, user_id: number, count = 1) {
+        let chat = this._store.get(chat_id);
 
-  private *_writeIterator() {
-    for (let [chat_id, users] of this._store.entries()) {
-      for (let [user_id, count] of users.entries()) {
-        if (count !== 0) {
-          yield new UserStats(chat_id, user_id, count);
-          users.set(user_id, 0);
+        if (chat === undefined) {
+            chat = new Map();
+            this._store.set(chat_id, chat);
         }
-      }
-    }
-  }
 
-  private _enableWriting() {
-    if (this._isWriting) {
-      return;
+        chat.set(user_id, (chat.get(user_id) || 0) + count);
     }
-    this._isWriting = true;
 
-    // Write stats every 5 sec
-    setInterval(() => this.writeBatch(), 5 * 1000);
-  }
-
-  public writeBatch() {
-    let stats = {} as UserStats;
-    for (stats of this._writeIterator()) {
-      DBStats.user.countUserMessage(stats.chat_id, stats.user_id, stats.count);
+    private *_writeIterator() {
+        for (let [chat_id, users] of this._store.entries()) {
+            for (let [user_id, count] of users.entries()) {
+                if (count !== 0) {
+                    yield new UserStats(chat_id, user_id, count);
+                    users.set(user_id, 0);
+                }
+            }
+        }
     }
-  }
+
+    private _enableWriting() {
+        if (this._isWriting) {
+            return;
+        }
+        this._isWriting = true;
+
+        // Write stats every 5 sec
+        setInterval(() => this.writeBatch(), 5 * 1000);
+    }
+
+    public writeBatch() {
+        let stats = {} as UserStats;
+        for (stats of this._writeIterator()) {
+            DBStats.user.countUserMessage(stats.chat_id, stats.user_id, stats.count);
+        }
+    }
 }
 
 class UserStats {
-  public readonly chat_id: number;
-  public readonly user_id: number;
-  public readonly count: number;
+    public readonly chat_id: number;
+    public readonly user_id: number;
+    public readonly count: number;
 
-  constructor(chat_id: number, user_id: number, count: number) {
-    this.chat_id = chat_id;
-    this.user_id = user_id;
-    this.count = count;
-  }
+    constructor(chat_id: number, user_id: number, count: number) {
+        this.chat_id = chat_id;
+        this.user_id = user_id;
+        this.count = count;
+    }
 }
 
 const messagesStatsBatchStore = new MessagesStatsBatchStore();

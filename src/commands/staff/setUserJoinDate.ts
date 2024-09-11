@@ -5,32 +5,32 @@ import isChatOwner from "../../utils/isChatOwner.js";
 import { active } from "../../data/active.js";
 
 async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
-  let date = (parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string | undefined[])[1];
-  const chat_id = ctx.chat.id;
-  const target_id = ctx.msg.reply_to_message?.from?.id || ctx.from.id;
+    let date = (parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string | undefined[])[1];
+    const chat_id = ctx.chat.id;
+    const target_id = ctx.msg.reply_to_message?.from?.id || ctx.from.id;
 
-  if (!(await isChatOwner(chat_id, ctx.from.id))) {
-    return void (await ctx.reply("Ця команда доступна лише власнику чату!"));
-  }
+    if (!(await isChatOwner(chat_id, ctx.from.id))) {
+        return void (await ctx.reply("Ця команда доступна лише власнику чату!"));
+    }
 
-  date ??= "";
-  date = date.split(".").join("-");
+    date ??= "";
+    date = date.split(".").join("-");
 
-  if (!date || isValidDateOrDateRange([date])) {
-    return void (await ctx
-      .reply("Щось пішло не так.\nПриклад використання команди: !дата вступу 2024.01.01")
-      .catch((e) => {}));
-  }
+    if (!date || isValidDateOrDateRange([date])) {
+        return void (await ctx
+            .reply("Щось пішло не так.\nПриклад використання команди: !дата вступу 2024.01.01")
+            .catch((e) => {}));
+    }
 
-  if (!active.data[chat_id]?.[target_id]) {
-    return void (await ctx.reply("Користувача не знайдено."));
-  }
+    if (!active.data[chat_id]?.[target_id]) {
+        return void (await ctx.reply("Користувача не знайдено."));
+    }
 
-  active.data[chat_id][target_id].active_first = date;
+    active.data[chat_id][target_id].active_first = date;
 
-  return void (await ctx.reply(
-    `Успішно змінено дату першої появи в чаті ${active.data[chat_id][target_id].name}!`
-  ));
+    return void (await ctx.reply(
+        `Успішно змінено дату першої появи в чаті ${active.data[chat_id][target_id].name}!`
+    ));
 }
 
 export { setUserJoinDate_cmd };

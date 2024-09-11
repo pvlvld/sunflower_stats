@@ -7,61 +7,61 @@ import parseCmdArgs from "../utils/parseCmdArgs.js";
 import { DBStats } from "../db/stats.js";
 
 async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true) {
-  const dateRange = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string[];
+    const dateRange = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string[];
 
-  if (dateRange.length > 2 || (validateDate && !isValidDateOrDateRange(dateRange))) {
+    if (dateRange.length > 2 || (validateDate && !isValidDateOrDateRange(dateRange))) {
+        return void (await sendSelfdestructMessage(
+            ctx,
+            {
+                isChart: false,
+                text: 'Команда має мати такий формат:\n"стата 2022.04.13" або стата "2022.04.13 2022.04.14"',
+                chart: undefined,
+            },
+            true
+        ));
+    }
+    const chat_id = ctx.chat.id;
+    const chatSettings = await getCachedOrDBChatSettings(chat_id);
+
+    if (dateRange.length === 2) {
+        return void (await sendSelfdestructMessage(
+            ctx,
+            {
+                isChart: false,
+                text:
+                    `📊 Статистика чату за ${dateRange[0]} - ${dateRange[1]}:\n\n` +
+                    getStatsRatingPlusToday(
+                        await DBStats.chat.inRage(chat_id, [dateRange[0], dateRange[1]]),
+                        chat_id,
+                        chatSettings,
+                        1,
+                        "date",
+                        "text"
+                    ),
+                chart: undefined,
+            },
+            chatSettings.selfdestructstats
+        ));
+    }
+
     return void (await sendSelfdestructMessage(
-      ctx,
-      {
-        isChart: false,
-        text: 'Команда має мати такий формат:\n"стата 2022.04.13" або стата "2022.04.13 2022.04.14"',
-        chart: undefined,
-      },
-      true
+        ctx,
+        {
+            isChart: false,
+            text:
+                `📊 Статистика чату за ${dateRange[0]}:\n\n` +
+                getStatsRatingPlusToday(
+                    await DBStats.chat.date(chat_id, dateRange[0]),
+                    chat_id,
+                    chatSettings,
+                    1,
+                    "date",
+                    "text"
+                ),
+            chart: undefined,
+        },
+        chatSettings.selfdestructstats
     ));
-  }
-  const chat_id = ctx.chat.id;
-  const chatSettings = await getCachedOrDBChatSettings(chat_id);
-
-  if (dateRange.length === 2) {
-    return void (await sendSelfdestructMessage(
-      ctx,
-      {
-        isChart: false,
-        text:
-          `📊 Статистика чату за ${dateRange[0]} - ${dateRange[1]}:\n\n` +
-          getStatsRatingPlusToday(
-            await DBStats.chat.inRage(chat_id, [dateRange[0], dateRange[1]]),
-            chat_id,
-            chatSettings,
-            1,
-            "date",
-            "text"
-          ),
-        chart: undefined,
-      },
-      chatSettings.selfdestructstats
-    ));
-  }
-
-  return void (await sendSelfdestructMessage(
-    ctx,
-    {
-      isChart: false,
-      text:
-        `📊 Статистика чату за ${dateRange[0]}:\n\n` +
-        getStatsRatingPlusToday(
-          await DBStats.chat.date(chat_id, dateRange[0]),
-          chat_id,
-          chatSettings,
-          1,
-          "date",
-          "text"
-        ),
-      chart: undefined,
-    },
-    chatSettings.selfdestructstats
-  ));
 }
 
 export default stats_chat_range_cmd;

@@ -3,20 +3,20 @@ import cacheManager from "../cache/cache.js";
 import bot from "../bot.js";
 
 async function cacheChatAdmins(chat_id: number) {
-  const apiAdmins = await bot.api.getChatAdministrators(chat_id).catch((e) => {
-    console.error("Error caching chat admins.", e);
-  });
-  const admins: IChatAdmin[] = [];
+    const apiAdmins = await bot.api.getChatAdministrators(chat_id).catch((e) => {
+        console.error("Error caching chat admins.", e);
+    });
+    const admins: IChatAdmin[] = [];
 
-  if (apiAdmins === undefined) {
-    return admins;
-  }
+    if (apiAdmins === undefined) {
+        return admins;
+    }
 
-  for (const admin of apiAdmins) {
-    admins.push({ user_id: admin.user.id, status: admin.status });
-  }
+    for (const admin of apiAdmins) {
+        admins.push({ user_id: admin.user.id, status: admin.status });
+    }
 
-  return cacheManager.ChatAdminsCache.setAdmins(chat_id, admins);
+    return cacheManager.ChatAdminsCache.setAdmins(chat_id, admins);
 }
 
 export { cacheChatAdmins };

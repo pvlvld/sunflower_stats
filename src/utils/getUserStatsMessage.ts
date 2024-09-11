@@ -4,14 +4,14 @@ import Escape from "./escape.js";
 import moment from "moment";
 
 function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatUserStatsPeriods) {
-  const nickname = active.data[chat_id]?.[user_id]?.nickname;
+    const nickname = active.data[chat_id]?.[user_id]?.nickname;
 
-  return Escape.html(`
+    return Escape.html(`
 ❄️ Статистика ${
-    nickname
-      ? `${nickname} (${active.data[chat_id]?.[user_id]?.name})`
-      : `${active.data[chat_id]?.[user_id]?.name}`
-  }
+        nickname
+            ? `${nickname} (${active.data[chat_id]?.[user_id]?.name})`
+            : `${active.data[chat_id]?.[user_id]?.name}`
+    }
     
 📊 Актив: 
 
@@ -22,12 +22,12 @@ function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatU
 - за весь час: ${(dbStats.total || 0).toLocaleString("fr-FR")}
 
 📅 Перша поява в чаті: ${
-    active.data[chat_id]?.[user_id]?.active_first
-      ? `${active.data[chat_id]?.[user_id]?.active_first} (${moment(
-          active.data[chat_id]?.[user_id]?.active_first
-        ).fromNow()})`
-      : "невідомо"
-  }`);
+        active.data[chat_id]?.[user_id]?.active_first
+            ? `${active.data[chat_id]?.[user_id]?.active_first} (${moment(
+                  active.data[chat_id]?.[user_id]?.active_first
+              ).fromNow()})`
+            : "невідомо"
+    }`);
 }
 
 export default getUserStatsMessage;

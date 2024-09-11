@@ -18,8 +18,8 @@ import { chatStatsPagination_menu } from "./ui/menus/statsPagination.js";
 const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 
 const autoRetryTransformer = autoRetry({
-  maxDelaySeconds: 30,
-  maxRetryAttempts: 1,
+    maxDelaySeconds: 30,
+    maxRetryAttempts: 1,
 });
 
 // PLUGINS
@@ -35,11 +35,13 @@ const autoRetryTransformer = autoRetry({
 // API TRANSFORMERS
 
 bot.api.config.use(async function autoRetry(prev, method, payload, signal) {
-  if (["getChat", "getChatMemberCount", "deleteMessage", "answerCallbackQuery"].includes(method)) {
-    return autoRetryTransformer(prev, method, payload, signal);
-  }
+    if (
+        ["getChat", "getChatMemberCount", "deleteMessage", "answerCallbackQuery"].includes(method)
+    ) {
+        return autoRetryTransformer(prev, method, payload, signal);
+    }
 
-  return prev(method, payload, signal);
+    return prev(method, payload, signal);
 });
 bot.api.config.use(parseMode("HTML"));
 bot.api.config.use(hydrateFiles(bot.token));

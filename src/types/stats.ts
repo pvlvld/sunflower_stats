@@ -10,22 +10,22 @@
 // };
 
 export interface IStats {
-  [chat_id: string | number]:
-    | {
-        [user_id: string | number]: number | undefined;
-      }
-    | undefined;
+    [chat_id: string | number]:
+        | {
+              [user_id: string | number]: number | undefined;
+          }
+        | undefined;
 }
 
 export interface IDBChatUserStatsPeriods {
-  total: number;
-  year: number;
-  month: number;
-  week: number;
-  today: number;
+    total: number;
+    year: number;
+    month: number;
+    week: number;
+    today: number;
 }
 
 export interface IDBChatUserStats {
-  user_id: number;
-  count: number;
+    user_id: number;
+    count: number;
 }

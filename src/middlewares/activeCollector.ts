@@ -6,64 +6,64 @@ import Escape from "../utils/escape.js";
 import cfg from "../config.js";
 
 function ActiveCollectorWrapper() {
-  return async function activeCollector(ctx: Context, next: NextFunction) {
-    if (
-      !ctx.from ||
-      !ctx.chat ||
-      ctx.from.is_bot ||
-      ctx.chat.id === ctx.from.id ||
-      ctx.chatMember ||
-      ctx.msg?.left_chat_member ||
-      cfg.IGNORE_IDS.includes(ctx.from.id) // anonimous users
-    ) {
-      return await next();
-    } else {
-      const chat_id = ctx.chat.id;
-      const user_id = ctx.from.id;
-      active.data[chat_id] ??= {};
+    return async function activeCollector(ctx: Context, next: NextFunction) {
+        if (
+            !ctx.from ||
+            !ctx.chat ||
+            ctx.from.is_bot ||
+            ctx.chat.id === ctx.from.id ||
+            ctx.chatMember ||
+            ctx.msg?.left_chat_member ||
+            cfg.IGNORE_IDS.includes(ctx.from.id) // anonimous users
+        ) {
+            return await next();
+        } else {
+            const chat_id = ctx.chat.id;
+            const user_id = ctx.from.id;
+            active.data[chat_id] ??= {};
 
-      const today = formattedDate.today[0];
-      if (active.data[chat_id][user_id] === undefined) {
-        let active_first = (await getUserFirstStatsDate(chat_id, user_id)) || today;
+            const today = formattedDate.today[0];
+            if (active.data[chat_id][user_id] === undefined) {
+                let active_first = (await getUserFirstStatsDate(chat_id, user_id)) || today;
 
-        active_first ??= today;
-        active.data[chat_id][user_id] = new UserActive(
-          active_first,
-          today,
-          ctx.from.first_name,
-          "",
-          ctx.from.username || ""
-        );
-      } else {
-        active.data[chat_id][user_id].active_last = today;
-        active.data[chat_id][user_id].name = Escape.html(ctx.from.first_name);
-        active.data[chat_id][user_id].username = ctx.from.username || "";
-      }
-    }
+                active_first ??= today;
+                active.data[chat_id][user_id] = new UserActive(
+                    active_first,
+                    today,
+                    ctx.from.first_name,
+                    "",
+                    ctx.from.username || ""
+                );
+            } else {
+                active.data[chat_id][user_id].active_last = today;
+                active.data[chat_id][user_id].name = Escape.html(ctx.from.first_name);
+                active.data[chat_id][user_id].username = ctx.from.username || "";
+            }
+        }
 
-    return await next();
-  };
+        return await next();
+    };
 }
 
 class UserActive {
-  active_first = "";
-  active_last = "";
-  name = "";
-  nickname = "";
-  username = "";
-  constructor(
-    active_first: string,
-    active_last: string,
-    name: string,
-    nickname: string,
-    username: string
-  ) {
-    this.active_first = active_first;
-    this.active_last = active_last;
-    this.name = Escape.html(name);
-    this.nickname = nickname;
-    this.username = username;
-  }
+    active_first = "";
+    active_last = "";
+    name = "";
+    nickname = "";
+    username = "";
+    constructor(
+        active_first: string,
+        active_last: string,
+        name: string,
+        nickname: string,
+        username: string
+    ) {
+        this.active_first = active_first;
+        this.active_last = active_last;
+        this.name = Escape.html(name);
+        this.nickname = nickname;
+        this.username = username;
+    }
 }
 
 export default ActiveCollectorWrapper;

@@ -21,115 +21,115 @@ import bot from "./bot.js";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
-  console.error("You Shall Not Pass!");
-  console.error(err);
+    console.error("You Shall Not Pass!");
+    console.error(err);
 });
 
 bot.catch((err) => {
-  const ctx = err.ctx;
-  console.error(`Error while handling update ${ctx.update.update_id}:`);
-  const e = err.error;
-  if (e instanceof GrammyError) {
-    console.error("Error in request:", e.description);
-  } else if (e instanceof HttpError) {
-    console.error("Could not contact Telegram:", e);
-  } else {
-    console.error("Unknown error:", e);
-  }
+    const ctx = err.ctx;
+    console.error(`Error while handling update ${ctx.update.update_id}:`);
+    const e = err.error;
+    if (e instanceof GrammyError) {
+        console.error("Error in request:", e.description);
+    } else if (e instanceof HttpError) {
+        console.error("Could not contact Telegram:", e);
+    } else {
+        console.error("Unknown error:", e);
+    }
 });
 
 async function main() {
-  let server: http.Server | ReturnType<typeof createServer>;
-  let runner: ReturnType<typeof run>;
+    let server: http.Server | ReturnType<typeof createServer>;
+    let runner: ReturnType<typeof run>;
 
-  const allowed_updates = [
-    "message",
-    "chat_member",
-    "my_chat_member",
-    "callback_query",
-    "edited_message",
-  ] as const;
+    const allowed_updates = [
+        "message",
+        "chat_member",
+        "my_chat_member",
+        "callback_query",
+        "edited_message",
+    ] as const;
 
-  active.load();
+    active.load();
 
-  bot.use(ActiveCollectorWrapper());
-  bot.use(StatsCollectorWrapper());
-  bot.use(
-    limit({
-      timeFrame: 1500,
-      limit: 1,
-    })
-  );
-  bot.use(autoQuote({ allowSendingWithoutReply: true }));
-  bot.use(autoThread());
-  regHandlers();
-  regCommands();
+    bot.use(ActiveCollectorWrapper());
+    bot.use(StatsCollectorWrapper());
+    bot.use(
+        limit({
+            timeFrame: 1500,
+            limit: 1,
+        })
+    );
+    bot.use(autoQuote({ allowSendingWithoutReply: true }));
+    bot.use(autoThread());
+    regHandlers();
+    regCommands();
 
-  collectGarbage();
+    collectGarbage();
 
-  createScheduler();
+    createScheduler();
 
-  bot.api.deleteWebhook({ drop_pending_updates: true }).then(async () => {
-    if (process.env.WEBHOOK) {
-      server = createServer();
-      server.listen({ port: 443, host: "0.0.0.0" }, async (error) => {
-        if (error) {
-          console.error(error);
-          process.exit(1);
+    bot.api.deleteWebhook({ drop_pending_updates: true }).then(async () => {
+        if (process.env.WEBHOOK) {
+            server = createServer();
+            server.listen({ port: 443, host: "0.0.0.0" }, async (error) => {
+                if (error) {
+                    console.error(error);
+                    process.exit(1);
+                }
+            });
+            await bot.api.setWebhook(`https://soniashnyk.pp.ua/${cfg.BOT_TOKEN}`, {
+                drop_pending_updates: true,
+                allowed_updates,
+            });
+
+            console.log("Bot is started using webhook.");
+            console.log(await bot.api.getWebhookInfo());
+        } else {
+            run(bot, { runner: { fetch: { allowed_updates } } });
+            console.log("Bot is started using long polling.");
         }
-      });
-      await bot.api.setWebhook(`https://soniashnyk.pp.ua/${cfg.BOT_TOKEN}`, {
-        drop_pending_updates: true,
-        allowed_updates,
-      });
 
-      console.log("Bot is started using webhook.");
-      console.log(await bot.api.getWebhookInfo());
-    } else {
-      run(bot, { runner: { fetch: { allowed_updates } } });
-      console.log("Bot is started using long polling.");
+        bot.api.sendAnimation(cfg.ANALYTICS_CHAT, cfg.MEDIA.ANIMATIONS.ThePrimeagen, {
+            caption: "Бота запущено!",
+        });
+    });
+
+    process.on("SIGINT", async () => await shutdown(DBPoolManager));
+    process.on("SIGTERM", async () => await shutdown(DBPoolManager));
+
+    let isShuttingDown = false;
+
+    async function shutdown(DBPoolManager: IDBPoolManager) {
+        if (isShuttingDown) return;
+        console.log("Shutting down.");
+        isShuttingDown = true;
+
+        await runner?.stop();
+
+        await bot.stop().then(() => {
+            console.log("- Bot stopped.");
+        });
+
+        await bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
+            console.log("Webhook removed");
+        });
+
+        if (server && "close" in server) {
+            server.close(() => {
+                console.log("- Server closed.");
+            });
+        }
+
+        await DBPoolManager.shutdown();
+
+        await active.save();
+        await botStatsManager.sendToAnalyticsChat();
+
+        console.log("Done.");
+        console.log(`Running NodeJS ${process.version}`);
+        process.exit();
     }
-
-    bot.api.sendAnimation(cfg.ANALYTICS_CHAT, cfg.MEDIA.ANIMATIONS.ThePrimeagen, {
-      caption: "Бота запущено!",
-    });
-  });
-
-  process.on("SIGINT", async () => await shutdown(DBPoolManager));
-  process.on("SIGTERM", async () => await shutdown(DBPoolManager));
-
-  let isShuttingDown = false;
-
-  async function shutdown(DBPoolManager: IDBPoolManager) {
-    if (isShuttingDown) return;
-    console.log("Shutting down.");
-    isShuttingDown = true;
-
-    await runner?.stop();
-
-    await bot.stop().then(() => {
-      console.log("- Bot stopped.");
-    });
-
-    await bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
-      console.log("Webhook removed");
-    });
-
-    if (server && "close" in server) {
-      server.close(() => {
-        console.log("- Server closed.");
-      });
-    }
-
-    await DBPoolManager.shutdown();
-
-    await active.save();
-    await botStatsManager.sendToAnalyticsChat();
-
-    console.log("Done.");
-    console.log(`Running NodeJS ${process.version}`);
-    process.exit();
-  }
 }
 
 main();

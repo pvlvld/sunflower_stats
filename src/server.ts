@@ -3,15 +3,15 @@ import fastify from "fastify";
 import bot from "./bot.js";
 
 function createServer() {
-  const server = fastify();
+    const server = fastify();
 
-  server.setErrorHandler(async (error) => {
-    console.error(error);
-  });
+    server.setErrorHandler(async (error) => {
+        console.error(error);
+    });
 
-  server.post(`/${bot.token}`, webhookCallback(bot, "fastify"));
+    server.post(`/${bot.token}`, webhookCallback(bot, "fastify"));
 
-  return server;
+    return server;
 }
 
 export default createServer;

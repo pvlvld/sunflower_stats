@@ -6,19 +6,19 @@ import cfg from "../config.js";
 import bot from "../bot.js";
 
 function regHandlers() {
-  const group = bot.chatType(["group", "supergroup"]);
-  group.on("my_chat_member", async (ctx) => {
-    updateChatBotStatus_handler(ctx);
-  });
+    const group = bot.chatType(["group", "supergroup"]);
+    group.on("my_chat_member", async (ctx) => {
+        updateChatBotStatus_handler(ctx);
+    });
 
-  group.on("chat_member", (ctx) => {
-    if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.new_chat_member.status)) {
-      leaveChatMemberHandler(ctx);
-    } else if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.old_chat_member.status)) {
-      joinChatMember(ctx);
-    }
-    adminUpdateHandler(ctx);
-  });
+    group.on("chat_member", (ctx) => {
+        if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.new_chat_member.status)) {
+            leaveChatMemberHandler(ctx);
+        } else if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.old_chat_member.status)) {
+            joinChatMember(ctx);
+        }
+        adminUpdateHandler(ctx);
+    });
 }
 
 export default regHandlers;

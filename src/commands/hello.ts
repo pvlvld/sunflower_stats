@@ -1,9 +1,9 @@
 import type { IContext } from "../types/context.js";
 
 async function hello(ctx: IContext) {
-  return await ctx
-    .reply(
-      `
+    return await ctx
+        .reply(
+            `
 Привіт! Я неймовірно радий, що ви додали мене до свого чату ❤️
 Аби ми краще познайомились, я хочу розказати вам трішки про свою сім'ю.
 
@@ -15,16 +15,16 @@ async function hello(ctx: IContext) {
 
 <a href="https://soniashnyk_call_bot.t.me">Соняшник | Заклик</a>
 Швидко збере всіх учасників чату`,
-      {
-        disable_notification: true,
-        link_preview_options: { is_disabled: true },
-        reply_parameters: {
-          allow_sending_without_reply: true,
-          message_id: ctx.msg?.message_id ?? -1,
-        },
-      }
-    )
-    .catch((e) => {});
+            {
+                disable_notification: true,
+                link_preview_options: { is_disabled: true },
+                reply_parameters: {
+                    allow_sending_without_reply: true,
+                    message_id: ctx.msg?.message_id ?? -1,
+                },
+            }
+        )
+        .catch((e) => {});
 }
 
 export { hello };

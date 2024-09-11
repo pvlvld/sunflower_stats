@@ -5,25 +5,25 @@ import cacheManager from "../cache/cache.js";
 import { Database } from "../db/db.js";
 
 async function getCachedOrDBChatSettings(chat_id: number): Promise<IChatSettings> {
-  let chatSettings = cacheManager.ChatSettingsCache.get(chat_id);
-
-  if (chatSettings === undefined) {
-    chatSettings = await Database.chatSettings.get(chat_id);
+    let chatSettings = cacheManager.ChatSettingsCache.get(chat_id);
 
     if (chatSettings === undefined) {
-      chatSettings = { ...DefaultChatSettings };
+        chatSettings = await Database.chatSettings.get(chat_id);
+
+        if (chatSettings === undefined) {
+            chatSettings = { ...DefaultChatSettings };
+        }
+
+        void cacheManager.ChatSettingsCache.set(chat_id, chatSettings);
     }
 
-    void cacheManager.ChatSettingsCache.set(chat_id, chatSettings);
-  }
-
-  return chatSettings;
+    return chatSettings;
 }
 
 async function getChatSettingsMessageText(ctx: IContext) {
-  const chatSettings = await getCachedOrDBChatSettings(ctx.chat!.id);
+    const chatSettings = await getCachedOrDBChatSettings(ctx.chat!.id);
 
-  return `
+    return `
 ${ctx.chat!.title}
 Налаштування Соняшник | Статистика
 
