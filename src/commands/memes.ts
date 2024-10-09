@@ -21,6 +21,11 @@ async function memes(ctx: Context) {
         if (ctx.msg?.caption?.includes("екомендації по збору дикоросів")) {
             ctx.deleteMessage();
         }
+
+        if (ctx.msg?.from?.id == 5147076742) {
+            // Кіт
+            return void ctx.react("❤").catch((e) => {});
+        }
     } catch (e) {}
 }
 
