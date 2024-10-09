@@ -23,7 +23,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
         }
 
         for (let user in active.data[chat]) {
-            if (moment().diff(moment(active.data[chat][user]!.active_last), "days") < 3) {
+            if (moment().diff(moment(active.data[chat][user]!.active_last), "days") < 5) {
                 try {
                     totalAttemptsSent++;
                     void (await ctx.api.forwardMessage(
