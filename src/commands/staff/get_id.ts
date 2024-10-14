@@ -11,7 +11,7 @@ async function getId_cmd(
     const sender_id = ctx.from?.id;
     const reply_to_id = ctx.msg.reply_to_message?.from?.id;
     const photo_id = ctx.msg.reply_to_message?.photo
-        ? ctx.msg.reply_to_message.photo[ctx.msg.reply_to_message.photo.length - 1]
+        ? ctx.msg.reply_to_message.photo[ctx.msg.reply_to_message.photo.length - 1].file_id
         : undefined;
     const animation_id = ctx.msg.reply_to_message?.animation
         ? ctx.msg.reply_to_message.animation.file_id
