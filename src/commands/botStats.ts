@@ -27,13 +27,13 @@ const BOT_STATS: IBotStats = {
 
 async function getStatsMsg() {
     let statsMsg = `
-Нових чатів: ${BOT_STATS.joinGroups}
-Покинуто чатів: ${BOT_STATS.leftGroups}
-Загалом: ${BOT_STATS.joinGroups - BOT_STATS.leftGroups}
+Нових чатів: ${BOT_STATS.joinGroups.toLocaleString("fr-FR")}
+Покинуто чатів: ${BOT_STATS.leftGroups.toLocaleString("fr-FR")}
+Загалом: ${(BOT_STATS.joinGroups - BOT_STATS.leftGroups).toLocaleString("fr-FR")}
   
 Повідомлень за ${moment
         .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
-        .humanize()}: ${BOT_STATS.messages.total}`;
+        .humanize()}: ${BOT_STATS.messages.total.toLocaleString("fr-FR")}`;
 
     if (Object.keys(BOT_STATS.commands).length > 0) {
         statsMsg += "\n\nЧастота використання команд:\n";
@@ -50,15 +50,14 @@ async function getStatsMsg() {
     statsMsg += `\n\nread queue: ${dbPoolsQueueStatus.read}\nwrite queue: ${dbPoolsQueueStatus.write}`;
 
     statsMsg += "\n";
-    statsMsg += `Chat charts: ${cacheManager.ChartCache_Chat.size}\n`;
-    statsMsg += `User charts: ${cacheManager.ChartCache_User.size}\n`;
+    statsMsg += `Chat charts: ${cacheManager.ChartCache_Chat.size.toLocaleString("fr-FR")}\n`;
+    statsMsg += `User charts: ${cacheManager.ChartCache_User.size.toLocaleString("fr-FR")}\n`;
     const totalMessagesInDB = (
         await DBPoolManager.getPoolRead
             .query("SELECT SUM(count) FROM stats_daily;")
             .catch((e) => {})
     )?.rows[0]?.sum;
-    console.log(totalMessagesInDB);
-    statsMsg += `Total messages: ${totalMessagesInDB}`;
+    statsMsg += `Total messages: ${totalMessagesInDB.toLocaleString("fr-FR")}`;
     return statsMsg;
 }
 
