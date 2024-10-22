@@ -5,6 +5,7 @@ import { isPremium } from "../../utils/isPremium.js";
 import isChatOwner from "../../utils/isChatOwner.js";
 import cacheManager from "../../cache/cache.js";
 import { Database } from "../../db/db.js";
+import cfg from "../../config.js";
 import {
     getCachedOrDBChatSettings,
     getChatSettingsMessageText,
@@ -81,7 +82,7 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
                 `${getSettingButtonsText("usechatbgforall", chatSettings.usechatbgforall)}`,
                 async (ctx) => {
                     if (await isChatOwner(chat_id, from_id)) {
-                        if (await isPremium(chat_id)) {
+                        if (cfg.ADMINS.includes(from_id) || (await isPremium(chat_id))) {
                             toggleSetting(ctx, chat_id, chatSettings, "usechatbgforall");
                             cacheManager.ChartCache_User.removeChat(chat_id);
                         } else {
