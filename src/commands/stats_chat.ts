@@ -164,7 +164,10 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     }
 
     botStatsManager.commandUse(`стата ${rawCmdDateRange}`);
-    if ([-1001898242958, -1002144414380].includes(ctx.chat.id)) {
+    if (
+        [-1001898242958, -1002144414380].includes(ctx.chat.id) ||
+        (externalChatTarget && cfg.ADMINS.includes(ctx.from.id))
+    ) {
         if (!chartTime) {
             chartTime = msgTime;
         }
