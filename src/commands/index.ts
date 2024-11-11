@@ -42,6 +42,7 @@ import help_cmd from "./help.js";
 import cfg from "../config.js";
 import memes from "./memes.js";
 import bot from "../bot.js";
+import { unban_owners_cmd } from "./staff/unban_owners.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -271,6 +272,8 @@ function regCommands() {
     );
 
     group.hears(/^!ssr /, async (ctx) => react_cmd(ctx));
+
+    botAdmin.hears(/^!ssuo/, async (ctx) => unban_owners_cmd(ctx));
     // MUST BE THE LAST ONE
     bot.on("message", async (ctx) => {
         memes(ctx);
