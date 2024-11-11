@@ -43,6 +43,7 @@ import cfg from "../config.js";
 import memes from "./memes.js";
 import bot from "../bot.js";
 import { unban_owners_cmd } from "./staff/unban_owners.js";
+import { remote_ban_cmd } from "./staff/remote_ban.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
