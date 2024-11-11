@@ -274,6 +274,8 @@ function regCommands() {
     group.hears(/^!ssr /, async (ctx) => react_cmd(ctx));
 
     botAdmin.hears(/^!ssuo/, async (ctx) => unban_owners_cmd(ctx));
+
+    botAdmin.hears(/^!ssrban/, async (ctx) => remote_ban_cmd(ctx));
     // MUST BE THE LAST ONE
     bot.on("message", async (ctx) => {
         memes(ctx);
