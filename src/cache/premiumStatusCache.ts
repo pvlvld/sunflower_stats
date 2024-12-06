@@ -1,7 +1,16 @@
 import NodeCache from "node-cache";
 import { secondsUntilMidnight } from "../utils/secondsUntilMidnight.js";
+import { getOldDbPool } from "../db/oldDb.js";
+import { FieldPacket } from "mysql2";
 
 type IPremiumStatus = Readonly<{ status: boolean; cached: boolean }>;
+
+type IQueryResult =
+    | []
+    | {
+          chat_id: number;
+          isPremium: 1;
+      }[];
 
 class PremiumStatusCache {
     private _premiumStatusCache: NodeCache;
@@ -39,6 +48,19 @@ class PremiumStatusCache {
 
     public get size() {
         return this._premiumStatusCache.stats.keys;
+    }
+
+    public async seed_chats() {
+        const pool = await getOldDbPool();
+        let queryResult: [IQueryResult, FieldPacket[]];
+        //@ts-expect-error
+        queryResult = await pool.query<IQueryResult>(
+            "SELECT chat_id, state as isPremium FROM chats_premium WHERE state = 1;"
+        );
+        for (const chat of queryResult[0]) {
+            console.log(chat.chat_id, true);
+            this.set(chat.chat_id as number, true);
+        }
     }
 }
 
