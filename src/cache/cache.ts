@@ -40,6 +40,5 @@ class CacheManager {
 }
 
 const cacheManager = new CacheManager();
-cacheManager.PremiumStatusCache.seed_chats();
 
 export default cacheManager;

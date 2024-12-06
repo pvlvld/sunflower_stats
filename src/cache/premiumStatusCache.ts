@@ -38,6 +38,14 @@ class PremiumStatusCache {
         return this._uncachedStatus;
     }
 
+    public isCachedPremium(id: number): boolean {
+        const premiumStatus = this._premiumStatusCache.get(id) as IPremiumStatus | undefined;
+        if (premiumStatus) {
+            return premiumStatus.cached ?? false;
+        }
+        return false;
+    }
+
     public del(id: number) {
         this._premiumStatusCache.del(id);
     }
@@ -58,7 +66,6 @@ class PremiumStatusCache {
             "SELECT chat_id, state as isPremium FROM chats_premium WHERE state = 1;"
         );
         for (const chat of queryResult[0]) {
-            console.log(chat.chat_id, true);
             this.set(chat.chat_id as number, true);
         }
     }

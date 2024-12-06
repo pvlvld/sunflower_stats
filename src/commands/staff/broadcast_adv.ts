@@ -13,6 +13,7 @@ import {
     sendMediaMessage,
 } from "../../utils/sendMediaMessage.js";
 import { getMessageMedia } from "../../utils/getMessageMedia.js";
+import cacheManager from "../../cache/cache.js";
 
 async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
     if (!cfg.ADMINS.includes(ctx.from.id)) {
@@ -41,12 +42,17 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
     let totalAttempts = 0;
 
     ctx.api.config.use(autoRetry());
+    cacheManager.PremiumStatusCache.seed_chats();
 
     const start = performance.now();
 
     chat_loop: for (const chat in active.data) {
         if (!chat.startsWith("-")) {
             delete active.data[chat];
+            continue;
+        }
+
+        if (cacheManager.PremiumStatusCache.isCachedPremium(Number(chat))) {
             continue;
         }
 
