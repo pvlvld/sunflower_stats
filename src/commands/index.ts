@@ -272,7 +272,10 @@ function regCommands() {
         }
     );
 
-    group.hears(/^!ssr /, async (ctx) => react_cmd(ctx));
+    botAdmin
+        .filter((ctx) => !!ctx.msg?.reply_to_message)
+        .on(":text")
+        .hears(/^!ssr /, async (ctx) => react_cmd(ctx));
 
     botAdmin.hears(/^!ssuo/, async (ctx) => unban_owners_cmd(ctx));
 

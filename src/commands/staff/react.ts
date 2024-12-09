@@ -1,19 +1,13 @@
-import type { IGroupHearsContext } from "../../types/context.js";
-import cfg from "../../config.js";
+import type { IGroupContext } from "../../types/context.js";
+import { ReactionTypeEmoji } from "@grammyjs/types";
+import { Filter } from "grammy";
 
-async function react_cmd(ctx: IGroupHearsContext) {
-    if (!cfg.ADMINS.includes(ctx.from.id)) return;
-
+async function react_cmd(ctx: Filter<IGroupContext, ":text">) {
     ctx.deleteMessage().catch((e) => {});
 
-    if (!ctx.msg.reply_to_message) return;
-    const reaction = ctx.msg.text?.split(" ")[1];
-
-    if (reaction === undefined) return;
-
     await ctx.api
-        .setMessageReaction(ctx.chat.id, ctx.msg.reply_to_message.message_id, [
-            { type: "emoji", emoji: reaction as any },
+        .setMessageReaction(ctx.chat.id, ctx.msg.reply_to_message!.message_id, [
+            { type: "emoji", emoji: ctx.msg.text.split(" ")[1] } as ReactionTypeEmoji,
         ])
         .catch((e) => {
             console.error(e);
