@@ -4,6 +4,7 @@ import cacheManager from "../cache/cache.js";
 import cfg from "../config.js";
 import bot from "../bot.js";
 import moment from "moment";
+import { getStatsChart } from "../chart/getStatsChart.js";
 
 type IBotStats = {
     commands: { [key: string]: number };
@@ -62,9 +63,16 @@ async function getStatsMsg() {
 }
 
 async function bot_stats_cmd(ctx: IContext) {
-    await ctx.reply(await getStatsMsg(), {
-        link_preview_options: { is_disabled: true },
-    });
+    const chart = await getStatsChart(-1, -1, "bot-all");
+    if (chart) {
+        await ctx.replyWithPhoto(chart, {
+            caption: await getStatsMsg(),
+        });
+    } else {
+        await ctx.reply(await getStatsMsg(), {
+            link_preview_options: { is_disabled: true },
+        });
+    }
 }
 
 export const botStatsManager = {

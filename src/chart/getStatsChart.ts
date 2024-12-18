@@ -1,7 +1,7 @@
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import { IAllowedChartStatsRanges } from "../commands/stats_chat.js";
 import { bgImagePlugin } from "./plugins/bgImagePlugin.js";
-import { IChartSettings } from "../db/chartSettings.js";
+import { DefaultChartSettings, IChartSettings } from "../db/chartSettings.js";
 import { ChartCanvasManager } from "./chartCanvas.js";
 import { Chart, ChartConfiguration } from "chart.js";
 import { DBPoolManager } from "../db/poolManager.js";
@@ -11,7 +11,7 @@ import { Database } from "../db/db.js";
 import chartJs from "chart.js/auto";
 import { InputFile } from "grammy";
 
-export type IChartType = "user" | "chat";
+export type IChartType = "user" | "chat" | "bot-all";
 
 async function getChatData(chat_id: number, rawDateRange: IAllowedChartStatsRanges) {
     const dateRange = formattedDate[rawDateRange];
@@ -35,14 +35,16 @@ async function getUserData(chat_id: number, user_id: number) {
     ).rows;
 }
 
-async function getChartSettings(target_id: number): Promise<IChartSettings> {
-    if (Math.sign(target_id) === -1) {
+async function getChartSettings(target_id: number, type: IChartType): Promise<IChartSettings> {
+    if (type === "chat") {
         // Chat
         const chat_settings = await getCachedOrDBChatSettings(target_id);
         return { line_color: chat_settings.line_color, font_color: chat_settings.font_color };
-    } else {
+    } else if (type === "user") {
         // User
         return await Database.userSettings.get(target_id);
+    } else {
+        return DefaultChartSettings;
     }
 }
 
@@ -51,7 +53,7 @@ async function getChartConfig(
     user_id: number,
     type: IChartType
 ): Promise<ChartConfiguration> {
-    const chart_settings = await getChartSettings(type === "chat" ? chat_id : user_id);
+    const chart_settings = await getChartSettings(type === "chat" ? chat_id : user_id, type);
     const line_rgbValuesString = getRGBValueString(chart_settings.line_color);
 
     return {
@@ -152,13 +154,21 @@ export async function getStatsChart(
     let data: any[];
     if (type === "user") {
         data = await getUserData(chat_id, user_id);
-    } else {
+    } else if (type === "chat") {
         if (rawDateRange) {
             data = await getChatData(chat_id, rawDateRange);
         } else {
             console.error("No date range is provided for the chat chart");
             data = await getChatData(chat_id, "all");
         }
+    } else if (type === "bot-all") {
+        data = (
+            await DBPoolManager.getPoolRead.query(
+                `SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y FROM stats_daily WHERE date > '2023-12-31' GROUP BY date ORDER BY date;`
+            )
+        ).rows;
+    } else {
+        throw new Error("Invalid chart type");
     }
     void data.pop();
     // remove 2023-12-31 data point, it's compiled stats for whole 2023 so it breaks chart

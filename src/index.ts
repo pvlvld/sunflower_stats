@@ -40,7 +40,7 @@ bot.catch((err) => {
 
 async function main() {
     let server: http.Server | ReturnType<typeof createServer>;
-    let runner: ReturnType<typeof run>;
+    let runner: ReturnType<typeof run> = undefined as any;
 
     const allowed_updates = [
         "message",
