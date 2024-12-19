@@ -53,16 +53,8 @@ function isHasMetadata(ctx: IContext) {
 }
 
 function extractMetadata(ctx: IGroupTextContext) {
-    let entities: MessageEntity[];
-    if (ctx.msg.caption) {
-        entities = ctx.msg.caption_entities!;
-    } else {
-        entities = ctx.msg.entities!;
-    }
-    const metadata_entity = entities.at(-1);
-    const metadata =
-        metadata_entity?.type === "text_link" ? parseMetadata(metadata_entity.url) : undefined;
-    return metadata;
+    const metadata_entity = (ctx.msg.caption_entities ?? ctx.msg.entities!).at(-1);
+    return metadata_entity?.type === "text_link" ? parseMetadata(metadata_entity.url) : undefined;
 }
 
 function parseMetadata(raw_medatada_text: string) {
@@ -71,14 +63,11 @@ function parseMetadata(raw_medatada_text: string) {
     return raw_medatada_text
         .slice(chopMetadataPart.length)
         .split("?")
-        .reduce(
-            (prev, curr) => {
-                parts = curr.split("=");
-                prev[parts[0]] = parts[1];
-                return prev;
-            },
-            {} as Record<string, string>
-        );
+        .reduce((prev, curr) => {
+            parts = curr.split("=");
+            prev[parts[0]] = parts[1];
+            return prev;
+        }, {} as Record<string, string>);
 }
 
 async function getBaseInfo(ctx: IGroupTextContext) {
