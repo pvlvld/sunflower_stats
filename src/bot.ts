@@ -14,6 +14,7 @@ import help_menu from "./ui/menus/help.js";
 import { Bot, matchFilter } from "grammy";
 import cfg from "./config.js";
 import { chatStatsPagination_menu } from "./ui/menus/statsPagination.js";
+import { blacklist } from "./middlewares/blacklist.js";
 
 const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 
@@ -48,6 +49,7 @@ bot.api.config.use(hydrateFiles(bot.token));
 bot.drop(matchFilter(":is_automatic_forward"));
 
 // MIDDLEWARES
+bot.use(blacklist.middleware);
 bot.use(ignoreOldMessages);
 bot.use(autoThread());
 bot.use(hydrateReply);
