@@ -30,7 +30,7 @@ class Blacklist {
         this.save();
     }
 
-    save() {
+    private save() {
         fs.writeFileSync(blacklistPath, JSON.stringify(this.data, null, 4));
     }
 }
