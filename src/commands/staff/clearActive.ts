@@ -1,5 +1,6 @@
 import type { IGroupHearsContext } from "../../types/context.js";
 import { active } from "../../data/active.js";
+import parseCmdArgs from "../../utils/parseCmdArgs.js";
 
 async function clearOldBotActive(ctx: IGroupHearsContext) {
     let chat: string;
@@ -29,4 +30,33 @@ function daysBetween(date1: Date, date2: Date): number {
     return Math.abs(differenceInDays);
 }
 
-export { clearOldBotActive };
+async function clearGroupActive(ctx: IGroupHearsContext) {
+    const cmdArguments = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
+    if (cmdArguments.length !== 2) {
+        return void (await ctx.reply("Недостатньо аргументів").catch((e) => {}));
+    }
+
+    const chat = cmdArguments[0]!;
+    const days = Number(cmdArguments[1]!);
+    const today = new Date();
+    let count = 0;
+
+    if (Number(chat) > 0) {
+        return void (await ctx.reply("Неправильний аргумент чату").catch((e) => {}));
+    }
+
+    if (isNaN(days)) {
+        return void (await ctx.reply("Неправильний аргумент днів").catch((e) => {}));
+    }
+
+    for (const user in active.data[chat]) {
+        if (daysBetween(new Date(active.data[chat][user]!.active_last), today) < days) continue;
+        delete active.data[chat][user];
+        count++;
+        break;
+    }
+
+    await ctx.reply(`Видалено ${count} користувачів з активу.`).catch((e) => {});
+}
+
+export { clearOldBotActive, clearGroupActive };
