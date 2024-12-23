@@ -15,7 +15,7 @@ import { toggleCharts } from "./staff/toggleCharts.js";
 import botMemoryUsage from "./staff/botMemoryUsage.js";
 import { isChatAdmin } from "../utils/isChatAdmin.js";
 import { chatSettings_cmd } from "./chatSettings.js";
-import { clearActive } from "./staff/clearActive.js";
+import { clearOldBotActive } from "./staff/clearActive.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
 import del_user_active from "./del_user_active.js";
 import getChatAdmins_cmd from "./getChatAdmins.js";
@@ -224,7 +224,7 @@ function regCommands() {
 
     botAdmin.hears(/^!ssrc/, async (ctx) => removeChatData_cmd(ctx));
 
-    botAdmin.hears("!ssclearactive", async (ctx) => clearActive(ctx));
+    botAdmin.hears("!ssclearactive", async (ctx) => clearOldBotActive(ctx));
     // Etc.
 
     group.hears("/getid", async (ctx) => {

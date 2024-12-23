@@ -1,7 +1,7 @@
 import type { IGroupHearsContext } from "../../types/context.js";
 import { active } from "../../data/active.js";
 
-async function clearActive(ctx: IGroupHearsContext) {
+async function clearOldBotActive(ctx: IGroupHearsContext) {
     let chat: string;
     let user: string;
     let today = new Date();
@@ -29,4 +29,4 @@ function daysBetween(date1: Date, date2: Date): number {
     return Math.abs(differenceInDays);
 }
 
-export { clearActive };
+export { clearOldBotActive };
