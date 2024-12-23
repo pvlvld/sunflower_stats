@@ -53,7 +53,6 @@ async function clearGroupActive(ctx: IGroupHearsContext) {
         if (daysBetween(new Date(active.data[chat][user]!.active_last), today) < days) continue;
         delete active.data[chat][user];
         count++;
-        break;
     }
 
     await ctx.reply(`Видалено ${count} користувачів з активу.`).catch((e) => {});
