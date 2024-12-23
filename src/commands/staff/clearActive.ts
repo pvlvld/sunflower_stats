@@ -10,11 +10,11 @@ async function clearActive(ctx: IGroupHearsContext) {
     for (chat in active.data) {
         for (user in active.data[chat]) {
             last_active = new Date(active.data[chat]![user]!.active_last);
-        }
-
-        if (daysBetween(last_active, today) > 30) {
-            delete active.data[chat];
-            count++;
+            if (daysBetween(last_active, today) > 30) {
+                delete active.data[chat];
+                count++;
+                break;
+            }
         }
     }
 
