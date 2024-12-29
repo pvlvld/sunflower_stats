@@ -28,7 +28,7 @@ async function memes(ctx: Context) {
             return void ctx.react("❤").catch((e) => {});
         }
 
-        if (ctx.msg?.from?.id === 5163758336 && Math.abs(moment().diff("2024-12-30")) < 7) {
+        if (ctx.msg?.from?.id === 5163758336 && Math.abs(moment().diff("2024-12-30", "days")) < 7) {
             // Кіт 1 week
             return void ctx.react("👻").catch((e) => {});
         }
