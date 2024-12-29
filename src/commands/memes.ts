@@ -1,4 +1,5 @@
 import { Context } from "grammy";
+import moment from "moment";
 
 async function memes(ctx: Context) {
     const text = (ctx.msg?.text ?? ctx.msg?.caption)?.toLowerCase();
@@ -22,9 +23,14 @@ async function memes(ctx: Context) {
             ctx.deleteMessage();
         }
 
-        if (ctx.msg?.from?.id == 5147076742) {
+        if (ctx.msg?.from?.id === 5147076742) {
             // Кіт
             return void ctx.react("❤").catch((e) => {});
+        }
+
+        if (ctx.msg?.from?.id === 5163758336 && Math.abs(moment().diff("2024-12-30")) < 7) {
+            // Кіт 1 week
+            return void ctx.react("👻").catch((e) => {});
         }
     } catch (e) {}
 }
