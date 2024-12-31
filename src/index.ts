@@ -105,15 +105,15 @@ async function main() {
         console.log("Shutting down.");
         isShuttingDown = true;
 
-        await runner?.stop();
+        await runner?.stop().catch(console.error);
 
         await bot.stop().then(() => {
             console.log("- Bot stopped.");
-        });
+        }).catch(console.error);
 
         await bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
             console.log("Webhook removed");
-        });
+        }).catch(console.error);
 
         if (server && "close" in server) {
             server.close(() => {
@@ -121,10 +121,10 @@ async function main() {
             });
         }
 
-        await DBPoolManager.shutdown();
+        await DBPoolManager.shutdown().catch(console.error);
 
-        await active.save();
-        await botStatsManager.sendToAnalyticsChat();
+        await active.save().catch(console.error);
+        await botStatsManager.sendToAnalyticsChat().catch(console.error);
 
         console.log("Done.");
         console.log(`Running NodeJS ${process.version}`);
