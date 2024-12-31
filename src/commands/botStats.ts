@@ -101,8 +101,8 @@ export const botStatsManager = {
     },
     sendToAnalyticsChat: async () => {
         return await bot.api
-            .sendMessage(cfg.ANALYTICS_CHAT, await getStatsMsg(), { message_thread_id: 3126 })
-            .catch(() => {});
+            .sendMessage(cfg.ANALYTICS_CHAT, await getStatsMsg() ?? "error getting stats", { message_thread_id: 3126 })
+            .catch(() => { });
     },
 };
 
