@@ -58,20 +58,26 @@ async function getStatsMsg() {
             .query("SELECT SUM(count) FROM stats_daily;")
             .catch((e) => {})
     )?.rows[0]?.sum;
+    if (!totalMessagesInDB) return;
     statsMsg += `Total messages: ${totalMessagesInDB.toLocaleString("fr-FR")}`;
     return statsMsg;
 }
 
 async function bot_stats_cmd(ctx: IContext) {
     const chart = await getStatsChart(-1, -1, "bot-all");
+    const statsMsg = await getStatsMsg();
+    if (!statsMsg) {
+        console.error("statsMsg is empty");
+        return;
+    }
     if (chart) {
         await ctx.replyWithPhoto(chart, {
-            caption: await getStatsMsg(),
+            caption: statsMsg,
         });
     } else {
-        await ctx.reply(await getStatsMsg(), {
+        await ctx.reply(statsMsg, {
             link_preview_options: { is_disabled: true },
-        });
+        }).catch(console.error);
     }
 }
 
