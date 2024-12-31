@@ -33,8 +33,8 @@ async function getStatsMsg() {
 Загалом: ${(BOT_STATS.joinGroups - BOT_STATS.leftGroups).toLocaleString("fr-FR")}
   
 Повідомлень за ${moment
-        .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
-        .humanize()}: ${BOT_STATS.messages.total.toLocaleString("fr-FR")}`;
+            .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
+            .humanize()}: ${BOT_STATS.messages.total.toLocaleString("fr-FR")}`;
 
     if (Object.keys(BOT_STATS.commands).length > 0) {
         statsMsg += "\n\nЧастота використання команд:\n";
