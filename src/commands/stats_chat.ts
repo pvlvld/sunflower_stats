@@ -15,6 +15,7 @@ import { chatStatsPagination_menu } from "../ui/menus/statsPagination.js";
 import { active } from "../data/active.js";
 
 const cmdToDateRangeMap = {
+    день: "today",
     сьогодні: "today",
     вчора: "yesterday",
     тиждень: "weekRange",
