@@ -6,6 +6,9 @@ import Escape from "../utils/escape.js";
 import cfg from "../config.js";
 
 function ActiveCollectorWrapper() {
+    let _chatId = 0;
+    let _userId = 0;
+
     return async function activeCollector(ctx: Context, next: NextFunction) {
         if (
             !ctx.from ||
@@ -14,20 +17,20 @@ function ActiveCollectorWrapper() {
             ctx.chat.id === ctx.from.id ||
             ctx.chatMember ||
             ctx.msg?.left_chat_member ||
-            cfg.IGNORE_IDS.includes(ctx.from.id) // anonimous users
+            cfg.IGNORE_IDS.indexOf(ctx.from.id) !== 0 // anonimous users
         ) {
             return await next();
         } else {
-            const chat_id = ctx.chat.id;
-            const user_id = ctx.from.id;
-            active.data[chat_id] ??= {};
+            _chatId = ctx.chat.id;
+            _userId = ctx.from.id;
+            active.data[_chatId] ??= {};
 
             const today = formattedDate.today[0];
-            if (active.data[chat_id][user_id] === undefined) {
-                let active_first = (await getUserFirstStatsDate(chat_id, user_id)) || today;
+            if (active.data[_chatId]![_userId] === undefined) {
+                let active_first = (await getUserFirstStatsDate(_chatId, _userId)) || today;
 
                 active_first ??= today;
-                active.data[chat_id][user_id] = new UserActive(
+                active.data[_chatId]![_userId] = new UserActive(
                     active_first,
                     today,
                     ctx.from.first_name,
@@ -35,9 +38,9 @@ function ActiveCollectorWrapper() {
                     ctx.from.username || ""
                 );
             } else {
-                active.data[chat_id][user_id].active_last = today;
-                active.data[chat_id][user_id].name = Escape.html(ctx.from.first_name);
-                active.data[chat_id][user_id].username = ctx.from.username || "";
+                active.data[_chatId]![_userId]!.active_last = today;
+                active.data[_chatId]![_userId]!.name = Escape.html(ctx.from.first_name);
+                active.data[_chatId]![_userId]!.username = ctx.from.username || "";
             }
         }
 
