@@ -38,7 +38,7 @@ const allowedChartStatsRanges: IAllowedChartStatsRanges[] = [
 async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     const splittedCommand = (ctx.msg.text ?? ctx.msg.caption).split(" ");
     const externalChatTarget = Number(splittedCommand[2]);
-    let chat_id = -1;
+    let chat_id = 0;
     if (externalChatTarget && cfg.ADMINS.includes(ctx.from.id)) {
         chat_id = externalChatTarget;
     } else {

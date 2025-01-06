@@ -10,7 +10,7 @@ export function getStatsRatingPlusToday(
     settings: IChatSettings,
     page: number,
     dateRange: IDateRange | "date",
-    type?: "caption" | "text"
+    type: "caption" | "text"
 ) {
     const replyParts: string[] = [];
     let totalChatMessages = 0;
