@@ -20,7 +20,10 @@ const METHODS = new Set([
     "sendGame",
     "sendMediaGroup",
     "copyMessage",
-    "forwardMessage ",
+    "copyMessages",
+    "forwardMessage",
+    "forwardMessages",
+    "sendChatAction",
 ]);
 
 export function autoThread<C extends Context>(): MiddlewareFn<C> {
