@@ -14,7 +14,7 @@ export function StatsCollectorWrapper() {
             ctx.chatMember ||
             ctx.msg?.left_chat_member ||
             // anonimous users
-            cfg.IGNORE_IDS.includes(ctx.from.id) ||
+            cfg.IGNORE_IDS.indexOf(ctx.from.id) !== 0 ||
             ctx.editedMessage
         ) {
             return await next();
