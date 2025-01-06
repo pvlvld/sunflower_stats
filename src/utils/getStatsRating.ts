@@ -29,22 +29,20 @@ export function getStatsRatingPlusToday(
         user = stats[i];
         if (statsRowsCount < statsRowLimit) {
             userData = activeData?.[user.user_id];
+            totalChatMessages += user.count || 0;
 
-            if (userData) {
-                validUsersCount++;
-                if (validUsersCount > offset) {
-                    replyParts.push(
-                        `${displayRank}. ${getUserNameString(settings, userData, user.user_id)} — ${(
-                            user.count || 0
-                        ).toLocaleString("fr-FR")}\n`
-                    );
-                    statsRowsCount++;
-                    displayRank++;
-                }
+            if (!userData) continue;
+            validUsersCount++;
+            if (validUsersCount > offset) {
+                replyParts.push(
+                    `${displayRank}. ${getUserNameString(settings, userData, user.user_id)} — ${(
+                        user.count || 0
+                    ).toLocaleString("fr-FR")}\n`
+                );
+                statsRowsCount++;
+                displayRank++;
             }
         }
-
-        totalChatMessages += user.count || 0;
     }
 
     replyParts.push(
