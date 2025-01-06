@@ -2,7 +2,7 @@ import type { IContext, IGroupTextContext } from "../../types/context.js";
 import type { IDateRange } from "../../commands/stats_chat.js";
 import { Menu, MenuButton } from "@grammyjs/menu";
 import { getCachedOrDBChatSettings } from "../../utils/chatSettingsUtils.js";
-import { getStatsRatingPlusToday } from "../../utils/getStatsRating.js";
+import { getStatsChatRating } from "../../utils/getStatsRating.js";
 import { DBStats } from "../../db/stats.js";
 import { MessageEntity } from "@grammyjs/types";
 
@@ -118,7 +118,7 @@ async function getPage(
         }
     }
 
-    const statsMsesage = getStatsRatingPlusToday(
+    const statsMsesage = getStatsChatRating(
         stats,
         baseInfo.chat_id,
         baseInfo.settings,

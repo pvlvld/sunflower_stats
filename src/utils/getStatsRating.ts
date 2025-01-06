@@ -4,7 +4,7 @@ import { active, IActiveUser } from "../data/active.js";
 import { IChatSettings } from "../types/settings.js";
 import { IDateRange } from "../commands/stats_chat.js";
 
-export function getStatsRatingPlusToday(
+export function getStatsChatRating(
     stats: IDBChatUserStats[],
     chat_id: number,
     settings: IChatSettings,

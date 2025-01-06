@@ -1,7 +1,7 @@
 import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage.js";
 import { isValidDateOrDateRange } from "../utils/isValidDateOrDateRange.js";
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
-import { getStatsRatingPlusToday } from "../utils/getStatsRating.js";
+import { getStatsChatRating } from "../utils/getStatsRating.js";
 import type { IGroupTextContext } from "../types/context.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
 import { DBStats } from "../db/stats.js";
@@ -30,7 +30,7 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
                 isChart: false,
                 text:
                     `📊 Статистика чату за ${dateRange[0]} - ${dateRange[1]}:\n\n` +
-                    getStatsRatingPlusToday(
+                    getStatsChatRating(
                         await DBStats.chat.inRage(chat_id, [dateRange[0], dateRange[1]]),
                         chat_id,
                         chatSettings,
@@ -50,7 +50,7 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
             isChart: false,
             text:
                 `📊 Статистика чату за ${dateRange[0]}:\n\n` +
-                getStatsRatingPlusToday(
+                getStatsChatRating(
                     await DBStats.chat.date(chat_id, dateRange[0]),
                     chat_id,
                     chatSettings,

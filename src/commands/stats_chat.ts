@@ -1,6 +1,6 @@
 import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage.js";
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
-import { getStatsRatingPlusToday } from "../utils/getStatsRating.js";
+import { getStatsChatRating } from "../utils/getStatsRating.js";
 import type { IGroupTextContext } from "../types/context.js";
 import { getStatsChart } from "../chart/getStatsChart.js";
 import { IDBChatUserStats } from "../types/stats.js";
@@ -192,7 +192,7 @@ function getStatsMessage(
 ) {
     return (
         `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
-        getStatsRatingPlusToday(
+        getStatsChatRating(
             stats,
             chat_id,
             settings,
