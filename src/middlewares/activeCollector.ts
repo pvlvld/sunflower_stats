@@ -17,7 +17,7 @@ function ActiveCollectorWrapper() {
             ctx.chat.id === ctx.from.id ||
             ctx.chatMember ||
             ctx.msg?.left_chat_member ||
-            cfg.IGNORE_IDS.indexOf(ctx.from.id) !== 0 // anonimous users
+            (cfg.IGNORE_IDS.indexOf(ctx.from.id) !== -1) // anonimous users
         ) {
             return await next();
         } else {
