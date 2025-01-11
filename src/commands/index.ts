@@ -131,7 +131,7 @@ function regCommands() {
         chatInactive_cmd(ctx);
     });
 
-    group.hears(/^!ссприховати/i, async (ctx) => {
+    group.hears([/^!ссприховати/i, "!фікс вступ"], async (ctx) => {
         botStatsManager.commandUse("ссприховати");
         del_user_active(ctx);
     });
