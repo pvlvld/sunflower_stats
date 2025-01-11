@@ -27,7 +27,7 @@ const LOG_LVL = {
         return _log_lvl;
     },
 };
-
+type IBotStatus = "running" | "stopping";
 type ICfg = Record<(typeof requiredEnv)[number], string> & {
     ADMINS: number[];
     STATUSES: { LEFT_STATUSES: string[] };
