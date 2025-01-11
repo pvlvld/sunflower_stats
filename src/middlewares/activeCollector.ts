@@ -10,6 +10,7 @@ function ActiveCollectorWrapper() {
     let _userId = 0;
 
     return async function activeCollector(ctx: Context, next: NextFunction) {
+        if (cfg.BOT_STATUS === "stopping") return;
         if (
             !ctx.from ||
             !ctx.chat ||
@@ -17,7 +18,7 @@ function ActiveCollectorWrapper() {
             ctx.chat.id === ctx.from.id ||
             ctx.chatMember ||
             ctx.msg?.left_chat_member ||
-            (cfg.IGNORE_IDS.indexOf(ctx.from.id) !== -1) // anonimous users
+            cfg.IGNORE_IDS.indexOf(ctx.from.id) !== -1 // anonimous users
         ) {
             return await next();
         } else {
@@ -54,13 +55,7 @@ class UserActive {
     name = "";
     nickname = "";
     username = "";
-    constructor(
-        active_first: string,
-        active_last: string,
-        name: string,
-        nickname: string,
-        username: string
-    ) {
+    constructor(active_first: string, active_last: string, name: string, nickname: string, username: string) {
         this.active_first = active_first;
         this.active_last = active_last;
         this.name = Escape.html(name);

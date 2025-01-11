@@ -42,13 +42,7 @@ async function main() {
     let server: http.Server | ReturnType<typeof createServer>;
     let runner: ReturnType<typeof run> = undefined as any;
 
-    const allowed_updates = [
-        "message",
-        "chat_member",
-        "my_chat_member",
-        "callback_query",
-        "edited_message",
-    ] as const;
+    const allowed_updates = ["message", "chat_member", "my_chat_member", "callback_query", "edited_message"] as const;
 
     active.load();
 
@@ -102,18 +96,25 @@ async function main() {
 
     async function shutdown(DBPoolManager: IDBPoolManager) {
         if (isShuttingDown) return;
+        cfg.SET_STATUS("stopping");
         console.log("Shutting down.");
         isShuttingDown = true;
 
         await runner?.stop().catch(console.error);
 
-        await bot.stop().then(() => {
-            console.log("- Bot stopped.");
-        }).catch(console.error);
+        await bot
+            .stop()
+            .then(() => {
+                console.log("- Bot stopped.");
+            })
+            .catch(console.error);
 
-        await bot.api.deleteWebhook({ drop_pending_updates: true }).then(() => {
-            console.log("Webhook removed");
-        }).catch(console.error);
+        await bot.api
+            .deleteWebhook({ drop_pending_updates: true })
+            .then(() => {
+                console.log("Webhook removed");
+            })
+            .catch(console.error);
 
         if (server && "close" in server) {
             server.close(() => {

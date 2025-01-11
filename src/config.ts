@@ -7,14 +7,7 @@ const DefaultConfigSettings = {
 
 type IConfigSettings = typeof DefaultConfigSettings;
 
-const requiredEnv = [
-    "BOT_TOKEN",
-    "DB_HOST",
-    "DB_USER",
-    "DB_PASSWORD",
-    "DB_DATABASE",
-    "API_HASH",
-] as const;
+const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE", "API_HASH"] as const;
 
 const ANIMATIONS = Object.freeze({
     no_stats: "CgACAgQAAx0Cf9EqrAACDUJmaJE8Jw9eTnlvmTG_GLslPqJJ8gACeQMAAr3JBFN7f2AJi52nTTUE",
@@ -47,6 +40,8 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
     SETTINGS: IConfigSettings;
     CHART: { width: number; height: number; ratio: number };
     LOG_LVL: typeof LOG_LVL;
+    BOT_STATUS: IBotStatus;
+    SET_STATUS: (status: IBotStatus) => IBotStatus;
 };
 
 function getCfg() {
@@ -59,6 +54,8 @@ function getCfg() {
         }
         throw new Error(`Bruh, fix your .env! Where's the ${e}?`);
     }
+    cfg.BOT_STATUS = "running";
+    cfg.SET_STATUS = (status: IBotStatus) => (cfg.BOT_STATUS = status);
     cfg.ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
     cfg.STATUSES ??= {} as any;
     cfg.STATUSES.LEFT_STATUSES = ["kicked", "left"];
