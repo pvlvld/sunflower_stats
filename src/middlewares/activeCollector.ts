@@ -10,7 +10,7 @@ function ActiveCollectorWrapper() {
     let _userId = 0;
 
     return async function activeCollector(ctx: Context, next: NextFunction) {
-        if (cfg.BOT_STATUS === "stopping") return;
+        if (cfg.GET_STATUS() === "stopping") return;
         if (
             !ctx.from ||
             !ctx.chat ||
