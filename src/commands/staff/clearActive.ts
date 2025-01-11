@@ -7,19 +7,29 @@ async function clearOldBotActive(ctx: IGroupHearsContext) {
     let user: string;
     let today = new Date();
     let last_active = today;
-    let count = 0;
+    let chats_count = 0;
+    let inactive_count = 0;
+    let users_count = 0;
     for (chat in active.data) {
+        inactive_count = 0;
+        users_count = active.data[chat] ? Object.keys(active.data[chat]!).length : 0;
+        if (users_count === 0) {
+            delete active.data[chat];
+            chats_count++;
+            continue;
+        }
         for (user in active.data[chat]) {
             last_active = new Date(active.data[chat]![user]!.active_last);
             if (daysBetween(last_active, today) > 30) {
+                inactive_count++;
+            }
+            if (inactive_count === users_count) {
                 delete active.data[chat];
-                count++;
-                break;
+                chats_count++;
             }
         }
     }
-
-    const logMsg = `Видалено ${count} чатів з активу`;
+    const logMsg = `Видалено ${chats_count} чатів з активу`;
     console.info(logMsg);
     void ctx.reply(logMsg).catch((e) => {});
 }
