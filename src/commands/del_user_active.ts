@@ -11,10 +11,10 @@ async function del_user_active(ctx: IGroupHearsContext) {
 
     const chat_id = ctx.chat.id;
     const userId = isCanDelOthers
-        ? ctx.msg.reply_to_message?.from?.id || getUserId(rawTarget, chat_id) || ctx.from.id
+        ? ctx.msg.reply_to_message?.from?.id || (rawTarget ? getUserId(rawTarget, chat_id) : undefined) || ctx.from.id
         : ctx.from.id;
 
-    if (active.data[chat_id]?.[userId]) {
+        if (active.data[chat_id]?.[userId]) {
         const targetName = active.data[chat_id][userId].name as string;
         delete active.data[chat_id][userId];
         await ctx

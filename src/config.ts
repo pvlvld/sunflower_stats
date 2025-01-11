@@ -1,5 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
+type IBotStatus = "running" | "stopping";
 
 const DefaultConfigSettings = {
     charts: true,
@@ -18,6 +19,7 @@ const MEDIA = Object.freeze({
     ANIMATIONS,
 });
 let _log_lvl = 0;
+let _bot_status: IBotStatus = "running";
 const LOG_LVL = {
     get: () => {
         return _log_lvl;
@@ -27,7 +29,7 @@ const LOG_LVL = {
         return _log_lvl;
     },
 };
-type IBotStatus = "running" | "stopping";
+
 type ICfg = Record<(typeof requiredEnv)[number], string> & {
     ADMINS: number[];
     STATUSES: { LEFT_STATUSES: string[] };
@@ -40,7 +42,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
     SETTINGS: IConfigSettings;
     CHART: { width: number; height: number; ratio: number };
     LOG_LVL: typeof LOG_LVL;
-    BOT_STATUS: IBotStatus;
+    GET_STATUS: () => IBotStatus;
     SET_STATUS: (status: IBotStatus) => IBotStatus;
 };
 
@@ -54,8 +56,8 @@ function getCfg() {
         }
         throw new Error(`Bruh, fix your .env! Where's the ${e}?`);
     }
-    cfg.BOT_STATUS = "running";
-    cfg.SET_STATUS = (status: IBotStatus) => (cfg.BOT_STATUS = status);
+    cfg.GET_STATUS = () => _bot_status;
+    cfg.SET_STATUS = (status: IBotStatus) => (_bot_status = status);
     cfg.ADMINS = (process.env.ADMINS?.split(" ") || []).map((id) => Number(id));
     cfg.STATUSES ??= {} as any;
     cfg.STATUSES.LEFT_STATUSES = ["kicked", "left"];
