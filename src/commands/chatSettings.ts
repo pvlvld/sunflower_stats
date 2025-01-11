@@ -7,7 +7,7 @@ async function chatSettings_cmd(ctx: IGroupTextContext | IGroupCommandContext) {
     if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
         void (await ctx
             .reply(await getChatSettingsMessageText(ctx), { reply_markup: settings_menu })
-            .catch((e) => {}));
+            .catch((e) => console.error("chatSettings_cmd", e)));
     }
 }
 
