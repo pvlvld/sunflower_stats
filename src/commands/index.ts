@@ -45,6 +45,7 @@ import bot from "../bot.js";
 import { unban_owners_cmd } from "./staff/unban_owners.js";
 import { remote_ban_cmd } from "./staff/remote_ban.js";
 import { addToBlacklist } from "./staff/blacklist.js";
+import { start_cmd } from "./start.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -66,8 +67,8 @@ function regCommands() {
     bot.command("refreshDonate", async (ctx) => {
         refreshDonate_cmd(ctx);
     });
-
-    bot.command(["help", "start"], async (ctx) => {
+    bot.command("start", start_cmd);
+    bot.command(["help"], async (ctx) => {
         if (
             ["supergroup", "group"].includes(ctx.msg.chat.type) &&
             ctx.msg.text.indexOf("@soniashnyk_statistics_bot") === -1 &&
