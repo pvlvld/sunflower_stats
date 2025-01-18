@@ -2,8 +2,9 @@ import type { ChatTypeContext, Context, HearsContext, CommandContext, Filter } f
 import type { ParseModeFlavor } from "@grammyjs/parse-mode";
 import type { FileFlavor } from "@grammyjs/files";
 import type { Update } from "grammy/types";
+import { I18nFlavor } from "@grammyjs/i18n";
 
-export type IContext = FileFlavor<ParseModeFlavor<Context>>;
+export type IContext = FileFlavor<ParseModeFlavor<Context>> & I18nFlavor;
 
 export type IGroupContext = ChatTypeContext<IContext, "supergroup" | "group">;
 

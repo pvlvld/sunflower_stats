@@ -7,6 +7,7 @@ import { leftGroup_menu } from "./ui/menus/leftGroup.js";
 import chatCleanup_menu from "./ui/menus/chatCleanup.js";
 import { settings_menu } from "./ui/menus/settings.js";
 import type { IContext } from "./types/context.js";
+import { I18n } from "@grammyjs/i18n";
 import { donate_menu } from "./ui/menus/donate.js";
 import { autoRetry } from "@grammyjs/auto-retry";
 import { hydrateFiles } from "@grammyjs/files";
@@ -22,6 +23,11 @@ const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 const autoRetryTransformer = autoRetry({
     maxDelaySeconds: 30,
     maxRetryAttempts: 1,
+});
+
+const i18n = new I18n<IContext>({
+    defaultLocale: "uk",
+    directory: "locales",
 });
 
 // PLUGINS
@@ -54,6 +60,7 @@ bot.use(blacklist.middleware);
 bot.use(ignoreOldMessages);
 bot.use(autoThread());
 bot.use(hydrateReply);
+bot.use(i18n);
 
 // MENUS
 bot.use(help_menu);
