@@ -86,20 +86,14 @@ function regCommands() {
         stats_chat(ctx);
     });
 
-    groupStats.hears(
-        /^(!?)(стата|статистика) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/i,
-        async (ctx) => {
-            botStatsManager.commandUse("стата дата");
-            stats_chat_range_cmd(ctx);
-        }
-    );
+    groupStats.hears(/^(!?)(стата|статистика) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/i, async (ctx) => {
+        botStatsManager.commandUse("стата дата");
+        stats_chat_range_cmd(ctx);
+    });
 
-    groupStats.hears(
-        /^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i,
-        async (ctx) => {
-            stats_chat(ctx);
-        }
-    );
+    groupStats.hears(/^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i, async (ctx) => {
+        stats_chat(ctx);
+    });
 
     groupStats.hears(/^(!?)(!я|йа|хто я)$/i, async (ctx) => {
         botStatsManager.commandUse("я");
@@ -263,18 +257,15 @@ function regCommands() {
     group.hears(/^!loglvl/i, (ctx) => setLogLvl(ctx));
 
     group.hears(/^!ssadv/, async (ctx) => await broadcast_adv(ctx));
-    bot.filter((ctx) => !!(ctx.msg?.caption ?? ctx.msg?.text)?.startsWith("!ssadv")).on(
-        "edited_message",
-        (ctx) => {
-            if ((ctx.msg.caption || ctx.msg.text)?.startsWith("!ssadvt")) {
-                // @ts-expect-error
-                broadcast_adv(ctx);
-            } else {
-                // @ts-expect-error
-                broadcast_adv(ctx, false);
-            }
+    bot.filter((ctx) => !!(ctx.msg?.caption ?? ctx.msg?.text)?.startsWith("!ssadv")).on("edited_message", (ctx) => {
+        if ((ctx.msg.caption || ctx.msg.text)?.startsWith("!ssadvt")) {
+            // @ts-expect-error
+            broadcast_adv(ctx);
+        } else {
+            // @ts-expect-error
+            broadcast_adv(ctx, false);
         }
-    );
+    });
 
     botAdmin
         .filter((ctx) => !!ctx.msg?.reply_to_message)
