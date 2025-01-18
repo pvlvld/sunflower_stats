@@ -1,4 +1,4 @@
-import { Chat, networkMiddlewares, TelegramClient } from "@mtcute/node";
+import { Chat, networkMiddlewares, SqliteStorage, TelegramClient } from "@mtcute/node";
 
 class MTProtoClient {
     protected _client: TelegramClient;
@@ -13,6 +13,9 @@ class MTProtoClient {
                     floodWaiter: { maxWait: Infinity, minStoredWait: 1 },
                 }),
             },
+            disableUpdates: true,
+            updates: { catchUp: false },
+            storage: new SqliteStorage("client.session"),
         });
         this._client.run({}, async (self) => {
             console.log(`Scanner: Logged in as ${self.displayName}`);
