@@ -15,6 +15,7 @@ import { Bot, matchFilter } from "grammy";
 import cfg from "./config.js";
 import { chatStatsPagination_menu } from "./ui/menus/statsPagination.js";
 import { blacklist } from "./middlewares/blacklist.js";
+import start_menu from "./ui/menus/start.js";
 
 const bot = new Bot<IContext>(cfg.BOT_TOKEN);
 
@@ -56,6 +57,7 @@ bot.use(hydrateReply);
 
 // MENUS
 bot.use(help_menu);
+bot.use(start_menu);
 bot.use(chatCleanup_menu);
 bot.use(leftGroup_menu);
 bot.use(donate_menu);
