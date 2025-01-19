@@ -28,6 +28,9 @@ const autoRetryTransformer = autoRetry({
 const i18n = new I18n<IContext>({
     defaultLocale: "uk",
     directory: "locales",
+    localeNegotiator: () => {
+        return "uk";
+    },
 });
 
 // PLUGINS
