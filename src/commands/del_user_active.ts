@@ -20,12 +20,12 @@ async function del_user_active(ctx: IGroupHearsContext) {
         const targetName = active.data[chat_id][userId].name as string;
         delete active.data[chat_id][userId];
         await ctx
-            .reply(`✅ Успішно видалено ${Escape.html(targetName)} з активу та приховано зі статистики.`, {
+            .reply(ctx.t("active-del-success", { name: Escape.html(targetName) }), {
                 parse_mode: "HTML",
             })
             .catch((e) => console.error(e));
     } else {
-        await ctx.reply("❌ Користувача не знайдено").catch((e) => {});
+        await ctx.reply(ctx.t("user-not-found")).catch((e) => {});
     }
     ctx.deleteMessage().catch(() => {});
 }

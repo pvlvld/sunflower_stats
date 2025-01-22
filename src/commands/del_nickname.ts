@@ -6,7 +6,7 @@ async function del_nickname(ctx: IGroupTextContext) {
         active.data[ctx.chat.id]![ctx.from.id]!.nickname = "";
     }
     await ctx
-        .reply(`✅ Нікнейм успішно видалено.`, {
+        .reply(ctx.t("nick-del-success"), {
             disable_notification: true,
             link_preview_options: { is_disabled: true },
         })

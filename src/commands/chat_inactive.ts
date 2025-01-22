@@ -23,9 +23,7 @@ function getInactivePageMessage(chat_id: number, page: number) {
     if (inactiveUsers.length === 0) return "Ця сторінка порожня.";
 
     return inactiveUsers
-        .map(
-            (user, i) => `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(chat_id, user)}`
-        )
+        .map((user, i) => `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(chat_id, user)}`)
         .join("\n");
 }
 
@@ -38,16 +36,12 @@ function genUserPageRecord(chat_id: number, user: string) {
 }
 
 function getInactivePage(chat_id: number, page: number) {
-    return getSortedInactive(chat_id).slice(
-        PAGE_LENGTH * (page - 1),
-        PAGE_LENGTH * (page - 1) + PAGE_LENGTH
-    );
+    return getSortedInactive(chat_id).slice(PAGE_LENGTH * (page - 1), PAGE_LENGTH * (page - 1) + PAGE_LENGTH);
 }
 
 function getSortedInactive(chat_id: number) {
     return Object.keys(active.data?.[chat_id] || {}).sort((u1, u2) => {
-        return (active.data?.[chat_id]?.[u1]?.active_last || 0) >
-            (active.data?.[chat_id]?.[u2]?.active_last || 0)
+        return (active.data?.[chat_id]?.[u1]?.active_last || 0) > (active.data?.[chat_id]?.[u2]?.active_last || 0)
             ? 1
             : -1;
     });

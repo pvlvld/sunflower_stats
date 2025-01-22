@@ -23,7 +23,7 @@ async function getChatInvite_cmd(ctx: IContext) {
             link_preview_options: { is_disabled: true },
         });
     } catch (e) {
-        await ctx.reply("Щось пішло не так.");
+        await ctx.reply(ctx.t("error"));
         console.error(e);
     }
 }

@@ -14,7 +14,7 @@ async function getChatAdmins_cmd(ctx: IContext) {
                 disable_notification: true,
             });
         } catch (e) {
-            await ctx.reply("Щоь пішло не так.");
+            await ctx.reply(ctx.t("error"));
             console.error(e);
         }
     }
