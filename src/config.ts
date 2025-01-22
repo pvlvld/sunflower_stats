@@ -15,8 +15,13 @@ const ANIMATIONS = Object.freeze({
     ThePrimeagen: "CgACAgQAAx0Cf9EqrAACDU1maJUfleSUmeFFT8YYGIC5FzrIDgACxAQAAvRCfVMq7ofhhIVE6zUE",
 });
 
+const IMG = Object.freeze({
+    stats_example: "AgACAgIAAx0Cf9MvPQABAbrmZ4vE9d5ytVv4VxcEGhHjVd4XLJ0AAnrtMRsYGGBISBtqUoD-kZ0BAAMCAAN5AAM2BA",
+});
+
 const MEDIA = Object.freeze({
     ANIMATIONS,
+    IMG,
 });
 let _log_lvl = 0;
 let _bot_status: IBotStatus = "running";
