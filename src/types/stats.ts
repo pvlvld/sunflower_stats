@@ -25,6 +25,8 @@ export interface IDBChatUserStatsPeriods {
     today: number;
 }
 
+export type IDBChatUserStatsAll = IDBChatUserStatsPeriods & { first_seen: string };
+
 export interface IDBChatUserStats {
     user_id: number;
     count: number;

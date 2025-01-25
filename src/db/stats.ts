@@ -1,4 +1,4 @@
-import type { IDBChatUserStatsPeriods, IDBChatUserStats } from "../types/stats.js";
+import type { IDBChatUserStats, IDBChatUserStatsAll } from "../types/stats.js";
 import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date.js";
 import { DBPoolManager, IDBPoolManager } from "./poolManager.js";
 
@@ -23,24 +23,24 @@ class DBUserStats {
         this._dbPooolManager = dbPoolManager;
     }
 
-    async all(chat_id: number, user_id: number): Promise<IDBChatUserStatsPeriods> {
+    async all(chat_id: number, user_id: number): Promise<IDBChatUserStatsAll> {
         const query = `
     SELECT
     SUM(count) AS total,
     SUM(CASE WHEN date BETWEEN '${formattedDate.yearRange[0]}' AND '${formattedDate.yearRange[1]}' THEN count ELSE 0 END) AS year,
     SUM(CASE WHEN date BETWEEN '${formattedDate.monthRange[0]}' AND '${formattedDate.monthRange[1]}' THEN count ELSE 0 END) AS month,
     SUM(CASE WHEN date BETWEEN '${formattedDate.weekRange[0]}' AND '${formattedDate.weekRange[1]}' THEN count ELSE 0 END) AS week,
-    SUM(CASE WHEN date = '${formattedDate.today[0]}' THEN count ELSE 0 END) AS today
+    SUM(CASE WHEN date = '${formattedDate.today[0]}' THEN count ELSE 0 END) AS today,
+    TO_CHAR(MIN(date), 'YYYY-MM-DD') AS first_seen
     FROM stats_daily
     WHERE chat_id = ${chat_id} AND user_id = ${user_id};
     `;
 
         try {
-            return (await this._dbPooolManager.getPoolRead.query(query))
-                .rows[0] as IDBChatUserStatsPeriods;
+            return (await this._dbPooolManager.getPoolRead.query(query)).rows[0] as IDBChatUserStatsAll;
         } catch (error) {
             console.error(error);
-            return {} as IDBChatUserStatsPeriods;
+            return {} as IDBChatUserStatsAll;
         }
     }
 
@@ -70,9 +70,7 @@ class DBUserStats {
         const query = `SELECT min(date) FROM stats_daily WHERE chat_id = ${chat_id} AND user_id = ${user_id}`;
 
         try {
-            return new Date(
-                (await this._dbPooolManager.getPoolRead.query(query)).rows[0] as string
-            );
+            return new Date((await this._dbPooolManager.getPoolRead.query(query)).rows[0] as string);
         } catch (error) {
             return undefined;
         }

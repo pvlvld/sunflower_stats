@@ -1,16 +1,14 @@
-import type { IDBChatUserStatsPeriods } from "../types/stats.js";
+import type { IDBChatUserStatsAll } from "../types/stats.js";
 import { active } from "../data/active.js";
 import Escape from "./escape.js";
 import moment from "moment";
 
-function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatUserStatsPeriods) {
+function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatUserStatsAll) {
     const nickname = active.data[chat_id]?.[user_id]?.nickname;
 
     return Escape.html(`
 ❄️ Статистика ${
-        nickname
-            ? `${nickname} (${active.data[chat_id]?.[user_id]?.name})`
-            : `${active.data[chat_id]?.[user_id]?.name}`
+        nickname ? `${nickname} (${active.data[chat_id]?.[user_id]?.name})` : `${active.data[chat_id]?.[user_id]?.name}`
     }
     
 📊 Актив: 
@@ -21,13 +19,7 @@ function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatU
 - за рік: ${(dbStats.year || 0).toLocaleString("fr-FR")}
 - за весь час: ${(dbStats.total || 0).toLocaleString("fr-FR")}
 
-📅 Перша поява в чаті: ${
-        active.data[chat_id]?.[user_id]?.active_first
-            ? `${active.data[chat_id]?.[user_id]?.active_first} (${moment(
-                  active.data[chat_id]?.[user_id]?.active_first
-              ).fromNow()})`
-            : "невідомо"
-    }`);
+📅 Перша поява в чаті: ${`${dbStats.first_seen} (${moment(dbStats.first_seen).fromNow()})`}`);
 }
 
 export default getUserStatsMessage;
