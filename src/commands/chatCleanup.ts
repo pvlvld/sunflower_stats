@@ -25,9 +25,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     }
 
     if (cacheManager.TTLCache.get(`cleanup_${chat_id}`) !== undefined) {
-        return void (await ctx.reply(
-            "В чаті вже запущено іншу чистку. Відмініть її або зачекайте хвилину."
-        ));
+        return void (await ctx.reply("В чаті вже запущено іншу чистку. Відмініть її або зачекайте хвилину."));
     }
 
     const [targetDaysCount, targetMessagesCount] = args as string[];
@@ -38,9 +36,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
       WITH chat_activity AS (
         SELECT user_id, SUM(count) AS total_count
         FROM public.stats_daily
-        WHERE date >= current_date - INTERVAL '${parseInt(
-            targetDaysCount
-        )} DAY' AND chat_id = ${chat_id}
+        WHERE date >= current_date - INTERVAL '${parseInt(targetDaysCount)} DAY' AND chat_id = ${chat_id}
         GROUP BY user_id
       )
       SELECT user_id
@@ -64,16 +60,11 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     }
 
     cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
-    void (await ctx.reply(
-        getChatCleanupText(String(targetMembers.length), targetDaysCount, targetMessagesCount),
-        { reply_markup: chatCleanup_menu }
-    ));
+    void (await ctx.reply(getChatCleanupText(String(targetMembers.length), targetDaysCount, targetMessagesCount), {
+        reply_markup: chatCleanup_menu,
+    }));
 }
 
-export function getChatCleanupText(
-    targetMembersCount: string,
-    targetDaysCount: string,
-    targetMessagesCount: string
-) {
+export function getChatCleanupText(targetMembersCount: string, targetDaysCount: string, targetMessagesCount: string) {
     return `Знайдено ${targetMembersCount} учасників, котрі за останні ${targetDaysCount} днів написали менше ${targetMessagesCount} повідомлень.`;
 }

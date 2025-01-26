@@ -12,9 +12,7 @@ async function set_nickname(ctx: IGroupTextContext) {
 
     const nickname = parseCmdArgs(ctx.msg.text as string).join(" ");
     if (nickname.length === 0) {
-        await ctx.reply(
-            "+нік Х, +нікнейм Х — замість х бажаний нікнейм. Відображається замість імені у всіх командах"
-        );
+        await ctx.reply("+нік Х, +нікнейм Х — замість х бажаний нікнейм. Відображається замість імені у всіх командах");
         return;
     }
 

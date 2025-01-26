@@ -28,11 +28,7 @@ const cmdToDateRangeMap = {
 export type IDateRange = (typeof cmdToDateRangeMap)[keyof typeof cmdToDateRangeMap];
 export type IAllowedChartStatsRanges = Exclude<IDateRange, "today" | "yesterday" | "weekRange">;
 
-const allowedChartStatsRanges: IAllowedChartStatsRanges[] = [
-    "monthRange",
-    "yearRange",
-    "all",
-] as const;
+const allowedChartStatsRanges: IAllowedChartStatsRanges[] = ["monthRange", "yearRange", "all"] as const;
 
 // TODO: use await Promise.all() for chart + msg
 
@@ -46,9 +42,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         chat_id = ctx.chat.id;
     }
     const chatSettings = await getCachedOrDBChatSettings(chat_id);
-    const rawCmdDateRange = (
-        splittedCommand[1] ?? "сьогодні"
-    ).toLowerCase() as keyof typeof cmdToDateRangeMap;
+    const rawCmdDateRange = (splittedCommand[1] ?? "сьогодні").toLowerCase() as keyof typeof cmdToDateRangeMap;
     const dateRange = cmdToDateRangeMap[rawCmdDateRange];
 
     const start = String(process.hrtime.bigint());
@@ -64,25 +58,11 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         }));
     }
     const isPagination = isPaginationNeeded(chat_id, stats, chatSettings);
-    if (
-        allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges) &&
-        chatSettings.charts
-    ) {
-        const cachedChart = cacheManager.ChartCache_Chat.get(
-            chat_id,
-            dateRange as IAllowedChartStatsRanges
-        );
+    if (allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges) && chatSettings.charts) {
+        const cachedChart = cacheManager.ChartCache_Chat.get(chat_id, dateRange as IAllowedChartStatsRanges);
 
         if (cachedChart.status === "ok") {
-            const statsMessage = getStatsMessage(
-                chat_id,
-                dateRange,
-                rawCmdDateRange,
-                stats,
-                chatSettings,
-                1,
-                true
-            );
+            const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, chatSettings, 1, true);
             msgTime = String(process.hrtime.bigint());
             chartTime = msgTime;
 
@@ -97,23 +77,10 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
                 isPagination ? chatStatsPagination_menu : undefined
             );
         } else if (cachedChart.status === "unrendered") {
-            const statsMessage = getStatsMessage(
-                chat_id,
-                dateRange,
-                rawCmdDateRange,
-                stats,
-                chatSettings,
-                1,
-                true
-            );
+            const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, chatSettings, 1, true);
             msgTime = String(process.hrtime.bigint());
 
-            const chartImage = await getStatsChart(
-                chat_id,
-                chat_id,
-                "chat",
-                dateRange as IAllowedChartStatsRanges
-            );
+            const chartImage = await getStatsChart(chat_id, chat_id, "chat", dateRange as IAllowedChartStatsRanges);
 
             if (chartImage) {
                 chartTime = String(process.hrtime.bigint());
@@ -141,15 +108,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     }
 
     if (reply === undefined) {
-        const statsMessage = getStatsMessage(
-            chat_id,
-            dateRange,
-            rawCmdDateRange,
-            stats,
-            chatSettings,
-            1,
-            false
-        );
+        const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, chatSettings, 1, false);
         msgTime = String(process.hrtime.bigint());
 
         reply = await sendSelfdestructMessage(
@@ -175,9 +134,11 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         ctx.reply(
             `DB: ${new Big(queryTime).minus(start).div(1000000)}ms\nGen: ${new Big(msgTime)
                 .minus(queryTime)
-                .div(1000000)}ms\nChart: ${new Big(chartTime)
-                .minus(msgTime)
-                .div(1000000)}ms\nTotal: ${new Big(chartTime).minus(start).div(1000000)}ms`
+                .div(1000000)}ms\nChart: ${new Big(chartTime).minus(msgTime).div(1000000)}ms\nTotal: ${new Big(
+                chartTime
+            )
+                .minus(start)
+                .div(1000000)}ms`
         );
     }
 }
@@ -193,14 +154,7 @@ function getStatsMessage(
 ) {
     return (
         `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
-        getStatsChatRating(
-            stats,
-            chat_id,
-            settings,
-            page,
-            dateRange,
-            chart ? "caption" : "text"
-        )
+        getStatsChatRating(stats, chat_id, settings, page, dateRange, chart ? "caption" : "text")
     );
 }
 
@@ -216,11 +170,7 @@ function getStatsUsersCount(chat_id: number, stats: IDBChatUserStats[]) {
     return counter;
 }
 
-function isPaginationNeeded(
-    chat_id: number,
-    stats: IDBChatUserStats[],
-    chatSettings: IChatSettings
-) {
+function isPaginationNeeded(chat_id: number, stats: IDBChatUserStats[], chatSettings: IChatSettings) {
     const statsUsersCount = getStatsUsersCount(chat_id, stats);
     return chatSettings.charts ? statsUsersCount > 25 : statsUsersCount > 50;
 }

@@ -20,9 +20,7 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
     const cacheKey = `cleanup_${chat_id}`;
     let targetMembers = cacheManager.TTLCache.get(cacheKey) as { user_id: number }[] | undefined;
 
-    let targetId =
-        ctx.msg.reply_to_message?.from?.id ||
-        getUserId((ctx.msg.text ?? ctx.msg.caption).slice(6), chat_id);
+    let targetId = ctx.msg.reply_to_message?.from?.id || getUserId((ctx.msg.text ?? ctx.msg.caption).slice(6), chat_id);
     if (targetId === -1) {
         if (targetMembers) {
             cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
@@ -44,9 +42,7 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
                 ));
 
             case "success":
-                return void (await ctx.reply(
-                    `✅ ${active.data[chat_id]?.[targetId]?.name} помічено як рест.`
-                ));
+                return void (await ctx.reply(`✅ ${active.data[chat_id]?.[targetId]?.name} помічено як рест.`));
 
             default:
                 console.error("Unexpected setRestStatus output!");
@@ -65,9 +61,7 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
     }
 
     cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
-    return void (await ctx
-        .reply("🤷🏻‍♀️ Схоже, що цього користувача немає в поточній чистці.")
-        .catch((e) => {}));
+    return void (await ctx.reply("🤷🏻‍♀️ Схоже, що цього користувача немає в поточній чистці.").catch((e) => {}));
 }
 
 async function setRestStatus(

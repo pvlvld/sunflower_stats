@@ -9,10 +9,7 @@ import cfg from "../config.js";
 
 const baseBgPath = "./data/chartBg/";
 
-async function setChartBg(
-    ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext,
-    type: "chat" | "user"
-) {
+async function setChartBg(ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext, type: "chat" | "user") {
     if (!ctx.has(":photo")) {
         return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
     }
@@ -30,9 +27,7 @@ async function setChartBg(
 
     if (ctx.from.id === ctx.chat.id || cfg.IGNORE_IDS.includes(target_id)) {
         return void (await ctx
-            .reply(
-                "Схоже, що у вас увімкнено режим анонімного адміну або ви пишете від імені каналу."
-            )
+            .reply("Схоже, що у вас увімкнено режим анонімного адміну або ви пишете від імені каналу.")
             .catch((e) => {}));
     }
 
@@ -67,9 +62,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
         path += `${target_id}.jpg`;
     }
 
-    const isDownloaded = await (
-        await ctx.api.getFile(image.file_id).catch((e) => {})
-    )?.download(path);
+    const isDownloaded = await (await ctx.api.getFile(image.file_id).catch((e) => {}))?.download(path);
 
     if (isDownloaded === undefined) {
         return await cantSaveImageError(ctx);

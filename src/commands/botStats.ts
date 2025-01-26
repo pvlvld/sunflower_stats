@@ -33,8 +33,8 @@ async function getStatsMsg() {
 Загалом: ${(BOT_STATS.joinGroups - BOT_STATS.leftGroups).toLocaleString("fr-FR")}
   
 Повідомлень за ${moment
-            .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
-            .humanize()}: ${BOT_STATS.messages.total.toLocaleString("fr-FR")}`;
+        .duration(BOT_STATS.messages.start_count_date.getTime() - Date.now())
+        .humanize()}: ${BOT_STATS.messages.total.toLocaleString("fr-FR")}`;
 
     if (Object.keys(BOT_STATS.commands).length > 0) {
         statsMsg += "\n\nЧастота використання команд:\n";
@@ -54,9 +54,7 @@ async function getStatsMsg() {
     statsMsg += `Chat charts: ${cacheManager.ChartCache_Chat.size.toLocaleString("fr-FR")}\n`;
     statsMsg += `User charts: ${cacheManager.ChartCache_User.size.toLocaleString("fr-FR")}\n`;
     const totalMessagesInDB = (
-        await DBPoolManager.getPoolRead
-            .query("SELECT SUM(count) FROM stats_daily;")
-            .catch((e) => {})
+        await DBPoolManager.getPoolRead.query("SELECT SUM(count) FROM stats_daily;").catch((e) => {})
     )?.rows[0]?.sum;
     if (!totalMessagesInDB) return;
     statsMsg += `Total messages: ${totalMessagesInDB.toLocaleString("fr-FR")}`;
@@ -75,9 +73,11 @@ async function bot_stats_cmd(ctx: IContext) {
             caption: statsMsg,
         });
     } else {
-        await ctx.reply(statsMsg, {
-            link_preview_options: { is_disabled: true },
-        }).catch(console.error);
+        await ctx
+            .reply(statsMsg, {
+                link_preview_options: { is_disabled: true },
+            })
+            .catch(console.error);
     }
 }
 
@@ -101,8 +101,8 @@ export const botStatsManager = {
     },
     sendToAnalyticsChat: async () => {
         return await bot.api
-            .sendMessage(cfg.ANALYTICS_CHAT, await getStatsMsg() ?? "error getting stats", { message_thread_id: 3126 })
-            .catch(() => { });
+            .sendMessage(cfg.ANALYTICS_CHAT, (await getStatsMsg()) ?? "error getting stats", { message_thread_id: 3126 })
+            .catch(() => {});
     },
 };
 

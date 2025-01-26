@@ -77,11 +77,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
                         return;
                     }
 
-                    cacheManager.ChartCache_User.set(
-                        chat_id,
-                        user_id,
-                        msg.photo[msg.photo.length - 1].file_id
-                    );
+                    cacheManager.ChartCache_User.set(chat_id, user_id, msg.photo[msg.photo.length - 1].file_id);
                 } else {
                     cacheManager.ChartCache_User.set(chat_id, user_id, "");
                     return void (await sendSelfdestructMessage(
