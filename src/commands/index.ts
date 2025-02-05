@@ -46,6 +46,7 @@ import { unban_owners_cmd } from "./staff/unban_owners.js";
 import { remote_ban_cmd } from "./staff/remote_ban.js";
 import { addToBlacklist } from "./staff/blacklist.js";
 import { start_cmd } from "./start.js";
+import { scanChatsForId } from "./staff/scanChatsForId.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -222,6 +223,8 @@ function regCommands() {
     botAdmin.hears("!ssclearactive", async (ctx) => clearOldBotActive(ctx));
 
     botAdmin.hears(/^!sscga/, async (ctx) => clearGroupActive(ctx));
+
+    botAdmin.hears(/^!scanChatsForId/, async (ctx) => scanChatsForId(ctx));
     // Etc.
 
     group.hears("/getid", async (ctx) => {
