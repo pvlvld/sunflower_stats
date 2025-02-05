@@ -23,7 +23,7 @@ async function scanChatsForId(ctx: IGroupHearsContext): Promise<void> {
             if (moment().diff(moment(active.data[chat][user]!.active_last), "days") < 5) {
                 try {
                     const test = await ctx.api.getChatMember(chat, target);
-                    if (!test) break;
+                    if (!test || !test.status) break;
                     if (test.status === "kicked") break;
                     chats.push(chat);
                 } catch (e) {
