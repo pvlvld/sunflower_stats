@@ -25,6 +25,7 @@ async function scanChatsForId(ctx: IGroupHearsContext): Promise<void> {
                     const test = await ctx.api.getChatMember(chat, target);
                     if (!test || !test.status) break;
                     if (test.status === "kicked") break;
+                    if (test.status === "left") break;
                     chats.push(chat);
                 } catch (e) {
                     console.error(e);
