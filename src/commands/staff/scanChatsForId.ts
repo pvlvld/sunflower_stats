@@ -34,6 +34,8 @@ async function scanChatsForId(ctx: IGroupHearsContext): Promise<void> {
                             .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat};`)
                             .catch((e) => {});
                     }
+                    if (e instanceof GrammyError && e.description.includes("chat not found")) {
+                        delete active.data[chat];
                 }
                 break;
             }
