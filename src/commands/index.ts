@@ -123,6 +123,8 @@ function regCommands() {
         stats_user(ctx, "ти");
     });
 
+    //@ts-expect-error
+    group.command("nick", set_nickname);
     group.hears(/^(\+(нік|нікнейм))/i, async (ctx) => {
         botStatsManager.commandUse("нік");
         set_nickname(ctx);
