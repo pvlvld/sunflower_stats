@@ -175,13 +175,13 @@ function regCommands() {
         chatSettings_cmd(ctx);
     });
 
-    group.hears(/^!дата вступу/, (ctx) => {
-        setUserJoinDate_cmd(ctx);
-    });
+    // group.hears(/^!дата вступу/, (ctx) => {
+    //     setUserJoinDate_cmd(ctx);
+    // });
 
     // -------- STAFF COMMANDS --------
 
-    bot.hears(/^бот(\??)$/i, async (ctx) => botTest_cmd(ctx));
+    // bot.hears(/^бот(\??)$/i, async (ctx) => botTest_cmd(ctx));
 
     botAdmin.hears("!ssstats", async (ctx) => bot_stats_cmd(ctx));
 
