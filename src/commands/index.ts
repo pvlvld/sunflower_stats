@@ -83,6 +83,8 @@ function regCommands() {
     });
 
     // STATS
+    //@ts-expect-error
+    groupStats.command("stats", stats_chat);
     groupStats.hears(/^(стата|статистика)$/i, async (ctx) => {
         stats_chat(ctx);
     });
@@ -92,15 +94,24 @@ function regCommands() {
         stats_chat_range_cmd(ctx);
     });
 
+    groupStats.command("statsall", async (ctx) => {
+        ctx.msg.text = "стата вся";
+        //@ts-expect-error
+        stats_chat(ctx);
+    });
     groupStats.hears(/^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i, async (ctx) => {
         stats_chat(ctx);
     });
 
+    //@ts-expect-error
+    groupStats.command("me", stats_user);
     groupStats.hears(/^(!?)(!я|йа|хто я)$/i, async (ctx) => {
         botStatsManager.commandUse("я");
         stats_user(ctx, "я");
     });
 
+    //@ts-expect-error
+    groupStats.command("you", stats_user);
     groupStats.hears(/^(!?)(ти|хто ти)/i, async (ctx) => {
         if (
             (!ctx.msg.reply_to_message && !ctx.msg?.text?.startsWith("!ти ")) ||
