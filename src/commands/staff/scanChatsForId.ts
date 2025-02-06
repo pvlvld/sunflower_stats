@@ -8,7 +8,10 @@ import { writeFileSync } from "node:fs";
 import path from "node:path";
 
 async function scanChatsForId(ctx: IGroupHearsContext): Promise<void> {
-    const target = parseInt(ctx.message.text!.split(" ")[1]);
+    const args = ctx.message.text!.split(" ");
+    const target = parseInt(args[1]);
+    const minMembersCount = parseInt(args[2]) || -1;
+    let chatMemberCount = 0;
     if (!target) {
         return;
     }
@@ -28,6 +31,10 @@ async function scanChatsForId(ctx: IGroupHearsContext): Promise<void> {
                     if (!test || !test.status) break;
                     if (test.status === "kicked") break;
                     if (test.status === "left") break;
+                    if (minMembersCount !== -1) {
+                        chatMemberCount = await ctx.api.getChatMemberCount(chat);
+                        if (chatMemberCount < minMembersCount) break;
+                    }
                     chats.push(chat);
                 } catch (e) {
                     console.error(e);
@@ -46,14 +53,17 @@ async function scanChatsForId(ctx: IGroupHearsContext): Promise<void> {
         }
     }
 
-    console.info(`Знайдено ${chats.length} чатів, де є користувач з ID ${target}.`);
+    const logMsg = `Знайдено ${chats.length} чатів${
+        chatMemberCount !== -1 ? ` з ${minMembersCount}+ учасників` : ""
+    }, де є користувач з ID ${target}.`;
+    console.info(logMsg);
     if (chats.length > 0) {
         const file = path.resolve(`./data/chats_with_${target}.txt`);
         console.log(file);
         writeFileSync(file, chats.join(","));
         await ctx
             .replyWithDocument(new InputFile(file), {
-                caption: `Знайдено ${chats.length} чатів, де є користувач з ID ${target}.`,
+                caption: logMsg,
             })
             .catch((e) => {});
     } else {
