@@ -5,8 +5,11 @@ import { active } from "../../data/active.js";
 import { GrammyError } from "grammy";
 import cfg from "../../config.js";
 import moment from "moment";
+import cacheManager from "../../cache/cache.js";
 
 async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
+    const args = ctx.message.text!.split(" ");
+    const ignorePremium = args.includes("-prem");
     if (!ctx.msg.reply_to_message) {
         return void ctx.reply("Команда має бути у відповідь на цільове повідомлення.");
     }
@@ -15,7 +18,8 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
 
     let successfullySent = 0;
     let totalAttemptsSent = 0;
-
+    ctx.reply(`Розрочато розсилку.\n${ignorePremium ? "- Ігнорування преміум чатів" : ""}`).catch((e) => {});
+    await cacheManager.PremiumStatusCache.seed_chats();
     for (let chat in active.data) {
         if (!chat.startsWith("-")) {
             delete active.data[chat];
@@ -24,16 +28,13 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
 
         for (let user in active.data[chat]) {
             if (moment().diff(moment(active.data[chat][user]!.active_last), "days") < 5) {
+                if (ignorePremium && cacheManager.PremiumStatusCache.get(+chat).status) break;
+
                 try {
                     totalAttemptsSent++;
-                    void (await ctx.api.forwardMessage(
-                        chat,
-                        ctx.chat.id,
-                        ctx.msg.reply_to_message.message_id,
-                        {
-                            disable_notification: true,
-                        }
-                    ));
+                    void (await ctx.api.forwardMessage(chat, ctx.chat.id, ctx.msg.reply_to_message.message_id, {
+                        disable_notification: true,
+                    }));
                     successfullySent++;
                 } catch (e) {
                     console.error(e);
