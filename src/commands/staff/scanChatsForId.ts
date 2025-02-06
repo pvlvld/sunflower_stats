@@ -47,6 +47,15 @@ async function scanChatsForId(ctx: IGroupHearsContext): Promise<void> {
                     if (e instanceof GrammyError && e.description.includes("chat not found")) {
                         delete active.data[chat];
                     }
+                    if (
+                        e instanceof GrammyError &&
+                        e.description.includes("group chat was upgraded to a supergroup chat")
+                    ) {
+                        console.info(`Migration detected in ${chat} to ${e.parameters.migrate_to_chat_id}`);
+                        ctx.reply(`Migration detected in ${chat} to ${e.parameters.migrate_to_chat_id}`).catch(
+                            (e) => {}
+                        );
+                    }
                     break;
                 }
             }
