@@ -6,6 +6,7 @@ import { GrammyError } from "grammy";
 import cfg from "../../config.js";
 import moment from "moment";
 import cacheManager from "../../cache/cache.js";
+import fs from "node:fs";
 
 async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     const args = ctx.message.text!.split(" ");
@@ -42,6 +43,19 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
                         void DBPoolManager.getPoolWrite
                             .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat};`)
                             .catch((e) => {});
+                    }
+                    if (
+                        e instanceof GrammyError &&
+                        e.description.includes("group chat was upgraded to a supergroup chat")
+                    ) {
+                        console.info(`Migration detected in ${chat} -> ${e.parameters.migrate_to_chat_id}`);
+                        try {
+                            fs.open("migrations.txt", "a", 666, (_, fd) => {
+                                fs.write(fd, `${chat} -> ${e.parameters.migrate_to_chat_id}\n`, null, "utf8", () => {
+                                    fs.close(fd);
+                                });
+                            });
+                        } catch (e) {}
                     }
                 }
                 break;
