@@ -35,6 +35,13 @@ class PgSQLPoolManager {
         throw new Error("Pool was not created.");
     }
 
+    get getPool() {
+        if (this._isReady) {
+            return this.pool;
+        }
+        throw new Error("Pool was not created.");
+    }
+
     async shutdown() {
         await this.pool.end();
     }
