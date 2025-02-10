@@ -204,12 +204,6 @@ function regCommands() {
 
     botAdmin.hears("!ssgc", (ctx) => collectGarbage());
 
-    botAdmin.hears("!ssshrink", (ctx) => {
-        if (typeof Bun !== "undefined") {
-            Bun.shrink();
-        }
-    });
-
     botAdmin.hears(/^!ssleave/, (ctx) => leaveChat_cmd(ctx));
 
     botAdmin.hears(/^!ssadmins/, (ctx) => getChatAdmins_cmd(ctx));
