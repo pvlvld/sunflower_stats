@@ -2,8 +2,7 @@ import pg from "pg";
 import cfg from "../config.js";
 class PgSQLPoolManager {
     private config: pg.PoolConfig;
-    private poolRead!: pg.Pool;
-    private poolWrite!: pg.Pool;
+    private pool!: pg.Pool;
     private _isReady: boolean;
 
     constructor(config: pg.PoolConfig) {
@@ -18,32 +17,30 @@ class PgSQLPoolManager {
     async createPool() {
         if (this._isReady) return;
         this._isReady = true;
-        this.poolRead = new pg.Pool(this.config);
-        this.poolWrite = new pg.Pool(this.config);
-        await this.poolRead.query("SELECT 1");
+        this.pool = new pg.Pool(this.config);
+        await this.pool.query("SELECT 1");
     }
 
     get getPoolRead() {
         if (this._isReady) {
-            return this.poolRead;
+            return this.pool;
         }
         throw new Error("Pool was not created.");
     }
 
     get getPoolWrite() {
         if (this._isReady) {
-            return this.poolWrite;
+            return this.pool;
         }
         throw new Error("Pool was not created.");
     }
 
     async shutdown() {
-        await this.poolRead.end();
-        await this.poolWrite.end();
+        await this.pool.end();
     }
 
     public getPoolsQueueStatus() {
-        return { read: this.poolRead.waitingCount, write: this.poolWrite.waitingCount };
+        return this.pool.waitingCount;
     }
 }
 
@@ -54,7 +51,7 @@ const DBPoolManager = new PgSQLPoolManager({
     database: cfg.DB_DATABASE,
     user: cfg.DB_USER,
     password: cfg.DB_PASSWORD,
-    max: 15,
+    max: 20,
 });
 
 export { IDBPoolManager, DBPoolManager };

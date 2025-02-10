@@ -47,8 +47,7 @@ async function getStatsMsg() {
         statsMsg += `${cmd} - ${BOT_STATS.commands[cmd]}\n`;
     }
 
-    const dbPoolsQueueStatus = DBPoolManager.getPoolsQueueStatus();
-    statsMsg += `\n\nread queue: ${dbPoolsQueueStatus.read}\nwrite queue: ${dbPoolsQueueStatus.write}`;
+    statsMsg += `\n\ndb queue: ${DBPoolManager.getPoolsQueueStatus()}`;
 
     statsMsg += "\n";
     statsMsg += `Chat charts: ${cacheManager.ChartCache_Chat.size.toLocaleString("fr-FR")}\n`;
