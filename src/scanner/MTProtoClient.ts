@@ -48,6 +48,15 @@ class MTProtoClient {
                     error: "link has expired",
                 };
             }
+
+            if ((e as Error).message?.includes("provided username is not valid")) {
+                return {
+                    success: true,
+                    needToJoin: true,
+                    chat_id: undefined,
+                    errorMessage: "provided username is not valid",
+                };
+            }
             errorMessage = (e as Error).message;
             return { success: false, needToJoin: true, chat_id: undefined, errorMessage } as const;
         }
