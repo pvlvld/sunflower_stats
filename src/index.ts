@@ -18,6 +18,7 @@ import cfg from "./config.js";
 import * as http from "http";
 import moment from "moment";
 import bot from "./bot.js";
+import { chatMigrationHandler } from "./handlers/chatMigrationHandler.js";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -30,6 +31,9 @@ bot.catch((err) => {
     console.error(`Error while handling update ${ctx.update.update_id}:`);
     const e = err.error;
     if (e instanceof GrammyError) {
+        if (e.parameters.migrate_to_chat_id) {
+            chatMigrationHandler.handleFromError(e);
+        }
         console.error("Error in request:", e.description);
     } else if (e instanceof HttpError) {
         console.error("Could not contact Telegram:", e);
