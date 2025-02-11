@@ -14,6 +14,7 @@ class ChatMigrationHandler {
     }
 
     private async handle(from_id: string, to_id: string): Promise<void> {
+        console.info(`Chat migration ${from_id} -> ${to_id}`);
         const query = `
             DELETE FROM public.stats_daily WHERE chat_id = ${to_id};
             INSERT INTO public.stats_daily (chat_id, user_id, count, date)
