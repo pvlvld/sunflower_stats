@@ -6,6 +6,7 @@ import { GrammyError, InputFile } from "grammy";
 import moment from "moment";
 import { writeFileSync } from "node:fs";
 import path from "node:path";
+import { chatMigrationHandler } from "../../handlers/chatMigrationHandler.js";
 
 async function scanChatsForId(ctx: IGroupHearsContext): Promise<void> {
     const args = ctx.message.text!.split(" ");
@@ -51,10 +52,7 @@ async function scanChatsForId(ctx: IGroupHearsContext): Promise<void> {
                         e instanceof GrammyError &&
                         e.description.includes("group chat was upgraded to a supergroup chat")
                     ) {
-                        console.info(`Migration detected in ${chat} to ${e.parameters.migrate_to_chat_id}`);
-                        ctx.reply(`Migration detected in ${chat} to ${e.parameters.migrate_to_chat_id}`).catch(
-                            (e) => {}
-                        );
+                        chatMigrationHandler.handleFromError(e);
                     }
                     break;
                 }
