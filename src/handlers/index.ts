@@ -4,6 +4,7 @@ import leaveChatMemberHandler from "./leaveChatMember.js";
 import { joinChatMember } from "./joinChatMember.js";
 import cfg from "../config.js";
 import bot from "../bot.js";
+import { chatMigrationHandler } from "./chatMigrationHandler.js";
 
 function regHandlers() {
     const group = bot.chatType(["group", "supergroup"]);
@@ -19,6 +20,8 @@ function regHandlers() {
         }
         adminUpdateHandler(ctx);
     });
+
+    bot.on("message:migrate_from_chat_id", chatMigrationHandler.handleFromCtx);
 }
 
 export default regHandlers;
