@@ -19,6 +19,7 @@ import * as http from "http";
 import moment from "moment";
 import bot from "./bot.js";
 import { chatMigrationHandler } from "./handlers/chatMigrationHandler.js";
+import { messagesStatsBatchStore } from "./data/messagesStatsBatchStore.js";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -112,6 +113,7 @@ async function main() {
                 console.log("- Bot stopped.");
             })
             .catch(console.error);
+        messagesStatsBatchStore.writeBatch();
 
         await bot.api
             .deleteWebhook({ drop_pending_updates: true })
