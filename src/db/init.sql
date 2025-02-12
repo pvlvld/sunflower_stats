@@ -13,7 +13,8 @@ CREATE TABLE
     userStatsLink  boolean NOT NULL DEFAULT true,
     line_color char(6),
     font_color char(6)
-    );
+    ),
+    title char(128);
 ALTER TABLE
   public.chats
 ADD
