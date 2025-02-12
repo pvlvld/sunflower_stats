@@ -12,6 +12,8 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
     ctx.api.config.use(autoRetry());
     const statusMessage = await ctx.reply(`Оновлення інформації про чати...\n\n0/${total_count}`).catch((e) => {});
     for (const chat of chats) {
+        console.log(`Updating chat info for ${chat}`);
+        count++;
         const chatInfo = await ctx.api.getChat(chat).catch((e) => {
             if (!(e instanceof GrammyError)) return;
             if (e.description.includes("bot was kicked")) {
@@ -24,8 +26,7 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
                 delete active.data[chat];
             }
         });
-        count++;
-        if (!chatInfo) return;
+        if (!chatInfo) continue;
         Database.poolManager.getPool.query(`INSERT INTO public.chats (chat_id, title)
             VALUES (${chatInfo.id}, '${chatInfo.title}')
             ON CONFLICT (chat_id)
@@ -42,6 +43,7 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
                 .catch((e) => {});
         }
     }
+    console.log("Finished updating chats info");
     if (statusMessage) {
         ctx.api
             .editMessageText(
