@@ -22,6 +22,10 @@ function regHandlers() {
         }
         adminUpdateHandler(ctx);
         if (ctx.chatMember.new_chat_member.user.id === ctx.me.id) {
+            //TODO:
+            // - separate into a handler
+            // - separate bot join and leave
+            // - update join/leave status
             Database.poolManager.getPool.query(`INSERT INTO public.chats (chat_id, title)
                                                 VALUES (${ctx.chat.id}, '${ctx.chat.title}')
                                                 ON CONFLICT (chat_id)
