@@ -47,6 +47,7 @@ import { remote_ban_cmd } from "./staff/remote_ban.js";
 import { addToBlacklist } from "./staff/blacklist.js";
 import { start_cmd } from "./start.js";
 import { scanChatsForId } from "./staff/scanChatsForId.js";
+import { updateDbChatsInfo } from "./staff/updateDbChatsInfo.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -287,6 +288,9 @@ function regCommands() {
     botAdmin.hears(/^!ssrban/, async (ctx) => remote_ban_cmd(ctx));
 
     botAdmin.hears(/^!ssblid/, async (ctx) => addToBlacklist(ctx));
+
+    botAdmin.hears("!ssuci", updateDbChatsInfo);
+
     // MUST BE THE LAST ONE
     bot.on("message", async (ctx) => {
         memes(ctx);
