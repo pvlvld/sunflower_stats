@@ -5,6 +5,7 @@ import { joinChatMember } from "./joinChatMember.js";
 import cfg from "../config.js";
 import bot from "../bot.js";
 import { chatMigrationHandler } from "./chatMigrationHandler.js";
+import { chatTitleUpdateHandler } from "./chatTitleUpdateHandler.js";
 
 function regHandlers() {
     const group = bot.chatType(["group", "supergroup"]);
@@ -22,6 +23,8 @@ function regHandlers() {
     });
 
     bot.on("message:migrate_from_chat_id", chatMigrationHandler.handleFromCtx);
+
+    bot.on(":new_chat_title", chatTitleUpdateHandler);
 }
 
 export default regHandlers;
