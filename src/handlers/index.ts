@@ -6,6 +6,7 @@ import cfg from "../config.js";
 import bot from "../bot.js";
 import { chatMigrationHandler } from "./chatMigrationHandler.js";
 import { chatTitleUpdateHandler } from "./chatTitleUpdateHandler.js";
+import { Database } from "../db/db.js";
 
 function regHandlers() {
     const group = bot.chatType(["group", "supergroup"]);
@@ -20,6 +21,12 @@ function regHandlers() {
             joinChatMember(ctx);
         }
         adminUpdateHandler(ctx);
+        if (ctx.chatMember.new_chat_member.user.id === ctx.me.id) {
+            Database.poolManager.getPool.query(`INSERT INTO public.chats (chat_id, title)
+                                                VALUES (${ctx.chat.id}, '${ctx.chat.title}')
+                                                ON CONFLICT (chat_id)
+                                                DO UPDATE SET title = EXCLUDED.title;`);
+        }
     });
 
     bot.on("message:migrate_from_chat_id", chatMigrationHandler.handleFromCtx);
