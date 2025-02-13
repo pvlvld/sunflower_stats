@@ -30,7 +30,8 @@ async function getUserData(chat_id: number, user_id: number) {
         await DBPoolManager.getPoolRead.query(
             `SELECT to_char(date, 'YYYY-MM-DD') AS x, count AS y
       FROM stats_daily
-      WHERE user_id = ${user_id} AND chat_id = ${chat_id};`
+      WHERE user_id = ${user_id} AND chat_id = ${chat_id}
+      ORDER BY date;`
         )
     ).rows;
 }
