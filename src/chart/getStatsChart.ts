@@ -186,7 +186,7 @@ export async function getStatsChart(
     configuration.data.datasets[0].data = data;
     configuration.data.labels = data.map((v) => v["x"]);
 
-    return new InputFile(await renderToBuffer(configuration), "test.jpg");
+    return new InputFile(await renderToBuffer(configuration), "chart.jpg");
 }
 
 function renderToBuffer(configuration: ChartConfiguration) {
