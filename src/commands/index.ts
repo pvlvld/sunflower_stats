@@ -64,6 +64,7 @@ function regCommands() {
         }
     });
 
+    dm.command(["me", "i"], stats_user_global);
     bot.command("donate", async (ctx) => donate_cmd(ctx));
 
     bot.command("refreshDonate", async (ctx) => {
