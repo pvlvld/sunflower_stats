@@ -27,10 +27,13 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
             }
         });
         if (!chatInfo) continue;
-        Database.poolManager.getPool.query(`INSERT INTO public.chats (chat_id, title)
-            VALUES (${chatInfo.id}, '${chatInfo.title}')
+        Database.poolManager.getPool.query(
+            `INSERT INTO public.chats (chat_id, title)
+            VALUES (${chatInfo.id}, '$1')
             ON CONFLICT (chat_id)
-            DO UPDATE SET title = EXCLUDED.title;`);
+            DO UPDATE SET title = EXCLUDED.title;`,
+            [chatInfo.title]
+        );
 
         if (count % 100 !== 0) continue;
         if (statusMessage) {

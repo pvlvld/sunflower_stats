@@ -26,10 +26,13 @@ function regHandlers() {
             // - separate into a handler
             // - separate bot join and leave
             // - update join/leave status
-            Database.poolManager.getPool.query(`INSERT INTO public.chats (chat_id, title)
-                                                VALUES (${ctx.chat.id}, '${ctx.chat.title}')
+            Database.poolManager.getPool.query(
+                `INSERT INTO public.chats (chat_id, title)
+                                                VALUES (${ctx.chat.id}, '$1')
                                                 ON CONFLICT (chat_id)
-                                                DO UPDATE SET title = EXCLUDED.title;`);
+                                                DO UPDATE SET title = EXCLUDED.title;`,
+                [ctx.chat.title]
+            );
         }
     });
 
