@@ -48,6 +48,7 @@ import { addToBlacklist } from "./staff/blacklist.js";
 import { start_cmd } from "./start.js";
 import { scanChatsForId } from "./staff/scanChatsForId.js";
 import { updateDbChatsInfo } from "./staff/updateDbChatsInfo.js";
+import { stats_user_global } from "./stats_user_global.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
