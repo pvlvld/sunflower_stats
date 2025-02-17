@@ -14,7 +14,7 @@ CREATE TABLE
     line_color char(6),
     font_color char(6)
     ),
-    title char(128);
+    title char(143); -- 128 + esscape HTLM characters
 ALTER TABLE
   public.chats
 ADD
