@@ -49,11 +49,7 @@ async function getChartSettings(target_id: number, type: IChartType): Promise<IC
     }
 }
 
-async function getChartConfig(
-    chat_id: number,
-    user_id: number,
-    type: IChartType
-): Promise<ChartConfiguration> {
+async function getChartConfig(chat_id: number, user_id: number, type: IChartType): Promise<ChartConfiguration> {
     const chart_settings = await getChartSettings(type === "chat" ? chat_id : user_id, type);
     const line_rgbValuesString = getRGBValueString(chart_settings.line_color);
 
@@ -72,12 +68,7 @@ async function getChartConfig(
                             return;
                         }
                         const { ctx, chartArea } = context.chart;
-                        const gradient = ctx.createLinearGradient(
-                            0,
-                            chartArea.top,
-                            0,
-                            chartArea.bottom
-                        );
+                        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
                         gradient.addColorStop(1, `rgba(${line_rgbValuesString}, 0)`);
                         gradient.addColorStop(0.6, `rgba(${line_rgbValuesString}, 0.4)`);
                         gradient.addColorStop(0, `rgba(${line_rgbValuesString}, 0.9)`);
@@ -184,6 +175,30 @@ export async function getStatsChart(
 
     const configuration = await getChartConfig(chat_id, user_id, type);
     configuration.data.datasets[0].data = data;
+    configuration.data.labels = data.map((v) => v["x"]);
+
+    return new InputFile(await renderToBuffer(configuration), "chart.jpg");
+}
+
+export async function getStatsChartFromData(
+    chat_id: number,
+    user_id: number,
+    type: IChartType,
+    data: { x: string; y: number }[]
+): Promise<InputFile | undefined> {
+    void data.pop();
+    // remove 2023-12-31 data point, it's compiled stats for whole 2023 so it breaks chart
+    if (data.length !== 0 && data[0].x === "2023-12-31") {
+        void data.shift();
+    }
+
+    // do not render chart if data points count less than 2
+    if (data.length < 2) {
+        return undefined;
+    }
+
+    const configuration = await getChartConfig(chat_id, user_id, type);
+    configuration.data.datasets[0].data = data as any;
     configuration.data.labels = data.map((v) => v["x"]);
 
     return new InputFile(await renderToBuffer(configuration), "chart.jpg");
