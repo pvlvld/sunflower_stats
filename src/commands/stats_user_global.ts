@@ -2,6 +2,7 @@ import { ChatTypeContext } from "grammy";
 import { ICommandContext } from "../types/context.js";
 import { Database } from "../db/db.js";
 import { getStatsChartFromData } from "../chart/getStatsChart.js";
+import getUserNameLink from "../utils/getUserNameLink.js";
 
 async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private">) {
     const query_top = `SELECT 
@@ -29,7 +30,11 @@ async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private"
 
     let i = 0;
     let row;
-    let text = "<blockquote>";
+    let text = `Особистий топ чатів ${getUserNameLink.html(
+        ctx.from.first_name,
+        ctx.from.username,
+        ctx.from.id
+    )}\n\n<blockquote>`;
     for (row of top_data.rows) {
         text += `${++i}. ${row.title} - ${(row.chat_count as number).toLocaleString("fr-FR")} повідомлень\n`;
     }
