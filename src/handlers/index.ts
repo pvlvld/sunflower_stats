@@ -7,6 +7,7 @@ import bot from "../bot.js";
 import { chatMigrationHandler } from "./chatMigrationHandler.js";
 import { chatTitleUpdateHandler } from "./chatTitleUpdateHandler.js";
 import { Database } from "../db/db.js";
+import Escape from "../utils/escape.js";
 
 function regHandlers() {
     const group = bot.chatType(["group", "supergroup"]);
@@ -31,7 +32,7 @@ function regHandlers() {
                                                 VALUES (${ctx.chat.id}, '$1')
                                                 ON CONFLICT (chat_id)
                                                 DO UPDATE SET title = EXCLUDED.title;`,
-                [ctx.chat.title]
+                [Escape.html(ctx.chat.title)]
             );
         }
     });
