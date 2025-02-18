@@ -53,6 +53,7 @@ async function main() {
 
     bot.use(ActiveCollectorWrapper());
     bot.use(StatsCollectorWrapper());
+    regHandlers();
     bot.use(
         limit({
             timeFrame: 1500,
@@ -61,7 +62,6 @@ async function main() {
     );
     bot.use(autoQuote({ allowSendingWithoutReply: true }));
     bot.use(autoThread());
-    regHandlers();
     regCommands();
 
     collectGarbage();
