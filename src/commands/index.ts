@@ -52,6 +52,7 @@ import { stats_user_global } from "./stats_user_global.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
+    const dm = bot.chatType("private");
     const botAdmin = group.filter((ctx) => cfg.ADMINS.includes(ctx.from?.id || -1));
     const groupStats = group.filter(async (ctx) => {
         if ((await getCachedOrDBChatSettings(ctx.chat.id)).statsadminsonly) {
@@ -66,21 +67,11 @@ function regCommands() {
     });
 
     dm.command(["me", "i"], stats_user_global);
-    bot.command("donate", async (ctx) => donate_cmd(ctx));
+    bot.command("donate", donate_cmd);
 
-    bot.command("refreshDonate", async (ctx) => {
-        refreshDonate_cmd(ctx);
-    });
+    bot.command("refreshDonate", refreshDonate_cmd);
     bot.command("start", start_cmd);
-    bot.command(["help"], async (ctx) => {
-        if (
-            ["supergroup", "group"].includes(ctx.msg.chat.type) &&
-            ctx.msg.text.indexOf("@soniashnyk_statistics_bot") === -1 &&
-            ctx.msg.text.indexOf("@testSun203_bot") === -1
-        ) {
-            return;
-        }
-
+    group.command(["help"], async (ctx) => {
         botStatsManager.commandUse("help");
         help_cmd(ctx);
     });
@@ -88,9 +79,7 @@ function regCommands() {
     // STATS
     //@ts-expect-error
     groupStats.command("stats", stats_chat);
-    groupStats.hears(/^(стата|статистика)$/i, async (ctx) => {
-        stats_chat(ctx);
-    });
+    groupStats.hears(/^(стата|статистика)$/i, stats_chat);
 
     groupStats.hears(/^(!?)(стата|статистика) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/i, async (ctx) => {
         botStatsManager.commandUse("стата дата");
@@ -102,9 +91,7 @@ function regCommands() {
         //@ts-expect-error
         stats_chat(ctx);
     });
-    groupStats.hears(/^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i, async (ctx) => {
-        stats_chat(ctx);
-    });
+    groupStats.hears(/^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i, stats_chat);
 
     //@ts-expect-error
     groupStats.command("me", "i", async (ctx) => stats_user(ctx, "я"));
@@ -153,9 +140,7 @@ function regCommands() {
         chatCleanup(ctx);
     });
 
-    group.hears(/^!рест/, async (ctx) => {
-        removeFromChatCleanup(ctx);
-    });
+    group.hears(/^!рест/, removeFromChatCleanup);
 
     // CHARTS
 
@@ -181,9 +166,7 @@ function regCommands() {
         await setChartColor(ctx);
     });
 
-    group.command("settings", async (ctx) => {
-        chatSettings_cmd(ctx);
-    });
+    group.command("settings", chatSettings_cmd);
 
     // group.hears(/^!дата вступу/, (ctx) => {
     //     setUserJoinDate_cmd(ctx);
@@ -193,19 +176,19 @@ function regCommands() {
 
     // bot.hears(/^бот(\??)$/i, async (ctx) => botTest_cmd(ctx));
 
-    botAdmin.hears("!ssstats", async (ctx) => bot_stats_cmd(ctx));
+    botAdmin.hears("!ssstats", bot_stats_cmd);
 
-    botAdmin.hears("!ssreset stats", (ctx) => botStatsManager.resetAll());
+    botAdmin.hears("!ssreset stats", botStatsManager.resetAll);
 
-    botAdmin.hears("!ssreset msg", (ctx) => botStatsManager.resetMessages());
+    botAdmin.hears("!ssreset msg", botStatsManager.resetMessages);
 
-    botAdmin.hears("!ssgc", (ctx) => collectGarbage());
+    botAdmin.hears("!ssgc", collectGarbage);
 
-    botAdmin.hears(/^!ssleave/, (ctx) => leaveChat_cmd(ctx));
+    botAdmin.hears(/^!ssleave/, leaveChat_cmd);
 
-    botAdmin.hears(/^!ssadmins/, (ctx) => getChatAdmins_cmd(ctx));
+    botAdmin.hears(/^!ssadmins/, getChatAdmins_cmd);
 
-    botAdmin.hears(/^!ssinvite/, (ctx) => getChatInvite_cmd(ctx));
+    botAdmin.hears(/^!ssinvite/, getChatInvite_cmd);
 
     botAdmin.hears(/^!ssru/, (ctx) => {
         const wantedUser = parseCmdArgs(ctx.msg?.text ?? ctx.msg?.caption)[0];
@@ -214,56 +197,38 @@ function regCommands() {
         }
     });
 
-    botAdmin.hears(/^!ssremoveanon/, (ctx) => removeAnonimousActive(ctx));
+    botAdmin.hears(/^!ssremoveanon/, removeAnonimousActive);
 
-    botAdmin.hears("!ssbroadcast_owners", (ctx) => broadcast_owners_cmd(ctx));
+    botAdmin.hears("!ssbroadcast_owners", broadcast_owners_cmd);
 
-    botAdmin.hears(/^!ssbroadcast_chats/, (ctx) => broadcast_chats_cmd(ctx));
+    botAdmin.hears(/^!ssbroadcast_chats/, broadcast_chats_cmd);
 
-    botAdmin.hears("!ssmem", async (ctx) => botMemoryUsage(ctx));
+    botAdmin.hears("!ssmem", botMemoryUsage);
 
-    botAdmin.hears(/^!ssrc/, async (ctx) => removeChatData_cmd(ctx));
+    botAdmin.hears(/^!ssrc/, removeChatData_cmd);
 
-    botAdmin.hears("!ssclearactive", async (ctx) => clearOldBotActive(ctx));
+    botAdmin.hears("!ssclearactive", clearOldBotActive);
 
-    botAdmin.hears(/^!sscga/, async (ctx) => clearGroupActive(ctx));
+    botAdmin.hears(/^!sscga/, clearGroupActive);
 
-    botAdmin.hears(/^!scanChatsForId/, async (ctx) => scanChatsForId(ctx));
+    botAdmin.hears(/^!scanChatsForId/, scanChatsForId);
     // Etc.
 
-    group.hears("/getid", async (ctx) => {
-        getId_cmd(ctx);
-    });
+    group.hears("/getid", getId_cmd);
 
-    group.hears("!sdel", async (ctx) => {
-        if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
-            await delMessage(ctx);
-        }
-    });
+    botAdmin.hears("!sdel", delMessage);
 
-    bot.hears("!hello", async (ctx) => {
-        await hello(ctx);
-    });
+    botAdmin.hears("!hello", hello);
 
-    group.hears("!sban", async (ctx) => {
-        if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
-            ban_cmd(ctx);
-        }
-    });
+    group.hears("!sban", ban_cmd);
 
-    group.hears(/^!sscanh/, async (ctx) => {
-        if (!cfg.ADMINS.includes(ctx.from.id)) {
-            return;
-        }
+    botAdmin.hears(/^!sscanh/, scanChatHistory_cmd);
 
-        scanChatHistory_cmd(ctx);
-    });
+    botAdmin.hears("!toggleCharts", toggleCharts);
 
-    group.hears("!toggleCharts", async (ctx) => toggleCharts(ctx));
+    botAdmin.hears(/^!loglvl/i, setLogLvl);
 
-    group.hears(/^!loglvl/i, (ctx) => setLogLvl(ctx));
-
-    group.hears(/^!ssadv/, async (ctx) => await broadcast_adv(ctx));
+    botAdmin.hears(/^!ssadv/, async (ctx) => await broadcast_adv(ctx));
     bot.filter((ctx) => !!(ctx.msg?.caption ?? ctx.msg?.text)?.startsWith("!ssadv")).on("edited_message", (ctx) => {
         if ((ctx.msg.caption || ctx.msg.text)?.startsWith("!ssadvt")) {
             // @ts-expect-error
@@ -279,11 +244,11 @@ function regCommands() {
         .on(":text")
         .hears([/^!ssr /, /^!sbr /], async (ctx) => react_cmd(ctx));
 
-    botAdmin.hears(/^!ssuo/, async (ctx) => unban_owners_cmd(ctx));
+    botAdmin.hears(/^!ssuo/, unban_owners_cmd);
 
-    botAdmin.hears(/^!ssrban/, async (ctx) => remote_ban_cmd(ctx));
+    botAdmin.hears(/^!ssrban/, remote_ban_cmd);
 
-    botAdmin.hears(/^!ssblid/, async (ctx) => addToBlacklist(ctx));
+    botAdmin.hears(/^!ssblid/, addToBlacklist);
 
     botAdmin.hears("!ssuci", updateDbChatsInfo);
 
