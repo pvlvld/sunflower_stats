@@ -181,12 +181,6 @@ function regCommands() {
         await setChartColor(ctx);
     });
 
-    group.hears("!settings", async (ctx) => {
-        chatSettings_cmd(ctx);
-    });
-    group.hears("!налаштування", async (ctx) => {
-        chatSettings_cmd(ctx);
-    });
     group.command("settings", async (ctx) => {
         chatSettings_cmd(ctx);
     });
