@@ -94,7 +94,7 @@ function regCommands() {
     groupStats.hears(/^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i, stats_chat);
 
     //@ts-expect-error
-    groupStats.command("me", "i", async (ctx) => stats_user(ctx, "я"));
+    groupStats.command(["me", "i"], async (ctx) => stats_user(ctx, "я"));
     groupStats.hears(/^(!?)(!я|йа|хто я)$/i, async (ctx) => {
         botStatsManager.commandUse("я");
         await stats_user(ctx, "я");
