@@ -31,3 +31,10 @@ export interface IDBChatUserStats {
     user_id: number;
     count: number;
 }
+
+export interface IDBUserTopChats {
+    chat_id: number;
+    title: string;
+    chat_count: number;
+    total_count: number;
+}

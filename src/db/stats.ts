@@ -1,4 +1,4 @@
-import type { IDBChatUserStats, IDBChatUserStatsAll } from "../types/stats.js";
+import type { IDBChatUserStats, IDBChatUserStatsAll, IDBUserTopChats } from "../types/stats.js";
 import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date.js";
 import { DBPoolManager, IDBPoolManager } from "./poolManager.js";
 
@@ -16,6 +16,22 @@ const queries = Object.freeze({
                         TO_CHAR(MIN(date), 'YYYY-MM-DD') AS first_seen
                         FROM stats_daily
                         WHERE chat_id = $8 AND user_id = $9`,
+            top_chats: `SELECT 
+                        sd.chat_id, 
+                        c.title,
+                        SUM(sd.count) AS chat_count, 
+                        SUM(SUM(sd.count)) OVER () AS total_count
+                        FROM stats_daily sd
+                        JOIN chats c ON sd.chat_id = c.chat_id
+                        WHERE sd.user_id = $1  AND c.title IS NOT NULL
+                        GROUP BY sd.chat_id, c.title
+                        ORDER BY chat_count DESC
+                        LIMIT 15`,
+            top_chats_chart: `SELECT to_char(date, 'YYYY-MM-DD') AS x, sum(count) as y
+                                FROM stats_daily
+                                WHERE user_id = $1 AND date >= NOW() - INTERVAL '1 year'
+                                GROUP BY date
+                                ORDER by date`,
         },
         chat: {
             // weekRange: `SELECT 1`,
@@ -82,6 +98,36 @@ class DBUserStats {
         } catch (error) {
             console.error(error);
             return {} as IDBChatUserStatsAll;
+        }
+    }
+
+    async topChats(user_id: number) {
+        try {
+            return (
+                await this._dbPooolManager.getPoolRead.query({
+                    name: "get_stats_user_chat_top",
+                    text: queries.stats.user.top_chats,
+                    values: [user_id],
+                })
+            ).rows as IDBUserTopChats[];
+        } catch (error) {
+            console.error(error);
+            return [] as IDBUserTopChats[];
+        }
+    }
+
+    async topChatsChart(user_id: number) {
+        try {
+            return (
+                await this._dbPooolManager.getPoolRead.query({
+                    name: "get_stats_user_chat_top_chart",
+                    text: queries.stats.user.top_chats_chart,
+                    values: [user_id],
+                })
+            ).rows as { x: string; y: number }[];
+        } catch (error) {
+            console.error(error);
+            return [] as { x: string; y: number }[];
         }
     }
 
