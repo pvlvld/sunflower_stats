@@ -24,7 +24,7 @@ async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private"
     }
 
     text += "</blockquote>";
-    text += `\n\nЗагалом: ${(+row.total_count as number).toLocaleString("fr-FR")} повідомлень`;
+    text += `\nЗагалом: ${(+row.total_count as number).toLocaleString("fr-FR")} повідомлень`;
 
     const chart = await getStatsChartFromData(ctx.chat.id, ctx.from.id, "user", chart_data);
 
