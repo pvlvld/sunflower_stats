@@ -4,15 +4,6 @@ import { IContext } from "../types/context.js";
 import { active } from "../data/active.js";
 
 class ChatMigrationHandler {
-    async handleFromError(e: GrammyError): Promise<void> {
-        if (!e.parameters.migrate_to_chat_id || !e.payload.chat_id) return;
-        await this.handle(String(e.payload.chat_id), String(e.parameters.migrate_to_chat_id));
-    }
-
-    async handleFromCtx(ctx: Filter<IContext, "message:migrate_from_chat_id">): Promise<void> {
-        await this.handle(String(ctx.msg.migrate_from_chat_id), String(ctx.msg.migrate_to_chat_id!));
-    }
-
     private async handle(from_id: string, to_id: string): Promise<void> {
         console.info(`Chat migration ${from_id} -> ${to_id}`);
         const query = `
@@ -33,6 +24,15 @@ class ChatMigrationHandler {
         await Database.poolManager.getPool.query(query);
         active.data[to_id] = active.data[from_id];
         delete active.data[from_id];
+    }
+
+    async handleFromError(e: GrammyError): Promise<void> {
+        if (!e.parameters.migrate_to_chat_id || !e.payload.chat_id) return;
+        await this.handle(String(e.payload.chat_id), String(e.parameters.migrate_to_chat_id));
+    }
+
+    async handleFromCtx(ctx: Filter<IContext, "message:migrate_from_chat_id">): Promise<void> {
+        await this.handle(String(ctx.msg.migrate_from_chat_id), String(ctx.msg.migrate_to_chat_id!));
     }
 }
 
