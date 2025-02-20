@@ -41,6 +41,22 @@ class CacheManager {
 
         this.TextCache = new TextCache();
     }
+
+    flush() {
+        this.ChartCache_User.flush();
+        this.ChartCache_Chat.flush();
+        this.PremiumStatusCache.flush();
+        // this.ChatSettingsCache.flush();
+        // this.ChatAdminsCache.flush();
+        // this.RestrictedUsersCache.flush();
+        this.TextCache.flush();
+    }
+
+    flushAll() {
+        this.flush();
+        this.LRUCache.clear();
+        this.TTLCache.flushAll();
+    }
 }
 
 const cacheManager = new CacheManager();
