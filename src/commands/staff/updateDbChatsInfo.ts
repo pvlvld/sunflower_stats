@@ -38,10 +38,10 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
         if (!chatInfo) continue;
         Database.poolManager.getPool.query(
             `INSERT INTO public.chats (chat_id, title)
-            VALUES (${chatInfo.id}, '$1')
+            VALUES ($1, $2)
             ON CONFLICT (chat_id)
-            DO UPDATE SET title = EXCLUDED.title;`,
-            [Escape.html(chatInfo.title || "")]
+            DO UPDATE SET title = EXCLUDED.title`,
+            [chatInfo.id, Escape.html(chatInfo.title || "")]
         );
 
         if (count % 100 !== 0) continue;
