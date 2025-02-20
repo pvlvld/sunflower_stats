@@ -12,6 +12,8 @@ import help_cmd from "../commands/help.js";
 import { DBStats } from "../db/stats.js";
 import cfg from "../config.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
+import { Database } from "../db/db.js";
+import Escape from "../utils/escape.js";
 
 async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     // Bot join chat
@@ -28,17 +30,14 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
             if (ctx.chat.username) {
                 historyScanner.scanChat(ctx.chat.username, ctx.chat.id);
             } else {
-                await ctx.reply(
-                    "Відсканувати історію чату, щоб старі повідомлення відображались в статистиці чату?",
-                    {
-                        reply_markup: historyScanProposal_menu,
-                        reply_parameters: {
-                            //@ts-expect-error
-                            message_id: ctx.msg?.id ?? -1,
-                            allow_sending_without_reply: true,
-                        },
-                    }
-                );
+                await ctx.reply("Відсканувати історію чату, щоб старі повідомлення відображались в статистиці чату?", {
+                    reply_markup: historyScanProposal_menu,
+                    reply_parameters: {
+                        //@ts-expect-error
+                        message_id: ctx.msg?.id ?? -1,
+                        allow_sending_without_reply: true,
+                    },
+                });
             }
         }
 
@@ -89,11 +88,9 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
                 cfg.ANALYTICS_CHAT,
                 `❌📉 #Left ${ctx.chat.title}\nID: ${ctx.chat.id}\nusername: @${
                     ctx.chat.username
-                }\nKicked by: ${getUserNameLink.html(
-                    ctx.from.first_name,
-                    ctx.from.username,
+                }\nKicked by: ${getUserNameLink.html(ctx.from.first_name, ctx.from.username, ctx.from.id)} (id: ${
                     ctx.from.id
-                )} (id: ${ctx.from.id})\n${admins_text}`,
+                })\n${admins_text}`,
                 {
                     reply_markup: leftGroup_menu,
                     reply_parameters: { message_id: -1, allow_sending_without_reply: true },
@@ -104,6 +101,20 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
             )
             .catch((e) => {});
     }
+
+    //TODO:
+    // - separate into a handler
+    // - separate bot join and leave
+    // - update join/leave status
+    Database.poolManager.getPool
+        .query(
+            `INSERT INTO public.chats (chat_id, title)
+                                                VALUES (${ctx.chat.id}, '$1')
+                                                ON CONFLICT (chat_id)
+                                                DO UPDATE SET title = EXCLUDED.title;`,
+            [Escape.html(ctx.chat.title)]
+        )
+        .catch((e) => {});
 }
 
 export { updateChatBotStatus_handler };

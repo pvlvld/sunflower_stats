@@ -22,19 +22,6 @@ function regHandlers() {
             joinChatMember(ctx);
         }
         adminUpdateHandler(ctx);
-        if (ctx.chatMember.new_chat_member.user.id === ctx.me.id) {
-            //TODO:
-            // - separate into a handler
-            // - separate bot join and leave
-            // - update join/leave status
-            Database.poolManager.getPool.query(
-                `INSERT INTO public.chats (chat_id, title)
-                                                VALUES (${ctx.chat.id}, '$1')
-                                                ON CONFLICT (chat_id)
-                                                DO UPDATE SET title = EXCLUDED.title;`,
-                [Escape.html(ctx.chat.title)]
-            );
-        }
     });
 
     bot.on("message:migrate_from_chat_id", chatMigrationHandler.handleFromCtx);
