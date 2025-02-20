@@ -7,7 +7,15 @@ import { chatMigrationHandler } from "../../handlers/chatMigrationHandler.js";
 import Escape from "../../utils/escape.js";
 
 async function updateDbChatsInfo(ctx: IGroupHearsContext) {
-    const chats = Object.keys(active.data);
+    // const chats = Object.keys(active.data);
+
+    // TEMPORARY
+    let chats = (await Database.poolManager.getPool.query("SELECT chat_id FROM chats WHERE title IS NULL")).rows.map(
+        (r) => <number>r.chat_id
+    );
+    chats = chats.filter((c) => !!active.data[c]);
+    // TEMPORARY
+
     const total_count = chats.length;
     let count = 0;
     ctx.api.config.use(autoRetry());
