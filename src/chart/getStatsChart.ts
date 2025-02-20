@@ -115,6 +115,12 @@ async function getChartConfig(chat_id: number, user_id: number, type: IChartType
                     },
                 },
                 y: {
+                    min: type === "bot-all" ? 600000 : "auto",
+                    afterBuildTicks: (scale: any) => {
+                        if (type === "bot-all") {
+                            scale.ticks.at(0).value = 600000;
+                        }
+                    },
                     grid: {
                         display: false,
                     },

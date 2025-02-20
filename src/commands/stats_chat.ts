@@ -134,9 +134,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         ctx.reply(
             `DB: ${new Big(queryTime).minus(start).div(1000000)}ms\nGen: ${new Big(msgTime)
                 .minus(queryTime)
-                .div(1000000)}ms\nChart: ${new Big(chartTime).minus(msgTime).div(1000000)}ms\nTotal: ${new Big(
-                chartTime
-            )
+                .div(1000000)}ms\nChart: ${new Big(chartTime).minus(msgTime).div(1000000)}ms\nTotal: ${new Big(chartTime)
                 .minus(start)
                 .div(1000000)}ms`
         );
