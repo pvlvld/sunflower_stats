@@ -6,6 +6,7 @@ import { ChartCache_Chat } from "./chartCache_Chat.js";
 import { ChatAdminsCache } from "./chatAdminsCache.js";
 import { LRUCache } from "lru-cache";
 import NodeCache from "node-cache";
+import { TextCache } from "./textCache.js";
 
 class CacheManager {
     public LRUCache: LRUCache<{}, {}, unknown>;
@@ -16,6 +17,7 @@ class CacheManager {
     public ChatSettingsCache: ChatSettingsCache;
     public ChatAdminsCache: ChatAdminsCache;
     public RestrictedUsersCache: RestrictedUsersCache;
+    public TextCache: TextCache;
 
     constructor() {
         this.LRUCache = new LRUCache({
@@ -36,6 +38,8 @@ class CacheManager {
         this.ChatAdminsCache = new ChatAdminsCache();
 
         this.RestrictedUsersCache = new RestrictedUsersCache();
+
+        this.TextCache = new TextCache();
     }
 }
 
