@@ -97,7 +97,7 @@ function regCommands() {
     groupStats.command("me", "i", async (ctx) => stats_user(ctx, "я"));
     groupStats.hears(/^(!?)(!я|йа|хто я)$/i, async (ctx) => {
         botStatsManager.commandUse("я");
-        stats_user(ctx, "я");
+        await stats_user(ctx, "я");
     });
 
     //@ts-expect-error
@@ -110,14 +110,14 @@ function regCommands() {
             return;
         }
         botStatsManager.commandUse("ти");
-        stats_user(ctx, "ти");
+        await stats_user(ctx, "ти");
     });
 
     //@ts-expect-error
     group.command("nick", set_nickname);
     group.hears(/^(\+(нік|нікнейм))/i, async (ctx) => {
         botStatsManager.commandUse("нік");
-        set_nickname(ctx);
+        await set_nickname(ctx);
     });
 
     group.hears(/^-(нік|нікнейм)/i, async (ctx) => {
