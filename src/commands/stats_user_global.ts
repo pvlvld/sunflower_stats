@@ -12,19 +12,20 @@ async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private"
     ]);
 
     let i = 0;
-    let row = <IDBUserTopChats>{};
     let text = `Особистий топ чатів ${getUserNameLink.html(
         ctx.from.first_name,
         ctx.from.username,
         ctx.from.id
     )}\n\n<blockquote>`;
 
-    for (row of top_data) {
-        text += `${++i}. ${row.title} - ${(row.chat_count as number).toLocaleString("fr-FR")} повідомлень\n`;
+    for (; i < top_data.length; i++) {
+        text += `${1 + i}. ${top_data[i].title} - ${(top_data[i].chat_count as number).toLocaleString(
+            "fr-FR"
+        )} повідомлень\n`;
     }
 
     text += "</blockquote>";
-    text += `\nЗагалом: ${(+row.total_count as number).toLocaleString("fr-FR")} повідомлень`;
+    text += `\nЗагалом: ${(+top_data[0].total_count as number).toLocaleString("fr-FR")} повідомлень`;
 
     const chart = await getStatsChartFromData(ctx.chat.id, ctx.from.id, "user", chart_data);
 
