@@ -1,39 +1,61 @@
-import { ChatTypeContext } from "grammy";
+import { ChatTypeContext, InputFile } from "grammy";
 import { ICommandContext } from "../types/context.js";
 import { Database } from "../db/db.js";
 import { getStatsChartFromData } from "../chart/getStatsChart.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
-import { IDBUserTopChats } from "../types/stats.js";
+import cacheManager from "../cache/cache.js";
 
 async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private">) {
-    const [top_data, chart_data] = await Promise.all([
-        Database.stats.user.topChats(ctx.from.id),
-        Database.stats.user.topChatsChart(ctx.from.id),
-    ]);
+    const chart_cached = cacheManager.ChartCache_User.get(ctx.me.id, ctx.from.id);
+    const top_cached = cacheManager.TextCache.get(`${ctx.from.id}_top_chats`);
 
-    let i = 0;
+    let top_data: Awaited<ReturnType<typeof Database.stats.user.topChats>> = [];
+    let chart_data: Awaited<ReturnType<typeof Database.stats.user.topChatsChart>> = [];
+    let chart: InputFile | undefined;
+
+    if (top_cached == undefined || chart_cached.status !== "ok") {
+        [top_data, chart_data] = await Promise.all([
+            Database.stats.user.topChats(ctx.from.id),
+            Database.stats.user.topChatsChart(ctx.from.id),
+        ]);
+
+        cacheManager.TextCache.set(`${ctx.from.id}_top_chats`, generateUserGlobalTop(ctx, top_data));
+        chart = await getStatsChartFromData(ctx.chat.id, ctx.from.id, "user", chart_data);
+    }
+
+    if (chart === undefined && chart_cached.status !== "ok") {
+        return await ctx.reply(cacheManager.TextCache.get(`${ctx.from.id}_top_chats`)!).catch(console.error);
+    }
+
+    const msg = await ctx
+        .replyWithPhoto(chart_cached.status === "ok" ? chart_cached.file_id : chart!, {
+            caption: cacheManager.TextCache.get(`${ctx.from.id}_top_chats`),
+        })
+        .catch(console.error);
+
+    if (msg) {
+        cacheManager.ChartCache_User.set(ctx.me.id, ctx.from.id, msg.photo[msg.photo.length - 1].file_id);
+    }
+}
+
+function generateUserGlobalTop(
+    ctx: ChatTypeContext<ICommandContext, "private">,
+    data: Awaited<ReturnType<typeof Database.stats.user.topChats>>
+) {
     let text = `Особистий топ чатів ${getUserNameLink.html(
         ctx.from.first_name,
         ctx.from.username,
         ctx.from.id
     )}\n\n<blockquote>`;
 
-    for (; i < top_data.length; i++) {
-        text += `${1 + i}. ${top_data[i].title} - ${(top_data[i].chat_count as number).toLocaleString(
-            "fr-FR"
-        )} повідомлень\n`;
+    for (let i = 0; i < data.length; i++) {
+        text += `${1 + i}. ${data[i].title} - ${(data[i].chat_count as number).toLocaleString("fr-FR")} повідомлень\n`;
     }
 
     text += "</blockquote>";
-    text += `\nЗагалом: ${(+top_data[0].total_count as number).toLocaleString("fr-FR")} повідомлень`;
+    text += `\nЗагалом: ${(+data[0].total_count as number).toLocaleString("fr-FR")} повідомлень`;
 
-    const chart = await getStatsChartFromData(ctx.chat.id, ctx.from.id, "user", chart_data);
-
-    if (chart === undefined) {
-        await ctx.reply(text).catch(console.error);
-    } else {
-        await ctx.replyWithPhoto(chart, { caption: text }).catch(console.error);
-    }
+    return text;
 }
 
 export { stats_user_global };
