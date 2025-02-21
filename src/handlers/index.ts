@@ -24,7 +24,7 @@ function regHandlers() {
         adminUpdateHandler(ctx);
     });
 
-    bot.on("message:migrate_from_chat_id", chatMigrationHandler.handleFromCtx);
+    bot.on("message:migrate_from_chat_id", async (ctx) => await chatMigrationHandler.handleFromCtx(ctx));
 
     bot.on(":new_chat_title", chatTitleUpdateHandler);
 }
