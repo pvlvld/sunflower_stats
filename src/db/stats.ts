@@ -16,7 +16,7 @@ const queries = Object.freeze({
                         TO_CHAR(MIN(date), 'YYYY-MM-DD') AS first_seen
                         FROM stats_daily
                         WHERE chat_id = $8 AND user_id = $9`,
-            top_chats: `SELECT 
+            topChats: `SELECT 
                         sd.chat_id, 
                         c.title,
                         SUM(sd.count) AS chat_count, 
@@ -27,7 +27,7 @@ const queries = Object.freeze({
                         GROUP BY sd.chat_id, c.title
                         ORDER BY chat_count DESC
                         LIMIT 15`,
-            top_chats_chart: `SELECT to_char(date, 'YYYY-MM-DD') AS x, sum(count) as y
+            topChatsChart: `SELECT to_char(date, 'YYYY-MM-DD') AS x, sum(count) as y
                                 FROM stats_daily
                                 WHERE user_id = $1 AND date >= NOW() - INTERVAL '1 year'
                                 GROUP BY date
@@ -53,7 +53,12 @@ const queries = Object.freeze({
                     GROUP BY user_id
                     ORDER BY count DESC`,
         },
-        global: {},
+        global: {
+            topChats: {
+                monthly: ``,
+                month: ``,
+            },
+        },
     },
 });
 
@@ -106,7 +111,7 @@ class DBUserStats {
             return (
                 await this._dbPooolManager.getPoolRead.query({
                     name: "get_stats_user_chat_top",
-                    text: queries.stats.user.top_chats,
+                    text: queries.stats.user.topChats,
                     values: [user_id],
                 })
             ).rows as IDBUserTopChats[];
@@ -121,7 +126,7 @@ class DBUserStats {
             return (
                 await this._dbPooolManager.getPoolRead.query({
                     name: "get_stats_user_chat_top_chart",
-                    text: queries.stats.user.top_chats_chart,
+                    text: queries.stats.user.topChatsChart,
                     values: [user_id],
                 })
             ).rows as { x: string; y: number }[];
