@@ -14,7 +14,7 @@ CREATE TABLE
     line_color char(6),
     font_color char(6)
     ),
-    title char(143); -- 128 + esscape HTLM characters
+    title varchar(768); -- can be up to 768+ chars, bruh
 ALTER TABLE
   public.chats
 ADD
@@ -51,6 +51,8 @@ CREATE TABLE public.stats_daily (
         ON UPDATE CASCADE
         ON DELETE CASCADE
 );
+
+CREATE INDEX idx_stats_daily_user_chat_count ON public.stats_daily USING btree (user_id, chat_id, count);
 
 -------------------------------------
 
