@@ -1,6 +1,6 @@
-import type { ChatTypeContext, Context, HearsContext, CommandContext, Filter } from "grammy";
+import type { ChatTypeContext, Context, HearsContext, CommandContext, Filter, Api } from "grammy";
 import type { ParseModeFlavor } from "@grammyjs/parse-mode";
-import type { FileFlavor } from "@grammyjs/files";
+import type { FileApiFlavor, FileFlavor } from "@grammyjs/files";
 import type { Update } from "grammy/types";
 import { I18nFlavor } from "@grammyjs/i18n";
 
@@ -27,3 +27,5 @@ export type IGroupPhotoCaptionContext = Filter<IGroupCaptionContext, ":photo">;
 export type IGroupAnimationCaptionContext = Filter<IGroupCaptionContext, ":animation">;
 
 export type IUpdates = ReadonlyArray<Exclude<keyof Update, "update_id">>;
+
+export type IApi = FileApiFlavor<Api>;

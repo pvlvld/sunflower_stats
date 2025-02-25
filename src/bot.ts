@@ -6,7 +6,7 @@ import { autoThread } from "./middlewares/autoThreads.js";
 import { leftGroup_menu } from "./ui/menus/leftGroup.js";
 import chatCleanup_menu from "./ui/menus/chatCleanup.js";
 import { settings_menu } from "./ui/menus/settings.js";
-import type { IContext } from "./types/context.js";
+import type { IApi, IContext } from "./types/context.js";
 import { I18n } from "@grammyjs/i18n";
 import { donate_menu } from "./ui/menus/donate.js";
 import { autoRetry } from "@grammyjs/auto-retry";
@@ -18,7 +18,7 @@ import { chatStatsPagination_menu } from "./ui/menus/statsPagination.js";
 import { blacklist } from "./middlewares/blacklist.js";
 import start_menu from "./ui/menus/start.js";
 
-const bot = new Bot<IContext>(cfg.BOT_TOKEN);
+const bot = new Bot<IContext, IApi>(cfg.BOT_TOKEN);
 
 const autoRetryTransformer = autoRetry({
     maxDelaySeconds: 30,
