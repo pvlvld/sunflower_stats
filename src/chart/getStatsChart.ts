@@ -253,7 +253,7 @@ const profileImagesPlugin = {
 
             // dont parallelized to avoid angering the telegram api
             const chatImage = await getChatImage(chat_id);
-            if (chatImage !== undefined) continue;
+            if (chatImage === undefined) continue;
             for (let point of meta.data) {
                 const { x, y } = point.getCenterPoint();
 
