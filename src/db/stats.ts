@@ -55,7 +55,39 @@ const queries = Object.freeze({
         },
         global: {
             topChats: {
-                monthly: ``,
+                monthly: `WITH monthly_chat_stats AS (
+                            SELECT
+                                DATE_TRUNC('month', date) AS month,
+                                chat_id,
+                                SUM(count) AS total_messages,
+                                DENSE_RANK() OVER (
+                                    PARTITION BY DATE_TRUNC('month', date) 
+                                    ORDER BY SUM(count) DESC
+                                ) AS rank
+                            FROM
+                                stats_daily sd
+                            WHERE
+                                date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '6 months')
+                                AND date < DATE_TRUNC('month', CURRENT_DATE)
+                            GROUP BY
+                                DATE_TRUNC('month', date),
+                                chat_id
+                            )
+                            SELECT
+                                m.month,
+                                m.chat_id,
+                                c.title,
+                                m.total_messages,
+                                m.rank
+                            FROM
+                                monthly_chat_stats m
+                                INNER JOIN chats c ON c.chat_id = m.chat_id
+                            WHERE
+                                m.rank <= 10
+                                AND c.title IS NOT NULL
+                            ORDER BY
+                                m.month,
+                                m.rank;`,
                 month: ``,
             },
         },
@@ -301,6 +333,36 @@ class DBBotStats {
 
     constructor(dbPoolManager: IDBPoolManager) {
         this._dbPoolManager = dbPoolManager;
+    }
+
+    public async topChatsMonthly() {
+        try {
+            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.monthly)).rows as {
+                month: string;
+                chat_id: number;
+                title: string;
+                total_messages: number;
+                rank: number;
+            }[];
+        } catch (error) {
+            console.error(error);
+            return [] as { month: string; chat_id: number; title: string; total_messages: number; rank: number }[];
+        }
+    }
+
+    public async topChatsPastMonth() {
+        try {
+            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.month)).rows as {
+                month: string;
+                chat_id: number;
+                title: string;
+                total_messages: number;
+                rank: number;
+            }[];
+        } catch (error) {
+            console.error(error);
+            return [] as { month: string; chat_id: number; title: string; total_messages: number; rank: number }[];
+        }
     }
 }
 
