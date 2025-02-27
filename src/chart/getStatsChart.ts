@@ -379,7 +379,7 @@ const topChatsMonthlyConfig: ChartConfiguration = {
         color: "#e8e7ec",
         datasets: {
             line: {
-                pointRadius: 20,
+                pointRadius: 34,
                 borderJoinStyle: "round",
                 // clip: 20,
             },
@@ -396,7 +396,7 @@ const topChatsMonthlyConfig: ChartConfiguration = {
         },
         animation: false,
         responsive: false,
-        clip: 20,
+        clip: 40,
         font: {
             size: 28,
         },
