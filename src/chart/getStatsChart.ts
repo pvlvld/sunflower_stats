@@ -225,13 +225,16 @@ async function downloadChatProfileImage(chat_id: number) {
     return true;
 }
 
-async function getChatImage(chat_id: number): Promise<Image | undefined> {
+async function getChatImage(chat_id: number): Promise<Image> {
     // Load image from disk
     if (fs.existsSync(`./data/profileImages/${chat_id}.jpg`)) {
         return await loadImage(`./data/profileImages/${chat_id}.jpg`);
+    }
+    // dont parallelized to avoid angering the telegram api
+    const isDownloaded = await downloadChatProfileImage(chat_id);
+    if (isDownloaded) {
+        return await loadImage(`./data/profileImages/${chat_id}.jpg`);
     } else {
-        // dont parallelized to avoid angering the telegram api
-        await downloadChatProfileImage(chat_id);
         return await loadImage(`./data/profileImages/!default.jpg`);
     }
 }
