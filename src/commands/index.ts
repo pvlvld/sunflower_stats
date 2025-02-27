@@ -49,6 +49,7 @@ import { start_cmd } from "./start.js";
 import { scanChatsForId } from "./staff/scanChatsForId.js";
 import { updateDbChatsInfo } from "./staff/updateDbChatsInfo.js";
 import { stats_user_global } from "./stats_user_global.js";
+import { statsChatGlobal } from "./statsChatGlobal.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -167,6 +168,8 @@ function regCommands() {
     });
 
     group.command("settings", chatSettings_cmd);
+
+    dm.command("tchats", statsChatGlobal);
 
     // group.hears(/^!дата вступу/, (ctx) => {
     //     setUserJoinDate_cmd(ctx);
