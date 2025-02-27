@@ -239,35 +239,51 @@ async function getChatImage(chat_id: number): Promise<Image> {
     }
 }
 
-const profileImagesPlugin = {
-    id: "profileImages",
-    afterDatasetsDraw: async (chart: any, args: any, options: any) => {
-        const { ctx } = chart;
-        const chatImages = new Map<number, Image>();
-        const imageSize = 30; // TODO: shuffle around
-        if (!fs.existsSync(`./data/profileImages/`)) fs.mkdirSync(`./data/profileImages/`, { recursive: true });
+async function preloadChatImages(chatIds: number[]) {
+    const imageMap = new Map<number, Image>();
 
-        for (let datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
-            const chat_id = chart.data.datasets[datasetIndex].chat_id;
-            const meta = chart.getDatasetMeta(datasetIndex);
-
-            // dont parallelized to avoid angering the telegram api
-            const chatImage = await getChatImage(chat_id);
-            if (chatImage === undefined) continue;
-            for (let point of meta.data) {
-                const { x, y } = point.getCenterPoint();
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(x, y, imageSize / 2, 0, Math.PI * 2, true);
-                ctx.closePath();
-                ctx.clip();
-                ctx.drawImage(chatImage, x - imageSize / 2, y - imageSize / 2, imageSize, imageSize);
-                ctx.restore();
-            }
+    for (const chatId of chatIds) {
+        try {
+            const image = await getChatImage(chatId);
+            imageMap.set(chatId, image);
+        } catch (error) {
+            console.error(`Failed to load image for chat_id: ${chatId}`, error);
         }
-    },
-};
+    }
+
+    return imageMap;
+}
+
+function createProfileImagesPlugin(imageMap: Map<number, Image>) {
+    return {
+        id: "profileImages",
+        afterDatasetsDraw(chart: any, args: any, options: any) {
+            const { ctx } = chart;
+            const imageSize = 60;
+
+            for (let datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
+                const chat_id = chart.data.datasets[datasetIndex].chat_id;
+                const meta = chart.getDatasetMeta(datasetIndex);
+
+                if (!imageMap.has(chat_id)) continue;
+
+                const chatImage = imageMap.get(chat_id);
+
+                for (let point of meta.data) {
+                    const { x, y } = point.getCenterPoint();
+
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(x, y, imageSize / 2, 0, Math.PI * 2, true);
+                    ctx.closePath();
+                    ctx.clip();
+                    ctx.drawImage(chatImage, x - imageSize / 2, y - imageSize / 2, imageSize, imageSize);
+                    ctx.restore();
+                }
+            }
+        },
+    };
+}
 
 function prepareBumpChartData(sqlResults: SQLQueryResult[]): BumpChartSeries[] {
     // Group data by chat_id/title
@@ -385,12 +401,19 @@ const topChatsMonthlyConfig: ChartConfiguration = {
             size: 28,
         },
     },
-    plugins: [profileImagesPlugin],
+    plugins: [],
 };
 
 async function getChartTopChatsMonthly(data: any) {
     const config = { ...topChatsMonthlyConfig };
     config.data.datasets = prepareBumpChartData(data) as any; // FIX:
+    config.plugins = [
+        createProfileImagesPlugin(
+            await preloadChatImages([
+                ...new Set(config.data.datasets.map((dataset: any) => dataset.chat_id)),
+            ] as number[])
+        ),
+    ];
     return new InputFile(await renderToBufferX2(config), "chart.jpg");
 }
 
