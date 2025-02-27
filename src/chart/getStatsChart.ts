@@ -214,6 +214,7 @@ async function downloadChatProfileImage(chat_id: number) {
         return undefined;
     });
     if (!chat || chat.photo?.small_file_id === undefined) return false;
+    if (!fs.existsSync(`./data/profileImages/`)) fs.mkdirSync(`./data/profileImages/`, { recursive: true });
     try {
         const file = await bot.api.getFile(chat.photo?.small_file_id);
         await file.download(`./data/profileImages/${chat_id}.jpg`);
