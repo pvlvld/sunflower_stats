@@ -1,15 +1,18 @@
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
-import { IAllowedChartStatsRanges } from "../commands/stats_chat.js";
+import type { IAllowedChartStatsRanges } from "../commands/stats_chat.js";
 import { bgImagePlugin } from "./plugins/bgImagePlugin.js";
-import { DefaultChartSettings, IChartSettings } from "../db/chartSettings.js";
+import { DefaultChartSettings, type IChartSettings } from "../db/chartSettings.js";
 import { ChartCanvasManager } from "./chartCanvas.js";
-import { Chart, ChartConfiguration } from "chart.js";
+import type { Chart, ChartConfiguration, LabelItem, Scale } from "chart.js";
 import { DBPoolManager } from "../db/poolManager.js";
 import { hexToRGB } from "../utils/hexToRGB.js";
 import formattedDate from "../utils/date.js";
 import { Database } from "../db/db.js";
 import chartJs from "chart.js/auto";
 import { InputFile } from "grammy";
+import { type Image, loadImage } from "canvas";
+import fs from "node:fs";
+import bot from "../bot.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
 
