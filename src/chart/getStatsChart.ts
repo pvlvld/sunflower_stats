@@ -55,6 +55,7 @@ async function getChartConfig(chat_id: number, user_id: number, type: IChartType
             labels: [] as LabelItem[],
             datasets: [
                 {
+                    // biome-ignore lint/suspicious/noExplicitAny: <lazyness>
                     data: [] as any[],
                     borderColor: `rgb(${line_rgbValuesString})`,
                     borderCapStyle: "round",
@@ -112,9 +113,9 @@ async function getChartConfig(chat_id: number, user_id: number, type: IChartType
                 },
                 y: {
                     min: type === "bot-all" ? 600000 : undefined,
-                    afterBuildTicks: (scale: any) => {
+                    afterBuildTicks: (scale: Scale) => {
                         if (type === "bot-all") {
-                            scale.ticks.at(0).value = 600000;
+                            scale.ticks[0].value = 600000;
                         }
                     },
                     grid: {
@@ -182,7 +183,209 @@ export async function getStatsChart(
     return new InputFile(await renderToBuffer(configuration), "chart.jpg");
 }
 
-export async function getStatsChartFromData(
+interface SQLQueryResult {
+    month: string;
+    chat_id: number;
+    title: string;
+    total_messages: number;
+    rank: number;
+}
+
+interface BumpChartDataPoint {
+    x: string;
+    y: number;
+    chat_id: number; // Chat pic
+}
+
+interface BumpChartSeries {
+    label: string;
+    chat_id: number; // Chat pic
+    data: BumpChartDataPoint[];
+}
+
+interface ChatProfileImage {
+    chat_id: number;
+    imageUrl: string;
+}
+
+async function downloadChatProfileImage(chat_id: number) {
+    const chat = await bot.api.getChat(chat_id);
+    if (chat.photo?.small_file_id === undefined) return false;
+    try {
+        const file = await bot.api.getFile(chat.photo?.small_file_id);
+        await file.download(`./data/profileImages/${chat_id}.jpg`);
+    } catch (error) {
+        return false;
+    }
+    return true;
+}
+
+async function getChatImage(chat_id: number): Promise<Image | undefined> {
+    // Load image from disk
+    if (fs.existsSync(`./data/profileImages/${chat_id}.jpg`)) {
+        return await loadImage(`./data/profileImages/${chat_id}.jpg`);
+    } else {
+        // dont parallelized to avoid angering the telegram api
+        await downloadChatProfileImage(chat_id);
+        return await loadImage(`./data/profileImages/!default.jpg`);
+    }
+}
+
+const profileImagesPlugin = {
+    id: "profileImages",
+    afterDatasetsDraw: async (chart: any, args: any, options: any) => {
+        const { ctx } = chart;
+        const chatImages = new Map<number, Image>();
+        const imageSize = 30; // TODO: shuffle around
+
+        for (let datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
+            const chat_id = chart.data.datasets[datasetIndex].data.chat_id;
+            const meta = chart.getDatasetMeta(datasetIndex);
+
+            for (let point of meta.data) {
+                // dont parallelized to avoid angering the telegram api
+                const chatImage = await getChatImage(chat_id);
+                if (chatImage === undefined) break;
+                const { x, y } = point.getCenterPoint();
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(x, y, imageSize / 2, 0, Math.PI * 2, true);
+                ctx.closePath();
+                ctx.clip();
+                ctx.drawImage(chatImage, x - imageSize / 2, y - imageSize / 2, imageSize, imageSize);
+                ctx.restore();
+            }
+        }
+    },
+};
+
+function prepareBumpChartData(sqlResults: SQLQueryResult[]): BumpChartSeries[] {
+    // Group data by chat_id/title
+    const chatGroups = new Map<
+        number,
+        {
+            title: string;
+            dataPoints: Map<string, number>;
+        }
+    >();
+
+    // Get all unique months
+    const months = new Set<string>();
+
+    sqlResults.forEach((row) => {
+        const date = new Date(row.month);
+        // TODO: localizations
+        const monthStr = date.toLocaleDateString("uk-UA", {
+            year: "numeric",
+            month: "short",
+        });
+        months.add(monthStr);
+
+        if (!chatGroups.has(row.chat_id)) {
+            chatGroups.set(row.chat_id, {
+                title: row.title,
+                dataPoints: new Map(),
+            });
+        }
+
+        chatGroups.get(row.chat_id)!.dataPoints.set(monthStr, row.rank);
+    });
+
+    // Convert to array and sort chronologically
+    const sortedMonths = Array.from(months).sort((a, b) => {
+        const dateA = new Date(a);
+        const dateB = new Date(b);
+        return dateA.getTime() - dateB.getTime();
+    });
+
+    const series: BumpChartSeries[] = [];
+
+    chatGroups.forEach((groupData, chat_id) => {
+        months;
+        const data: BumpChartDataPoint[] = sortedMonths.map((month) => ({
+            x: month,
+            y: groupData.dataPoints.get(month) ?? 11, // null? undefined? 0? Adjust as needed
+            chat_id: chat_id,
+        }));
+
+        series.push({
+            label: groupData.title,
+            chat_id: chat_id,
+            data: data,
+        });
+    });
+
+    return series;
+}
+
+const topChatsMonthlyConfig: ChartConfiguration = {
+    type: "line",
+    data: {
+        //@ts-expect-error
+        datasets: [] as ReturnType<typeof prepareBumpChartData>, // FIX:
+    },
+    options: {
+        elements: {
+            line: {
+                tension: 0.2,
+                borderWidth: 8,
+            },
+        },
+        scales: {
+            y: {
+                reverse: true,
+                min: 1,
+                max: 10,
+                ticks: {
+                    padding: 30,
+                },
+            },
+            x: {
+                ticks: {
+                    padding: 30,
+                },
+            },
+        },
+        locale: "uk-UA",
+        layout: {
+            // padding: 100,
+        },
+        color: "#e8e7ec",
+        datasets: {
+            line: {
+                pointRadius: 20,
+                borderJoinStyle: "round",
+                // clip: 20,
+            },
+        },
+        plugins: {
+            legend: {
+                display: false,
+            },
+            tooltip: {
+                bodyFont: { size: 28 },
+            },
+            //@ts-expect-error
+            profileImages: {},
+        },
+        animation: false,
+        responsive: false,
+        clip: 20,
+        font: {
+            size: 28,
+        },
+    },
+    plugins: [profileImagesPlugin],
+};
+
+async function getChartTopChatsMonthly(data: any) {
+    const config = { ...topChatsMonthlyConfig };
+    config.data.datasets = prepareBumpChartData(data) as any; // FIX:
+    return new InputFile(await renderToBufferX2(config), "chart.jpg");
+}
+
+async function getStatsChartFromData(
     chat_id: number,
     user_id: number,
     type: IChartType,
@@ -215,6 +418,15 @@ function renderToBuffer(configuration: ChartConfiguration) {
     return buffer;
 }
 
+function renderToBufferX2(configuration: ChartConfiguration) {
+    const canvas = ChartCanvasManager.getX2;
+    const chart = new chartJs(canvas, configuration);
+    const buffer = chart.canvas.toBuffer("image/jpeg", { quality: 1 });
+    destroyChart_Async(chart);
+    ChartCanvasManager.recycleX2(canvas);
+    return buffer;
+}
+
 async function destroyChart_Async(chart: Chart) {
     chart.destroy();
 }
@@ -223,3 +435,5 @@ function getRGBValueString(hex: string) {
     const rgb = hexToRGB(hex)!;
     return `${rgb.r}, ${rgb.g}, ${rgb.b}`;
 }
+
+export { getStatsChartFromData, getChartTopChatsMonthly };
