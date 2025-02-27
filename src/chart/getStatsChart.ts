@@ -40,16 +40,9 @@ async function getUserData(chat_id: number, user_id: number) {
 }
 
 async function getChartSettings(target_id: number, type: IChartType): Promise<IChartSettings> {
-    if (type === "chat") {
-        // Chat
-        const chat_settings = await getCachedOrDBChatSettings(target_id);
-        return { line_color: chat_settings.line_color, font_color: chat_settings.font_color };
-    } else if (type === "user") {
-        // User
-        return await Database.userSettings.get(target_id);
-    } else {
-        return DefaultChartSettings;
-    }
+    if (type === "chat") return await getCachedOrDBChatSettings(target_id);
+    if (type === "user") return await Database.userSettings.get(target_id);
+    return DefaultChartSettings;
 }
 
 async function getChartConfig(chat_id: number, user_id: number, type: IChartType): Promise<ChartConfiguration> {
@@ -59,7 +52,7 @@ async function getChartConfig(chat_id: number, user_id: number, type: IChartType
     return {
         type: "line",
         data: {
-            labels: [] as any[],
+            labels: [] as LabelItem[],
             datasets: [
                 {
                     data: [] as any[],
