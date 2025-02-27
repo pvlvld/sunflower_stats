@@ -239,7 +239,7 @@ const profileImagesPlugin = {
         const imageSize = 30; // TODO: shuffle around
 
         for (let datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
-            const chat_id = chart.data.datasets[datasetIndex].data.chat_id;
+            const chat_id = chart.data.datasets[datasetIndex].chat_id;
             const meta = chart.getDatasetMeta(datasetIndex);
 
             // dont parallelized to avoid angering the telegram api
