@@ -242,10 +242,10 @@ const profileImagesPlugin = {
             const chat_id = chart.data.datasets[datasetIndex].data.chat_id;
             const meta = chart.getDatasetMeta(datasetIndex);
 
+            // dont parallelized to avoid angering the telegram api
+            const chatImage = await getChatImage(chat_id);
+            if (chatImage !== undefined) continue;
             for (let point of meta.data) {
-                // dont parallelized to avoid angering the telegram api
-                const chatImage = await getChatImage(chat_id);
-                if (chatImage === undefined) break;
                 const { x, y } = point.getCenterPoint();
 
                 ctx.save();
