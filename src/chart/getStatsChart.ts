@@ -213,8 +213,9 @@ async function downloadChatProfileImage(chat_id: number) {
         console.error(e);
         return undefined;
     });
+
     if (!chat || chat.photo?.small_file_id === undefined) return false;
-    if (!fs.existsSync(`./data/profileImages/`)) fs.mkdirSync(`./data/profileImages/`, { recursive: true });
+
     try {
         const file = await bot.api.getFile(chat.photo?.small_file_id);
         await file.download(`./data/profileImages/${chat_id}.jpg`);
@@ -241,6 +242,7 @@ const profileImagesPlugin = {
         const { ctx } = chart;
         const chatImages = new Map<number, Image>();
         const imageSize = 30; // TODO: shuffle around
+        if (!fs.existsSync(`./data/profileImages/`)) fs.mkdirSync(`./data/profileImages/`, { recursive: true });
 
         for (let datasetIndex = 0; datasetIndex < chart.data.datasets.length; datasetIndex++) {
             const chat_id = chart.data.datasets[datasetIndex].chat_id;
