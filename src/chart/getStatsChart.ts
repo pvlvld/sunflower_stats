@@ -209,8 +209,11 @@ interface ChatProfileImage {
 }
 
 async function downloadChatProfileImage(chat_id: number) {
-    const chat = await bot.api.getChat(chat_id);
-    if (chat.photo?.small_file_id === undefined) return false;
+    const chat = await bot.api.getChat(chat_id).catch((e) => {
+        console.error(e);
+        return undefined;
+    });
+    if (!chat || chat.photo?.small_file_id === undefined) return false;
     try {
         const file = await bot.api.getFile(chat.photo?.small_file_id);
         await file.download(`./data/profileImages/${chat_id}.jpg`);
