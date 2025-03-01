@@ -12,7 +12,7 @@ import chartJs from "chart.js/auto";
 import { InputFile } from "grammy";
 import { type Image, loadImage } from "canvas";
 import fs from "node:fs";
-import bot from "../bot.js";
+import { downloadChatProfileImage } from "./utils/downloadProfileImage.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
 
@@ -201,28 +201,6 @@ interface BumpChartSeries {
     label: string;
     chat_id: number; // Chat pic
     data: BumpChartDataPoint[];
-}
-
-interface ChatProfileImage {
-    chat_id: number;
-    imageUrl: string;
-}
-
-async function downloadChatProfileImage(chat_id: number) {
-    const chat = await bot.api.getChat(chat_id).catch((e) => {
-        console.error(e);
-        return undefined;
-    });
-
-    if (!chat || chat.photo?.small_file_id === undefined) return false;
-
-    try {
-        const file = await bot.api.getFile(chat.photo?.small_file_id);
-        await file.download(`./data/profileImages/${chat_id}.jpg`);
-    } catch (error) {
-        return false;
-    }
-    return true;
 }
 
 async function getChatImage(chat_id: number): Promise<Image> {
