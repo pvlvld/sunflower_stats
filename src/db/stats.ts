@@ -55,39 +55,53 @@ const queries = Object.freeze({
         },
         global: {
             topChats: {
-                monthly: `WITH monthly_chat_stats AS (
-                            SELECT
-                                DATE_TRUNC('month', date) AS month,
-                                chat_id,
-                                SUM(count) AS total_messages,
-                                DENSE_RANK() OVER (
-                                    PARTITION BY DATE_TRUNC('month', date) 
-                                    ORDER BY SUM(count) DESC
-                                ) AS rank
-                            FROM
-                                stats_daily sd
-                            WHERE
-                                date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '6 months')
-                                AND date < DATE_TRUNC('month', CURRENT_DATE)
-                            GROUP BY
-                                DATE_TRUNC('month', date),
-                                chat_id
+                // can play with r.rank <= 10 to make chart less "fake" looking
+                // TODO: use stats_bot_in in future
+                monthly: `WITH titled_chats AS (
+                                SELECT chat_id
+                                FROM chats
+                                WHERE title IS NOT NULL
+                            ),
+                            monthly_chat_stats AS (
+                                SELECT
+                                    DATE_TRUNC('month', date) AS month,
+                                    sd.chat_id,
+                                    SUM(count) AS total_messages
+                                FROM
+                                    stats_daily sd
+                                JOIN titled_chats tc ON sd.chat_id = tc.chat_id
+                                WHERE
+                                    date >= DATE_TRUNC('month', CURRENT_DATE - INTERVAL '6 months')
+                                    AND date < DATE_TRUNC('month', CURRENT_DATE)
+                                GROUP BY
+                                    DATE_TRUNC('month', date),
+                                    sd.chat_id
+                            ),
+                            ranked_chats AS (
+                                SELECT
+                                    month,
+                                    chat_id,
+                                    total_messages,
+                                    DENSE_RANK() OVER (
+                                        PARTITION BY month 
+                                        ORDER BY total_messages DESC
+                                    ) AS rank
+                                FROM monthly_chat_stats
                             )
                             SELECT
-                                m.month,
-                                m.chat_id,
+                                r.month,
+                                r.chat_id,
                                 c.title,
-                                m.total_messages,
-                                m.rank
+                                r.total_messages,
+                                r.rank
                             FROM
-                                monthly_chat_stats m
-                                INNER JOIN chats c ON c.chat_id = m.chat_id
+                                ranked_chats r
+                                JOIN chats c ON r.chat_id = c.chat_id
                             WHERE
-                                m.rank <= 10
-                                AND c.title IS NOT NULL
+                                r.rank <= 15
                             ORDER BY
-                                m.month,
-                                m.rank;`,
+                                r.month,
+                                r.rank;`,
                 month: ``,
             },
         },
