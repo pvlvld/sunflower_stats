@@ -12,6 +12,26 @@ import { getChartData } from "./utils/getChartData.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
 
+interface SQLQueryResult {
+    month: string;
+    chat_id: number;
+    title: string;
+    total_messages: number;
+    rank: number;
+}
+
+interface BumpChartDataPoint {
+    x: string;
+    y: number;
+    chat_id: number; // Chat pic
+}
+
+interface BumpChartSeries {
+    label: string;
+    chat_id: number; // Chat pic
+    data: BumpChartDataPoint[];
+}
+
 /**Rerutns @InputFile success @undefined stats contain less than 7 records*/
 export async function getStatsChart(
     chat_id: number,
@@ -54,26 +74,6 @@ export async function getStatsChart(
     configuration.data.labels = data.map((v) => v["x"]);
 
     return new InputFile(await renderToBuffer(configuration), "chart.jpg");
-}
-
-interface SQLQueryResult {
-    month: string;
-    chat_id: number;
-    title: string;
-    total_messages: number;
-    rank: number;
-}
-
-interface BumpChartDataPoint {
-    x: string;
-    y: number;
-    chat_id: number; // Chat pic
-}
-
-interface BumpChartSeries {
-    label: string;
-    chat_id: number; // Chat pic
-    data: BumpChartDataPoint[];
 }
 
 async function getChatImage(chat_id: number): Promise<Image> {
