@@ -369,19 +369,23 @@ const topChatsMonthlyConfig: ChartConfiguration = {
                 min: 1,
                 max: 10,
                 ticks: {
-                    padding: 30,
+                    padding: 35,
+                    count: 10,
+                    font: {
+                        size: 28,
+                    },
                 },
             },
             x: {
                 ticks: {
-                    padding: 30,
+                    padding: 45,
+                    font: {
+                        size: 28,
+                    },
                 },
             },
         },
         locale: "uk-UA",
-        layout: {
-            // padding: 100,
-        },
         color: "#e8e7ec",
         datasets: {
             line: {
@@ -402,7 +406,7 @@ const topChatsMonthlyConfig: ChartConfiguration = {
         },
         animation: false,
         responsive: false,
-        clip: 40,
+        clip: 35,
         font: {
             size: 28,
         },
