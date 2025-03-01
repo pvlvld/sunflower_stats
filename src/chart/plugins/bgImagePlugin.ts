@@ -43,7 +43,7 @@ function createPlugin(image: Image) {
         beforeDraw: (chart: Chart) => {
             if (image.complete) {
                 const ctx = chart.ctx;
-                ctx.drawImage(image, 0, 0);
+                ctx.drawImage(image, 0, 0, chart.width, chart.height);
             } else {
                 image.onload = () => chart.draw();
             }
