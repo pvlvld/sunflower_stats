@@ -1,14 +1,14 @@
 import type { IAllowedChartStatsRanges } from "../commands/stats_chat.js";
 import { ChartCanvasManager } from "./chartCanvas.js";
-import type { Chart, ChartConfiguration, LabelItem, Scale } from "chart.js";
+import type { Chart, ChartConfiguration } from "chart.js";
 import { DBPoolManager } from "../db/poolManager.js";
 import chartJs from "chart.js/auto";
 import { InputFile } from "grammy";
 import { type Image, loadImage } from "canvas";
 import fs from "node:fs";
-import { downloadChatProfileImage } from "./utils/downloadProfileImage.js";
 import { getChartConfig } from "./utils/getChartConfig.js";
 import { getChartData } from "./utils/getChartData.js";
+import { downloadAvatar } from "./utils/downloadAvatar.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
 
@@ -82,7 +82,7 @@ async function getChatImage(chat_id: number): Promise<Image> {
         return await loadImage(`./data/profileImages/${chat_id}.jpg`);
     }
     // dont parallelized to avoid angering the telegram api
-    const isDownloaded = await downloadChatProfileImage(chat_id);
+    const isDownloaded = await downloadAvatar.chat(chat_id);
     if (isDownloaded) {
         return await loadImage(`./data/profileImages/${chat_id}.jpg`);
     } else {
