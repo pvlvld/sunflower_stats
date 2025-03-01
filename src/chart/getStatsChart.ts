@@ -2,38 +2,15 @@ import type { IAllowedChartStatsRanges } from "../commands/stats_chat.js";
 import { ChartCanvasManager } from "./chartCanvas.js";
 import type { Chart, ChartConfiguration, LabelItem, Scale } from "chart.js";
 import { DBPoolManager } from "../db/poolManager.js";
-import formattedDate from "../utils/date.js";
 import chartJs from "chart.js/auto";
 import { InputFile } from "grammy";
 import { type Image, loadImage } from "canvas";
 import fs from "node:fs";
 import { downloadChatProfileImage } from "./utils/downloadProfileImage.js";
 import { getChartConfig } from "./utils/getChartConfig.js";
+import { getChartData } from "./utils/getChartData.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
-
-async function getChatData(chat_id: number, rawDateRange: IAllowedChartStatsRanges) {
-    const dateRange = formattedDate[rawDateRange];
-    return (
-        await DBPoolManager.getPoolRead.query(`
-      SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y
-          FROM stats_daily
-          WHERE chat_id = ${chat_id} AND date BETWEEN '${dateRange[0]}' AND '${dateRange[1]}'
-          GROUP BY date
-          ORDER BY date;`)
-    ).rows;
-}
-
-async function getUserData(chat_id: number, user_id: number) {
-    return (
-        await DBPoolManager.getPoolRead.query(
-            `SELECT to_char(date, 'YYYY-MM-DD') AS x, count AS y
-      FROM stats_daily
-      WHERE user_id = ${user_id} AND chat_id = ${chat_id}
-      ORDER BY date;`
-        )
-    ).rows;
-}
 
 /**Rerutns @InputFile success @undefined stats contain less than 7 records*/
 export async function getStatsChart(
@@ -44,13 +21,13 @@ export async function getStatsChart(
 ): Promise<InputFile | undefined> {
     let data: any[];
     if (type === "user") {
-        data = await getUserData(chat_id, user_id);
+        data = await getChartData.userInChat(chat_id, user_id);
     } else if (type === "chat") {
         if (rawDateRange) {
-            data = await getChatData(chat_id, rawDateRange);
+            data = await getChartData.chatInChat(chat_id, rawDateRange);
         } else {
             console.error("No date range is provided for the chat chart");
-            data = await getChatData(chat_id, "all");
+            data = await getChartData.chatInChat(chat_id, "all");
         }
     } else if (type === "bot-all") {
         data = (
