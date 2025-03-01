@@ -1,10 +1,16 @@
+import type { ChartConfiguration, LabelItem, Scale } from "chart.js";
+import type { IChartType } from "../getStatsChart.js";
+import { getChartSettings } from "./getChartSettings.js";
+import { bgImagePlugin } from "../plugins/bgImagePlugin.js";
+import { hexToGgbString } from "./hexToGgbString.js";
+
 const getChartConfig = {
     default: getDefaultChartConfig,
 };
 
 async function getDefaultChartConfig(chat_id: number, user_id: number, type: IChartType): Promise<ChartConfiguration> {
     const chart_settings = await getChartSettings(type === "chat" ? chat_id : user_id, type);
-    const line_rgbValuesString = getRGBValueString(chart_settings.line_color);
+    const line_rgbValuesString = hexToGgbString(chart_settings.line_color);
 
     return {
         type: "line",
