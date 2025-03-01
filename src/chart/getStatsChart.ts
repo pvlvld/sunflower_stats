@@ -335,7 +335,8 @@ function prepareBumpChartData(sqlResults: SQLQueryResult[]): BumpChartSeries[] {
         months;
         const data: BumpChartDataPoint[] = sortedMonths.map((month) => ({
             x: month,
-            y: groupData.dataPoints.get(month) ?? 11, // null? undefined? 0? Adjust as needed
+            // fetch ~15, show 10, set 16 for 11th+ place to make chart less "fake" looking
+            y: groupData.dataPoints.get(month) || 16,
             chat_id: chat_id,
         }));
 
