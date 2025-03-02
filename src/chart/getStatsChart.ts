@@ -201,80 +201,8 @@ function prepareBumpChartData(sqlResults: SQLQueryResult[]): BumpChartSeries[] {
     return series;
 }
 
-const topChatsMonthlyConfig: ChartConfiguration = {
-    type: "line",
-    data: {
-        //@ts-expect-error
-        datasets: [] as ReturnType<typeof prepareBumpChartData>,
-    },
-    options: {
-        elements: {
-            line: {
-                tension: 0.2,
-                borderWidth: 8,
-            },
-            point: {
-                radius: 38,
-                borderWidth: 4,
-            },
-        },
-        scales: {
-            y: {
-                reverse: true,
-                min: 0.6,
-                max: 10.4,
-                afterBuildTicks: (scale) => {
-                    scale.ticks = Array.from({ length: 10 }, (_, i) => ({ value: 1 + i }));
-                },
-                ticks: {
-                    padding: 46,
-                    count: 10,
-                    font: {
-                        size: 28,
-                    },
-                },
-            },
-            x: {
-                ticks: {
-                    font: {
-                        size: 28,
-                    },
-                },
-            },
-        },
-        locale: "uk-UA",
-        color: "#e8e7ec",
-        datasets: {
-            line: {
-                pointRadius: 38,
-            },
-        },
-        layout: {
-            padding: {
-                left: -15,
-                right: 0,
-                top: -10,
-                bottom: 0,
-            },
-        },
-        plugins: {
-            legend: {
-                display: false,
-            },
-            //@ts-expect-error
-            profileImages: {},
-        },
-        animation: false,
-        responsive: false,
-        font: {
-            size: 28,
-        },
-    },
-    plugins: [],
-};
-
 async function getChartTopChatsMonthly(data: any) {
-    const config = { ...topChatsMonthlyConfig };
+    const config = getChartConfig.topChatsMonthly(10);
     config.data.datasets = prepareBumpChartData(data) as any; // FIX:
     config.plugins = [
         createProfileImagesPlugin(
