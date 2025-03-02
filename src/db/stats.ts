@@ -57,7 +57,7 @@ const queries = Object.freeze({
             topChats: {
                 // can play with r.rank <= 10 to make chart less "fake" looking
                 // TODO: use stats_bot_in in future
-                monthly: `WITH titled_chats AS (
+                monthlyRankAndTotal: `WITH titled_chats AS (
                                 SELECT chat_id
                                 FROM chats
                                 WHERE title IS NOT NULL
@@ -351,7 +351,8 @@ class DBBotStats {
 
     public async topChatsMonthly() {
         try {
-            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.monthly)).rows as {
+            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.monthlyRankAndTotal))
+                .rows as {
                 month: string;
                 chat_id: number;
                 title: string;
