@@ -109,11 +109,11 @@ function getTopChatsMonthlyChartConfig(positions: number): ChartConfiguration {
             elements: {
                 line: {
                     tension: 0.2,
-                    borderWidth: 8,
+                    borderWidth: 9,
                 },
                 point: {
                     radius: 38,
-                    borderWidth: 4,
+                    borderWidth: 5,
                 },
             },
             scales: {
@@ -125,7 +125,7 @@ function getTopChatsMonthlyChartConfig(positions: number): ChartConfiguration {
                         scale.ticks = Array.from({ length: positions }, (_, i) => ({ value: 1 + i }));
                     },
                     ticks: {
-                        padding: 46,
+                        padding: 50,
                         count: 10,
                         font: {
                             size: 28,
@@ -151,7 +151,7 @@ function getTopChatsMonthlyChartConfig(positions: number): ChartConfiguration {
                 padding: {
                     left: -15,
                     right: 0,
-                    top: -10,
+                    top: -15,
                     bottom: 0,
                 },
             },

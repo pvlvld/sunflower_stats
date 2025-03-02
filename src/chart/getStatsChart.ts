@@ -110,7 +110,7 @@ function createProfileImagesPlugin(imageMap: Map<number, Image>) {
         id: "profileImages",
         afterDatasetsDraw(chart: any, args: any, options: any) {
             const { ctx } = chart;
-            const imageSize = 60;
+            const imageSize = 72;
 
             let x = 0.0;
             let y = 0.0;
