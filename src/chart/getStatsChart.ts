@@ -205,7 +205,7 @@ const topChatsMonthlyConfig: ChartConfiguration = {
     type: "line",
     data: {
         //@ts-expect-error
-        datasets: [] as ReturnType<typeof prepareBumpChartData>, // FIX:
+        datasets: [] as ReturnType<typeof prepareBumpChartData>,
     },
     options: {
         elements: {
@@ -213,14 +213,21 @@ const topChatsMonthlyConfig: ChartConfiguration = {
                 tension: 0.2,
                 borderWidth: 8,
             },
+            point: {
+                radius: 38,
+                borderWidth: 4,
+            },
         },
         scales: {
             y: {
                 reverse: true,
-                min: 1,
-                max: 10,
+                min: 0.6,
+                max: 10.4,
+                afterBuildTicks: (scale) => {
+                    scale.ticks = Array.from({ length: 10 }, (_, i) => ({ value: 1 + i }));
+                },
                 ticks: {
-                    padding: 35,
+                    padding: 46,
                     count: 10,
                     font: {
                         size: 28,
@@ -229,7 +236,6 @@ const topChatsMonthlyConfig: ChartConfiguration = {
             },
             x: {
                 ticks: {
-                    padding: 45,
                     font: {
                         size: 28,
                     },
@@ -240,24 +246,26 @@ const topChatsMonthlyConfig: ChartConfiguration = {
         color: "#e8e7ec",
         datasets: {
             line: {
-                pointRadius: 34,
-                borderJoinStyle: "round",
-                // clip: 20,
+                pointRadius: 38,
+            },
+        },
+        layout: {
+            padding: {
+                left: -15,
+                right: 0,
+                top: -10,
+                bottom: 0,
             },
         },
         plugins: {
             legend: {
                 display: false,
             },
-            tooltip: {
-                bodyFont: { size: 28 },
-            },
             //@ts-expect-error
             profileImages: {},
         },
         animation: false,
         responsive: false,
-        clip: 35,
         font: {
             size: 28,
         },
