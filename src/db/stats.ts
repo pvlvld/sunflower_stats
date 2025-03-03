@@ -349,7 +349,7 @@ class DBBotStats {
         this._dbPoolManager = dbPoolManager;
     }
 
-    public async topChatsMonthly() {
+    public async topChatsMonthlyRating() {
         try {
             return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.monthlyRankAndTotal))
                 .rows as {
@@ -365,7 +365,7 @@ class DBBotStats {
         }
     }
 
-    public async topChatsPastMonth() {
+    public async topChatsPastMonthRating() {
         try {
             return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.month)).rows as {
                 month: string;

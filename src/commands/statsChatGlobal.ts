@@ -5,7 +5,7 @@ import { getChartTopChatsMonthly } from "../chart/getStatsChart.js";
 
 async function statsChatGlobal(ctx: ChatTypeContext<ICommandContext, "private">) {
     try {
-        const stats = await Database.stats.bot.topChatsMonthly();
+        const stats = await Database.stats.bot.topChatsMonthlyRating();
         const chart = await getChartTopChatsMonthly(stats);
         await ctx.replyWithPhoto(chart, { caption: "test" }).catch((e) => {});
     } catch (error) {
