@@ -23,7 +23,7 @@ function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.t
     let message = `Топ чатів за тиждень:\n\n<blockquote>`;
 
     for (let i = 0; i < data.length; i++) {
-        message += `${i + 1}. «${data[i].title}» - ${data[i].total_messages}\n`;
+        message += `${i + 1}. «${data[i].title}» - ${data[i].total_messages.toLocaleString("fr-FR")}\n`;
     }
     message += "</blockquote>";
     return message;
