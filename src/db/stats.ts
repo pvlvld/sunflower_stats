@@ -55,6 +55,22 @@ const queries = Object.freeze({
         },
         global: {
             topChats: {
+                weaklyRankAndTotal: `SELECT
+                                        s.chat_id,
+                                        c.title,
+                                        SUM(s.count) as total_messages
+                                    FROM
+                                        public.stats_daily s
+                                    LEFT JOIN
+                                        public.chats c ON s.chat_id = c.chat_id
+                                    WHERE
+                                        s.date >= CURRENT_DATE - INTERVAL '7 days'
+                                        AND s.date < CURRENT_DATE
+                                    GROUP BY
+                                        s.chat_id, c.title
+                                    ORDER BY
+                                        total_messages DESC
+                                    LIMIT 15;`,
                 // can play with r.rank <= 10 to make chart less "fake" looking
                 // TODO: use stats_bot_in in future
                 monthlyRankAndTotal: `WITH titled_chats AS (
@@ -377,6 +393,20 @@ class DBBotStats {
         } catch (error) {
             console.error(error);
             return [] as { month: string; chat_id: number; title: string; total_messages: number; rank: number }[];
+        }
+    }
+
+    public async topChatsWeeklyRating() {
+        try {
+            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.weaklyRankAndTotal))
+                .rows as {
+                chat_id: number;
+                title: string;
+                total_messages: number;
+            }[];
+        } catch (error) {
+            console.error(error);
+            return [] as { chat_id: number; title: string; total_messages: number }[];
         }
     }
 }
