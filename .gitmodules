@@ -1,3 +1,5 @@
 [submodule "locales"]
 	path = locales
 	url = https://github.com/pvlvld/sunflower_stats_i18n.git
+	branch = main
+	active = true
