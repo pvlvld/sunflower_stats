@@ -20,7 +20,7 @@ async function statsChatGlobal(ctx: ChatTypeContext<ICommandContext, "private">)
 }
 
 function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.topChatsWeeklyRating>>) {
-    let message = `Топ чатів за тиждень:\n\n<blockquote>`;
+    let message = `Топ чатів за останні сім днів:\n\n<blockquote>`;
 
     for (let i = 0; i < data.length; i++) {
         message += `${i + 1}. «${data[i].title}» - ${data[i].total_messages.toLocaleString("fr-FR")}\n`;
