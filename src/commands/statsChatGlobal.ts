@@ -21,13 +21,11 @@ async function statsChatGlobal(ctx: ICommandContext) {
 }
 
 function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.topChatsWeeklyRating>>) {
-    let message = `Топ чатів за останні сім днів:\n\n<blockquote>`;
-
-    for (let i = 0; i < data.length; i++) {
-        message += `${i + 1}. «${data[i].title}» - ${data[i].total_messages.toLocaleString("fr-FR")}\n`;
-    }
-    message += "</blockquote>";
-    return message;
+    return (
+        data.reduce((message, chat, index) => {
+            return message + `${1 + index}. «${chat.title}» - ${chat.total_messages.toLocaleString("fr-FR")}\n`;
+        }, "Топ чатів за останні сім днів:\n\n<blockquote>") + "</blockquote>"
+    );
 }
 
 export { statsChatGlobal };
