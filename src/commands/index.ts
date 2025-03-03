@@ -169,7 +169,7 @@ function regCommands() {
 
     group.command("settings", chatSettings_cmd);
 
-    dm.command("tchats", statsChatGlobal);
+    bot.command("tchats", statsChatGlobal);
 
     // group.hears(/^!дата вступу/, (ctx) => {
     //     setUserJoinDate_cmd(ctx);

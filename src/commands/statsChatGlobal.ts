@@ -1,9 +1,10 @@
-import { ChatTypeContext } from "grammy";
 import { ICommandContext } from "../types/context.js";
 import { Database } from "../db/db.js";
 import { getChartTopChatsMonthly } from "../chart/getStatsChart.js";
 
-async function statsChatGlobal(ctx: ChatTypeContext<ICommandContext, "private">) {
+async function statsChatGlobal(ctx: ICommandContext) {
+    if (ctx.chat.type !== "private") return await ctx.reply(ctx.t("only_private_cmd")).catch((e) => {});
+
     try {
         const [chartData, messageData] = await Promise.all([
             Database.stats.bot.topChatsMonthlyRating(),
@@ -14,8 +15,8 @@ async function statsChatGlobal(ctx: ChatTypeContext<ICommandContext, "private">)
         const message = generateTopMessage(messageData);
         await ctx.replyWithPhoto(chart, { caption: message }).catch((e) => {});
     } catch (error) {
-        ctx.reply(ctx.t("error")).catch((e) => {});
         console.error(error);
+        await ctx.reply(ctx.t("error")).catch((e) => {});
     }
 }
 
