@@ -35,7 +35,9 @@ async function statsChatGlobal(ctx: ICommandContext) {
 function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.topChatsWeeklyRating>>) {
     return (
         data.reduce((message, chat, index) => {
-            return message + `${1 + index}. «${chat.title}» - ${chat.total_messages.toLocaleString("fr-FR")}\n`;
+            return (
+                message + `${1 + index}. «${Escape.html(chat.title)}» - ${chat.total_messages.toLocaleString("fr-FR")}\n`
+            );
         }, "Топ чатів за останні сім днів:\n\n<blockquote>") + "</blockquote>"
     );
 }
