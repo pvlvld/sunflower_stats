@@ -4,31 +4,44 @@ import { getChartTopChatsMonthly } from "../chart/getStatsChart.js";
 import cacheManager from "../cache/cache.js";
 import { InputFile } from "grammy";
 import { getLastDayOfMonth } from "../utils/getLastDayOfMonth.js";
+import bot from "../bot.js";
+import { SequentialQueue } from "../utils/SequentialQueue.js";
+import Escape from "../utils/escape.js";
+
+const statsChatGlobalQueue = new SequentialQueue();
 
 async function statsChatGlobal(ctx: ICommandContext) {
-    if (ctx.chat.type !== "private") return await ctx.reply(ctx.t("only_private_cmd")).catch((e) => {});
+    await statsChatGlobalQueue.enqueue(`stats_${ctx.from!.id}`, async () => {
+        await _statsChatGlobal(ctx);
+    });
+}
 
-    const chart = getChartImage();
-    const caption = getChartText();
+async function _statsChatGlobal(ctx: ICommandContext) {
+    if (ctx.chat.type === "private") {
+        bot.api.sendChatAction(ctx.chat.id, "typing").catch((e) => {});
+        const chart = getChartImage();
+        const caption = getChartText();
 
-    try {
-        const msg = await ctx.replyWithPhoto(await chart, { caption: await caption }).catch(console.error);
+        try {
+            const msg = await ctx.replyWithPhoto(await chart, { caption: await caption }).catch(console.error);
+            if (typeof chart !== "string" && msg && msg.photo) {
+                cacheManager.ChartCache_Global.set(
+                    "statsChatGlobalMonthly",
+                    msg.photo[msg.photo.length - 1].file_id,
+                    getLastDayOfMonth()
+                );
+            }
 
-        if (typeof chart !== "string" && msg && msg.photo) {
-            cacheManager.ChartCache_Global.set(
-                "statsChatGlobalMonthly",
-                msg.photo[msg.photo.length - 1].file_id,
-                getLastDayOfMonth()
-            );
+            if (!cacheManager.TextCache.has("statsChatGlobalWeekly")) {
+                //@ts-expect-error
+                cacheManager.TextCache.set("statsChatGlobalWeekly", caption);
+            }
+        } catch (error) {
+            console.error(error);
+            await ctx.reply(ctx.t("error")).catch((e) => {});
         }
-
-        if (cacheManager.TextCache.has("statsChatGlobalWeekly")) {
-            //@ts-expect-error
-            cacheManager.TextCache.set("statsChatGlobalWeekly", caption);
-        }
-    } catch (error) {
-        console.error(error);
-        await ctx.reply(ctx.t("error")).catch((e) => {});
+    } else {
+        await ctx.reply(ctx.t("only_private_cmd")).catch((e) => {});
     }
 }
 
