@@ -9,6 +9,8 @@ import fs from "node:fs";
 import { getChartConfig } from "./utils/getChartConfig.js";
 import { getChartData } from "./utils/getChartData.js";
 import { downloadAvatar } from "./utils/downloadAvatar.js";
+import bot from "../bot.js";
+import cfg from "../config.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
 
