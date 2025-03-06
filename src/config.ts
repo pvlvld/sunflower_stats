@@ -47,6 +47,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
     SETTINGS: IConfigSettings;
     CHART: { width: number; height: number; ratio: number };
     LOG_LVL: typeof LOG_LVL;
+    BOT_ID: number;
     GET_STATUS: () => IBotStatus;
     SET_STATUS: (status: IBotStatus) => IBotStatus;
 };
@@ -76,7 +77,7 @@ function getCfg() {
     cfg.SETTINGS = DefaultConfigSettings;
     cfg.CHART = { width: 1280, height: 640, ratio: 1280 / 640 };
     cfg.LOG_LVL = LOG_LVL;
-
+    cfg.BOT_ID = Number(cfg.BOT_TOKEN.split(":")[0]);
     return Object.freeze(cfg);
 }
 
