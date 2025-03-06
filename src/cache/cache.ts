@@ -15,13 +15,17 @@ class CacheManager {
         updateAgeOnGet: true,
     });
     public TTLCache = new NodeCache({ stdTTL: 60, checkperiod: 5 });
+    /** Flushes at 00:00 */
     public ChartCache_User = new ChartCache_User();
+    /** Flushes at 00:00 */
     public ChartCache_Chat = new ChartCache_Chat();
     public ChartCache_Global = new ChartCache_Global();
+    /** Flushes at 00:00 */
     public PremiumStatusCache = new PremiumStatusCache();
     public ChatSettingsCache = new ChatSettingsCache();
     public ChatAdminsCache = new ChatAdminsCache();
     public RestrictedUsersCache = new RestrictedUsersCache();
+    /** Flushes at 00:00 */
     public TextCache = new TextCache();
 
     flush() {
