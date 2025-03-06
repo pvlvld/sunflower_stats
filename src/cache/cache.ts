@@ -7,40 +7,22 @@ import { ChatAdminsCache } from "./chatAdminsCache.js";
 import { LRUCache } from "lru-cache";
 import NodeCache from "node-cache";
 import { TextCache } from "./textCache.js";
+import { ChartCache_Global } from "./chartCache_Global.js";
 
 class CacheManager {
-    public LRUCache: LRUCache<{}, {}, unknown>;
-    public TTLCache: NodeCache;
-    public ChartCache_User: ChartCache_User;
-    public ChartCache_Chat: ChartCache_Chat;
-    public PremiumStatusCache: PremiumStatusCache;
-    public ChatSettingsCache: ChatSettingsCache;
-    public ChatAdminsCache: ChatAdminsCache;
-    public RestrictedUsersCache: RestrictedUsersCache;
-    public TextCache: TextCache;
-
-    constructor() {
-        this.LRUCache = new LRUCache({
-            max: 1000,
-            updateAgeOnGet: true,
-        });
-
-        this.TTLCache = new NodeCache({ stdTTL: 60, checkperiod: 5 });
-
-        this.ChartCache_User = new ChartCache_User();
-
-        this.ChartCache_Chat = new ChartCache_Chat();
-
-        this.PremiumStatusCache = new PremiumStatusCache();
-
-        this.ChatSettingsCache = new ChatSettingsCache();
-
-        this.ChatAdminsCache = new ChatAdminsCache();
-
-        this.RestrictedUsersCache = new RestrictedUsersCache();
-
-        this.TextCache = new TextCache();
-    }
+    public LRUCache: LRUCache<{}, {}, unknown> = new LRUCache({
+        max: 1000,
+        updateAgeOnGet: true,
+    });
+    public TTLCache = new NodeCache({ stdTTL: 60, checkperiod: 5 });
+    public ChartCache_User = new ChartCache_User();
+    public ChartCache_Chat = new ChartCache_Chat();
+    public ChartCache_Global = new ChartCache_Global();
+    public PremiumStatusCache = new PremiumStatusCache();
+    public ChatSettingsCache = new ChatSettingsCache();
+    public ChatAdminsCache = new ChatAdminsCache();
+    public RestrictedUsersCache = new RestrictedUsersCache();
+    public TextCache = new TextCache();
 
     flush() {
         this.ChartCache_User.flush();
@@ -56,6 +38,7 @@ class CacheManager {
         this.flush();
         this.LRUCache.clear();
         this.TTLCache.flushAll();
+        this.ChartCache_Global.flush();
     }
 }
 
