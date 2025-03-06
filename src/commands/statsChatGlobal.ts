@@ -39,7 +39,12 @@ async function _statsChatGlobal(ctx: ICommandContext) {
             await ctx.reply(ctx.t("error")).catch((e) => {});
         }
     } else {
-        await ctx.reply(ctx.t("only_private_cmd")).catch((e) => {});
+        await ctx
+            .reply(ctx.t("only_private_cmd"), {
+                link_preview_options: { is_disabled: true },
+                disable_notification: true,
+            })
+            .catch((e) => {});
     }
 }
 
