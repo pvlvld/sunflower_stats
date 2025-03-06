@@ -18,12 +18,11 @@ async function statsChatGlobal(ctx: ICommandContext) {
 
 async function _statsChatGlobal(ctx: ICommandContext) {
     if (ctx.chat.type === "private") {
-        bot.api.sendChatAction(ctx.chat.id, "typing").catch((e) => {});
-        const chart = getChartImage();
-        const caption = getChartText();
+        bot.api.sendChatAction(ctx.from!.id, "typing").catch((e) => {});
 
+        const [chart, caption] = await Promise.all([getChartImage(), getChartText()]);
         try {
-            const msg = await ctx.replyWithPhoto(await chart, { caption: await caption }).catch(console.error);
+            const msg = await ctx.replyWithPhoto(chart, { caption: caption }).catch(console.error);
             if (typeof chart !== "string" && msg && msg.photo) {
                 cacheManager.ChartCache_Global.set(
                     "statsChatGlobalMonthly",
@@ -33,7 +32,6 @@ async function _statsChatGlobal(ctx: ICommandContext) {
             }
 
             if (!cacheManager.TextCache.has("statsChatGlobalWeekly")) {
-                //@ts-expect-error
                 cacheManager.TextCache.set("statsChatGlobalWeekly", caption);
             }
         } catch (error) {
