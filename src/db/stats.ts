@@ -55,7 +55,7 @@ const queries = Object.freeze({
         },
         global: {
             topChats: {
-                weaklyRankAndTotal: `SELECT
+                weeklyRankAndTotal: `SELECT
                                         s.chat_id,
                                         c.title,
                                         SUM(s.count) as total_messages
@@ -398,7 +398,7 @@ class DBBotStats {
 
     public async topChatsWeeklyRating() {
         try {
-            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.weaklyRankAndTotal))
+            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.weeklyRankAndTotal))
                 .rows as {
                 chat_id: number;
                 title: string;
