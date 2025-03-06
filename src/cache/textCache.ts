@@ -13,6 +13,10 @@ class TextCache {
         this.cache.delete(String(key));
     }
 
+    public has(key: string | number): boolean {
+        return this.cache.has(String(key));
+    }
+
     public flush(): void {
         this.cache.clear();
     }
