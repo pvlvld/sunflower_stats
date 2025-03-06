@@ -151,7 +151,7 @@ function getTopChatsMonthlyChartConfig(positions: number): ChartConfiguration {
                 padding: {
                     left: -15,
                     right: 0,
-                    top: -15,
+                    top: 0,
                     bottom: 0,
                 },
             },
