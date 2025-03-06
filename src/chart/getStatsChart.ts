@@ -77,6 +77,10 @@ export async function getStatsChart(
 }
 
 async function getChatImage(chat_id: number): Promise<Image> {
+    // If bot is not the main bot, return default image
+    if (String(bot.botInfo.id) != cfg.BOT_TOKEN.split(":")[0]) {
+        return await loadImage(`./data/profileImages/!default.jpg`);
+    }
     // Load image from disk
     if (fs.existsSync(`./data/profileImages/${chat_id}.jpg`)) {
         return await loadImage(`./data/profileImages/${chat_id}.jpg`);
