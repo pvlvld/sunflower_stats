@@ -50,7 +50,7 @@ export function getStatsChatRating(
             statsRowLimit,
             dateRange,
             page
-        )}">:</a> ${stats[0].total_count.toLocaleString("fr-FR")}`
+        )}">:</a> ${(+stats[0].total_count).toLocaleString("fr-FR")}`
     );
     return replyParts.join("");
 }
