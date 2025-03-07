@@ -3,7 +3,7 @@ import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import { getStatsChatRating } from "../utils/getStatsRating.js";
 import type { IGroupTextContext } from "../types/context.js";
 import { getStatsChart } from "../chart/getStatsChart.js";
-import { IDBChatUserStats } from "../types/stats.js";
+import { IDBChatUserStatsAndTotal } from "../types/stats.js";
 import { IChatSettings } from "../types/settings.js";
 import { botStatsManager } from "./botStats.js";
 import cacheManager from "../cache/cache.js";
@@ -145,7 +145,7 @@ function getStatsMessage(
     chat_id: number,
     dateRange: IDateRange,
     rawCmdDateRange: keyof typeof cmdToDateRangeMap,
-    stats: IDBChatUserStats[],
+    stats: IDBChatUserStatsAndTotal[],
     settings: IChatSettings,
     page: number,
     chart: boolean
@@ -156,8 +156,8 @@ function getStatsMessage(
     );
 }
 
-function getStatsUsersCount(chat_id: number, stats: IDBChatUserStats[]) {
-    let user: IDBChatUserStats;
+function getStatsUsersCount(chat_id: number, stats: IDBChatUserStatsAndTotal[]) {
+    let user: IDBChatUserStatsAndTotal;
     let activeData = active.data[chat_id];
     let counter = 0;
     for (user of stats) {
@@ -168,7 +168,7 @@ function getStatsUsersCount(chat_id: number, stats: IDBChatUserStats[]) {
     return counter;
 }
 
-function isPaginationNeeded(chat_id: number, stats: IDBChatUserStats[], chatSettings: IChatSettings) {
+function isPaginationNeeded(chat_id: number, stats: IDBChatUserStatsAndTotal[], chatSettings: IChatSettings) {
     const statsUsersCount = getStatsUsersCount(chat_id, stats);
     return chatSettings.charts ? statsUsersCount > 25 : statsUsersCount > 50;
 }

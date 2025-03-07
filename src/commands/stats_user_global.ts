@@ -4,6 +4,7 @@ import { Database } from "../db/db.js";
 import { getStatsChartFromData } from "../chart/getStatsChart.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import cacheManager from "../cache/cache.js";
+import Escape from "../utils/escape.js";
 
 async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private">) {
     const chart_cached = cacheManager.ChartCache_User.get(ctx.me.id, ctx.from.id);
@@ -49,7 +50,9 @@ function generateUserGlobalTop(
     )}\n\n<blockquote>`;
 
     for (let i = 0; i < data.length; i++) {
-        text += `${1 + i}. ${data[i].title} - ${(data[i].chat_count as number).toLocaleString("fr-FR")} повідомлень\n`;
+        text += `${1 + i}. «${Escape.html(data[i].title)}» - ${(data[i].chat_count as number).toLocaleString(
+            "fr-FR"
+        )} повідомлень\n`;
     }
 
     text += "</blockquote>";

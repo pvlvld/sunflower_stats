@@ -1,4 +1,9 @@
-import type { IDBChatUserStats, IDBChatUserStatsAll, IDBUserTopChats } from "../types/stats.js";
+import type {
+    IDBChatUserStats,
+    IDBChatUserStatsAll,
+    IDBChatUserStatsAndTotal,
+    IDBUserTopChats,
+} from "../types/stats.js";
 import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date.js";
 import { DBPoolManager, IDBPoolManager } from "./poolManager.js";
 
@@ -34,19 +39,26 @@ const queries = Object.freeze({
                                 ORDER by date`,
         },
         chat: {
-            // weekRange: `SELECT 1`,
-            // monthRange: `SELECT 1`,
-            // yearRange: `SELECT 1`,
-            customRange: `SELECT user_id, SUM(count) AS count
-                            FROM stats_daily
-                            WHERE chat_id = $1 AND date BETWEEN $2 AND $3
-                            GROUP BY user_id
-                            ORDER BY count DESC`,
-            date: `SELECT user_id, SUM(count) AS count
-                    FROM stats_daily
-                    WHERE chat_id = $1 AND date = $2
-                    GROUP BY user_id
-                    ORDER BY count DESC`,
+            customRange: `WITH user_counts AS (
+                                SELECT user_id, SUM(count) AS count
+                                FROM stats_daily
+                                WHERE chat_id = $1
+                                  AND date BETWEEN $2 AND $3
+                                GROUP BY user_id
+                            )
+                            SELECT user_id, count, (SELECT SUM(count) FROM user_counts) AS total_count
+                            FROM user_counts
+                            ORDER BY count DESC;`,
+            date: `WITH user_counts AS (
+                                SELECT user_id, SUM(count) AS count
+                                FROM stats_daily
+                                WHERE chat_id = $1
+                                  AND date = $2
+                                GROUP BY user_id
+                            )
+                            SELECT user_id, count, (SELECT SUM(count) FROM user_counts) AS total_count
+                            FROM user_counts
+                            ORDER BY count DESC;`,
             all: `SELECT user_id, SUM(count) AS count
                     FROM stats_daily
                     WHERE chat_id = $1
@@ -278,7 +290,7 @@ class DBChatStats {
                         text: queries.stats.chat.customRange,
                         values: [chat_id, range[0], range[1]],
                     })
-                ).rows as IDBChatUserStats[];
+                ).rows as IDBChatUserStatsAndTotal[];
             } else {
                 return (
                     await this._dbPoolManager.getPoolRead.query({
@@ -286,11 +298,11 @@ class DBChatStats {
                         text: queries.stats.chat.customRange,
                         values: [chat_id, rawRange[0], rawRange[1]],
                     })
-                ).rows as IDBChatUserStats[];
+                ).rows as IDBChatUserStatsAndTotal[];
             }
         } catch (error) {
             console.error(error);
-            return [] as IDBChatUserStats[];
+            return [] as IDBChatUserStatsAndTotal[];
         }
     }
 
@@ -302,10 +314,10 @@ class DBChatStats {
                     text: queries.stats.chat.date,
                     values: [chat_id, date],
                 })
-            ).rows as IDBChatUserStats[];
+            ).rows as IDBChatUserStatsAndTotal[];
         } catch (error) {
             console.error(error);
-            return [] as IDBChatUserStats[];
+            return [] as IDBChatUserStatsAndTotal[];
         }
     }
 
