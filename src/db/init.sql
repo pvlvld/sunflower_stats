@@ -12,9 +12,9 @@ CREATE TABLE
     usechatbgforall boolean NOT NULL DEFAULT false,
     userStatsLink  boolean NOT NULL DEFAULT true,
     line_color char(6),
-    font_color char(6)
+    font_color char(6),
+    title varchar(768) -- can be up to 768+ chars, bruh
     ),
-    title varchar(768); -- can be up to 768+ chars, bruh
 ALTER TABLE
   public.chats
 ADD
