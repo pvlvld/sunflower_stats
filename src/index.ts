@@ -20,6 +20,7 @@ import moment from "moment";
 import bot from "./bot.js";
 import { chatMigrationHandler } from "./handlers/chatMigrationHandler.js";
 import { messagesStatsBatchStore } from "./data/messagesStatsBatchStore.js";
+import cacheManager from "./cache/cache.js";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
