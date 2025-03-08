@@ -97,8 +97,6 @@ async function main() {
     process.on("SIGINT", async () => await shutdown(DBPoolManager));
     process.on("SIGTERM", async () => await shutdown(DBPoolManager));
 
-    await cacheManager.PremiumStatusCache.seed_chats();
-
     let isShuttingDown = false;
 
     async function shutdown(DBPoolManager: IDBPoolManager) {
@@ -139,6 +137,8 @@ async function main() {
         console.log(`Running NodeJS ${process.version}`);
         process.exit();
     }
+
+    await cacheManager.PremiumStatusCache.seed_chats();
 }
 
 main();
