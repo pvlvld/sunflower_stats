@@ -49,13 +49,22 @@ async function _statsChatGlobal(ctx: ICommandContext) {
 }
 
 function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.topChatsWeeklyRating>>) {
-    return (
-        data.reduce((message, chat, index) => {
-            return (
-                message + `${1 + index}. «${Escape.html(chat.title)}» - ${chat.total_messages.toLocaleString("fr-FR")}\n`
-            );
-        }, "Топ чатів за останні сім днів:\n\n<blockquote>") + "</blockquote>"
-    );
+    let message = "Топ чатів за останні сім днів:\n\n<blockquote>";
+
+    let isDonate = false;
+    let chat: (typeof data)[0];
+
+    for (let i = 0; i < data.length; i++) {
+        chat = data[i];
+        isDonate = cacheManager.PremiumStatusCache.get(chat.chat_id).status;
+        message += `${1 + i}.${isDonate ? " 👑 " : " "}«${Escape.html(
+            chat.title
+        )}» - ${chat.total_messages.toLocaleString("fr-FR")}\n`;
+    }
+
+    message += "</blockquote>";
+
+    return message;
 }
 
 async function getChartImage(): Promise<InputFile | string> {
