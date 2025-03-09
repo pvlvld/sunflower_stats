@@ -62,7 +62,16 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         const cachedChart = cacheManager.ChartCache_Chat.get(chat_id, dateRange as IAllowedChartStatsRanges);
 
         if (cachedChart.status === "ok") {
-            const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, chatSettings, 1, true);
+            const statsMessage = getStatsMessage(
+                chat_id,
+                dateRange,
+                rawCmdDateRange,
+                stats,
+                chatSettings,
+                1,
+                true,
+                ctx.chat.title
+            );
             msgTime = String(process.hrtime.bigint());
             chartTime = msgTime;
 
@@ -77,7 +86,16 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
                 isPagination ? chatStatsPagination_menu : undefined
             );
         } else if (cachedChart.status === "unrendered") {
-            const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, chatSettings, 1, true);
+            const statsMessage = getStatsMessage(
+                chat_id,
+                dateRange,
+                rawCmdDateRange,
+                stats,
+                chatSettings,
+                1,
+                true,
+                ctx.chat.title
+            );
             msgTime = String(process.hrtime.bigint());
 
             const chartImage = await getStatsChart(chat_id, chat_id, "chat", dateRange as IAllowedChartStatsRanges);
@@ -108,7 +126,16 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     }
 
     if (reply === undefined) {
-        const statsMessage = getStatsMessage(chat_id, dateRange, rawCmdDateRange, stats, chatSettings, 1, false);
+        const statsMessage = getStatsMessage(
+            chat_id,
+            dateRange,
+            rawCmdDateRange,
+            stats,
+            chatSettings,
+            1,
+            false,
+            ctx.chat.title
+        );
         msgTime = String(process.hrtime.bigint());
 
         reply = await sendSelfdestructMessage(
@@ -148,10 +175,11 @@ function getStatsMessage(
     stats: IDBChatUserStatsAndTotal[],
     settings: IChatSettings,
     page: number,
-    chart: boolean
+    chart: boolean,
+    title: string
 ) {
     return (
-        `📊 Статистика чату за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
+        `📊 Статистика «${title}» за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
         getStatsChatRating(stats, chat_id, settings, page, dateRange, chart ? "caption" : "text")
     );
 }

@@ -7,7 +7,7 @@ function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatU
     const nickname = active.data[chat_id]?.[user_id]?.nickname;
 
     return Escape.html(`
-❄️ Статистика ${
+Статистика ${
         nickname ? `${nickname} (${active.data[chat_id]?.[user_id]?.name})` : `${active.data[chat_id]?.[user_id]?.name}`
     }
     
