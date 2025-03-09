@@ -20,9 +20,9 @@ async function _statsChatGlobal(ctx: ICommandContext) {
     if (ctx.chat.type === "private") {
         bot.api.sendChatAction(ctx.from!.id, "typing").catch((e) => {});
 
-        const [chart, caption] = await Promise.all([getChartImage(), getChartText()]);
         try {
-            const msg = await ctx.replyWithPhoto(chart, { caption: caption }).catch(console.error);
+            const [chart, caption] = await Promise.all([getChartImage(), getChartText()]);
+            const msg = await ctx.replyWithPhoto(chart, { caption: caption });
             if (typeof chart !== "string" && msg && msg.photo) {
                 cacheManager.ChartCache_Global.set(
                     "statsChatGlobalMonthly",
