@@ -179,7 +179,7 @@ function getStatsMessage(
     title: string
 ) {
     return (
-        `📊 Статистика «${title}» за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
+        `📊 Статистика${chat_id}«${title}» за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
         getStatsChatRating(stats, chat_id, settings, page, dateRange, chart ? "caption" : "text")
     );
 }

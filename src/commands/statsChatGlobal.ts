@@ -56,8 +56,7 @@ function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.t
 
     for (let i = 0; i < data.length; i++) {
         chat = data[i];
-        isDonate = cacheManager.PremiumStatusCache.get(chat.chat_id).status;
-        message += `${1 + i}.${isDonate ? " 👑 " : " "}«${Escape.html(
+        message += `${1 + i}.${getPremiumMarkSpaced(chat.chat_id)}«${Escape.html(
             chat.title
         )}» - ${chat.total_messages.toLocaleString("fr-FR")}\n`;
     }
