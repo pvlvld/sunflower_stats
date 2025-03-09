@@ -179,8 +179,9 @@ function getStatsMessage(
     title: string
 ) {
     return (
-        `📊 Статистика${chat_id}«${title}» за ${dateRange === "all" ? "весь час" : rawCmdDateRange}:\n\n` +
-        getStatsChatRating(stats, chat_id, settings, page, dateRange, chart ? "caption" : "text")
+        `📊 Статистика${getPremiumMarkSpaced(chat_id)}«${title}» за ${
+            dateRange === "all" ? "весь час" : rawCmdDateRange
+        }:\n\n` + getStatsChatRating(stats, chat_id, settings, page, dateRange, chart ? "caption" : "text")
     );
 }
 
