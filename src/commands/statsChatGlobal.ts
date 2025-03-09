@@ -17,41 +17,41 @@ async function statsChatGlobal(ctx: ICommandContext) {
 }
 
 async function _statsChatGlobal(ctx: ICommandContext) {
-    if (ctx.chat.type === "private") {
-        ctx.api.sendChatAction(ctx.from!.id, "typing").catch((e) => {});
-
-        try {
-            const [chart, caption] = await Promise.all([getChartImage(), getChartText()]);
-            const msg = await ctx.replyWithPhoto(chart, { caption: caption });
-            if (typeof chart !== "string" && msg && msg.photo) {
-                cacheManager.ChartCache_Global.set(
-                    "statsChatGlobalMonthly",
-                    msg.photo[msg.photo.length - 1].file_id,
-                    getLastDayOfMonth()
-                );
-            }
-
-            if (!cacheManager.TextCache.has("statsChatGlobalWeekly")) {
-                cacheManager.TextCache.set("statsChatGlobalWeekly", caption);
-            }
-        } catch (error) {
-            console.error(error);
-            await ctx.reply(ctx.t("error")).catch((e) => {});
-        }
-    } else {
+    if (ctx.chat.type !== "private") {
         await ctx
             .reply(ctx.t("only_private_cmd"), {
                 link_preview_options: { is_disabled: true },
                 disable_notification: true,
             })
-            .catch((e) => {});
+            .catch(console.error);
+        return;
+    }
+
+    ctx.api.sendChatAction(ctx.from!.id, "typing").catch((e) => {});
+
+    try {
+        const [chart, caption] = await Promise.all([getChartImage(), getChartText()]);
+        const msg = await ctx.replyWithPhoto(chart, { caption });
+
+        if (typeof chart !== "string" && msg?.photo !== undefined) {
+            cacheManager.ChartCache_Global.set(
+                "statsChatGlobalMonthly",
+                msg.photo[msg.photo.length - 1].file_id,
+                getLastDayOfMonth()
+            );
+        }
+
+        if (!cacheManager.TextCache.has("statsChatGlobalWeekly")) {
+            cacheManager.TextCache.set("statsChatGlobalWeekly", caption);
+        }
+    } catch (error) {
+        console.error(error);
+        await ctx.reply(ctx.t("error")).catch(console.error);
     }
 }
 
 function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.topChatsWeeklyRating>>) {
     let message = "Топ чатів за останні сім днів:\n\n<blockquote>";
-
-    let isDonate = false;
     let chat: (typeof data)[0];
 
     for (let i = 0; i < data.length; i++) {
