@@ -76,7 +76,7 @@ function regCommands() {
         await stats_chat(ctx);
     });
     groupStats.command("m", async (ctx) => {
-        ctx.msg.text = "стата місяь";
+        ctx.msg.text = "стата місяць";
         // @ts-expect-error
         await stats_chat(ctx);
     });
