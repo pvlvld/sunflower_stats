@@ -13,6 +13,7 @@ import cfg from "../config.js";
 import Big from "big-js";
 import { chatStatsPagination_menu } from "../ui/menus/statsPagination.js";
 import { active } from "../data/active.js";
+import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
 
 const cmdToDateRangeMap = {
     день: "today",
