@@ -31,7 +31,7 @@ class CacheManager {
     flush() {
         this.ChartCache_User.flush();
         this.ChartCache_Chat.flush();
-        this.PremiumStatusCache.flush();
+        this.PremiumStatusCache.refresh();
         // this.ChatSettingsCache.flush();
         // this.ChatAdminsCache.flush();
         // this.RestrictedUsersCache.flush();
