@@ -69,6 +69,11 @@ class PremiumStatusCache {
             this.set(chat.chat_id as number, true);
         }
     }
+
+    public async refresh() {
+        this.flush();
+        await this.seed_chats();
+    }
 }
 
 export { PremiumStatusCache };
