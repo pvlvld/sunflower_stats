@@ -70,6 +70,22 @@ function regCommands() {
     dm.command(["me", "i"], stats_user_global);
     bot.command("donate", donate_cmd);
 
+    groupStats.command("w", async (ctx) => {
+        ctx.msg.text = "стата тиждень";
+        // @ts-expect-error
+        await stats_chat(ctx);
+    });
+    groupStats.command("m", async (ctx) => {
+        ctx.msg.text = "стата місяь";
+        // @ts-expect-error
+        await stats_chat(ctx);
+    });
+    groupStats.command("y", async (ctx) => {
+        ctx.msg.text = "стата рік";
+        // @ts-expect-error
+        await stats_chat(ctx);
+    });
+
     bot.command("refreshDonate", refreshDonate_cmd);
     bot.command("start", start_cmd);
     group.command(["help"], async (ctx) => {
