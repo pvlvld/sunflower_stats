@@ -4,9 +4,9 @@ import { getChartTopChatsMonthly } from "../chart/getStatsChart.js";
 import cacheManager from "../cache/cache.js";
 import { InputFile } from "grammy";
 import { getLastDayOfMonth } from "../utils/getLastDayOfMonth.js";
-import bot from "../bot.js";
 import { SequentialQueue } from "../utils/SequentialQueue.js";
 import Escape from "../utils/escape.js";
+import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
 
 const statsChatGlobalQueue = new SequentialQueue();
 
@@ -18,7 +18,7 @@ async function statsChatGlobal(ctx: ICommandContext) {
 
 async function _statsChatGlobal(ctx: ICommandContext) {
     if (ctx.chat.type === "private") {
-        bot.api.sendChatAction(ctx.from!.id, "typing").catch((e) => {});
+        ctx.api.sendChatAction(ctx.from!.id, "typing").catch((e) => {});
 
         try {
             const [chart, caption] = await Promise.all([getChartImage(), getChartText()]);
