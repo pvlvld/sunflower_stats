@@ -16,7 +16,7 @@ function getMessageMedia(ctx: IGroupHearsContext): IMedia {
 }
 
 function toTitleCase(type: (typeof MediaTypes)[number]) {
-    return (type[0].toUpperCase() + type.slice(1)) as IMediaMethodType;
+    return (type[0].toUpperCase() + type.slice(1).toLowerCase()) as IMediaMethodType;
 }
 
 export { getMessageMedia };
