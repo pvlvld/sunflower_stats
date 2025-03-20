@@ -6,6 +6,7 @@ import type { IGroupTextContext } from "../types/context.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
 import { DBStats } from "../db/stats.js";
 import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
+import Escape from "../utils/escape.js";
 
 async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true) {
     const dateRange = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string[];

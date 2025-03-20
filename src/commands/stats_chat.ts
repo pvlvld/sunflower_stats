@@ -14,6 +14,7 @@ import Big from "big-js";
 import { chatStatsPagination_menu } from "../ui/menus/statsPagination.js";
 import { active } from "../data/active.js";
 import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
+import Escape from "../utils/escape.js";
 
 const cmdToDateRangeMap = {
     день: "today",
