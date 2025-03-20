@@ -54,7 +54,12 @@ export async function getStatsChart(
     } else if (type === "bot-all") {
         data = (
             await DBPoolManager.getPoolRead.query(
-                `SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y FROM stats_daily WHERE date > '2023-12-31' GROUP BY date ORDER BY date;`
+                `SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y
+                    FROM stats_daily
+                    WHERE date > CURRENT_DATE - INTERVAL '1 year' 
+                      AND date < CURRENT_DATE
+                    GROUP BY date
+                    ORDER BY date;`
             )
         ).rows;
     } else {
