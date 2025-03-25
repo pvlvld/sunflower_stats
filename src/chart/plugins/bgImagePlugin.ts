@@ -59,17 +59,16 @@ async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType)
     } else {
         if (cacheManager.ChatSettingsCache.get(chat_id)?.usechatbgforall || false) {
             if (await isPremium(chat_id)) {
-                pluginBgImage = await loadBgImage(chat_id);
+                return createPlugin(await loadBgImage(chat_id));
             } else {
-                pluginBgImage = await loadBgImage(user_id);
                 Database.chatSettings.set(
                     chat_id,
                     cacheManager.ChatSettingsCache.set(chat_id, { usechatbgforall: false })
                 );
             }
-            return createPlugin(pluginBgImage);
         }
 
+        // Restrictions for the background image
         if (cacheManager.RestrictedUsersCache.isRestricted(user_id, "horny")) {
             pluginBgImage = await loadBgImage(user_id, "horny");
         } else if (cacheManager.RestrictedUsersCache.isRestricted(user_id, "uk")) {
@@ -77,6 +76,7 @@ async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType)
         } else {
             pluginBgImage = await loadBgImage(user_id);
         }
+
         return createPlugin(pluginBgImage);
     }
 
