@@ -37,10 +37,11 @@ async function loadBgImage(id: number, specific?: "horny" | "uk"): Promise<Image
     return getDefaultBg();
 }
 
-function createPlugin(image: Image) {
+function createPlugin(image: Image | undefined) {
     return {
         id: "customCanvasBackgroundImage",
         beforeDraw: (chart: Chart) => {
+            if (!image) return;
             if (image.complete) {
                 const ctx = chart.ctx;
                 ctx.drawImage(image, 0, 0, chart.width, chart.height);
