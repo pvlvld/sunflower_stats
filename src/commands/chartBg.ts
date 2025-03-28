@@ -10,6 +10,7 @@ import { readFile, writeFile } from "node:fs";
 import cacheManager from "../cache/cache.js";
 import { InputFile } from "grammy";
 import cfg from "../config.js";
+import { isPremium } from "../utils/isPremium.js";
 
 const baseBgPath = "./data/chartBg/";
 
@@ -36,6 +37,10 @@ async function setChartBg(
         return void (await ctx
             .reply("Схоже, що ви пишете від імені чату або каналу. Це не підтримується.")
             .catch((e) => {}));
+    }
+
+    if (ctx.msg.animation && !(await isPremium(target_id))) {
+        return void (await ctx.reply("Анімовані фони доступні лише донатерам /donate").catch((e) => {}));
     }
 
     if (type === "chat") {
