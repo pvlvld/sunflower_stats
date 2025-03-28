@@ -7,6 +7,8 @@ import { Chart } from "chart.js/auto";
 import fs from "fs";
 import cfg from "../../config.js";
 
+type IBackground = { bg: Image; transparent: boolean };
+
 let defaultBg: Image;
 
 async function getDefaultBg() {
@@ -16,7 +18,7 @@ async function getDefaultBg() {
     return defaultBg;
 }
 
-async function loadBgImage(id: number, specific?: "horny" | "uk"): Promise<Image> {
+async function loadBgImage(id: number, specific?: "horny" | "uk"): Promise<IBackground> {
     let path = "";
     switch (specific) {
         case "horny":
@@ -29,11 +31,18 @@ async function loadBgImage(id: number, specific?: "horny" | "uk"): Promise<Image
             break;
     }
 
-    if (fs.existsSync(path)) {
-        return loadImage(path);
+    if ((await isPremium(id)) && fs.existsSync(`${cfg.PATHS.BASE_BG_PATH}/${id}.mp4`)) {
+        return {
+            bg: {} as Image,
+            transparent: true,
+        };
     }
 
-    return getDefaultBg();
+    if (fs.existsSync(path)) {
+        return { bg: await loadImage(path), transparent: false };
+    }
+
+    return { bg: await getDefaultBg(), transparent: false };
 }
 
 function createPlugin(image: Image | undefined) {
