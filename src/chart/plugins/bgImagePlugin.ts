@@ -45,16 +45,16 @@ async function loadBgImage(id: number, specific?: "horny" | "uk"): Promise<IBack
     return { bg: await getDefaultBg(), transparent: false };
 }
 
-function createPlugin(image: Image | undefined) {
+function createPlugin(image: IBackground | undefined) {
     return {
         id: "customCanvasBackgroundImage",
         beforeDraw: (chart: Chart) => {
-            if (!image) return;
-            if (image.complete) {
+            if (!image || image.transparent) return;
+            if (image.bg.complete) {
                 const ctx = chart.ctx;
                 ctx.drawImage(image, 0, 0, chart.width, chart.height);
             } else {
-                image.onload = () => chart.draw();
+                image.bg.onload = () => chart.draw();
             }
         },
     };
