@@ -41,8 +41,10 @@ export async function getStatsChart(
     user_id: number,
     type: IChartType,
     rawDateRange?: IAllowedChartStatsRanges
-): Promise<InputFile | undefined> {
+): Promise<{ chart: InputFile; chartFormat: IChartFormat } | undefined> {
     let data: any[];
+    const targetId = type === "user" ? user_id : chat_id;
+
     if (type === "user") {
         data = await getChartData.userInChat(chat_id, user_id);
     } else if (type === "chat") {
@@ -82,7 +84,17 @@ export async function getStatsChart(
     configuration.data.datasets[0].data = data;
     configuration.data.labels = data.map((v) => v["x"]);
 
-    return new InputFile(await renderToBuffer(configuration), "chart.jpg");
+    if (configuration.custom.transparent) {
+        return {
+            chart: new InputFile(await overlayChartOnVideo(await renderToBuffer(configuration), targetId), "chart.mp4"),
+            chartFormat: "video",
+        };
+    } else {
+        return {
+            chart: new InputFile(await renderToBuffer(configuration), "chart.jpg"),
+            chartFormat: "image",
+        };
+    }
 }
 
 async function getChatImage(chat_id: number): Promise<Image> {
