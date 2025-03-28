@@ -61,7 +61,7 @@ function createPlugin(image: IBackground | undefined) {
 }
 
 async function bgImagePlugin(chat_id: number, user_id: number, type: IChartType) {
-    let pluginBgImage: Image;
+    let pluginBgImage: IBackground;
 
     if (type === "chat") {
         pluginBgImage = await loadBgImage(chat_id);
