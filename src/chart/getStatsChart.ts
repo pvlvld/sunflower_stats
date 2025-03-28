@@ -13,7 +13,7 @@ import bot from "../bot.js";
 import cfg from "../config.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
-export type IBackgroundType = "video" | "image";
+export type IChartFormat = "video" | "image";
 
 interface SQLQueryResult {
     month: string;
