@@ -73,18 +73,18 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
     const isDownloaded = await (await ctx.api.getFile(image.file_id).catch((e) => {}))?.download(path);
 
     if (isDownloaded === undefined) {
-        return await cantSaveImageError(ctx);
+        return await cantSaveImageError();
     }
 
     if (image.width !== cfg.CHART.width || image.height !== cfg.CHART.height) {
         readFile(path, async (err, data) => {
             if (err) {
-                return await cantSaveImageError(ctx);
+                return await cantSaveImageError();
             }
             data = resizeImage(data);
             writeFile(path, data, async (err) => {
                 if (err) {
-                    return await cantSaveImageError(ctx);
+                    return await cantSaveImageError();
                 }
             });
         });
@@ -108,7 +108,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
     return { status: true, message: "💅🏻 Фон успішно оновлено!" };
 }
 
-async function cantSaveImageError(ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext) {
+async function cantSaveImageError() {
     return {
         status: false,
         message: "Не вдалося зберегти зображення. Спробуйте знову.",
