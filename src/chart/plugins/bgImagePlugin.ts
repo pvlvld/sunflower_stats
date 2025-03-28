@@ -48,6 +48,7 @@ async function loadBgImage(id: number, specific?: "horny" | "uk"): Promise<IBack
 function createPlugin(image: IBackground | undefined) {
     return {
         id: "customCanvasBackgroundImage",
+        transparent: image?.transparent || false,
         beforeDraw: (chart: Chart) => {
             if (!image || image.transparent) return;
             if (image.bg.complete) {
