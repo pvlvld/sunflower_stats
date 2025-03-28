@@ -11,6 +11,7 @@ import cacheManager from "../cache/cache.js";
 import { InputFile } from "grammy";
 import cfg from "../config.js";
 import { isPremium } from "../utils/isPremium.js";
+import { Animation, PhotoSize } from "@grammyjs/types";
 
 const baseBgPath = "./data/chartBg/";
 
@@ -18,8 +19,8 @@ async function setChartBg(
     ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext | IGroupAnimationCaptionContext,
     type: "chat" | "user"
 ) {
-    if (!ctx.has(":photo")) {
-        return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
+    if (!ctx.has(":photo") && !ctx.has(":animation")) {
+        return void ctx.reply("Щоб змінити фон, наділшіть зображення чи гіф з цією команою в описі.");
     }
     let target_id = -1;
 
