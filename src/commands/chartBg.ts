@@ -57,27 +57,28 @@ async function setChartBg(
     void (await ctx.reply(donwloadRes.message).catch((e) => {}));
 }
 
-async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat") {
-    const image = ctx.msg.photo[ctx.msg.photo.length - 1];
+async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptionContext, type: "user" | "chat") {
+    let bgType: "photo" | "animation" = "photo";
+    if (ctx.msg.animation) {
+        bgType = "animation";
+    }
+
+    let file: Animation | PhotoSize | (PhotoSize & string) =
+        ctx.msg.animation || ctx.msg.photo![ctx.msg.photo!.length - 1];
 
     let path = baseBgPath;
     let target_id = -1;
 
-    if (type === "chat") {
-        target_id = ctx.chat.id;
-        path += `${target_id}.jpg`;
-    } else {
-        target_id = ctx.from.id;
-        path += `${target_id}.jpg`;
-    }
+    target_id = type === "chat" ? ctx.chat.id : ctx.from.id;
+    path += `${target_id}.${bgType === "photo" ? "jpg" : "mp4"}`;
 
-    const isDownloaded = await (await ctx.api.getFile(image.file_id).catch((e) => {}))?.download(path);
+    const isDownloaded = await (await ctx.api.getFile(file.file_id).catch((e) => {}))?.download(path);
 
     if (isDownloaded === undefined) {
         return await cantSaveImageError();
     }
 
-    if (image.width !== cfg.CHART.width || image.height !== cfg.CHART.height) {
+    if (file.width !== cfg.CHART.width || file.height !== cfg.CHART.height) {
         readFile(path, async (err, data) => {
             if (err) {
                 return await cantSaveImageError();
