@@ -1,4 +1,8 @@
-import { IGroupHearsCommandContext, IGroupPhotoCaptionContext } from "../types/context.js";
+import {
+    IGroupAnimationCaptionContext,
+    IGroupHearsCommandContext,
+    IGroupPhotoCaptionContext,
+} from "../types/context.js";
 import { personalChartBgControl_menu } from "../ui/menus/personalChartBgControl.js";
 import { resizeImage } from "../chart/processing/resizeImage.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
@@ -9,7 +13,10 @@ import cfg from "../config.js";
 
 const baseBgPath = "./data/chartBg/";
 
-async function setChartBg(ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext, type: "chat" | "user") {
+async function setChartBg(
+    ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext | IGroupAnimationCaptionContext,
+    type: "chat" | "user"
+) {
     if (!ctx.has(":photo")) {
         return void ctx.reply("Щоб змінити фон, наділшіть зображення з цією команою в описі.");
     }
