@@ -51,6 +51,9 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
     MAIN_BOT_ID: number;
     GET_STATUS: () => IBotStatus;
     SET_STATUS: (status: IBotStatus) => IBotStatus;
+    PATHS: {
+        BASE_BG_PATH: string;
+    };
 };
 
 function getCfg() {
@@ -80,6 +83,10 @@ function getCfg() {
     cfg.LOG_LVL = LOG_LVL;
     cfg.BOT_ID = Number(cfg.BOT_TOKEN.split(":")[0]);
     cfg.MAIN_BOT_ID = 6081112363;
+
+    cfg.PATHS = {
+        BASE_BG_PATH: "./data/chartBg",
+    };
     return Object.freeze(cfg);
 }
 
