@@ -49,7 +49,6 @@ export async function getStatsChart(
         if (rawDateRange) {
             data = await getChartData.chatInChat(chat_id, rawDateRange);
         } else {
-            console.error("No date range is provided for the chat chart");
             data = await getChartData.chatInChat(chat_id, "all");
         }
     } else if (type === "bot-all") {
