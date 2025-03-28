@@ -27,7 +27,7 @@ async function setChartBg(ctx: IGroupHearsCommandContext | IGroupPhotoCaptionCon
 
     if (ctx.from.id === ctx.chat.id || cfg.IGNORE_IDS.includes(target_id)) {
         return void (await ctx
-            .reply("Схоже, що у вас увімкнено режим анонімного адміну або ви пишете від імені каналу.")
+            .reply("Схоже, що ви пишете від імені чату або каналу. Це не підтримується.")
             .catch((e) => {}));
     }
 
