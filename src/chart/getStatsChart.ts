@@ -11,6 +11,7 @@ import { getChartData } from "./utils/getChartData.js";
 import { downloadAvatar } from "./utils/downloadAvatar.js";
 import bot from "../bot.js";
 import cfg from "../config.js";
+import { overlayChartOnVideo } from "./utils/overlayChartOnVideo.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
 export type IChartFormat = "video" | "image";
