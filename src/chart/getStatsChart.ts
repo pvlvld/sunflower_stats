@@ -13,6 +13,7 @@ import bot from "../bot.js";
 import cfg from "../config.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
+export type IBackgroundType = "video" | "image";
 
 interface SQLQueryResult {
     month: string;
@@ -65,6 +66,8 @@ export async function getStatsChart(
     } else {
         throw new Error("Invalid chart type");
     }
+
+    // Do we steel need this?
     void data.pop();
     // remove 2023-12-31 data point, it's compiled stats for whole 2023 so it breaks chart
     if (data.length !== 0 && data[0].x === "2023-12-31") {
