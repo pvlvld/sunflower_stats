@@ -58,10 +58,6 @@ async function setChartBg(
 
 async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat") {
     const image = ctx.msg.photo[ctx.msg.photo.length - 1];
-    let needToResize = false;
-    if (image.width !== cfg.CHART.width || image.height !== cfg.CHART.height) {
-        needToResize = true;
-    }
 
     let path = baseBgPath;
     let target_id = -1;
@@ -80,7 +76,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
         return await cantSaveImageError(ctx);
     }
 
-    if (needToResize) {
+    if (image.width !== cfg.CHART.width || image.height !== cfg.CHART.height) {
         readFile(path, async (err, data) => {
             if (err) {
                 return await cantSaveImageError(ctx);
@@ -109,14 +105,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext, type: "user" | "chat")
         })
         .catch((e) => {});
 
-    if (needToResize) {
-        return {
-            status: true,
-            message: `💅🏻 Фон успішно оновлено!\nЩоб отримати найкращу якість, використовуйте зображення з розширенням ${cfg.CHART.width}*${cfg.CHART.height} (2 до 1)`,
-        };
-    } else {
-        return { status: true, message: "💅🏻 Фон успішно оновлено!" };
-    }
+    return { status: true, message: "💅🏻 Фон успішно оновлено!" };
 }
 
 async function cantSaveImageError(ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext) {
