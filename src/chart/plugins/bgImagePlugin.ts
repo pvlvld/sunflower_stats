@@ -5,8 +5,7 @@ import { Database } from "../../db/db.js";
 import { Image, loadImage } from "canvas";
 import { Chart } from "chart.js/auto";
 import fs from "fs";
-
-const baseBgPath = "./data/chartBg";
+import cfg from "../../config.js";
 
 let defaultBg: Image;
 
@@ -21,12 +20,12 @@ async function loadBgImage(id: number, specific?: "horny" | "uk"): Promise<Image
     let path = "";
     switch (specific) {
         case "horny":
-            path = `${baseBgPath}/!horny.jpg`;
+            path = `${cfg.PATHS.BASE_BG_PATH}/!horny.jpg`;
             break;
         case "uk":
-            path = `${baseBgPath}/!ДЕРЖАВНОЮ.jpg`;
+            path = `${cfg.PATHS.BASE_BG_PATH}/!ДЕРЖАВНОЮ.jpg`;
         default:
-            path = `${baseBgPath}/${id}.jpg`;
+            path = `${cfg.PATHS.BASE_BG_PATH}/${id}.jpg`;
             break;
     }
 
