@@ -255,7 +255,7 @@ async function getStatsChartFromData(
 function renderToBuffer(configuration: ChartConfiguration) {
     const canvas = ChartCanvasManager.get;
     const chart = new chartJs(canvas, configuration);
-    const buffer = chart.canvas.toBuffer("image/jpeg", { quality: 1 });
+    const buffer = chart.canvas.toBuffer("image/png", { quality: 1 });
     destroyChart_Async(chart);
     ChartCanvasManager.recycle(canvas);
     return buffer;
@@ -264,7 +264,7 @@ function renderToBuffer(configuration: ChartConfiguration) {
 function renderToBufferX2(configuration: ChartConfiguration) {
     const canvas = ChartCanvasManager.getX2;
     const chart = new chartJs(canvas, configuration);
-    const buffer = chart.canvas.toBuffer("image/jpeg", { quality: 1 });
+    const buffer = chart.canvas.toBuffer("image/png", { quality: 1 });
     destroyChart_Async(chart);
     ChartCanvasManager.recycleX2(canvas);
     return buffer;
