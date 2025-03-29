@@ -5,11 +5,13 @@ import { Message } from "@grammyjs/types";
 import { Database } from "../db/db.js";
 import cfg from "../config.js";
 import { Menu } from "@grammyjs/menu";
+import { IChartFormat } from "../chart/getStatsChart.js";
 
 // TODO: Write our own selfDestruct messsage GrammY plugin (API transformer)
 
 type ISelfdestructMsgChartData = {
     isChart: true;
+    chartType: IChartFormat;
     text: string;
     chart: string | InputFile;
 };
@@ -28,17 +30,30 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
     selfdestructstats: boolean,
     reply_markup?: Menu<any>
 ): Promise<
-    (T extends ISelfdestructMsgChartData ? Message.PhotoMessage : Message.TextMessage) | undefined
+    | (T extends ISelfdestructMsgChartData
+          ? T["chartType"] extends "image"
+              ? Message.PhotoMessage
+              : Message.AnimationMessage
+          : Message.TextMessage)
+    | undefined
 > {
     const chat_id = ctx.chat.id;
     try {
-        let message: Message.PhotoMessage | Message.TextMessage;
+        let message: Message.PhotoMessage | Message.TextMessage | Message.AnimationMessage;
         if (data.isChart) {
-            message = await ctx.replyWithPhoto(data.chart, {
-                caption: data.text,
-                disable_notification: true,
-                reply_markup,
-            });
+            if (data.chartType === "image") {
+                message = await ctx.replyWithPhoto(data.chart, {
+                    caption: data.text,
+                    disable_notification: true,
+                    reply_markup,
+                });
+            } else {
+                message = await ctx.replyWithAnimation(data.chart, {
+                    caption: data.text,
+                    disable_notification: true,
+                    reply_markup,
+                });
+            }
         } else {
             message = await ctx.reply(data.text, {
                 disable_notification: true,
@@ -56,7 +71,9 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
         }
 
         return message as T extends ISelfdestructMsgChartData
-            ? Message.PhotoMessage
+            ? T["chartType"] extends "image"
+                ? Message.PhotoMessage
+                : Message.AnimationMessage
             : Message.TextMessage;
     } catch (e) {
         if (e instanceof GrammyError) {
@@ -67,10 +84,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
                 void cacheManager.ChatSettingsCache.set(chat_id, {
                     charts: false,
                 });
-                void Database.chatSettings.set(
-                    chat_id,
-                    cacheManager.ChatSettingsCache.get(chat_id)!
-                );
+                void Database.chatSettings.set(chat_id, cacheManager.ChatSettingsCache.get(chat_id)!);
 
                 void (await ctx
                     .reply(
