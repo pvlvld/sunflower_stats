@@ -25,9 +25,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
     }
 
     if (cfg.IGNORE_IDS.includes(user_id)) {
-        return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats, {
-            caption: "Користувача не знайдено 🤷🏻‍♀️",
-        }));
+        return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats));
     }
 
     const chatSettings = await getCachedOrDBChatSettings(chat_id);
