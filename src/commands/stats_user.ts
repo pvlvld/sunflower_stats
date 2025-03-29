@@ -36,7 +36,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
             return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats),
             { caption: "Схоже, що це ваше перше повідомлення в цьому чаті 🎉" });
         } else {
-            return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats), { caption: "Вперше бачу 🤔" });
+            return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats));
         }
     }
 
