@@ -19,8 +19,8 @@ function resizeVideo(id: number): Promise<void> {
             .outputOptions([
                 `-vf scale=w=${width}:h=${height}:flags=lanczos:force_original_aspect_ratio=increase,crop=${width}:${height}`,
                 "-c:v libx264",
-                "-preset fast",
-                "-crf 23",
+                "-preset slower",
+                "-crf 20",
                 "-movflags +faststart",
             ])
             .on("end", () => {
