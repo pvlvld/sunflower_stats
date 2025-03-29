@@ -57,6 +57,17 @@ async function setChartBg(
     void (await ctx.reply(donwloadRes.message).catch((e) => {}));
 }
 
+const donloadBgErrors = {
+    cantSaveImage: {
+        status: false,
+        message: "Не вдалося зберегти зображення. Спробуйте знову.",
+    },
+    cantResizeImage: {
+        status: false,
+        message: "Не вдалося змінити розмір зображення. Спробуйте знову.",
+    },
+};
+
 async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptionContext, type: "user" | "chat") {
     let bgType: "photo" | "animation" = "photo";
     if (ctx.msg.animation) {
@@ -75,7 +86,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
     const isDownloaded = await (await ctx.api.getFile(file.file_id).catch((e) => {}))?.download(path);
 
     if (isDownloaded === undefined) {
-        return await cantSaveImageError();
+        return donloadBgErrors.cantSaveImage;
     }
 
     if (file.width !== cfg.CHART.width || file.height !== cfg.CHART.height) {
