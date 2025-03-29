@@ -31,6 +31,7 @@ function resizeVideo(id: number): Promise<void> {
                 });
             })
             .on("error", (e) => {
+                fs.unlink(inputPath, (e) => {});
                 fs.unlink(tempPath, (e) => {});
                 reject(e);
             })
