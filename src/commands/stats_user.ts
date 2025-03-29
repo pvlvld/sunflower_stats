@@ -63,15 +63,21 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
             case "unrendered":
                 const chart = await getStatsChart(chat_id, user_id, "user");
                 if (chart) {
-                    const msg = await sendSelfdestructMessage(
-                        ctx,
-                        {
-                            isChart: true,
-                            text: statsMessage,
-                            chart: chart,
-                        },
-                        chatSettings.selfdestructstats
-                    );
+                    let msg: Awaited<ReturnType<typeof sendSelfdestructMessage>>;
+                    if (chart.chartFormat === "video") {
+                        msg = await ctx.replyWithAnimation(chart.chart, { caption: statsMessage });
+                    } else {
+                        msg = await sendSelfdestructMessage(
+                            ctx,
+                            {
+                                isChart: true,
+                                chartType: chart.chartFormat,
+                                text: statsMessage,
+                                chart: chart.chart,
+                            },
+                            chatSettings.selfdestructstats
+                        );
+                    }
 
                     if (!msg) {
                         return;
@@ -96,6 +102,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
                     ctx,
                     {
                         isChart: true,
+                        chartType: cachedChart.format,
                         text: statsMessage,
                         chart: cachedChart.file_id,
                     },
