@@ -6,6 +6,8 @@ import { Database } from "../db/db.js";
 import cfg from "../config.js";
 import { Menu } from "@grammyjs/menu";
 
+// TODO: Write our own selfDestruct messsage GrammY plugin (API transformer)
+
 type ISelfdestructMsgChartData = {
     isChart: true;
     text: string;
