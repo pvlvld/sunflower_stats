@@ -11,7 +11,7 @@ import { IChartFormat } from "../chart/getStatsChart.js";
 
 type ISelfdestructMsgChartData = {
     isChart: true;
-    chartType: IChartFormat;
+    chartFormat: IChartFormat;
     text: string;
     chart: string | InputFile;
 };
@@ -31,7 +31,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
     reply_markup?: Menu<any>
 ): Promise<
     | (T extends ISelfdestructMsgChartData
-          ? T["chartType"] extends "image"
+          ? T["chartFormat"] extends "image"
               ? Message.PhotoMessage
               : Message.AnimationMessage
           : Message.TextMessage)
@@ -41,7 +41,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
     try {
         let message: Message.PhotoMessage | Message.TextMessage | Message.AnimationMessage;
         if (data.isChart) {
-            if (data.chartType === "image") {
+            if (data.chartFormat === "image") {
                 message = await ctx.replyWithPhoto(data.chart, {
                     caption: data.text,
                     disable_notification: true,
@@ -71,7 +71,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
         }
 
         return message as T extends ISelfdestructMsgChartData
-            ? T["chartType"] extends "image"
+            ? T["chartFormat"] extends "image"
                 ? Message.PhotoMessage
                 : Message.AnimationMessage
             : Message.TextMessage;
