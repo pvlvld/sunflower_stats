@@ -13,6 +13,7 @@ type IChartConfiguration = ChartConfiguration & {
 async function getDefaultChartConfig(chat_id: number, user_id: number, type: IChartType): Promise<IChartConfiguration> {
     const chart_settings = await getChartSettings(type === "chat" ? chat_id : user_id, type);
     const line_rgbValuesString = hexToGgbString(chart_settings.line_color);
+    const _bgImagePlugin = await bgImagePlugin(chat_id, user_id, type);
 
     return {
         type: "line",
@@ -100,7 +101,10 @@ async function getDefaultChartConfig(chat_id: number, user_id: number, type: ICh
                 },
             },
         },
-        plugins: [await bgImagePlugin(chat_id, user_id, type)],
+        plugins: [_bgImagePlugin],
+        custom: {
+            transparent: _bgImagePlugin.transparent,
+        },
     };
 }
 
