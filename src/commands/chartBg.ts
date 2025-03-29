@@ -41,7 +41,7 @@ async function setChartBg(
             .catch((e) => {}));
     }
 
-    if (ctx.msg.animation && !(await isPremium(target_id))) {
+    if (ctx.msg.animation && !((await isPremium(target_id)) || cfg.ADMINS.includes(ctx.from.id))) {
         return void (await ctx.reply("Анімовані фони доступні лише донатерам /donate").catch((e) => {}));
     }
 
