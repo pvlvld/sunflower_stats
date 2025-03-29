@@ -23,6 +23,7 @@ function resizeVideo(id: number): Promise<void> {
                 "-crf 20",
                 "-movflags +faststart",
             ])
+            .on("start", (cmdline) => cfg.DEBUG && console.log("resizeVideo Ffmpeg cmd:\n", cmdline))
             .on("end", () => {
                 fs.rename(tempPath, outputPath, (err) => {
                     if (err) return reject(err);
