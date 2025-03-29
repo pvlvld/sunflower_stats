@@ -54,6 +54,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
     PATHS: {
         BASE_BG_PATH: string;
     };
+    DEBUG: boolean;
 };
 
 function getCfg() {
@@ -87,6 +88,7 @@ function getCfg() {
     cfg.PATHS = {
         BASE_BG_PATH: "./data/chartBg",
     };
+    cfg.DEBUG = false;
     return Object.freeze(cfg);
 }
 
