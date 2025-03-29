@@ -2,7 +2,7 @@ import { IChartFormat } from "../chart/getStatsChart.js";
 import cfg from "../config.js";
 
 type IChartStatuses = "ok" | "skip" | "unrendered";
-type IChartCache = Readonly<{ file_id: string; status: IChartStatuses; format: IChartFormat }>;
+type IChartCache = Readonly<{ file_id: string; status: IChartStatuses; chartFormat: IChartFormat }>;
 
 class ChartCache_User {
     private _chartCache: Map<number, Map<number, IChartCache>>;
@@ -13,8 +13,8 @@ class ChartCache_User {
     constructor() {
         this._chartCache = new Map();
         this._userChats = new Map();
-        this._skipChart = Object.freeze({ file_id: "", status: "skip", format: "image" });
-        this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered", format: "image" });
+        this._skipChart = Object.freeze({ file_id: "", status: "skip", chartFormat: "image" });
+        this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered", chartFormat: "image" });
     }
 
     public get(chat_id: number, user_id: number): IChartCache {
@@ -32,7 +32,7 @@ class ChartCache_User {
         return this._unrenderedChart;
     }
 
-    public set(chat_id: number, user_id: number, file_id: string, format: IChartFormat) {
+    public set(chat_id: number, user_id: number, file_id: string, chartFormat: IChartFormat) {
         let chatCache = this._chartCache.get(chat_id);
         if (!chatCache) {
             chatCache = new Map();
@@ -42,7 +42,7 @@ class ChartCache_User {
         if (file_id.length === 0) {
             void chatCache.set(user_id, this._skipChart);
         } else {
-            void chatCache.set(user_id, Object.freeze({ file_id, status: "ok", format }));
+            void chatCache.set(user_id, Object.freeze({ file_id, status: "ok", chartFormat }));
         }
 
         let userChats = this._userChats.get(user_id);
