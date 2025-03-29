@@ -12,6 +12,7 @@ import { InputFile } from "grammy";
 import cfg from "../config.js";
 import { isPremium } from "../utils/isPremium.js";
 import { Animation, PhotoSize } from "@grammyjs/types";
+import { resizeVideo } from "../chart/processing/resizeVideo.js";
 
 const baseBgPath = "./data/chartBg/";
 
