@@ -136,7 +136,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
                     cacheManager.ChartCache_Chat.set(
                         chat_id,
                         dateRange as IAllowedChartStatsRanges,
-                        reply.photo[reply.photo.length - 1].file_id,
+                        reply.animation?.file_id || reply.photo[reply.photo.length - 1].file_id,
                         chart.chartFormat
                     );
                 }
