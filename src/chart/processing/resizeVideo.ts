@@ -17,7 +17,7 @@ function resizeVideo(id: number): Promise<void> {
 
         Ffmpeg(inputPath)
             .outputOptions([
-                `-vf scale=w=${width}:h=${height}:force_original_aspect_ratio=increase,crop=${width}:${height}`,
+                `-vf scale=w=${width}:h=${height}:flags=lanczos:force_original_aspect_ratio=increase,crop=${width}:${height}`,
                 "-c:v libx264",
                 "-preset fast",
                 "-crf 23",
