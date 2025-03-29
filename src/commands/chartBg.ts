@@ -90,17 +90,28 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
     }
 
     if (file.width !== cfg.CHART.width || file.height !== cfg.CHART.height) {
-        readFile(path, async (err, data) => {
-            if (err) {
-                return await cantSaveImageError();
+        if (bgType === "animation") {
+            try {
+                await resizeVideo(target_id);
+            } catch (e) {
+                if (cfg.DEBUG) {
+                    console.error(e);
+                }
+
+                return donloadBgErrors.cantResizeImage;
             }
-            data = resizeImage(data);
-            writeFile(path, data, async (err) => {
+        } else {
+            readFile(path, async (err, data) => {
                 if (err) {
                     return await cantSaveImageError();
                 }
+                writeFile(path, resizeImage(data), async (err) => {
+                    if (err) {
+                        return await cantSaveImageError();
+                    }
+                });
             });
-        });
+        }
     }
 
     ctx.api
