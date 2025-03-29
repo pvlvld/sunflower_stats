@@ -53,7 +53,7 @@ function createPlugin(image: IBackground | undefined) {
             if (!image || image.transparent) return;
             if (image.bg.complete) {
                 const ctx = chart.ctx;
-                ctx.drawImage(image, 0, 0, chart.width, chart.height);
+                ctx.drawImage(image.bg, 0, 0, chart.width, chart.height);
             } else {
                 image.bg.onload = () => chart.draw();
             }
