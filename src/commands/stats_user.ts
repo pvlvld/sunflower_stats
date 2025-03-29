@@ -84,7 +84,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
                     cacheManager.ChartCache_User.set(
                         chat_id,
                         user_id,
-                        msg.photo?.file_id || msg.animation?.file_id || "",
+                        msg.animation?.file_id || msg.photo[msg.photo.length - 1].file_id || "",
                         chart.chartFormat
                     );
                 } else {
