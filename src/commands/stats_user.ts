@@ -71,7 +71,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
                             ctx,
                             {
                                 isChart: true,
-                                chartType: chart.chartFormat,
+                                chartFormat: chart.chartFormat,
                                 text: statsMessage,
                                 chart: chart.chart,
                             },
@@ -102,7 +102,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
                     ctx,
                     {
                         isChart: true,
-                        chartType: cachedChart.format,
+                        chartFormat: cachedChart.format,
                         text: statsMessage,
                         chart: cachedChart.file_id,
                     },
