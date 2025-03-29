@@ -1,7 +1,7 @@
+import { IChartFormat } from "../chart/getStatsChart.js";
 import cfg from "../config.js";
 
 type IChartStatuses = "ok" | "skip" | "unrendered";
-type IChartFormat = "photo" | "video";
 type IChartCache = Readonly<{ file_id: string; status: IChartStatuses; format: IChartFormat }>;
 
 class ChartCache_User {
@@ -13,8 +13,8 @@ class ChartCache_User {
     constructor() {
         this._chartCache = new Map();
         this._userChats = new Map();
-        this._skipChart = Object.freeze({ file_id: "", status: "skip", format: "photo" });
-        this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered", format: "photo" });
+        this._skipChart = Object.freeze({ file_id: "", status: "skip", format: "image" });
+        this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered", format: "image" });
     }
 
     public get(chat_id: number, user_id: number): IChartCache {
