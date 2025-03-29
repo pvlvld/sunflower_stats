@@ -77,16 +77,31 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
             msgTime = String(process.hrtime.bigint());
             chartTime = msgTime;
 
-            reply = await sendSelfdestructMessage(
-                ctx,
-                {
-                    isChart: true,
-                    text: statsMessage,
-                    chart: cachedChart.file_id,
-                },
-                chatSettings.selfdestructstats,
-                isPagination ? chatStatsPagination_menu : undefined
-            );
+            if (cachedChart.chartFormat === "video") {
+                reply = await sendSelfdestructMessage(
+                    ctx,
+                    {
+                        isChart: true,
+                        text: statsMessage,
+                        chart: cachedChart.file_id,
+                        chartFormat: cachedChart.chartFormat,
+                    },
+                    chatSettings.selfdestructstats,
+                    isPagination ? chatStatsPagination_menu : undefined
+                );
+            } else {
+                reply = await sendSelfdestructMessage(
+                    ctx,
+                    {
+                        isChart: true,
+                        text: statsMessage,
+                        chart: cachedChart.file_id,
+                        chartFormat: cachedChart.chartFormat,
+                    },
+                    chatSettings.selfdestructstats,
+                    isPagination ? chatStatsPagination_menu : undefined
+                );
+            }
         } else if (cachedChart.status === "unrendered") {
             const statsMessage = getStatsMessage(
                 chat_id,
@@ -100,9 +115,9 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
             );
             msgTime = String(process.hrtime.bigint());
 
-            const chartImage = await getStatsChart(chat_id, chat_id, "chat", dateRange as IAllowedChartStatsRanges);
+            const chart = await getStatsChart(chat_id, chat_id, "chat", dateRange as IAllowedChartStatsRanges);
 
-            if (chartImage) {
+            if (chart) {
                 chartTime = String(process.hrtime.bigint());
 
                 reply = await sendSelfdestructMessage(
@@ -110,7 +125,8 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
                     {
                         isChart: true,
                         text: statsMessage,
-                        chart: chartImage,
+                        chart: chart.chart,
+                        chartFormat: chart.chartFormat,
                     },
                     chatSettings.selfdestructstats,
                     isPagination ? chatStatsPagination_menu : undefined
@@ -120,7 +136,8 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
                     cacheManager.ChartCache_Chat.set(
                         chat_id,
                         dateRange as IAllowedChartStatsRanges,
-                        reply.photo[reply.photo.length - 1].file_id
+                        reply.photo[reply.photo.length - 1].file_id,
+                        chart.chartFormat
                     );
                 }
             }

@@ -1,8 +1,8 @@
 import { IChartFormat } from "../chart/getStatsChart.js";
 import cfg from "../config.js";
 
-type IChartStatuses = "ok" | "skip" | "unrendered";
-type IChartCache = Readonly<{ file_id: string; status: IChartStatuses; chartFormat: IChartFormat }>;
+export type IChartStatuses = "ok" | "skip" | "unrendered";
+export type IChartCache = Readonly<{ file_id: string; status: IChartStatuses; chartFormat: IChartFormat }>;
 
 class ChartCache_User {
     private _chartCache: Map<number, Map<number, IChartCache>>;

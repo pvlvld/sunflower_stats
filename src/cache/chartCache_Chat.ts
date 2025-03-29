@@ -1,7 +1,7 @@
+import { IChartFormat } from "../chart/getStatsChart.js";
 import cfg from "../config.js";
+import { IChartCache } from "./chartCache_User.js";
 
-type IChartStatuses = "ok" | "skip" | "unrendered";
-type IChartCache = Readonly<{ file_id: string; status: IChartStatuses }>;
 type IDateRange = "weekRange" | "monthRange" | "yearRange" | "all";
 
 class ChartCache_Chat {
@@ -11,8 +11,8 @@ class ChartCache_Chat {
 
     constructor() {
         this._chartCache = new Map();
-        this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered" });
-        this._skipChart = Object.freeze({ file_id: "", status: "skip" });
+        this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered", chartFormat: "image" });
+        this._skipChart = Object.freeze({ file_id: "", status: "skip", chartFormat: "image" });
     }
 
     public get(chat_id: number, range: IDateRange): IChartCache {
@@ -31,7 +31,7 @@ class ChartCache_Chat {
         return this._unrenderedChart;
     }
 
-    public set(chat_id: number, range: IDateRange, file_id: string) {
+    public set(chat_id: number, range: IDateRange, file_id: string, chartFormat: IChartFormat) {
         let chatCache = this._chartCache.get(chat_id);
         if (!chatCache) {
             chatCache = new Map();
@@ -41,7 +41,7 @@ class ChartCache_Chat {
         if (file_id.length === 0) {
             void chatCache.set(range, this._skipChart);
         } else {
-            void chatCache.set(range, Object.freeze({ file_id, status: "ok" }));
+            void chatCache.set(range, Object.freeze({ file_id, status: "ok", chartFormat }));
         }
     }
 
