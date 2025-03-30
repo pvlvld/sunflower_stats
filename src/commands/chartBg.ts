@@ -6,7 +6,7 @@ import {
 import { personalChartBgControl_menu } from "../ui/menus/personalChartBgControl.js";
 import { resizeImage } from "../chart/processing/resizeImage.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
-import { readFile, writeFile } from "node:fs";
+import { readFile, unlink, writeFile } from "node:fs";
 import cacheManager from "../cache/cache.js";
 import { InputFile } from "grammy";
 import cfg from "../config.js";
