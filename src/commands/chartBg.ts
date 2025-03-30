@@ -110,6 +110,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
                     if (err) {
                         return await cantSaveImageError();
                     }
+                    unlink(`${baseBgPath}/${target_id}.mp4`, (e) => {});
                 });
             });
         }
