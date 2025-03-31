@@ -271,6 +271,13 @@ function regCommands() {
 
     botAdmin.hears("!ssuci", updateDbChatsInfo);
 
+    botAdmin.hears(/^!sse/, async (ctx) => {
+        ctx.api.sendMessage(ctx.chat.id, ctx.msg.text!, {
+            message_thread_id: ctx.msg.message_thread_id,
+            reply_to_message_id: ctx.msg.reply_to_message?.message_id,
+        }).catch((e) => {})
+    })
+
     // MUST BE THE LAST ONE
     bot.on("message", async (ctx) => {
         memes(ctx);
