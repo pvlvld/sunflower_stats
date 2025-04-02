@@ -3,6 +3,7 @@ import type { IChartType } from "../getStatsChart.js";
 import { getChartSettings } from "./getChartSettings.js";
 import { bgImagePlugin } from "../plugins/bgImagePlugin.js";
 import { hexToGgbString } from "./hexToGgbString.js";
+import { bgColorPlugin } from "../plugins/bgColorPlugin.js";
 
 type IChartConfiguration = ChartConfiguration & {
     custom: {
@@ -151,7 +152,6 @@ function getTopChatsMonthlyChartConfig(positions: number): ChartConfiguration {
                 },
             },
             locale: "uk-UA",
-            color: "#e8e7ec",
             datasets: {
                 line: {
                     pointRadius: 38,
@@ -171,6 +171,9 @@ function getTopChatsMonthlyChartConfig(positions: number): ChartConfiguration {
                 },
                 //@ts-expect-error
                 profileImages: {},
+                customCanvasBackgroundColor: {
+                    color: "#000000",
+                },
             },
             animation: false,
             responsive: false,
@@ -179,7 +182,10 @@ function getTopChatsMonthlyChartConfig(positions: number): ChartConfiguration {
                 size: 28,
             },
         },
-        plugins: [],
+        plugins: [bgColorPlugin],
+        custom: {
+            transparent: false,
+        },
     };
 }
 
