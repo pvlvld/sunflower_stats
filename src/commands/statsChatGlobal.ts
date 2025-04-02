@@ -7,6 +7,7 @@ import { getLastDayOfMonth } from "../utils/getLastDayOfMonth.js";
 import { SequentialQueue } from "../utils/SequentialQueue.js";
 import Escape from "../utils/escape.js";
 import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
+import cfg from "../config.js";
 
 const statsChatGlobalQueue = new SequentialQueue();
 
@@ -17,7 +18,7 @@ async function statsChatGlobal(ctx: ICommandContext) {
 }
 
 async function _statsChatGlobal(ctx: ICommandContext) {
-    if (ctx.chat.type !== "private") {
+    if (ctx.chat.type !== "private" && !cfg.ADMINS.includes(ctx.from?.id || -1)) {
         await ctx
             .reply(ctx.t("only_private_cmd"), {
                 link_preview_options: { is_disabled: true },
