@@ -45,6 +45,9 @@ async function setChartBg(
     if (ctx.msg.animation && !((await isPremium(target_id)) || cfg.ADMINS.includes(ctx.from.id))) {
         return void (await ctx.reply("Анімовані фони доступні лише донатерам /donate").catch((e) => {}));
     }
+    // TODO:
+    //@ts-expect-error
+    const donwloadRes = await downloadBg(ctx, type);
 
     if (type === "chat") {
         target_id = ctx.chat.id;
@@ -53,9 +56,6 @@ async function setChartBg(
         target_id = ctx.from.id;
         cacheManager.ChartCache_User.removeUser(target_id);
     }
-    // TODO:
-    //@ts-expect-error
-    const donwloadRes = await downloadBg(ctx, type);
 
     void (await ctx.reply(donwloadRes.message).catch((e) => {}));
 }
