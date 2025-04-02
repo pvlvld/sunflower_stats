@@ -2,12 +2,13 @@ import type { IDBChatUserStatsAll } from "../types/stats.js";
 import { active } from "../data/active.js";
 import Escape from "./escape.js";
 import moment from "moment";
+import { getPremiumMarkSpaced } from "./getPremiumMarkSpaced.js";
 
 function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatUserStatsAll) {
     const nickname = active.data[chat_id]?.[user_id]?.nickname;
 
     return Escape.html(`
-Статистика ${
+Статистика${getPremiumMarkSpaced(user_id)}${
         nickname ? `${nickname} (${active.data[chat_id]?.[user_id]?.name})` : `${active.data[chat_id]?.[user_id]?.name}`
     }
     
