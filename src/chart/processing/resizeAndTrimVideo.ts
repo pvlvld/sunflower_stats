@@ -3,7 +3,7 @@ import cfg from "../../config.js";
 import fs from "node:fs";
 import path from "node:path";
 
-function resizeVideo(id: number): Promise<void> {
+function resizeAndTrimVideo(id: number): Promise<void> {
     return new Promise((resolve, reject) => {
         const inputPath = path.join(cfg.PATHS.BASE_BG_PATH, `${id}.mp4`);
         const tempPath = path.join(cfg.PATHS.BASE_BG_PATH, `${id}_resized.mp4`);
@@ -23,7 +23,8 @@ function resizeVideo(id: number): Promise<void> {
                 "-crf 20",
                 "-movflags +faststart",
             ])
-            .on("start", (cmdline) => cfg.DEBUG && console.log("resizeVideo Ffmpeg cmd:\n", cmdline))
+            .duration(10)
+            .on("start", (cmdline) => cfg.DEBUG && console.log("resizeAndTrimVideo Ffmpeg cmd:\n", cmdline))
             .on("end", () => {
                 fs.rename(tempPath, outputPath, (err) => {
                     if (err) return reject(err);
@@ -39,4 +40,4 @@ function resizeVideo(id: number): Promise<void> {
     });
 }
 
-export { resizeVideo };
+export { resizeAndTrimVideo };
