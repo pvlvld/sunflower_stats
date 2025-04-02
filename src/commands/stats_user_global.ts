@@ -5,6 +5,7 @@ import { getStatsChartFromData } from "../chart/getStatsChart.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import cacheManager from "../cache/cache.js";
 import Escape from "../utils/escape.js";
+import { Message } from "@grammyjs/types";
 
 async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private">) {
     const chart_cached = cacheManager.ChartCache_User.get(ctx.me.id, ctx.from.id);
@@ -12,7 +13,7 @@ async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private"
 
     let top_data: Awaited<ReturnType<typeof Database.stats.user.topChats>> = [];
     let chart_data: Awaited<ReturnType<typeof Database.stats.user.topChatsChart>> = [];
-    let chart: InputFile | undefined;
+    let chart: Awaited<ReturnType<typeof getStatsChartFromData>>;
 
     if (top_cached == undefined || chart_cached.status !== "ok") {
         [top_data, chart_data] = await Promise.all([
@@ -28,14 +29,29 @@ async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private"
         return await ctx.reply(cacheManager.TextCache.get(`${ctx.from.id}_top_chats`)!).catch(console.error);
     }
 
-    const msg = await ctx
-        .replyWithPhoto(chart_cached.status === "ok" ? chart_cached.file_id : chart!, {
-            caption: cacheManager.TextCache.get(`${ctx.from.id}_top_chats`),
-        })
-        .catch(console.error);
+    let msg: Message.PhotoMessage | Message.AnimationMessage | void;
+
+    if (chart_cached.chartFormat === "video" || chart?.chartFormat === "video") {
+        msg = await ctx
+            .replyWithAnimation(chart?.chart || chart_cached.file_id, {
+                caption: cacheManager.TextCache.get(`${ctx.from.id}_top_chats`),
+            })
+            .catch(console.error);
+    } else {
+        msg = await ctx
+            .replyWithPhoto(chart?.chart || chart_cached.file_id, {
+                caption: cacheManager.TextCache.get(`${ctx.from.id}_top_chats`),
+            })
+            .catch(console.error);
+    }
 
     if (msg) {
-        cacheManager.ChartCache_User.set(ctx.me.id, ctx.from.id, msg.photo[msg.photo.length - 1].file_id);
+        cacheManager.ChartCache_User.set(
+            ctx.me.id,
+            ctx.from.id,
+            "photo" in msg ? msg.photo[msg.photo.length - 1].file_id : msg.animation.file_id,
+            "photo" in msg ? "image" : "video"
+        );
     }
 }
 

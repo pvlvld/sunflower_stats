@@ -248,7 +248,7 @@ async function getStatsChartFromData(
     user_id: number,
     type: IChartType,
     data: { x: string; y: number }[]
-): Promise<InputFile | undefined> {
+): Promise<{ chart: InputFile; chartFormat: IChartFormat } | undefined> {
     void data.pop();
     // remove 2023-12-31 data point, it's compiled stats for whole 2023 so it breaks chart
     if (data.length !== 0 && data[0].x === "2023-12-31") {
@@ -264,7 +264,24 @@ async function getStatsChartFromData(
     configuration.data.datasets[0].data = data as any;
     configuration.data.labels = data.map((v) => v["x"]);
 
-    return new InputFile(await renderToBuffer(configuration), "chart.jpg");
+    if (configuration.custom.transparent) {
+        return {
+            chart: new InputFile(
+                await overlayChartOnVideo(
+                    await renderToBuffer(configuration),
+                    type === "chat" ? chat_id : user_id,
+                    chat_id
+                ),
+                "chart.mp4"
+            ),
+            chartFormat: "video",
+        };
+    } else {
+        return {
+            chart: new InputFile(await renderToBuffer(configuration), "chart.jpg"),
+            chartFormat: "image",
+        };
+    }
 }
 
 function renderToBuffer(configuration: ChartConfiguration) {
