@@ -68,7 +68,7 @@ async function bot_stats_cmd(ctx: IContext) {
         return;
     }
     if (chart) {
-        await ctx.replyWithPhoto(chart, {
+        await ctx.replyWithPhoto(chart.chart, {
             caption: statsMsg,
         });
     } else {
