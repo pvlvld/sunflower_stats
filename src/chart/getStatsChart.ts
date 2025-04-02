@@ -230,13 +230,13 @@ function prepareBumpChartData(sqlResults: SQLQueryResult[]): BumpChartSeries[] {
 async function getChartTopChatsMonthly(data: any) {
     const config = getChartConfig.topChatsMonthly(10);
     config.data.datasets = prepareBumpChartData(data) as any; // FIX:
-    config.plugins = [
+    config.plugins!.push(
         createProfileImagesPlugin(
             await preloadChatImages([
                 ...new Set(config.data.datasets.map((dataset: any) => dataset.chat_id)),
             ] as number[])
-        ),
-    ];
+        )
+    );
     return new InputFile(await renderToBufferX2(config), "chart.jpg");
 }
 
