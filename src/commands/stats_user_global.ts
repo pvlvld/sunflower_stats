@@ -6,6 +6,7 @@ import getUserNameLink from "../utils/getUserNameLink.js";
 import cacheManager from "../cache/cache.js";
 import Escape from "../utils/escape.js";
 import { Message } from "@grammyjs/types";
+import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
 
 async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private">) {
     const chart_cached = cacheManager.ChartCache_User.get(ctx.me.id, ctx.from.id);
@@ -59,7 +60,7 @@ function generateUserGlobalTop(
     ctx: ChatTypeContext<ICommandContext, "private">,
     data: Awaited<ReturnType<typeof Database.stats.user.topChats>>
 ) {
-    let text = `Особистий топ чатів ${getUserNameLink.html(
+    let text = `Особистий топ чатів${getPremiumMarkSpaced(ctx.from.id)}${getUserNameLink.html(
         ctx.from.first_name,
         ctx.from.username,
         ctx.from.id
