@@ -72,9 +72,9 @@ const donloadBgErrors = {
 };
 
 async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptionContext, type: "user" | "chat") {
-    let bgType: "photo" | "animation" = "photo";
+    let bgFormat: "photo" | "animation" = "photo";
     if (ctx.msg.animation) {
-        bgType = "animation";
+        bgFormat = "animation";
     }
 
     let file: Animation | PhotoSize | (PhotoSize & string) =
@@ -84,7 +84,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
     let target_id = -1;
 
     target_id = type === "chat" ? ctx.chat.id : ctx.from.id;
-    path += `${target_id}.${bgType === "photo" ? "jpg" : "mp4"}`;
+    path += `${target_id}.${bgFormat === "photo" ? "jpg" : "mp4"}`;
 
     const isDownloaded = await (await ctx.api.getFile(file.file_id).catch((e) => {}))?.download(path);
 
@@ -93,7 +93,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
     }
 
     if (file.width !== cfg.CHART.width || file.height !== cfg.CHART.height) {
-        if (bgType === "animation") {
+        if (bgFormat === "animation") {
             try {
                 await resizeAndTrimVideo(target_id);
             } catch (e) {
@@ -118,21 +118,37 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
         }
     }
 
-    ctx.api
-        .sendPhoto(cfg.ANALYTICS_CHAT, new InputFile(path, "chart.jpg"), {
-            caption: `${getUserNameLink.html(
-                ctx.from.first_name,
-                ctx.from.username,
-                target_id
-            )} set new <b>${type}</b> chart bg.\nGroup: ${Escape.html(ctx.chat.title)}  | @${ctx.chat.username} | ${
-                ctx.chat.id
-            }\nUser id: ${target_id}\nTarget id: ${target_id}`,
-            disable_notification: true,
-            message_thread_id: 3992,
-            reply_markup: personalChartBgControl_menu,
-        })
-        .catch((e) => {});
-
+    if (bgFormat === "photo") {
+        ctx.api
+            .sendPhoto(cfg.ANALYTICS_CHAT, new InputFile(path, "chart.jpg"), {
+                caption: `${getUserNameLink.html(
+                    ctx.from.first_name,
+                    ctx.from.username,
+                    target_id
+                )} set new <b>${type}</b> chart bg.\nGroup: ${Escape.html(ctx.chat.title)}  | @${ctx.chat.username} | ${
+                    ctx.chat.id
+                }\nUser id: ${target_id}\nTarget id: ${target_id}\nFormat: ${bgFormat}`,
+                disable_notification: true,
+                message_thread_id: 3992,
+                reply_markup: personalChartBgControl_menu,
+            })
+            .catch((e) => {});
+    } else {
+        ctx.api
+            .sendAnimation(cfg.ANALYTICS_CHAT, new InputFile(path, "chart.mp4"), {
+                caption: `${getUserNameLink.html(
+                    ctx.from.first_name,
+                    ctx.from.username,
+                    target_id
+                )} set new <b>${type}</b> chart bg.\nGroup: ${Escape.html(ctx.chat.title)}  | @${ctx.chat.username} | ${
+                    ctx.chat.id
+                }\nUser id: ${target_id}\nTarget id: ${target_id}\nFormat: ${bgFormat}`,
+                disable_notification: true,
+                message_thread_id: 3992,
+                reply_markup: personalChartBgControl_menu,
+            })
+            .catch((e) => {});
+    }
     return { status: true, message: "💅🏻 Фон успішно оновлено!" };
 }
 
