@@ -87,7 +87,10 @@ export async function getStatsChart(
 
     if (configuration.custom.transparent) {
         return {
-            chart: new InputFile(await overlayChartOnVideo(await renderToBuffer(configuration), targetId), "chart.mp4"),
+            chart: new InputFile(
+                await overlayChartOnVideo(await renderToBuffer(configuration), targetId, chat_id),
+                "chart.mp4"
+            ),
             chartFormat: "video",
         };
     } else {

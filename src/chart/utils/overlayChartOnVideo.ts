@@ -1,14 +1,20 @@
 import Ffmpeg from "fluent-ffmpeg";
 import cfg from "../../config.js";
 import { Readable, Stream } from "stream";
+import { isPremium } from "../../utils/isPremium.js";
+import { getCachedOrDBChatSettings } from "../../utils/chatSettingsUtils.js";
 
-async function overlayChartOnVideo(chartBuffer: Buffer, id: number): Promise<Buffer> {
-    return new Promise((resolve, reject) => {
+async function overlayChartOnVideo(chartBuffer: Buffer, target_id: number, chat_id: number): Promise<Buffer> {
+    return new Promise(async (resolve, reject) => {
         const imageStream = Readable.from(chartBuffer);
         const passthroughStream = new Stream.PassThrough();
         const outputChunks: Buffer[] = [];
 
-        Ffmpeg(`${cfg.PATHS.BASE_BG_PATH}/${id}.mp4`)
+        if ((await isPremium(chat_id)) && (await getCachedOrDBChatSettings(chat_id)).usechatbgforall) {
+            target_id = chat_id;
+        }
+
+        Ffmpeg(`${cfg.PATHS.BASE_BG_PATH}/${target_id}.mp4`)
             .input(imageStream)
             .complexFilter([`overlay=W-w-0:H-h-0`])
             .format("mp4")
