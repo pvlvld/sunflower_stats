@@ -1,12 +1,11 @@
 import { getChatUsernameOrInvite } from "../utils/getChatUsernameOrInviteLink.js";
 import type { IContext } from "../types/context.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
+import Escape from "../utils/escape.js";
 
 async function getChatInvite_cmd(ctx: IContext) {
     const chat_id = Number(parseCmdArgs(ctx.msg?.text || "")?.[0]);
-    if (!chat_id) {
-        return;
-    }
+    if (!chat_id) return;
 
     let reply = "";
     try {
@@ -15,7 +14,7 @@ async function getChatInvite_cmd(ctx: IContext) {
             await ctx.reply("Не вдалось отримати юзернейм або запрошення.");
             return;
         }
-        reply += `${chat_info.rawChatInfo.title}\n${
+        reply += `${Escape.html(chat_info.rawChatInfo.title || "unknown")}\n${
             chat_info.type === "username" ? chat_info.username : chat_info.invite
         }`;
         await ctx.reply(reply, {

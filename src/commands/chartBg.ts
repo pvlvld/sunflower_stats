@@ -13,6 +13,7 @@ import cfg from "../config.js";
 import { isPremium } from "../utils/isPremium.js";
 import { Animation, PhotoSize } from "@grammyjs/types";
 import { resizeAndTrimVideo } from "../chart/processing/resizeAndTrimVideo.js";
+import Escape from "../utils/escape.js";
 
 const baseBgPath = "./data/chartBg/";
 
@@ -20,7 +21,7 @@ async function setChartBg(
     ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext | IGroupAnimationCaptionContext,
     type: "chat" | "user"
 ) {
-    if (!ctx.has(":photo") && !ctx.has(":animation")) {
+    if (!ctx.has([":photo", "edited_message:photo"]) && !ctx.has([":animation", "edited_message:animation"])) {
         return void ctx.reply("Щоб змінити фон, наділшіть зображення чи гіф з цією команою в описі.");
     }
     let target_id = -1;
@@ -52,7 +53,8 @@ async function setChartBg(
         target_id = ctx.from.id;
         cacheManager.ChartCache_User.removeUser(target_id);
     }
-
+    // TODO:
+    //@ts-expect-error
     const donwloadRes = await downloadBg(ctx, type);
 
     void (await ctx.reply(donwloadRes.message).catch((e) => {}));
@@ -122,7 +124,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
                 ctx.from.first_name,
                 ctx.from.username,
                 target_id
-            )} set new <b>${type}</b> chart bg.\nGroup: ${ctx.chat.title}  | @${ctx.chat.username} | ${
+            )} set new <b>${type}</b> chart bg.\nGroup: ${Escape.html(ctx.chat.title)}  | @${ctx.chat.username} | ${
                 ctx.chat.id
             }\nUser id: ${target_id}\nTarget id: ${target_id}`,
             disable_notification: true,

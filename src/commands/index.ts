@@ -160,6 +160,20 @@ function regCommands() {
     group.hears(/^!рест/, removeFromChatCleanup);
 
     // CHARTS
+    group.on("edited_message:caption", async (ctx, next) => {
+        // TODO: fix types
+        if (["!стата фон я", "стата фон я", "/setmybg"].includes(ctx.msg.caption)) {
+            // @ts-expect-error
+            setChartBg(ctx, "user");
+            console.log(ctx);
+        } else if (["!стата фон чат", "стата фон чат", "/setchatbg"].includes(ctx.msg.caption)) {
+            if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
+                // @ts-expect-error
+                setChartBg(ctx, "chat");
+            }
+        }
+        return await next();
+    });
 
     group.hears(/(!?)стата фон я/i, (ctx) => {
         setChartBg(ctx, "user");

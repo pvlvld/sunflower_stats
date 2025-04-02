@@ -4,7 +4,6 @@ import { IGroupHearsContext } from "../../types/context.js";
 import { Database } from "../../db/db.js";
 import { GrammyError } from "grammy";
 import { chatMigrationHandler } from "../../handlers/chatMigrationHandler.js";
-import Escape from "../../utils/escape.js";
 
 async function updateDbChatsInfo(ctx: IGroupHearsContext) {
     // const chats = Object.keys(active.data);
@@ -41,7 +40,7 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
             VALUES ($1, $2)
             ON CONFLICT (chat_id)
             DO UPDATE SET title = EXCLUDED.title`,
-            [chatInfo.id, Escape.html(chatInfo.title || "")]
+            [chatInfo.id, chatInfo.title || ""]
         );
 
         if (count % 100 !== 0) continue;
