@@ -12,7 +12,7 @@ import { InputFile } from "grammy";
 import cfg from "../config.js";
 import { isPremium } from "../utils/isPremium.js";
 import { Animation, PhotoSize } from "@grammyjs/types";
-import { resizeVideo } from "../chart/processing/resizeVideo.js";
+import { resizeAndTrimVideo } from "../chart/processing/resizeAndTrimVideo.js";
 
 const baseBgPath = "./data/chartBg/";
 
@@ -93,7 +93,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
     if (file.width !== cfg.CHART.width || file.height !== cfg.CHART.height) {
         if (bgType === "animation") {
             try {
-                await resizeVideo(target_id);
+                await resizeAndTrimVideo(target_id);
             } catch (e) {
                 if (cfg.DEBUG) {
                     console.error(e);
