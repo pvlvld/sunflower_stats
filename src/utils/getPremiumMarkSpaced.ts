@@ -1,7 +1,7 @@
-import cacheManager from "../cache/cache.js";
+import { isPremium } from "./isPremium.js";
 
-function getPremiumMarkSpaced(id: number) {
-    return cacheManager.PremiumStatusCache.get(id).status ? " 👑 " : " ";
+async function getPremiumMarkSpaced(id: number) {
+    return (await isPremium(id)) ? " 👑 " : " ";
 }
 
 export { getPremiumMarkSpaced };

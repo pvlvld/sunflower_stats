@@ -40,7 +40,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
         }
     }
 
-    const statsMessage = getUserStatsMessage(chat_id, user_id, user_stats);
+    const statsMessage = await getUserStatsMessage(chat_id, user_id, user_stats);
 
     if (!chatSettings.charts) {
         return void (await sendSelfdestructMessage(

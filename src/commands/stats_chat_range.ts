@@ -31,7 +31,7 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
             {
                 isChart: false,
                 text:
-                    `📊 Статистика${getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}» за ${
+                    `📊 Статистика${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}» за ${
                         dateRange[0]
                     } - ${dateRange[1]}:\n\n` +
                     getStatsChatRating(
@@ -53,7 +53,9 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
         {
             isChart: false,
             text:
-                `📊 Статистика${getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}» за ${dateRange[0]}:\n\n` +
+                `📊 Статистика${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}» за ${
+                    dateRange[0]
+                }:\n\n` +
                 getStatsChatRating(
                     await DBStats.chat.date(chat_id, dateRange[0]),
                     chat_id,

@@ -64,7 +64,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         const cachedChart = cacheManager.ChartCache_Chat.get(chat_id, dateRange as IAllowedChartStatsRanges);
 
         if (cachedChart.status === "ok") {
-            const statsMessage = getStatsMessage(
+            const statsMessage = await getStatsMessage(
                 chat_id,
                 dateRange,
                 rawCmdDateRange,
@@ -103,7 +103,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
                 );
             }
         } else if (cachedChart.status === "unrendered") {
-            const statsMessage = getStatsMessage(
+            const statsMessage = await getStatsMessage(
                 chat_id,
                 dateRange,
                 rawCmdDateRange,
@@ -145,7 +145,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     }
 
     if (reply === undefined) {
-        const statsMessage = getStatsMessage(
+        const statsMessage = await getStatsMessage(
             chat_id,
             dateRange,
             rawCmdDateRange,
@@ -187,7 +187,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     }
 }
 
-function getStatsMessage(
+async function getStatsMessage(
     chat_id: number,
     dateRange: IDateRange,
     rawCmdDateRange: keyof typeof cmdToDateRangeMap,
@@ -198,7 +198,7 @@ function getStatsMessage(
     title: string
 ) {
     return (
-        `📊 Статистика${getPremiumMarkSpaced(chat_id)}«${Escape.html(title)}» за ${
+        `📊 Статистика${await getPremiumMarkSpaced(chat_id)}«${Escape.html(title)}» за ${
             dateRange === "all" ? "весь час" : rawCmdDateRange
         }:\n\n` + getStatsChatRating(stats, chat_id, settings, page, dateRange, chart ? "caption" : "text")
     );

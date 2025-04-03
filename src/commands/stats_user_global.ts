@@ -22,7 +22,7 @@ async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private"
             Database.stats.user.topChatsChart(ctx.from.id),
         ]);
 
-        cacheManager.TextCache.set(`${ctx.from.id}_top_chats`, generateUserGlobalTop(ctx, top_data));
+        cacheManager.TextCache.set(`${ctx.from.id}_top_chats`, await generateUserGlobalTop(ctx, top_data));
         chart = await getStatsChartFromData(ctx.chat.id, ctx.from.id, "user", chart_data);
     }
 
@@ -56,11 +56,11 @@ async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private"
     }
 }
 
-function generateUserGlobalTop(
+async function generateUserGlobalTop(
     ctx: ChatTypeContext<ICommandContext, "private">,
     data: Awaited<ReturnType<typeof Database.stats.user.topChats>>
 ) {
-    let text = `Особистий топ чатів${getPremiumMarkSpaced(ctx.from.id)}${getUserNameLink.html(
+    let text = `Особистий топ чатів${await getPremiumMarkSpaced(ctx.from.id)}${getUserNameLink.html(
         ctx.from.first_name,
         ctx.from.username,
         ctx.from.id

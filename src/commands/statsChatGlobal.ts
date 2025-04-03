@@ -51,13 +51,13 @@ async function _statsChatGlobal(ctx: ICommandContext) {
     }
 }
 
-function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.topChatsWeeklyRating>>) {
+async function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.topChatsWeeklyRating>>) {
     let message = "Топ чатів за останні сім днів:\n\n<blockquote>";
     let chat: (typeof data)[0];
 
     for (let i = 0; i < data.length; i++) {
         chat = data[i];
-        message += `${1 + i}.${getPremiumMarkSpaced(chat.chat_id)}«${Escape.html(
+        message += `${1 + i}.${await getPremiumMarkSpaced(chat.chat_id)}«${Escape.html(
             chat.title
         )}» - ${chat.total_messages.toLocaleString("fr-FR")}\n`;
     }
@@ -78,7 +78,7 @@ async function getChartText(): Promise<string> {
     const cached = cacheManager.TextCache.get("statsChatGlobalWeekly");
 
     if (cached !== undefined) return cached;
-    return generateTopMessage(await Database.stats.bot.topChatsWeeklyRating());
+    return await generateTopMessage(await Database.stats.bot.topChatsWeeklyRating());
 }
 
 export { statsChatGlobal };
