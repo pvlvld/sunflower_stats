@@ -81,13 +81,13 @@ const donloadBgErrors = {
 
 async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptionContext, type: "user" | "chat") {
     let bgFormat: "photo" | "animation" = "photo";
-    if (ctx.msg.animation) {
+    if (ctx.msg.animation || ctx.msg.reply_to_message?.animation) {
         bgFormat = "animation";
     }
 
     let file = (ctx.msg.animation ||
         ctx.msg.photo?.[ctx.msg.photo?.length - 1] ||
-        ctx.msg.reply_to_message?.photo![ctx.msg.reply_to_message.photo!.length - 1] ||
+        (ctx.msg.reply_to_message?.photo && ctx.msg.reply_to_message.photo[ctx.msg.reply_to_message.photo.length - 1]) ||
         ctx.msg.reply_to_message?.animation) as Animation | PhotoSize | (PhotoSize & string);
 
     let path = baseBgPath;
@@ -143,6 +143,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
                 reply_markup: personalChartBgControl_menu,
             })
             .catch((e) => {});
+        unlink(`${baseBgPath}/${target_id}.mp4`, (e) => {});
     } else {
         ctx.api
             .sendAnimation(cfg.ANALYTICS_CHAT, new InputFile(path, "chart.mp4"), {
