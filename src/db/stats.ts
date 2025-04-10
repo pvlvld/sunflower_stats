@@ -78,6 +78,7 @@ const queries = Object.freeze({
                                     WHERE
                                         s.date >= CURRENT_DATE - INTERVAL '7 days'
                                         AND s.date < CURRENT_DATE
+                                        AND c.title IS NOT NULL
                                     GROUP BY
                                         s.chat_id, c.title
                                     ORDER BY
