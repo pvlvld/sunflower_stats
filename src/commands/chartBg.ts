@@ -21,7 +21,12 @@ async function setChartBg(
     ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext | IGroupAnimationCaptionContext,
     type: "chat" | "user"
 ) {
-    if (!ctx.has([":photo", "edited_message:photo"]) && !ctx.has([":animation", "edited_message:animation"])) {
+    if (
+        !ctx.has([":photo", "edited_message:photo"]) &&
+        !ctx.has([":animation", "edited_message:animation"]) &&
+        !ctx.msg.reply_to_message?.photo &&
+        !ctx.msg.reply_to_message?.animation
+    ) {
         return void ctx.reply("Щоб змінити фон, наділшіть зображення чи гіф з цією команою в описі.");
     }
     let target_id = -1;
@@ -42,7 +47,10 @@ async function setChartBg(
             .catch((e) => {}));
     }
 
-    if (ctx.msg.animation && !((await isPremium(target_id)) || cfg.ADMINS.includes(ctx.from.id))) {
+    if (
+        (ctx.msg.animation || ctx.msg.reply_to_message?.animation) &&
+        !((await isPremium(target_id)) || cfg.ADMINS.includes(ctx.from.id))
+    ) {
         return void (await ctx.reply("Анімовані фони доступні лише донатерам /donate").catch((e) => {}));
     }
     // TODO:
@@ -77,8 +85,10 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
         bgFormat = "animation";
     }
 
-    let file: Animation | PhotoSize | (PhotoSize & string) =
-        ctx.msg.animation || ctx.msg.photo![ctx.msg.photo!.length - 1];
+    let file = (ctx.msg.animation ||
+        ctx.msg.photo?.[ctx.msg.photo?.length - 1] ||
+        ctx.msg.reply_to_message?.photo![ctx.msg.reply_to_message.photo!.length - 1] ||
+        ctx.msg.reply_to_message?.animation) as Animation | PhotoSize | (PhotoSize & string);
 
     let path = baseBgPath;
     let target_id = -1;
