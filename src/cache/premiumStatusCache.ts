@@ -1,4 +1,4 @@
-import NodeCache from "node-cache";
+import NodeCache from "@cacheable/node-cache";
 import { secondsUntilMidnight } from "../utils/secondsUntilMidnight.js";
 import { getOldDbPool } from "../db/oldDb.js";
 import { FieldPacket } from "mysql2";
@@ -55,13 +55,13 @@ class PremiumStatusCache {
     }
 
     public get size() {
-        return this._premiumStatusCache.stats.keys;
+        return this._premiumStatusCache.getStats().keys;
     }
 
     public async seed_chats() {
         const pool = await getOldDbPool();
         let queryResult: [IQueryResult, FieldPacket[]];
-        //@ts-expect-error
+        //@ts-expect-error TODO: fix types
         queryResult = await pool.query<IQueryResult>(
             "SELECT chat_id, state as isPremium FROM chats_premium WHERE state = 1;"
         );

@@ -5,7 +5,7 @@ import { ChartCache_User } from "./chartCache_User.js";
 import { ChartCache_Chat } from "./chartCache_Chat.js";
 import { ChatAdminsCache } from "./chatAdminsCache.js";
 import { LRUCache } from "lru-cache";
-import NodeCache from "node-cache";
+import NodeCache from "@cacheable/node-cache";
 import { TextCache } from "./textCache.js";
 import { ChartCache_Global } from "./chartCache_Global.js";
 

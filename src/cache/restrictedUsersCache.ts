@@ -1,4 +1,4 @@
-import NodeCache from "node-cache";
+import NodeCache from "@cacheable/node-cache";
 
 type IReason = "chartBg" | "horny" | "uk";
 
