@@ -107,13 +107,8 @@ class ChartCache_User {
         this._userChats.clear();
     }
 
-    public get size(): number {
-        let totalSize = 0;
-        for (const chatCache of this._chartCache.values()) {
-            totalSize += chatCache.size;
-        }
-
-        return totalSize;
+    public get size() {
+        return this._chartCache.size;
     }
 }
 
