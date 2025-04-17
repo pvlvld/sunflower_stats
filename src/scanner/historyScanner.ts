@@ -21,12 +21,7 @@ class HistoryScanner extends MTProtoClient {
 
     public async scanChat(identifier: string | number, chat_id: number) {
         if (this.isQueued(chat_id)) {
-            return new ScanReport(
-                identifier,
-                false,
-                0,
-                `Чат ${chat_id} / ${identifier} вже в черзі на сканування.`
-            );
+            return new ScanReport(identifier, false, 0, `Чат ${chat_id} / ${identifier} вже в черзі на сканування.`);
         }
 
         const scanTask = async () => {
@@ -96,24 +91,14 @@ class HistoryScanner extends MTProtoClient {
         return scanReport;
     }
 
-    private async _scanHistory(
-        identifier: number | string,
-        chat_id: number,
-        endDate: Date
-    ): Promise<ScanReport> {
+    private async _scanHistory(identifier: number | string, chat_id: number, endDate: Date): Promise<ScanReport> {
         const stats: IStats = new Map<number, number>();
         let iterator = this._client.iterHistory(identifier, { reverse: true });
         let totalCount = 0;
         const firstMessageDate = await this._getFirstMessageDate(identifier);
 
         if (firstMessageDate === undefined) {
-            return createReportAndLeave(
-                chat_id,
-                false,
-                0,
-                "Не вдалося отримати історію чату.",
-                this._client
-            );
+            return createReportAndLeave(chat_id, false, 0, "Не вдалося отримати історію чату.", this._client);
         }
 
         if (formattedDate.dateToYYYYMMDD(endDate) === "2023-12-31") {
@@ -178,9 +163,7 @@ class HistoryScanner extends MTProtoClient {
                 break main_loop;
             } catch (error: any) {
                 if ("seconds" in error) {
-                    console.info(
-                        `HistoryScanner: Sleeping for ${error.seconds} seconds. Target: ${identifier}`
-                    );
+                    console.info(`HistoryScanner: Sleeping for ${error.seconds} seconds. Target: ${identifier}`);
                     await new Promise((resolve) => setTimeout(resolve, error.seconds * 1000));
                     iterator = this._client.iterHistory(identifier, {
                         reverse: true,
@@ -210,9 +193,8 @@ class HistoryScanner extends MTProtoClient {
     }
 
     private async _getFirstMessageDate(identifier: string | number) {
-        const date = (
-            await this._client.getHistory(identifier, { reverse: true, limit: 1 }).catch((e) => {})
-        )?.[0]?.date;
+        const date = (await this._client.getHistory(identifier, { reverse: true, limit: 1 }).catch((e) => {}))?.[0]
+            ?.date;
         console.info(`HistoryScanner: _getFirstMessageDate: ${date}, ${identifier}`);
         return date;
     }
@@ -235,10 +217,7 @@ class HistoryScanner extends MTProtoClient {
             string_date = formattedDate.dateToYYYYMMDD(date);
 
             // Update first seen date
-            if (
-                active.data[chat_id]?.[id] &&
-                moment(active.data[chat_id][id].active_first).diff(string_date) > 0
-            ) {
+            if (active.data[chat_id]?.[id] && moment(active.data[chat_id][id].active_first).diff(string_date) > 0) {
                 active.data[chat_id][id].active_first = string_date;
             }
 
