@@ -12,9 +12,9 @@ import cfg from "../config.js";
 //@ts-expect-error
 import Big from "big-js";
 import { chatStatsPagination_menu } from "../ui/menus/statsPagination.js";
-import { active } from "../data/active.js";
 import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
 import Escape from "../utils/escape.js";
+import { active } from "../redis/active.js";
 
 const cmdToDateRangeMap = {
     день: "today",
@@ -59,7 +59,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
             caption: `👀 Схоже, що повідомлень за ${rawCmdDateRange} ще немає.`,
         }));
     }
-    const isPagination = isPaginationNeeded(chat_id, stats, chatSettings);
+    const isPagination = await isPaginationNeeded(chat_id, stats, chatSettings);
     if (allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges) && chatSettings.charts) {
         const cachedChart = cacheManager.ChartCache_Chat.get(chat_id, dateRange as IAllowedChartStatsRanges);
 
@@ -204,9 +204,9 @@ async function getStatsMessage(
     );
 }
 
-function getStatsUsersCount(chat_id: number, stats: IDBChatUserStatsAndTotal[]) {
+async function getStatsUsersCount(chat_id: number, stats: IDBChatUserStatsAndTotal[]) {
     let user: IDBChatUserStatsAndTotal;
-    let activeData = active.data[chat_id];
+    let activeData = await active.getChatUsers(chat_id);
     let counter = 0;
     for (user of stats) {
         if (activeData?.[user.user_id]) {
@@ -216,8 +216,8 @@ function getStatsUsersCount(chat_id: number, stats: IDBChatUserStatsAndTotal[]) 
     return counter;
 }
 
-function isPaginationNeeded(chat_id: number, stats: IDBChatUserStatsAndTotal[], chatSettings: IChatSettings) {
-    const statsUsersCount = getStatsUsersCount(chat_id, stats);
+async function isPaginationNeeded(chat_id: number, stats: IDBChatUserStatsAndTotal[], chatSettings: IChatSettings) {
+    const statsUsersCount = await getStatsUsersCount(chat_id, stats);
     return chatSettings.charts ? statsUsersCount > 25 : statsUsersCount > 50;
 }
 
