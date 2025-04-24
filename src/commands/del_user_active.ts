@@ -1,33 +1,44 @@
 import type { IGroupHearsContext } from "../types/context.js";
 import getUserId from "../utils/getUserId.js";
-import { active } from "../data/active.js";
 import Escape from "../utils/escape.js";
 import cfg from "../config.js";
+import { active } from "../redis/active.js";
 
 async function del_user_active(ctx: IGroupHearsContext) {
+    const userId = await determineTargetUserId(ctx);
+    const user = await active.getUser(ctx.chat.id, userId);
+
+    if (!user) {
+        await ctx.reply(ctx.t("user-not-found")).catch((e) => {});
+        return;
+    }
+
+    const res = await active.removeUser(ctx.chat.id, userId);
+
+    if (!res) {
+        await ctx.reply(ctx.t("user-not-found")).catch((e) => {});
+        return;
+    }
+
+    await ctx
+        .reply(ctx.t("active-del-success", { name: Escape.html(user?.name) }), {
+            parse_mode: "HTML",
+        })
+        .catch((e) => {});
+
+    ctx.deleteMessage().catch((e) => {});
+}
+
+async function determineTargetUserId(ctx: IGroupHearsContext): Promise<number> {
     const chatMember = await ctx.getChatMember(ctx.from?.id || -1).catch(() => {});
     const isCanDelOthers = chatMember?.status === "creator" || cfg.ADMINS.includes(ctx.from?.id || -1);
     const rawTarget = (ctx.msg.text ?? ctx.msg.caption).split(" ").at(-1)!;
 
-    const chat_id = ctx.chat.id;
-    const userId = isCanDelOthers
+    return isCanDelOthers
         ? ctx.msg.reply_to_message?.from?.id ||
-          (["вступ", "!ссприховати"].includes(rawTarget) ? undefined : getUserId(rawTarget, chat_id)) ||
-          ctx.from.id
+              (["вступ", "!ссприховати"].includes(rawTarget) ? undefined : getUserId(rawTarget, ctx.chat.id)) ||
+              ctx.from.id
         : ctx.from.id;
-
-    if (active.data[chat_id]?.[userId]) {
-        const targetName = active.data[chat_id][userId].name as string;
-        delete active.data[chat_id][userId];
-        await ctx
-            .reply(ctx.t("active-del-success", { name: Escape.html(targetName) }), {
-                parse_mode: "HTML",
-            })
-            .catch((e) => console.error(e));
-    } else {
-        await ctx.reply(ctx.t("user-not-found")).catch((e) => {});
-    }
-    ctx.deleteMessage().catch(() => {});
 }
 
 export default del_user_active;
