@@ -50,8 +50,6 @@ async function main() {
 
     const allowed_updates = ["message", "chat_member", "my_chat_member", "callback_query", "edited_message"] as const;
 
-    active.load();
-
     bot.use(ActiveCollectorWrapper());
     bot.use(StatsCollectorWrapper());
     regHandlers();
@@ -131,7 +129,6 @@ async function main() {
 
         await DBPoolManager.shutdown().catch(console.error);
 
-        await active.save().catch(console.error);
         await botStatsManager.sendToAnalyticsChat().catch(console.error);
 
         console.log("Done.");
