@@ -41,8 +41,8 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
     const start = performance.now();
     const chats = await active.getAllChatIds();
     let users: Awaited<ReturnType<typeof active.getChatUsers>> = {};
-    chat_loop: for (const chat in chats) {
-        if (!chat.startsWith("-")) continue;
+    chat_loop: for (const chat of chats) {
+        if (chat > 0) continue;
 
         if (cacheManager.PremiumStatusCache.isCachedPremium(Number(chat))) {
             continue;
