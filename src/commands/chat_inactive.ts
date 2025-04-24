@@ -1,7 +1,7 @@
 import type { IGroupTextContext } from "../types/context.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
 
 const PAGE_LENGTH = 25;
 
@@ -12,38 +12,37 @@ async function chatInactive_cmd(ctx: IGroupTextContext) {
         return;
     }
 
-    await ctx.reply(getInactivePageMessage(ctx.chat.id, Math.abs(page)), {
+    await ctx.reply(await getInactivePageMessage(ctx.chat.id, Math.abs(page)), {
         link_preview_options: { is_disabled: true },
         disable_notification: true,
     });
 }
 
-function getInactivePageMessage(chat_id: number, page: number) {
-    const inactiveUsers = getInactivePage(chat_id, page);
+async function getInactivePageMessage(chat_id: number, page: number) {
+    const users = await active.getChatUsers(chat_id);
+    const inactiveUsers = getInactivePage(users, page);
     if (inactiveUsers.length === 0) return "Ця сторінка порожня.";
 
     return inactiveUsers
-        .map((user, i) => `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(chat_id, user)}`)
+        .map((target, i) => `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(chat_id, users, target)}`)
         .join("\n");
 }
 
-function genUserPageRecord(chat_id: number, user: string) {
+function genUserPageRecord(chat_id: number, users: Awaited<ReturnType<typeof active.getChatUsers>>, target: string) {
     return `<b>${getUserNameLink.html(
-        active.data[chat_id]?.[user]?.nickname || active.data[chat_id]?.[user]?.name || "невідомо",
-        active.data[chat_id]?.[user]?.username,
-        user
-    )}</b> — ${active.data[chat_id]?.[user]?.active_last || "невідомо"}`;
+        users[target]?.nickname || users[target]?.name || "невідомо",
+        users[target]?.username,
+        target
+    )}</b> — ${users[target]?.active_last || "невідомо"}`;
 }
 
-function getInactivePage(chat_id: number, page: number) {
-    return getSortedInactive(chat_id).slice(PAGE_LENGTH * (page - 1), PAGE_LENGTH * (page - 1) + PAGE_LENGTH);
+function getInactivePage(users: Awaited<ReturnType<typeof active.getChatUsers>>, page: number) {
+    return getSortedInactive(users).slice(PAGE_LENGTH * (page - 1), PAGE_LENGTH * (page - 1) + PAGE_LENGTH);
 }
 
-function getSortedInactive(chat_id: number) {
-    return Object.keys(active.data?.[chat_id] || {}).sort((u1, u2) => {
-        return (active.data?.[chat_id]?.[u1]?.active_last || 0) > (active.data?.[chat_id]?.[u2]?.active_last || 0)
-            ? 1
-            : -1;
+function getSortedInactive(users: Awaited<ReturnType<typeof active.getChatUsers>>) {
+    return Object.keys(users).sort((u1, u2) => {
+        return (users[u1]?.active_last || 0) > (users[u2]?.active_last || 0) ? 1 : -1;
     });
 }
 
