@@ -88,7 +88,7 @@ class ChatUserStore {
 
         if (!VALID_USER_KEYS.includes(key)) throw new Error(`Invalid user field: ${key}`);
 
-        if (value === null || value === undefined || value === "") {
+        if (value === null || value === undefined) {
             await this.redis.hset(userKey, key, "");
         } else {
             await this.redis.hset(userKey, key, value);
