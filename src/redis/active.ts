@@ -151,7 +151,7 @@ class ChatUserStore {
         await multi.exec();
     }
 
-    async removeUser(chatId: number, userId: number): Promise<void> {
+    async removeUser(chatId: number, userId: number): Promise<boolean> {
         const userKey = this.getUserKey(chatId, userId);
         const chatKey = this.getChatKey(chatId);
 
@@ -161,7 +161,7 @@ class ChatUserStore {
 
         multi.srem(chatKey, userId.toString());
 
-        await multi.exec();
+        return !!(await multi.exec())?.[1][1];
     }
 
     async getAllChatIds(): Promise<number[]> {
