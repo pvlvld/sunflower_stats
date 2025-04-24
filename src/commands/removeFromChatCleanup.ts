@@ -2,7 +2,7 @@ import type { IGroupTextContext } from "../types/context.js";
 import isChatOwner from "../utils/isChatOwner.js";
 import getUserId from "../utils/getUserId.js";
 import cacheManager from "../cache/cache.js";
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
 import { GrammyError } from "grammy";
 
 async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
@@ -24,13 +24,18 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
     if (targetId === -1) {
         if (targetMembers) {
             cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
+            await setRestStatus(ctx, targetId);
         }
         return void (await ctx.reply("❌ Користувача не знайдено").catch((e) => {}));
     }
 
     if (!targetMembers) {
         // Try to promote target as an empty admin with with "рест" role
-        switch (await setRestStatus(ctx, targetId)) {
+        const [setRestStatusResult, user] = await Promise.all([
+            await setRestStatus(ctx, targetId),
+            active.getUser(chat_id, targetId),
+        ]);
+        switch (setRestStatusResult) {
             case "not enough rights set admin":
                 return void (await ctx.reply(
                     `Бот не має дозволу призначати адміністраторів.\nВидайте дозвіл або скористайтесь командою під час чистки.`
@@ -38,11 +43,11 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
 
             case "not enough rights edit admin":
                 return void (await ctx.reply(
-                    `${active.data[chat_id]?.[targetId]?.name} адмін, він не може бути видалений під час чистки та не потребує ресту.`
+                    `${user?.name} адмін, він не може бути видалений під час чистки та не потребує ресту.`
                 ));
 
             case "success":
-                return void (await ctx.reply(`✅ ${active.data[chat_id]?.[targetId]?.name} помічено як рест.`));
+                return void (await ctx.reply(`✅ ${user?.name} помічено як рест.`));
 
             default:
                 console.error("Unexpected setRestStatus output!");
@@ -54,10 +59,9 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
     const startLength = targetMembers.length;
     targetMembers = targetMembers.filter((m) => m.user_id === targetId);
     if (targetMembers.length < startLength) {
+        const user = await active.getUser(chat_id, targetId);
         cacheManager.TTLCache.set(cacheKey, targetMembers, 5 * 60);
-        return void (await ctx
-            .reply(`✅ ${active.data[chat_id]?.[targetId]?.name} успішно виключено з чистки.`)
-            .catch((e) => {}));
+        return void (await ctx.reply(`✅ ${user?.name} успішно виключено з чистки.`).catch((e) => {}));
     }
 
     cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
