@@ -1,19 +1,13 @@
-import { active } from "../../data/active.js";
 import { autoRetry } from "@grammyjs/auto-retry";
 import cfg from "../../config.js";
 import { Database } from "../../db/db.js";
 import { extractAndMakeKeyboard } from "../../utils/extractAndMakeKeyboard.js";
 import moment from "moment";
 import { IGroupHearsContext } from "../../types/context.js";
-import {
-    IMedia,
-    IMediaMethodType,
-    IMessage,
-    MediaTypes,
-    sendMediaMessage,
-} from "../../utils/sendMediaMessage.js";
+import { IMessage, sendMediaMessage } from "../../utils/sendMediaMessage.js";
 import { getMessageMedia } from "../../utils/getMessageMedia.js";
 import cacheManager from "../../cache/cache.js";
+import { active } from "../../redis/active.js";
 
 async function broadcast_adv(ctx: IGroupHearsContext, test = true) {
     if (!cfg.ADMINS.includes(ctx.from.id)) {
@@ -45,27 +39,21 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
     cacheManager.PremiumStatusCache.seed_chats();
 
     const start = performance.now();
-
-    chat_loop: for (const chat in active.data) {
-        if (!chat.startsWith("-")) {
-            delete active.data[chat];
-            continue;
-        }
+    const chats = await active.getAllChatIds();
+    let users: Awaited<ReturnType<typeof active.getChatUsers>> = {};
+    chat_loop: for (const chat in chats) {
+        if (!chat.startsWith("-")) continue;
 
         if (cacheManager.PremiumStatusCache.isCachedPremium(Number(chat))) {
             continue;
         }
-
-        for (const user in active.data[chat]) {
-            if (moment().diff(moment(active.data[chat]![user]!.active_last), "days") < 4) {
+        users = await active.getChatUsers(Number(chat));
+        for (const user in users) {
+            if (moment().diff(moment(users[user].active_last), "days") < 4) {
                 // Skip if bot joined less than 14 days ago
                 const botJoinDate = await Database.stats.chat.firstRecordDate(Number(chat));
                 if (moment().diff(botJoinDate, "days") < 14) {
-                    console.log(
-                        "Adv broadcast: ",
-                        chat,
-                        "Skip, first message less than 14 days ago"
-                    );
+                    console.log("Adv broadcast: ", chat, "Skip, first message less than 14 days ago");
                     continue chat_loop;
                 }
                 totalAttempts++;
