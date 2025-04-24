@@ -9,6 +9,8 @@ interface User {
     username: string | null;
 }
 
+const VALID_USER_KEYS: (keyof User)[] = ["active_last", "nickname", "name", "username", "active_first"];
+
 class ChatUserStore {
     private redis: Redis.Redis;
 
@@ -79,6 +81,18 @@ class ChatUserStore {
         }
 
         await multi.exec();
+    }
+
+    async updateUserField(chatId: number, userId: number, key: keyof User, value: string | null): Promise<void> {
+        const userKey = this.getUserKey(chatId, userId);
+
+        if (!VALID_USER_KEYS.includes(key)) throw new Error(`Invalid user field: ${key}`);
+
+        if (value === null || value === undefined || value === "") {
+            await this.redis.hset(userKey, key, "");
+        } else {
+            await this.redis.hset(userKey, key, value);
+        }
     }
 
     async getUser(chatId: number, userId: number): Promise<User | null> {
