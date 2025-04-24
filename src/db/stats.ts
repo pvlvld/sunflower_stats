@@ -64,6 +64,21 @@ const queries = Object.freeze({
                     WHERE chat_id = $1
                     GROUP BY user_id
                     ORDER BY count DESC`,
+            /**$1 - chat_id
+             *
+             * $2 - target messages count
+             *
+             * $3 - days count
+             */
+            usersBelowTargetMessagesLastXDays: `WITH chat_activity AS (
+                  SELECT user_id, SUM(count) AS total_count
+                  FROM public.stats_daily
+                  WHERE date >= current_date - INTERVAL '$3 DAY' AND chat_id = $1
+                  GROUP BY user_id
+                )
+                SELECT user_id
+                FROM chat_activity
+                WHERE total_count < $2;`,
         },
         global: {
             topChats: {
@@ -367,6 +382,20 @@ class DBChatStats {
             return true;
         } catch (error) {
             return false;
+        }
+    }
+
+    async usersBelowTargetMessagesLastXDays(chat_id: number, targetMessagesCount: string, targetDaysCount: string) {
+        try {
+            return (
+                await this._dbPoolManager.getPoolRead.query({
+                    text: queries.stats.chat.usersBelowTargetMessagesLastXDays,
+                    values: [chat_id, targetMessagesCount, targetDaysCount],
+                })
+            ).rows as { user_id: number }[];
+        } catch (error) {
+            console.error(error);
+            return [] as { user_id: number }[];
         }
     }
 }
