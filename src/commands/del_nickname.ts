@@ -1,10 +1,8 @@
 import type { IGroupTextContext } from "../types/context.js";
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
 
 async function del_nickname(ctx: IGroupTextContext) {
-    if (active.data[ctx.chat.id]![ctx.from.id]) {
-        active.data[ctx.chat.id]![ctx.from.id]!.nickname = "";
-    }
+    active.updateUserField(ctx.chat.id, ctx.from.id, "nickname", null);
     await ctx
         .reply(ctx.t("nick-del-success"), {
             disable_notification: true,
