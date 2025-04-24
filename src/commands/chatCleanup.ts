@@ -5,7 +5,8 @@ import { DBPoolManager } from "../db/poolManager.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
 import isChatOwner from "../utils/isChatOwner.js";
 import cacheManager from "../cache/cache.js";
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
+import { Database } from "../db/db.js";
 import moment from "moment";
 
 export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
@@ -30,28 +31,16 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
 
     const [targetDaysCount, targetMessagesCount] = args as string[];
 
-    let targetMembers = (
-        await DBPoolManager.getPoolRead.query(
-            `
-      WITH chat_activity AS (
-        SELECT user_id, SUM(count) AS total_count
-        FROM public.stats_daily
-        WHERE date >= current_date - INTERVAL '${parseInt(targetDaysCount)} DAY' AND chat_id = ${chat_id}
-        GROUP BY user_id
-      )
-      SELECT user_id
-      FROM chat_activity
-      WHERE total_count < ${parseInt(targetMessagesCount)};
-      `
-        )
-    ).rows as { user_id: number }[];
+    let [targetMembers, users] = await Promise.all([
+        Database.stats.chat.usersBelowTargetMessagesLastXDays(chat_id, targetDaysCount, targetMessagesCount),
+        active.getChatUsers(chat_id),
+    ]);
 
     // Filter left chat members & members that in chat less than targetDaysCount
     const beforeTargetDaysCount = moment().subtract(targetDaysCount + 1, "days");
     targetMembers = targetMembers.filter((m) => {
         return (
-            active.data[chat_id]?.[m.user_id]?.active_first &&
-            beforeTargetDaysCount.isSameOrBefore(active.data[chat_id][m.user_id]!.active_first)
+            users?.[m.user_id]?.active_first && beforeTargetDaysCount.isSameOrBefore(users?.[m.user_id]?.active_first)
         );
     });
 
