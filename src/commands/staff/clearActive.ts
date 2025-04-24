@@ -1,30 +1,33 @@
 import type { IGroupHearsContext } from "../../types/context.js";
-import { active } from "../../data/active.js";
+import { active } from "../../redis/active.js";
 import parseCmdArgs from "../../utils/parseCmdArgs.js";
 
 async function clearOldBotActive(ctx: IGroupHearsContext) {
-    let chat: string;
+    let chat: number;
     let user: string;
     let today = new Date();
     let last_active = today;
     let chats_count = 0;
     let inactive_count = 0;
     let users_count = 0;
-    for (chat in active.data) {
+    const chats = await active.getAllChatIds();
+    let users: Awaited<ReturnType<typeof active.getChatUsers>>;
+    for (chat of chats) {
+        users = await active.getChatUsers(chat);
         inactive_count = 0;
-        users_count = active.data[chat] ? Object.keys(active.data[chat]!).length : 0;
+        users_count = users ? Object.keys(users).length : 0;
         if (users_count === 0) {
-            delete active.data[chat];
+            active.removeChat(chat);
             chats_count++;
             continue;
         }
-        for (user in active.data[chat]) {
-            last_active = new Date(active.data[chat]![user]!.active_last);
+        for (user in users) {
+            last_active = new Date(users[user].active_last);
             if (daysBetween(last_active, today) > 30) {
                 inactive_count++;
             }
             if (inactive_count === users_count) {
-                delete active.data[chat];
+                active.removeChat(chat);
                 chats_count++;
             }
         }
@@ -40,7 +43,7 @@ function daysBetween(date1: Date, date2: Date): number {
     return Math.abs(differenceInDays);
 }
 
-async function clearGroupActive(ctx: IGroupHearsContext) {
+async function clearGroupActive(ctx: IGroupHearsContext, users: Awaited<ReturnType<typeof active.getChatUsers>>) {
     const cmdArguments = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
     if (cmdArguments.length !== 2) {
         return void (await ctx.reply("Недостатньо аргументів").catch((e) => {}));
@@ -59,9 +62,9 @@ async function clearGroupActive(ctx: IGroupHearsContext) {
         return void (await ctx.reply("Неправильний аргумент днів").catch((e) => {}));
     }
 
-    for (const user in active.data[chat]) {
-        if (daysBetween(new Date(active.data[chat][user]!.active_last), today) < days) continue;
-        delete active.data[chat][user];
+    for (const user in users) {
+        if (daysBetween(new Date(users[user].active_last), today) < days) continue;
+        active.removeUser(+chat, +user);
         count++;
     }
 
