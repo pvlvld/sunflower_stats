@@ -1,7 +1,7 @@
 import type { IGroupHearsContext } from "../../types/context.js";
 import { DBPoolManager } from "../../db/poolManager.js";
 import { autoRetry } from "@grammyjs/auto-retry";
-import { active } from "../../data/active.js";
+import { active } from "../../redis/active.js";
 import { GrammyError } from "grammy";
 import cfg from "../../config.js";
 import moment from "moment";
@@ -21,15 +21,14 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     let totalAttemptsSent = 0;
     ctx.reply(`Розрочато розсилку.\n${ignorePremium ? "- Ігнорування преміум чатів" : ""}`).catch((e) => {});
     await cacheManager.PremiumStatusCache.seed_chats();
-    for (let chat in active.data) {
-        if (!chat.startsWith("-")) {
-            delete active.data[chat];
-            continue;
-        }
-
-        for (let user in active.data[chat]) {
-            if (moment().diff(moment(active.data[chat][user]!.active_last), "days") < 5) {
-                if (ignorePremium && cacheManager.PremiumStatusCache.get(+chat).status) break;
+    const chats = await active.getAllChatIds();
+    let users: Awaited<ReturnType<typeof active.getChatUsers>> = {};
+    for (let chat of chats) {
+        if (chat > 0) continue;
+        users = await active.getChatUsers(chat);
+        for (let user in users) {
+            if (moment().diff(moment(users[user].active_last), "days") < 5) {
+                if (ignorePremium && cacheManager.PremiumStatusCache.get(chat).status) break;
 
                 try {
                     totalAttemptsSent++;
@@ -59,15 +58,11 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     void (await ctx.api
         .sendMessage(
             cfg.ANALYTICS_CHAT ?? -1,
-            `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${
-                Object.keys(active.data).length
-            }`
+            `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${chats.length}`
         )
         .catch((e) => {}));
     console.info(
-        `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${
-            Object.keys(active.data).length
-        }`
+        `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${chats.length}`
     );
 }
 
