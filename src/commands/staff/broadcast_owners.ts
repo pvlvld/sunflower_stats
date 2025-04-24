@@ -1,7 +1,7 @@
 import type { IGroupHearsContext } from "../../types/context.js";
 import type { ChatMemberOwner } from "@grammyjs/types";
 import { autoRetry } from "@grammyjs/auto-retry";
-import { active } from "../../data/active.js";
+import { active } from "../../redis/active.js";
 import moment from "moment";
 
 async function broadcast_owners_cmd(ctx: IGroupHearsContext): Promise<void> {
@@ -16,10 +16,12 @@ async function broadcast_owners_cmd(ctx: IGroupHearsContext): Promise<void> {
     let admins: Awaited<ReturnType<typeof ctx.api.getChatAdministrators>>;
     let owner: ChatMemberOwner | undefined;
     let counter = 0;
-
-    for (let chat in active.data) {
-        for (let user in active.data[chat]) {
-            if (moment().diff(moment(active.data[chat][user]!.active_last), "days") < 3) {
+    const chats = await active.getAllChatIds();
+    let users: Awaited<ReturnType<typeof active.getChatUsers>> = {};
+    for (let chat of chats) {
+        users = await active.getChatUsers(chat);
+        for (let user in users) {
+            if (moment().diff(moment(users[user].active_last), "days") < 3) {
                 admins = await ctx.api.getChatAdministrators(chat);
                 owner = admins.filter((a) => a.status === "creator")[0] as any;
                 if (!owner) {
@@ -27,14 +29,9 @@ async function broadcast_owners_cmd(ctx: IGroupHearsContext): Promise<void> {
                 }
 
                 try {
-                    await ctx.api.forwardMessage(
-                        owner.user.id,
-                        ctx.chat.id,
-                        ctx.msg.reply_to_message.message_id,
-                        {
-                            disable_notification: true,
-                        }
-                    );
+                    await ctx.api.forwardMessage(owner.user.id, ctx.chat.id, ctx.msg.reply_to_message.message_id, {
+                        disable_notification: true,
+                    });
                     counter++;
                 } catch (e) {
                     console.error(e);
