@@ -98,7 +98,7 @@ class ChatUserStore {
     async getUser(chatId: number, userId: number): Promise<User | null> {
         const userKey = this.getUserKey(chatId, userId);
 
-        const userData = await this.redis.hgetall(userKey);
+        const userData = (await this.redis.hgetall(userKey)) as Record<string, string>;
 
         if (Object.keys(userData).length === 0) {
             return null;
@@ -115,23 +115,36 @@ class ChatUserStore {
 
     async getChatUsers(chatId: number): Promise<Record<string, User>> {
         const chatKey = this.getChatKey(chatId);
-
         const userIds = await this.redis.smembers(chatKey);
+        if (userIds.length === 0) return {};
 
-        if (userIds.length === 0) {
-            return {};
-        }
-
-        const result: Record<string, User> = {};
+        const multi = this.redis.multi();
 
         for (const userId of userIds) {
-            const user = await this.getUser(chatId, parseInt(userId, 10));
-            if (user) {
-                result[userId] = user;
-            }
+            multi.hgetall(this.getUserKey(chatId, parseInt(userId, 10)));
         }
 
-        return result;
+        const results = (await multi.exec()) as [error: Error | null, result: User][] | null;
+        if (!results) return {};
+
+        const users: Record<string, User> = {};
+
+        for (let i = 0; i < userIds.length; i++) {
+            const userId = userIds[i];
+            const [err, userData] = results[i];
+
+            if (err || !userData || Object.keys(userData).length === 0) continue;
+
+            users[userId] = {
+                active_first: userData.active_first,
+                active_last: userData.active_last,
+                name: userData.name,
+                nickname: userData.nickname === "" ? null : userData.nickname,
+                username: userData.username === "" ? null : userData.username,
+            };
+        }
+
+        return users;
     }
 
     async removeChat(chatId: number): Promise<void> {
