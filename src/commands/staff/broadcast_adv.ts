@@ -44,14 +44,13 @@ async function broadcastToChats(ctx: IGroupHearsContext, adv: IMessage) {
     chat_loop: for (const chat of chats) {
         if (chat > 0) continue;
 
-        if (cacheManager.PremiumStatusCache.isCachedPremium(Number(chat))) {
-            continue;
-        }
-        users = await active.getChatUsers(Number(chat));
+        if (cacheManager.PremiumStatusCache.isCachedPremium(chat)) continue;
+
+        users = await active.getChatUsers(chat);
         for (const user in users) {
             if (moment().diff(moment(users[user].active_last), "days") < 4) {
                 // Skip if bot joined less than 14 days ago
-                const botJoinDate = await Database.stats.chat.firstRecordDate(Number(chat));
+                const botJoinDate = await Database.stats.chat.firstRecordDate(chat);
                 if (moment().diff(botJoinDate, "days") < 14) {
                     console.log("Adv broadcast: ", chat, "Skip, first message less than 14 days ago");
                     continue chat_loop;
