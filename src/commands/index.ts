@@ -5,7 +5,6 @@ import bot_stats_cmd, { botStatsManager } from "./botStats.js";
 import broadcast_owners_cmd from "./staff/broadcast_owners.js";
 import removeFromChatCleanup from "./removeFromChatCleanup.js";
 import { removeChatData_cmd } from "./staff/removeChatData.js";
-import { removeAnonimousActive } from "./staff/utils_cmd.js";
 import broadcast_chats_cmd from "./staff/broadcast_chats.js";
 import { donate_cmd, refreshDonate_cmd } from "./donate.js";
 import stats_chat_range_cmd from "./stats_chat_range.js";
@@ -228,8 +227,6 @@ function regCommands() {
             ctx.reply(String(getUserId(wantedUser, ctx.chat.id)));
         }
     });
-
-    botAdmin.hears(/^!ssremoveanon/, removeAnonimousActive);
 
     botAdmin.hears("!ssbroadcast_owners", broadcast_owners_cmd);
 
