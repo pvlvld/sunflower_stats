@@ -46,7 +46,6 @@ import { unban_owners_cmd } from "./staff/unban_owners.js";
 import { remote_ban_cmd } from "./staff/remote_ban.js";
 import { addToBlacklist } from "./staff/blacklist.js";
 import { start_cmd } from "./start.js";
-import { scanChatsForId } from "./staff/scanChatsForId.js";
 import { updateDbChatsInfo } from "./staff/updateDbChatsInfo.js";
 import { stats_user_global } from "./stats_user_global.js";
 import { statsChatGlobal } from "./statsChatGlobal.js";
@@ -244,7 +243,6 @@ function regCommands() {
 
     botAdmin.hears(/^!sscga/, clearGroupActive);
 
-    botAdmin.hears(/^!scanChatsForId/, scanChatsForId);
     // Etc.
 
     group.hears("/getid", getId_cmd);
