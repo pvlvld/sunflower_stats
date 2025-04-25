@@ -2,7 +2,7 @@ import { isValidDateOrDateRange } from "../../utils/isValidDateOrDateRange.js";
 import type { IGroupTextContext } from "../../types/context.js";
 import parseCmdArgs from "../../utils/parseCmdArgs.js";
 import isChatOwner from "../../utils/isChatOwner.js";
-import { active } from "../../data/active.js";
+import { active } from "../../redis/active.js";
 
 async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
     let date = (parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string | undefined[])[1];
@@ -22,15 +22,14 @@ async function setUserJoinDate_cmd(ctx: IGroupTextContext) {
             .catch((e) => {}));
     }
 
-    if (!active.data[chat_id]?.[target_id]) {
+    const user = await active.getUser(chat_id, target_id);
+    if (user === null) {
         return void (await ctx.reply("Користувача не знайдено."));
     }
 
-    active.data[chat_id][target_id].active_first = date;
+    active.updateUserField(chat_id, target_id, "active_first", date);
 
-    return void (await ctx.reply(
-        `Успішно змінено дату першої появи в чаті ${active.data[chat_id][target_id].name}!`
-    ));
+    return void (await ctx.reply(`Успішно змінено дату першої появи в чаті ${user.name}!`));
 }
 
 export { setUserJoinDate_cmd };
