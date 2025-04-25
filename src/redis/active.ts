@@ -1,5 +1,7 @@
 import Redis from "ioredis";
 import * as OldActive from "../data/active.js";
+import { getUserFirstStatsDate } from "../utils/getUserFirstStatsDate.js";
+import formattedDate from "../utils/date.js";
 
 interface User {
     active_first: string; // YYYY-MM-DD
@@ -101,6 +103,17 @@ class ChatUserStore {
 
         if (Object.keys(userData).length === 0) {
             return null;
+        }
+
+        // If active_first is empty, set it to the first stats date or today
+        if (!userData.active_first) {
+            const dbActiveFirstDate = await getUserFirstStatsDate(chatId, userId);
+
+            if (dbActiveFirstDate) {
+                userData.active_first = dbActiveFirstDate;
+            } else {
+                userData.active_first = formattedDate.today[0];
+            }
         }
 
         return {
