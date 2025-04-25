@@ -1,7 +1,7 @@
 import { getUserFirstStatsDate } from "../utils/getUserFirstStatsDate.js";
-import { type IActiveUser, active } from "../data/active.js";
 import type { IContext } from "../types/context.js";
 import type { Filter } from "grammy";
+import { active } from "../redis/active.js";
 
 async function joinChatMember(ctx: Filter<IContext, "chat_member">) {
     const chat_id = ctx.chat.id;
@@ -9,9 +9,7 @@ async function joinChatMember(ctx: Filter<IContext, "chat_member">) {
     const active_first = await getUserFirstStatsDate(chat_id, user_id);
 
     if (active_first) {
-        active.data[chat_id] ??= {};
-        active.data[chat_id][user_id] ??= {} as IActiveUser;
-        active.data[chat_id][user_id].active_first = active_first;
+        await active.updateUserField(chat_id, user_id, "active_first", active_first);
     }
 }
 export { joinChatMember };
