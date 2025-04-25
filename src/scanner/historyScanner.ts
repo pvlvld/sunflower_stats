@@ -5,7 +5,7 @@ import formattedDate from "../utils/date.js";
 import { DBStats } from "../db/stats.js";
 import cfg from "../config.js";
 import bot from "../bot.js";
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
 import moment from "moment";
 
 //TODO:
@@ -216,9 +216,11 @@ class HistoryScanner extends MTProtoClient {
         for (const [id, count] of stats) {
             string_date = formattedDate.dateToYYYYMMDD(date);
 
+            // TODO: Optimize. It runs in the loop. Some local state to minimize redis access.
             // Update first seen date
-            if (active.data[chat_id]?.[id] && moment(active.data[chat_id][id].active_first).diff(string_date) > 0) {
-                active.data[chat_id][id].active_first = string_date;
+            const user = await active.getUser(chat_id, id);
+            if (!user || moment(user.active_first).diff(string_date) > 0) {
+                await active.updateUserField(chat_id, id, "active_first", string_date);
             }
 
             await DBStats.user.countUserMessage(chat_id, id, count, string_date);
