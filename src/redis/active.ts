@@ -283,4 +283,4 @@ class ChatUserStore {
 }
 
 const active = new ChatUserStore();
-export { ChatUserStore, active };
+export { ChatUserStore, active, IActiveUser };
