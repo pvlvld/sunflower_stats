@@ -43,7 +43,7 @@ function daysBetween(date1: Date, date2: Date): number {
     return Math.abs(differenceInDays);
 }
 
-async function clearGroupActive(ctx: IGroupHearsContext, users: Awaited<ReturnType<typeof active.getChatUsers>>) {
+async function clearGroupActive(ctx: IGroupHearsContext) {
     const cmdArguments = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
     if (cmdArguments.length !== 2) {
         return void (await ctx.reply("Недостатньо аргументів").catch((e) => {}));
@@ -62,6 +62,7 @@ async function clearGroupActive(ctx: IGroupHearsContext, users: Awaited<ReturnTy
         return void (await ctx.reply("Неправильний аргумент днів").catch((e) => {}));
     }
 
+    const users = await active.getChatUsers(+chat);
     for (const user in users) {
         if (daysBetween(new Date(users[user].active_last), today) < days) continue;
         active.removeUser(+chat, +user);
