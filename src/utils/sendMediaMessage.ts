@@ -1,5 +1,5 @@
 import { GrammyError } from "grammy";
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
 import { DBPoolManager } from "../db/poolManager.js";
 import { IGroupHearsContext } from "../types/context.js";
 import { IKeyboard } from "./extractAndMakeKeyboard.js";
@@ -48,7 +48,7 @@ async function sendMediaMessage(ctx: IGroupHearsContext, chat_id: number | strin
         console.error(e);
         if (e instanceof GrammyError) {
             if (e.description.includes("bot was kicked")) {
-                delete active.data[chat_id];
+                await active.removeChat(+chat_id);
                 void DBPoolManager.getPoolWrite
                     .query(`UPDATE chats SET stats_bot_in = false WHERE chat_id = ${chat_id};`)
                     .catch((e) => {});
