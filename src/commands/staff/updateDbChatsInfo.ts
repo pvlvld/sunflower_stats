@@ -1,18 +1,17 @@
 import { autoRetry } from "@grammyjs/auto-retry";
-import { active } from "../../data/active.js";
 import { IGroupHearsContext } from "../../types/context.js";
 import { Database } from "../../db/db.js";
 import { GrammyError } from "grammy";
 import { chatMigrationHandler } from "../../handlers/chatMigrationHandler.js";
+import { active } from "../../redis/active.js";
 
 async function updateDbChatsInfo(ctx: IGroupHearsContext) {
-    // const chats = Object.keys(active.data);
-
     // TEMPORARY
+    const chats_active = await active.getAllChatIds();
     let chats = (await Database.poolManager.getPool.query("SELECT chat_id FROM chats WHERE title IS NULL")).rows.map(
         (r) => <number>r.chat_id
     );
-    chats = chats.filter((c) => !!active.data[c]);
+    chats = chats.filter((c) => chats_active.indexOf(c) != -1);
     // TEMPORARY
 
     const total_count = chats.length;
@@ -25,13 +24,13 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
         const chatInfo = await ctx.api.getChat(chat).catch((e) => {
             if (!(e instanceof GrammyError)) return;
             if (e.description.includes("bot was kicked")) {
-                delete active.data[chat];
+                active.removeChat(chat);
             }
             if (e.description.includes("group chat was upgraded to a supergroup chat")) {
                 chatMigrationHandler.handleFromError(e);
             }
             if (e.description.includes("chat not found")) {
-                delete active.data[chat];
+                active.removeChat(chat);
             }
         });
         if (!chatInfo) continue;
