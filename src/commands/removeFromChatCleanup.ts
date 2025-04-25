@@ -20,7 +20,8 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
     const cacheKey = `cleanup_${chat_id}`;
     let targetMembers = cacheManager.TTLCache.get(cacheKey) as { user_id: number }[] | undefined;
 
-    let targetId = ctx.msg.reply_to_message?.from?.id || getUserId((ctx.msg.text ?? ctx.msg.caption).slice(6), chat_id);
+    let targetId =
+        ctx.msg.reply_to_message?.from?.id || (await getUserId((ctx.msg.text ?? ctx.msg.caption).slice(6), chat_id));
     if (targetId === -1) {
         if (targetMembers) {
             cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);

@@ -20,7 +20,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
         }
         user_id =
             ctx.msg.reply_to_message?.from?.id ||
-            getUserId((ctx.msg.text ?? ctx.msg.caption).slice(type.length + 2), chat_id) ||
+            (await getUserId((ctx.msg.text ?? ctx.msg.caption).slice(type.length + 2), chat_id)) ||
             -1;
     }
 

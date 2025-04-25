@@ -221,10 +221,10 @@ function regCommands() {
 
     botAdmin.hears(/^!ssinvite/, getChatInvite_cmd);
 
-    botAdmin.hears(/^!ssru/, (ctx) => {
+    botAdmin.hears(/^!ssru/, async (ctx) => {
         const wantedUser = parseCmdArgs(ctx.msg?.text ?? ctx.msg?.caption)[0];
         if (wantedUser) {
-            ctx.reply(String(getUserId(wantedUser, ctx.chat.id)));
+            ctx.reply(String(await getUserId(wantedUser, ctx.chat.id)));
         }
     });
 
