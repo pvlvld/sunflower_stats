@@ -7,7 +7,7 @@ import { sleepAsync } from "../utils/sleep.js";
 import { hello } from "../commands/hello.js";
 import formattedDate from "../utils/date.js";
 import cacheManager from "../cache/cache.js";
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
 import help_cmd from "../commands/help.js";
 import { DBStats } from "../db/stats.js";
 import cfg from "../config.js";
@@ -71,12 +71,13 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
         botStatsManager.leftGroup();
 
         const admins = cacheManager.ChatAdminsCache.getAdmins(ctx.chat.id);
+        const users = await active.getChatUsers(ctx.chat.id);
         let admins_text = "";
 
         admins.forEach((a) => {
-            admins_text += `<a href="tg://user?id=${a.user_id}">${
-                active.data[ctx.chat.id]?.[a.user_id]?.name || a.status
-            }</a>: ${a.status}\n`;
+            admins_text += `<a href="tg://user?id=${a.user_id}">${users?.[a.user_id]?.name || a.status}</a>: ${
+                a.status
+            }\n`;
         });
 
         if (admins_text.length) {
