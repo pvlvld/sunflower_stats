@@ -98,10 +98,7 @@ async function changePage(
     }
 }
 
-async function getPage(
-    baseInfo: Awaited<ReturnType<typeof getBaseInfo>>,
-    direction: "previous" | "next"
-) {
+async function getPage(baseInfo: Awaited<ReturnType<typeof getBaseInfo>>, direction: "previous" | "next") {
     const stats = await DBStats.chat.inRage(baseInfo.chat_id, baseInfo.dateRange as IDateRange);
     let target_page = 1;
     if (direction === "next") {
@@ -118,7 +115,7 @@ async function getPage(
         }
     }
 
-    const statsMsesage = getStatsChatRating(
+    const statsMsesage = await getStatsChatRating(
         stats,
         baseInfo.chat_id,
         baseInfo.settings,

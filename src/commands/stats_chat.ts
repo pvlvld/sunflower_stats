@@ -200,7 +200,7 @@ async function getStatsMessage(
     return (
         `📊 Статистика${await getPremiumMarkSpaced(chat_id)}«${Escape.html(title)}» за ${
             dateRange === "all" ? "весь час" : rawCmdDateRange
-        }:\n\n` + getStatsChatRating(stats, chat_id, settings, page, dateRange, chart ? "caption" : "text")
+        }:\n\n` + (await getStatsChatRating(stats, chat_id, settings, page, dateRange, chart ? "caption" : "text"))
     );
 }
 

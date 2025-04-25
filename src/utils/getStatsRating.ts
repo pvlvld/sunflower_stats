@@ -1,10 +1,10 @@
 import type { IDBChatUserStatsAndTotal } from "../types/stats.js";
 import getUserNameLink from "./getUserNameLink.js";
-import { active, IActiveUser } from "../data/active.js";
 import { IChatSettings } from "../types/settings.js";
 import { IDateRange } from "../commands/stats_chat.js";
+import { active, IActiveUser } from "../redis/active.js";
 
-export function getStatsChatRating(
+export async function getStatsChatRating(
     stats: IDBChatUserStatsAndTotal[],
     chat_id: number,
     settings: IChatSettings,
@@ -15,7 +15,7 @@ export function getStatsChatRating(
     const replyParts: string[] = [];
 
     const statsRowLimit = Math.min(type === "text" ? 50 : 25, stats.length);
-    const activeData = active.data[chat_id];
+    const users = await active.getChatUsers(chat_id);
 
     let statsRowsCount = 0;
     const offset = statsRowLimit * page - statsRowLimit;
@@ -27,7 +27,7 @@ export function getStatsChatRating(
     for (let i = 0; i < stats.length; i++) {
         user = stats[i];
         if (statsRowsCount < statsRowLimit) {
-            userData = activeData?.[user.user_id];
+            userData = users?.[user.user_id];
 
             if (!userData) continue;
             validUsersCount++;
@@ -45,8 +45,7 @@ export function getStatsChatRating(
 
     replyParts.push(
         `\nЗагальна кількість повідомлень<a href="${encodeStatsMetadata(
-            chat_id,
-            stats,
+            validUsersCount,
             statsRowLimit,
             dateRange,
             page
@@ -68,23 +67,10 @@ function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_
 }
 
 function encodeStatsMetadata(
-    chat_id: number,
-    stats: IDBChatUserStatsAndTotal[],
+    validUsersCount: number,
     statsRowLimit: number,
     dateRange: IDateRange | "date",
     page: number
 ) {
-    return `t.me/meta?u=${getStatsUsersCount(chat_id, stats)}?l=${statsRowLimit}?r=${dateRange}?p=${page}`;
-}
-
-function getStatsUsersCount(chat_id: number, stats: IDBChatUserStatsAndTotal[]) {
-    let user: IDBChatUserStatsAndTotal;
-    let activeData = active.data[chat_id];
-    let counter = 0;
-    for (user of stats) {
-        if (activeData?.[user.user_id]) {
-            counter++;
-        }
-    }
-    return counter;
+    return `t.me/meta?u=${validUsersCount}?l=${statsRowLimit}?r=${dateRange}?p=${page}`;
 }
