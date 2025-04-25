@@ -18,7 +18,7 @@ function ActiveCollectorWrapper() {
             ctx.msg?.left_chat_member ||
             cfg.IGNORE_IDS.indexOf(ctx.from.id) !== -1 // anonimous users
         ) {
-            return await next();
+            // Do nothing.
         } else {
             _chatId = ctx.chat.id;
             _userId = ctx.from.id;
