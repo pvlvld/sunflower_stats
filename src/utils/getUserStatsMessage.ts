@@ -5,12 +5,10 @@ import moment from "moment";
 import { getPremiumMarkSpaced } from "./getPremiumMarkSpaced.js";
 
 async function getUserStatsMessage(chat_id: number, user_id: number, dbStats: IDBChatUserStatsAll) {
-    const nickname = (await active.getUser(chat_id, user_id))?.username;
+    const user = await active.getUser(chat_id, user_id);
 
     return Escape.html(`
-Статистика${await getPremiumMarkSpaced(user_id)}${
-        nickname ? `${nickname} (${active.data[chat_id]?.[user_id]?.name})` : `${active.data[chat_id]?.[user_id]?.name}`
-    }
+Статистика${await getPremiumMarkSpaced(user_id)}${user?.nickname ? `${user.nickname} (${user?.name})` : `${user?.name}`}
     
 📊 Актив: 
 
