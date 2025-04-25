@@ -3,7 +3,7 @@ import * as OldActive from "../data/active.js";
 import { getUserFirstStatsDate } from "../utils/getUserFirstStatsDate.js";
 import formattedDate from "../utils/date.js";
 
-interface User {
+interface IActiveUser {
     active_first: string; // YYYY-MM-DD
     active_last: string; // YYYY-MM-DD
     name: string;
@@ -11,7 +11,7 @@ interface User {
     username: string | null;
 }
 
-const VALID_USER_KEYS: (keyof User)[] = ["active_last", "nickname", "name", "username", "active_first"];
+const VALID_USER_KEYS: (keyof IActiveUser)[] = ["active_last", "nickname", "name", "username", "active_first"];
 
 class ChatUserStore {
     private redis: Redis.Redis;
@@ -84,7 +84,7 @@ class ChatUserStore {
         await multi.exec();
     }
 
-    async updateUserField(chatId: number, userId: number, key: keyof User, value: string | null): Promise<void> {
+    async updateUserField(chatId: number, userId: number, key: keyof IActiveUser, value: string | null): Promise<void> {
         const userKey = this.getUserKey(chatId, userId);
 
         if (!VALID_USER_KEYS.includes(key)) throw new Error(`Invalid user field: ${key}`);
@@ -96,7 +96,7 @@ class ChatUserStore {
         }
     }
 
-    async getUser(chatId: number, userId: number): Promise<User | null> {
+    async getUser(chatId: number, userId: number): Promise<IActiveUser | null> {
         const userKey = this.getUserKey(chatId, userId);
 
         const userData = (await this.redis.hgetall(userKey)) as Record<string, string>;
@@ -125,7 +125,7 @@ class ChatUserStore {
         };
     }
 
-    async getChatUsers(chatId: number): Promise<Record<string, User>> {
+    async getChatUsers(chatId: number): Promise<Record<string, IActiveUser>> {
         const chatKey = this.getChatKey(chatId);
         const userIds = await this.redis.smembers(chatKey);
         if (userIds.length === 0) return {};
@@ -136,10 +136,10 @@ class ChatUserStore {
             multi.hgetall(this.getUserKey(chatId, parseInt(userId, 10)));
         }
 
-        const results = (await multi.exec()) as [error: Error | null, result: User][] | null;
+        const results = (await multi.exec()) as [error: Error | null, result: IActiveUser][] | null;
         if (!results) return {};
 
-        const users: Record<string, User> = {};
+        const users: Record<string, IActiveUser> = {};
 
         for (let i = 0; i < userIds.length; i++) {
             const userId = userIds[i];
