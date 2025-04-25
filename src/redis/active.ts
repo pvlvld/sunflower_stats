@@ -204,6 +204,44 @@ class ChatUserStore {
             .filter((id) => id !== 0);
     }
 
+    async migrateChatId(oldId: number, newId: number): Promise<void> {
+        const oldChatKey = this.getChatKey(oldId);
+        const newChatKey = this.getChatKey(newId);
+
+        const userIds = await this.redis.smembers(oldChatKey);
+        if (userIds.length === 0) throw new Error(`No users found for chat ID ${oldId}`);
+
+        const multi = this.redis.multi();
+
+        for (const userId of userIds) {
+            const oldUserKey = this.getUserKey(oldId, parseInt(userId, 10));
+            multi.hgetall(oldUserKey);
+        }
+
+        const userDataResults = await multi.exec();
+        if (!userDataResults) throw new Error("Failed to fetch user data");
+
+        multi.reset();
+
+        for (let i = 0; i < userIds.length; i++) {
+            const userId = userIds[i];
+            const [, userData] = userDataResults[i];
+            const newUserKey = this.getUserKey(newId, parseInt(userId, 10));
+            if (userData && Object.keys(userData).length > 0) {
+                multi.hmset(newUserKey, userData);
+                multi.sadd(newChatKey, userId);
+            }
+        }
+
+        multi.del(oldChatKey);
+        for (const userId of userIds) {
+            const oldUserKey = this.getUserKey(oldId, parseInt(userId, 10));
+            multi.del(oldUserKey);
+        }
+
+        await multi.exec();
+    }
+
     async close(): Promise<void> {
         await this.redis.quit();
     }
