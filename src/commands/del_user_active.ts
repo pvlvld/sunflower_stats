@@ -36,7 +36,7 @@ async function determineTargetUserId(ctx: IGroupHearsContext): Promise<number> {
 
     return isCanDelOthers
         ? ctx.msg.reply_to_message?.from?.id ||
-              (["вступ", "!ссприховати"].includes(rawTarget) ? undefined : getUserId(rawTarget, ctx.chat.id)) ||
+              (["вступ", "!ссприховати"].includes(rawTarget) ? undefined : await getUserId(rawTarget, ctx.chat.id)) ||
               ctx.from.id
         : ctx.from.id;
 }

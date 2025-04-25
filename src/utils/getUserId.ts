@@ -1,12 +1,13 @@
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
 
 /** Returns user_id or -1 on fail*/
-function getUserId(wantedUser: string | undefined, chat_id: number | string): number {
+async function getUserId(wantedUser: string | undefined, chat_id: number | string): Promise<number> {
     if (wantedUser === undefined) return -1;
+    const users = await active.getChatUsers(+chat_id);
     if (wantedUser.startsWith("@")) {
         wantedUser = wantedUser.slice(1);
-        for (const user in active.data[chat_id]) {
-            if (active.data[chat_id]?.[user]?.username === wantedUser) {
+        for (const user in users) {
+            if (users?.[user]?.username === wantedUser) {
                 return +user;
             }
         }
@@ -14,14 +15,14 @@ function getUserId(wantedUser: string | undefined, chat_id: number | string): nu
     }
 
     if (isNaN(Number(wantedUser))) {
-        for (const user in active.data[chat_id]) {
-            if (active.data[chat_id]?.[user]?.name === wantedUser) {
+        for (const user in users) {
+            if (users?.[user]?.name === wantedUser) {
                 return +user;
             }
         }
         return -1;
     } else {
-        if (active.data[chat_id]?.[wantedUser]) {
+        if (users?.[wantedUser]) {
             return +wantedUser;
         }
     }
