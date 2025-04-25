@@ -1,11 +1,11 @@
 import getUserNameLink from "../../utils/getUserNameLink.js";
-import { active, IActiveUser } from "../../data/active.js";
 import type { IContext } from "../../types/context.js";
 import { Menu, type MenuFlavor } from "@grammyjs/menu";
 import isChatOwner from "../../utils/isChatOwner.js";
 import { autoRetry } from "@grammyjs/auto-retry";
 import cacheManager from "../../cache/cache.js";
 import { GrammyError } from "grammy";
+import { active, IActiveUser } from "../../redis/active.js";
 
 const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
     autoAnswer: false,
@@ -22,9 +22,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
             return;
         }
 
-        const targetMembers = cacheManager.TTLCache.get(`cleanup_${ctx.chat.id}`) as
-            | { user_id: number }[]
-            | undefined;
+        const targetMembers = cacheManager.TTLCache.get(`cleanup_${ctx.chat.id}`) as { user_id: number }[] | undefined;
 
         range.text("Видалити ✅", async (ctx) => {
             ctx.answerCallbackQuery().catch((e) => {});
@@ -34,19 +32,13 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
             }
 
             if (await destroyMenuIfOutdated(ctx, targetMembers)) {
-                return void (await ctx
-                    .reply("Ця чистка застаріла. Створіть нову.")
-                    .catch((e) => {}));
+                return void (await ctx.reply("Ця чистка застаріла. Створіть нову.").catch((e) => {}));
             }
 
             ctx.deleteMessage().catch((e) => {});
 
             const statusMessage = await ctx.reply("Починаю чистку!").catch((e) => {});
-            const cleanupStatus = await chatCleanupWorker(
-                ctx,
-                chat_id,
-                targetMembers as { user_id: number }[]
-            );
+            const cleanupStatus = await chatCleanupWorker(ctx, chat_id, targetMembers as { user_id: number }[]);
 
             if (statusMessage && cleanupStatus) {
                 return void (await ctx.api
@@ -68,10 +60,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
         range.text("Скасувати ❌", async (ctx) => {
             ctx.answerCallbackQuery().catch((e) => {});
 
-            if (
-                !(await isChatOwner(chat_id, from_id)) ||
-                (await destroyMenuIfOutdated(ctx, targetMembers))
-            ) {
+            if (!(await isChatOwner(chat_id, from_id)) || (await destroyMenuIfOutdated(ctx, targetMembers))) {
                 return;
             }
 
@@ -88,9 +77,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
             }
 
             if (await destroyMenuIfOutdated(ctx, targetMembers)) {
-                return void (await ctx
-                    .reply("Ця чистка застаріла. Створіть нову.")
-                    .catch((e) => {}));
+                return void (await ctx.reply("Ця чистка застаріла. Створіть нову.").catch((e) => {}));
             }
             let messageText = ctx.msg?.text;
             if (!messageText) {
@@ -103,7 +90,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
                 messageText = `${messageText.replace(
                     /\d+/,
                     String(targetMembers!.length)
-                )}\n\nСписок:\n${getTargetMembersList(chat_id, targetMembers as { user_id: number }[])}`;
+                )}\n\nСписок:\n${await getTargetMembersList(chat_id, targetMembers as { user_id: number }[])}`;
 
                 await ctx.editMessageText(messageText, {
                     link_preview_options: { is_disabled: true },
@@ -137,15 +124,14 @@ async function destroyMenuIfOutdated(
 
 const targetMembersListMaxSize = 100;
 
-function getTargetMembersList(chat_id: number, targetMembers: { user_id: number }[]): string {
+async function getTargetMembersList(chat_id: number, targetMembers: { user_id: number }[]): Promise<string> {
     const targetMemberNames: string[] = [];
     let user: IActiveUser | undefined;
+    const users = await active.getChatUsers(chat_id);
     for (let i = 0; i < Math.min(targetMembersListMaxSize, targetMembers.length); i++) {
-        user = active.data[chat_id]?.[targetMembers[i].user_id];
+        user = users?.[targetMembers[i].user_id];
         if (user) {
-            targetMemberNames.push(
-                getUserNameLink.html(user.name, undefined, targetMembers[i].user_id)
-            );
+            targetMemberNames.push(getUserNameLink.html(user.name, undefined, targetMembers[i].user_id));
         }
     }
 
@@ -156,18 +142,16 @@ function getTargetMembersList(chat_id: number, targetMembers: { user_id: number 
     return targetMemberNames.join("\n");
 }
 
-async function chatCleanupWorker(
-    ctx: IContext & MenuFlavor,
-    chat_id: number,
-    targetMembers: { user_id: number }[]
-) {
+async function chatCleanupWorker(ctx: IContext & MenuFlavor, chat_id: number, targetMembers: { user_id: number }[]) {
     ctx.api.config.use(autoRetry());
     ctx.replyWithChatAction("typing").catch((e) => {});
 
     for (let i = 0; i < targetMembers.length; i++) {
         try {
-            await ctx.banChatMember(targetMembers[i].user_id);
-            delete active.data[chat_id]?.[targetMembers[i].user_id];
+            await Promise.all([
+                await ctx.banChatMember(targetMembers[i].user_id),
+                await active.removeUser(chat_id, targetMembers[i].user_id),
+            ]);
         } catch (e) {
             if (e instanceof GrammyError) {
                 if (e.description.indexOf("not enough rights") !== -1) {
@@ -175,7 +159,7 @@ async function chatCleanupWorker(
                     return false;
                 }
             } else {
-                delete active.data[chat_id]?.[targetMembers[i].user_id];
+                await active.removeUser(chat_id, targetMembers[i].user_id);
             }
         }
     }
