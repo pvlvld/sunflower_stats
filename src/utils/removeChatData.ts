@@ -1,10 +1,10 @@
 import { DBPoolManager } from "../db/poolManager.js";
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
 import { QueryResult } from "pg";
 
 /** Returns -1 on db error */
 async function removeChatData(chat_id: string | number): Promise<number> {
-    active.data[chat_id] = undefined;
+    active.removeChat(+chat_id);
     let res: QueryResult<any>;
 
     try {
