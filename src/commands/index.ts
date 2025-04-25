@@ -49,6 +49,9 @@ import { updateDbChatsInfo } from "./staff/updateDbChatsInfo.js";
 import { stats_user_global } from "./stats_user_global.js";
 import { statsChatGlobal } from "./statsChatGlobal.js";
 
+import { active as oldActive } from "../data/active.js";
+import { active } from "../redis/active.js";
+
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
     const dm = bot.chatType("private");
@@ -279,6 +282,11 @@ function regCommands() {
     botAdmin.hears(/^!ssblid/, addToBlacklist);
 
     botAdmin.hears("!ssuci", updateDbChatsInfo);
+
+    botAdmin.hears("!mytr", async (ctx) => {
+        oldActive.load();
+        active.seedFromYAML();
+    });
 
     botAdmin.hears(/^!sse/, async (ctx) => {
         if (ctx.msg.reply_to_message) {

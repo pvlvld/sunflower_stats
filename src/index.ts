@@ -10,7 +10,6 @@ import { GrammyError, HttpError } from "grammy";
 import regCommands from "./commands/index.js";
 import regHandlers from "./handlers/index.js";
 import { limit } from "@grammyjs/ratelimiter";
-import { active } from "./data/active.js";
 import createServer from "./server.js";
 import { run } from "@grammyjs/runner";
 import process from "node:process";
