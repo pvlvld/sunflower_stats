@@ -1,7 +1,7 @@
 import { Filter, GrammyError } from "grammy";
 import { Database } from "../db/db.js";
 import { IContext } from "../types/context.js";
-import { active } from "../data/active.js";
+import { active } from "../redis/active.js";
 
 class ChatMigrationHandler {
     private async handle(from_id: string, to_id: string): Promise<void> {
@@ -22,8 +22,7 @@ class ChatMigrationHandler {
             DO NOTHING;
         `;
         await Database.poolManager.getPool.query(query);
-        active.data[to_id] = active.data[from_id];
-        delete active.data[from_id];
+        active.migrateChatId(Number(from_id), Number(to_id));
     }
 
     async handleFromError(e: GrammyError): Promise<void> {
