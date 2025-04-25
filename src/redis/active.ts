@@ -59,9 +59,8 @@ class ChatUserStore {
 
         if (userExists) {
             // If user exists, need to preserve nick if not updating
-            if (nickname === "") {
-                delete userDataToStore.nickname;
-            }
+            if (nickname === "") delete userDataToStore.nickname;
+            if (active_first === "") delete userDataToStore.active_first;
 
             // Only set the non-empty fields
             const fieldsToUpdate: Record<string, string> = {};
