@@ -11,11 +11,13 @@ async function set_nickname(ctx: IGroupTextContext) {
     } else if (nickname.length > 20) {
         await ctx.reply("Максимальна довжина нікнейму 20 символів.");
     } else {
-        await active.updateUserField(ctx.chat.id, ctx.from.id, "nickname", Escape.html(nickname));
-        await ctx.reply(`✅ Успішно встановлено нікнейм: ${nickname}`, {
-            disable_notification: true,
-            link_preview_options: { is_disabled: true },
-        });
+        await Promise.all([
+            active.updateUserField(ctx.chat.id, ctx.from.id, "nickname", nickname),
+            ctx.reply(`✅ Успішно встановлено нікнейм: ${Escape.html(nickname)}`, {
+                disable_notification: true,
+                link_preview_options: { is_disabled: true },
+            }),
+        ]);
     }
 }
 export default set_nickname;
