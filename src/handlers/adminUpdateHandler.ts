@@ -2,17 +2,17 @@ import type { Context, Filter } from "grammy";
 import cacheManager from "../cache/cache.js";
 import cfg from "../config.js";
 
-async function adminUpdateHandler(ctx: Filter<Context, "chat_member">): Promise<void> {
+async function adminUpdateHandler(ctx: Filter<Context, "chat_member" | ":left_chat_member">): Promise<void> {
     const chat_id = ctx.chat.id;
-    const user_id = ctx.chatMember.new_chat_member.user.id;
-    const new_status = ctx.chatMember.new_chat_member.status;
-    const old_status = ctx.chatMember.old_chat_member.status;
+    const user_id = ctx.chatMember ? ctx.chatMember.new_chat_member.user.id : ctx.msg.left_chat_member.id;
+    const new_status = ctx.chatMember?.new_chat_member.status;
+    const old_status = ctx.chatMember?.old_chat_member.status;
 
     if (new_status === old_status) {
         return;
     }
 
-    if (ctx.chatMember.new_chat_member.user.is_bot) {
+    if (ctx.chatMember?.new_chat_member.user.is_bot || ctx.msg?.left_chat_member?.is_bot) {
         return;
     }
 
