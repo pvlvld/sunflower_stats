@@ -77,9 +77,10 @@ class ChatUserStore {
             }
         } else {
             multi.hmset(userKey, userDataToStore);
-            // Add user to the chat's user set
-            multi.sadd(chatKey, userId.toString());
         }
+
+        // ALWAYS add user to the chat's user set, regardless of whether they existed before
+        multi.sadd(chatKey, userId.toString());
 
         await multi.exec();
     }
