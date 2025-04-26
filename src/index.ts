@@ -49,9 +49,9 @@ async function main() {
 
     const allowed_updates = ["message", "chat_member", "my_chat_member", "callback_query", "edited_message"] as const;
 
+    regHandlers();
     bot.use(ActiveCollectorWrapper());
     bot.use(StatsCollectorWrapper());
-    regHandlers();
     bot.use(
         limit({
             timeFrame: 1500,
