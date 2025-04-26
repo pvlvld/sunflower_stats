@@ -32,9 +32,8 @@ function ActiveCollectorWrapper() {
                 "",
                 ctx.from.username || ""
             );
+            return await next();
         }
-
-        return await next();
     };
 }
 
