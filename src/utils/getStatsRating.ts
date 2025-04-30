@@ -26,11 +26,11 @@ export async function getStatsChatRating(
 
     for (let i = 0; i < stats.length; i++) {
         user = stats[i];
+        userData = users?.[user.user_id];
+        if (!userData) continue;
+        validUsersCount++;
+    
         if (statsRowsCount < statsRowLimit) {
-            userData = users?.[user.user_id];
-
-            if (!userData) continue;
-            validUsersCount++;
             if (validUsersCount > offset) {
                 replyParts.push(
                     `${displayRank}. ${getUserNameString(settings, userData, user.user_id)} — ${(
