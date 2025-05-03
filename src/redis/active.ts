@@ -197,7 +197,7 @@ class ChatUserStore {
         do {
             // SCAN through keys with pattern "chat:*" but exclude user keys
             // Using "chat:*" pattern to match both positive and negative IDs
-            const reply = await this.redis.scan(cursor, "MATCH", "chat:*", "COUNT", 1000);
+            const reply = await this.redis.scan(cursor, "MATCH", "active:chat:*", "COUNT", 1000);
 
             cursor = reply[0];
             const keys = reply[1];
