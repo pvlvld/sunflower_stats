@@ -211,7 +211,7 @@ class ChatUserStore {
         return chatKeys
             .map((key) => {
                 // Extract the number after "chat:" - handle both positive and negative numbers
-                const match = key.match(/^chat:(-?\d+)$/);
+                const match = key.match(/^active:chat:(-?\d+)$/);
                 return match ? parseInt(match[1], 10) : 0;
             })
             .filter((id) => id !== 0);
