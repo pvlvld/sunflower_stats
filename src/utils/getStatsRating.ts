@@ -29,7 +29,7 @@ export async function getStatsChatRating(
         userData = users?.[user.user_id];
         if (!userData) continue;
         validUsersCount++;
-    
+
         if (statsRowsCount < statsRowLimit) {
             if (validUsersCount > offset) {
                 replyParts.push(
@@ -59,9 +59,9 @@ function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_
         return getUserNameLink.html(userData.nickname || userData.name || "Невідомо", userData.username, user_id);
     } else {
         if (userData.nickname) {
-            return `${userData.nickname} (${userData.name})`;
+            return `${userData.nickname} (${Escape.html(userData.name)})`;
         } else {
-            return userData.name;
+            return Escape.html(userData.name);
         }
     }
 }
