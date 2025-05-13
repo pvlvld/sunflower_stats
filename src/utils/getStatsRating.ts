@@ -3,6 +3,7 @@ import getUserNameLink from "./getUserNameLink.js";
 import { IChatSettings } from "../types/settings.js";
 import { IDateRange } from "../commands/stats_chat.js";
 import { active, IActiveUser } from "../redis/active.js";
+import Escape from "./escape.js";
 
 export async function getStatsChatRating(
     stats: IDBChatUserStatsAndTotal[],
