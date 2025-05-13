@@ -56,15 +56,19 @@ export async function getStatsChatRating(
 }
 
 function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_id: number) {
+    let result = "";
+
     if (settings.userstatslink) {
-        return getUserNameLink.html(userData.nickname || userData.name || "Невідомо", userData.username, user_id);
+        result = getUserNameLink.html(userData.nickname || userData.name || "Невідомо", userData.username, user_id);
     } else {
         if (userData.nickname) {
-            return `${userData.nickname} (${Escape.html(userData.name)})`;
+            result = `${userData.nickname} (${Escape.html(userData.name)})`;
         } else {
-            return Escape.html(userData.name);
+            result = Escape.html(userData.name);
         }
     }
+
+    return result;
 }
 
 function encodeStatsMetadata(
