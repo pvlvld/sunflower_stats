@@ -12,6 +12,8 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     const args = ctx.message.text!.split(" ");
     const ignorePremium = args.includes("-prem");
     const skipMafia = args.includes("-mafia");
+    const skipNew = args.includes("-new");
+
     if (!ctx.msg.reply_to_message) {
         return void ctx.reply("Команда має бути у відповідь на цільове повідомлення.");
     }
@@ -23,7 +25,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     ctx.reply(
         `Розрочато розсилку.${ignorePremium ? "\n- Ігнорування преміум чатів." : ""}${
             skipMafia ? "\n- Ігнорування чатів мафії." : ""
-        }`
+        }${skipNew ? "\n- Ігнорування нових чатів." : ""}`
     ).catch((e) => {});
     await cacheManager.PremiumStatusCache.seed_chats();
     const chats = await active.getAllChatIds();
@@ -35,6 +37,12 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
         for (let user in users) {
             if (moment().diff(moment(users[user].active_last), "days") < 5) {
                 if (ignorePremium && cacheManager.PremiumStatusCache.get(chat).status) break;
+
+                if (skipNew) {
+                    const firstRecordDate = (await Database.stats.chat.firstRecordDate(chat)) || new Date();
+                    if (firstRecordDate > moment().subtract(5, "days").toDate()) break;
+                }
+
                 if (skipMafia) {
                     chatMembersCount = Object.keys(users).length;
                     if (chatMembersCount > 69) break;
