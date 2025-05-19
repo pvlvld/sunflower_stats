@@ -11,6 +11,7 @@ import { chatMigrationHandler } from "../../handlers/chatMigrationHandler.js";
 async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     const args = ctx.message.text!.split(" ");
     const ignorePremium = args.includes("-prem");
+    const skipMafia = args.includes("-mafia");
     if (!ctx.msg.reply_to_message) {
         return void ctx.reply("Команда має бути у відповідь на цільове повідомлення.");
     }
@@ -23,13 +24,24 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     await cacheManager.PremiumStatusCache.seed_chats();
     const chats = await active.getAllChatIds();
     let users: Awaited<ReturnType<typeof active.getChatUsers>> = {};
+    let chatMembersCount: number = 0;
     for (let chat of chats) {
         if (chat > 0) continue;
         users = await active.getChatUsers(chat);
         for (let user in users) {
             if (moment().diff(moment(users[user].active_last), "days") < 5) {
                 if (ignorePremium && cacheManager.PremiumStatusCache.get(chat).status) break;
+                if (skipMafia) {
+                    chatMembersCount = Object.keys(users).length;
+                    if (chatMembersCount > 69) break;
 
+                    // TODO: make this prettier. preserve monomorphic type if possible
+                    const isMafiaBotIn = await ctx.api.getChatMember(chat, 5837576145).catch((e) => {
+                        return { status: "error" };
+                    });
+                    // Mafia bot works only with admin rights
+                    if (["administrator"].includes(isMafiaBotIn?.status)) break;
+                }
                 try {
                     totalAttemptsSent++;
                     void (await ctx.api.forwardMessage(chat, ctx.chat.id, ctx.msg.reply_to_message.message_id, {
