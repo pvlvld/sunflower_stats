@@ -40,6 +40,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
 
                 if (skipNew) {
                     const firstRecordDate = (await Database.stats.chat.firstRecordDate(chat)) || new Date();
+                    // Skip if the first record date is less than 5 days ago
                     if (firstRecordDate > moment().subtract(5, "days").toDate()) break;
                 }
 
