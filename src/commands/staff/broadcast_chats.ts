@@ -7,6 +7,7 @@ import cfg from "../../config.js";
 import moment from "moment";
 import cacheManager from "../../cache/cache.js";
 import { chatMigrationHandler } from "../../handlers/chatMigrationHandler.js";
+import { Database } from "../../db/db.js";
 
 async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     const args = ctx.message.text!.split(" ");
