@@ -20,7 +20,11 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
 
     let successfullySent = 0;
     let totalAttemptsSent = 0;
-    ctx.reply(`Розрочато розсилку.\n${ignorePremium ? "- Ігнорування преміум чатів" : ""}`).catch((e) => {});
+    ctx.reply(
+        `Розрочато розсилку.${ignorePremium ? "\n- Ігнорування преміум чатів." : ""}${
+            skipMafia ? "\n- Ігнорування чатів мафії." : ""
+        }`
+    ).catch((e) => {});
     await cacheManager.PremiumStatusCache.seed_chats();
     const chats = await active.getAllChatIds();
     let users: Awaited<ReturnType<typeof active.getChatUsers>> = {};
