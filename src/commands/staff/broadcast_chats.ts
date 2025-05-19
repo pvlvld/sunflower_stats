@@ -35,7 +35,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
         if (chat > 0) continue;
         users = await active.getChatUsers(chat);
         for (let user in users) {
-            if (moment().diff(moment(users[user].active_last), "days") < 5) {
+            if (moment().diff(moment(users[user].active_last), "days") < 7) {
                 if (ignorePremium && cacheManager.PremiumStatusCache.get(chat).status) break;
 
                 if (skipNew) {
