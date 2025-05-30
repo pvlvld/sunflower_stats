@@ -451,6 +451,20 @@ class DBBotStats {
             return [] as { chat_id: number; title: string; total_messages: number }[];
         }
     }
+
+    public async messagesToday() {
+        try {
+            return (
+                await this._dbPoolManager.getPoolRead.query({
+                    text: `SELECT SUM(count) AS total FROM stats_daily WHERE date = $1`,
+                    values: [formattedDate.today[0]],
+                })
+            ).rows[0].total as number;
+        } catch (error) {
+            console.error(error);
+            return 0;
+        }
+    }
 }
 
 const DBStats = new DBStatsWrapper(DBPoolManager);
