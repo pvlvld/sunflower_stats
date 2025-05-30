@@ -214,8 +214,6 @@ function regCommands() {
 
     botAdmin.hears("!ssreset stats", botStatsManager.resetAll);
 
-    botAdmin.hears("!ssreset msg", botStatsManager.resetMessages);
-
     botAdmin.hears("!ssgc", collectGarbage);
 
     botAdmin.hears(/^!ssleave/, leaveChat_cmd);

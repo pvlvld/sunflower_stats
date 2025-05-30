@@ -1,11 +1,9 @@
 import { messagesStatsBatchStore } from "../data/messagesStatsBatchStore.js";
-import { botStatsManager } from "../commands/botStats.js";
 import type { Context, NextFunction } from "grammy";
 import cfg from "../config.js";
 
 export function StatsCollectorWrapper() {
     return async function statsCollector(ctx: Context, next: NextFunction) {
-        botStatsManager.newMessage();
         if (
             !ctx.from ||
             !ctx.chat ||
@@ -14,7 +12,7 @@ export function StatsCollectorWrapper() {
             ctx.chatMember ||
             ctx.msg?.left_chat_member ||
             // anonimous users
-            (cfg.IGNORE_IDS.indexOf(ctx.from.id) !== -1) ||
+            cfg.IGNORE_IDS.indexOf(ctx.from.id) !== -1 ||
             ctx.editedMessage
         ) {
             return await next();

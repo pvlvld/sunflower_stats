@@ -3,27 +3,19 @@ import { DBPoolManager } from "../db/poolManager.js";
 import cacheManager from "../cache/cache.js";
 import cfg from "../config.js";
 import bot from "../bot.js";
-import moment from "moment";
 import { getStatsChart } from "../chart/getStatsChart.js";
+import { Database } from "../db/db.js";
 
 type IBotStats = {
     commands: { [key: string]: number };
     joinGroups: number;
     leftGroups: number;
-    messages: {
-        total: number;
-        start_count_date: Date;
-    };
 };
 
 const BOT_STATS: IBotStats = {
     commands: {},
     joinGroups: 0,
     leftGroups: 0,
-    messages: {
-        total: 0,
-        start_count_date: new Date(),
-    },
 };
 
 async function getStatsMsg() {
@@ -81,13 +73,7 @@ export const botStatsManager = {
     },
     joinGroup: () => BOT_STATS.joinGroups++,
     leftGroup: () => BOT_STATS.leftGroups++,
-    newMessage: () => BOT_STATS.messages.total++,
-    resetMessages: () => {
-        BOT_STATS.messages.total = 0;
-        BOT_STATS.messages.start_count_date = new Date();
-    },
     resetAll: () => {
-        botStatsManager.resetMessages();
         BOT_STATS.commands = {};
         BOT_STATS.joinGroups = 0;
         BOT_STATS.leftGroups = 0;
