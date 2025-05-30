@@ -19,12 +19,17 @@ const BOT_STATS: IBotStats = {
 };
 
 async function getStatsMsg() {
+    const [messagesToday, totalMessages] = await Promise.all([
+        Database.stats.bot.messagesToday(),
+        Database.stats.bot.totalMessages(),
+    ]);
+
     let statsMsg = `
 Нових чатів: ${BOT_STATS.joinGroups.toLocaleString("fr-FR")}
 Покинуто чатів: ${BOT_STATS.leftGroups.toLocaleString("fr-FR")}
 Загалом: ${(BOT_STATS.joinGroups - BOT_STATS.leftGroups).toLocaleString("fr-FR")}
   
-Повідомлень за сьогодні ${((await Database.stats.bot.messagesToday()) || 0).toLocaleString("fr-FR")}`;
+Повідомлень за сьогодні ${(messagesToday || 0).toLocaleString("fr-FR")}`;
 
     if (Object.keys(BOT_STATS.commands).length > 0) {
         statsMsg += "\n\nЧастота використання команд:\n";
@@ -42,7 +47,7 @@ async function getStatsMsg() {
     statsMsg += "\n";
     statsMsg += `Chat charts: ${cacheManager.ChartCache_Chat.size.toLocaleString("fr-FR")}\n`;
     statsMsg += `User charts: ${cacheManager.ChartCache_User.size.toLocaleString("fr-FR")}\n`;
-    statsMsg += `Total messages: ${((await Database.stats.bot.totalMessages()) || 0).toLocaleString("fr-FR")}`;
+    statsMsg += `Total messages: ${(totalMessages || 0).toLocaleString("fr-FR")}`;
     return statsMsg;
 }
 
