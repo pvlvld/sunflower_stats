@@ -465,6 +465,19 @@ class DBBotStats {
             return 0;
         }
     }
+
+    public async totalMessages() {
+        try {
+            return (
+                await this._dbPoolManager.getPoolRead.query({
+                    text: `SELECT SUM(count) AS total FROM stats_daily`,
+                })
+            ).rows[0].total as number;
+        } catch (error) {
+            console.error(error);
+            return 0;
+        }
+    }
 }
 
 const DBStats = new DBStatsWrapper(DBPoolManager);
