@@ -6,7 +6,7 @@ async function getOldDbPool() {
         return pool;
     }
     pool = mysql.createPool({
-        host: "0.0.0.0",
+        host: process.env.OLD_DB_HOST || "0.0.0.0",
         user: "ulii",
         password: "myuliipassword",
         database: "soniashnyk_bot",
