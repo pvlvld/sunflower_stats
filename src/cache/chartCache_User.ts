@@ -108,7 +108,11 @@ class ChartCache_User {
     }
 
     public get size() {
-        return this._chartCache.size;
+        let size = 0;
+        for (const chatCache of this._chartCache.values()) {
+            size += chatCache.size;
+        }
+        return size;
     }
 }
 
