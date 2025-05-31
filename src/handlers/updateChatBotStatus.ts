@@ -20,13 +20,13 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.myChatMember.old_chat_member.status)) {
         botStatsManager.joinGroup();
 
-        const hello_msg = await hello(ctx);
-        await help_cmd(ctx);
-        if (hello_msg) {
-            hello_msg.message_id;
-        }
+        // const hello_msg = await hello(ctx);
+        const help_msg = await help_cmd(ctx);
+        // if (hello_msg) {
+        //     hello_msg.message_id;
+        // }
         // History scan only if there is more than 500 messages.
-        if (hello_msg && hello_msg.message_id > 500) {
+        if (help_msg && help_msg.message_id > 500) {
             if (ctx.chat.username) {
                 historyScanner.scanChat(ctx.chat.username, ctx.chat.id);
             } else {

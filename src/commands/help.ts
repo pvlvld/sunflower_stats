@@ -2,7 +2,7 @@ import type { IContext } from "../types/context.js";
 import help_menu from "../ui/menus/help.js";
 
 async function help_cmd(ctx: IContext) {
-    await ctx
+    return await ctx
         .reply(ctx.t("help"), {
             disable_notification: true,
             reply_markup: help_menu,
