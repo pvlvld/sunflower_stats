@@ -47,7 +47,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
 
                 if (skipMafia) {
                     chatMembersCount = Object.keys(users).length;
-                    if (chatMembersCount > 69) break;
+                    if (chatMembersCount > 99) break;
 
                     // TODO: make this prettier. preserve monomorphic type if possible
                     const isMafiaBotIn = await ctx.api.getChatMember(chat, 5837576145).catch((e) => {
