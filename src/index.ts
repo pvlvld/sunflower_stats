@@ -87,9 +87,13 @@ async function main() {
             console.log("Bot is started using long polling.");
         }
 
-        bot.api.sendAnimation(cfg.ANALYTICS_CHAT, cfg.MEDIA.ANIMATIONS.ThePrimeagen, {
-            caption: "Бота запущено!",
-        });
+        await bot.api
+            .sendAnimation(cfg.ANALYTICS_CHAT, cfg.MEDIA.ANIMATIONS.ThePrimeagen, {
+                caption: "Бота запущено!",
+            })
+            .catch((e) => {});
+
+        // addButtonToThePost(14, -1002188288504, "зіграти в гру", "https://t.me/+pX0GCECNRl1iYTli");
     });
 
     process.on("SIGINT", async () => await shutdown(DBPoolManager));
@@ -139,3 +143,18 @@ async function main() {
 }
 
 main();
+
+function addButtonToThePost(messageId: number, chatId: number, text: string, url: string) {
+    return bot.api.editMessageReplyMarkup(chatId, messageId, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    {
+                        text,
+                        url,
+                    },
+                ],
+            ],
+        },
+    });
+}
