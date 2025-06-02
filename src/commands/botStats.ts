@@ -5,6 +5,7 @@ import cfg from "../config.js";
 import bot from "../bot.js";
 import { getStatsChart } from "../chart/getStatsChart.js";
 import { Database } from "../db/db.js";
+import formattedDate from "../utils/date.js";
 
 type IBotStats = {
     commands: { [key: string]: number };
@@ -19,8 +20,9 @@ const BOT_STATS: IBotStats = {
 };
 
 async function getStatsMsg() {
+    const yesterdayDate = formattedDate.yesterday[0];
     const [messagesToday, totalMessages] = await Promise.all([
-        Database.stats.bot.messagesToday(),
+        Database.stats.bot.messagesDuringDate(yesterdayDate),
         Database.stats.bot.totalMessages(),
     ]);
 
@@ -29,7 +31,7 @@ async function getStatsMsg() {
 Покинуто чатів: ${BOT_STATS.leftGroups.toLocaleString("fr-FR")}
 Загалом: ${(BOT_STATS.joinGroups - BOT_STATS.leftGroups).toLocaleString("fr-FR")}
   
-Повідомлень за сьогодні ${(messagesToday || 0).toLocaleString("fr-FR")}`;
+Повідомлень за ${yesterdayDate}: ${messagesToday.toLocaleString("fr-FR")}`;
 
     if (Object.keys(BOT_STATS.commands).length > 0) {
         statsMsg += "\n\nЧастота використання команд:\n";

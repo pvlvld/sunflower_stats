@@ -452,12 +452,12 @@ class DBBotStats {
         }
     }
 
-    public async messagesToday() {
+    public async messagesDuringDate(date: string) {
         try {
             return (
                 await this._dbPoolManager.getPoolRead.query({
                     text: `SELECT SUM(count) AS total FROM stats_daily WHERE date = $1`,
-                    values: [formattedDate.today[0]],
+                    values: [date],
                 })
             ).rows[0].total as number;
         } catch (error) {
