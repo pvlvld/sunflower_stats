@@ -28,8 +28,10 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
         return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats));
     }
 
-    const chatSettings = await getCachedOrDBChatSettings(chat_id);
-    const user_stats = await DBStats.user.all(chat_id, user_id);
+    const [chatSettings, user_stats] = await Promise.all([
+        getCachedOrDBChatSettings(chat_id),
+        DBStats.user.all(chat_id, user_id),
+    ]);
 
     if (isUserStatsEmpty(user_stats)) {
         if (type === "я") {
