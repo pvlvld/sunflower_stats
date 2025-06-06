@@ -35,6 +35,8 @@ const allowedChartStatsRanges: IAllowedChartStatsRanges[] = ["monthRange", "year
 // TODO: use await Promise.all() for chart + msg
 
 async function stats_chat(ctx: IGroupTextContext): Promise<void> {
+    const start = String(process.hrtime.bigint());
+
     const splittedCommand = (ctx.msg.text ?? ctx.msg.caption).split(" ");
     const externalChatTarget = Number(splittedCommand[2]);
     let chat_id = 0;
@@ -43,12 +45,14 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     } else {
         chat_id = ctx.chat.id;
     }
-    const chatSettings = await getCachedOrDBChatSettings(chat_id);
     const rawCmdDateRange = (splittedCommand[1] ?? "сьогодні").toLowerCase() as keyof typeof cmdToDateRangeMap;
     const dateRange = cmdToDateRangeMap[rawCmdDateRange];
 
-    const start = String(process.hrtime.bigint());
-    const stats = await DBStats.chat.inRage(chat_id, dateRange);
+    const [stats, chatSettings] = await Promise.all([
+        DBStats.chat.inRage(chat_id, dateRange),
+        getCachedOrDBChatSettings(chat_id),
+    ]);
+
     const queryTime = String(process.hrtime.bigint());
     let msgTime = "";
     let chartTime = "";
