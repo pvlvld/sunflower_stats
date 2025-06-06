@@ -8,6 +8,7 @@ import getUserId from "../utils/getUserId.js";
 import cacheManager from "../cache/cache.js";
 import { DBStats } from "../db/stats.js";
 import cfg from "../config.js";
+import { active } from "../redis/active.js";
 
 async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
     const chat_id = ctx.chat.id;
@@ -28,12 +29,13 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
         return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats));
     }
 
-    const [chatSettings, user_stats] = await Promise.all([
+    const [chatSettings, userStats, userActive] = await Promise.all([
         getCachedOrDBChatSettings(chat_id),
         DBStats.user.all(chat_id, user_id),
+        active.getUser(chat_id, user_id),
     ]);
 
-    if (isUserStatsEmpty(user_stats)) {
+    if (isUserStatsEmpty(userStats)) {
         if (type === "я") {
             return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats),
             { caption: "Схоже, що це ваше перше повідомлення в цьому чаті 🎉" });
@@ -42,7 +44,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
         }
     }
 
-    const statsMessage = await getUserStatsMessage(chat_id, user_id, user_stats);
+    const statsMessage = await getUserStatsMessage(user_id, userStats, userActive);
 
     if (!chatSettings.charts) {
         return void (await sendSelfdestructMessage(
