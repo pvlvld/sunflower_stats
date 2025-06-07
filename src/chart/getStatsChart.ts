@@ -286,8 +286,8 @@ async function getStatsChartFromData(
 
 function renderToBuffer(configuration: ChartConfiguration) {
     const canvas = ChartCanvasManager.get;
-    const chart = new chartJs(canvas, configuration);
-    const buffer = chart.canvas.toBuffer("image/png", { quality: 1 });
+    const chart = new chartJs(canvas, configuration); // 50-70ms
+    const buffer = chart.canvas.toBuffer("image/jpeg", { quality: 0.9, chromaSubsampling: true });
     destroyChart_Async(chart);
     ChartCanvasManager.recycle(canvas);
     return buffer;
