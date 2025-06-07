@@ -10,7 +10,12 @@ async function overlayChartOnVideo(chartBuffer: Buffer, target_id: number, chat_
         const passthroughStream = new Stream.PassThrough();
         const outputChunks: Buffer[] = [];
 
-        if ((await isPremium(chat_id)) && (await getCachedOrDBChatSettings(chat_id)).usechatbgforall) {
+        const [isPremiumUser, chatSettings] = await Promise.all([
+            isPremium(chat_id),
+            getCachedOrDBChatSettings(chat_id),
+        ]);
+
+        if (isPremiumUser && chatSettings.usechatbgforall) {
             target_id = chat_id;
         }
 
