@@ -5,39 +5,35 @@ import { isPremium } from "../../utils/isPremium.js";
 import { getCachedOrDBChatSettings } from "../../utils/chatSettingsUtils.js";
 
 async function overlayChartOnVideo(chartBuffer: Buffer, target_id: number, chat_id: number): Promise<Buffer> {
-    return new Promise(async (resolve, reject) => {
-        const imageStream = Readable.from(chartBuffer);
+    const imageStream = Readable.from(chartBuffer);
+    const outputChunks: Buffer[] = [];
+
+    const [isPremiumUser, chatSettings] = await Promise.all([isPremium(chat_id), getCachedOrDBChatSettings(chat_id)]);
+
+    if (isPremiumUser && chatSettings.usechatbgforall) {
+        target_id = chat_id;
+    }
+
+    return new Promise((resolve, reject) => {
         const passthroughStream = new Stream.PassThrough();
-        const outputChunks: Buffer[] = [];
-
-        const [isPremiumUser, chatSettings] = await Promise.all([
-            isPremium(chat_id),
-            getCachedOrDBChatSettings(chat_id),
-        ]);
-
-        if (isPremiumUser && chatSettings.usechatbgforall) {
-            target_id = chat_id;
-        }
-
+        // const ffmpegTime = new Date().getTime();
         Ffmpeg(`${cfg.PATHS.BASE_BG_PATH}/${target_id}.mp4`)
             .input(imageStream)
             .complexFilter([`overlay=W-w-0:H-h-0`])
             .format("mp4")
-            .outputOptions(["-movflags frag_keyframe+empty_moov"])
-            .pipe(passthroughStream)
-            .on("end", () => passthroughStream.end())
+            .outputOptions(["-movflags frag_keyframe+empty_moov", "-preset superfast", "-crf 26"])
             .on("error", reject)
-            .on("stderr", console.error);
+            // .on("stderr", console.error)
+            .pipe(passthroughStream);
 
-        passthroughStream.on("data", function (buf) {
-            outputChunks.push(buf);
-        });
-        passthroughStream.on("error", function (err) {
+        passthroughStream.on("data", (buf) => outputChunks.push(buf));
+        passthroughStream.on("error", (err) => {
             console.error("Error in passthrough stream:", err);
             reject(err);
         });
-        passthroughStream.on("end", function () {
+        passthroughStream.on("end", () => {
             resolve(Buffer.concat(outputChunks));
+            // console.log(`FFmpeg time: ${new Date().getTime() - ffmpegTime}ms`);
         });
     });
 }
