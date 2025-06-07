@@ -7,44 +7,42 @@ import { DBStats } from "../../db/stats.js";
 import { MessageEntity } from "@grammyjs/types";
 import { active } from "../../redis/active.js";
 
-const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").dynamic(
-    async (ctx, range) => {
-        if (
-            !ctx.chat ||
-            !ctx.from ||
-            !ctx.msg ||
-            !(ctx.msg.caption || ctx.msg.text) ||
-            !["group", "supergroup"].includes(ctx.chat.type)
-        ) {
-            return;
-        }
+const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").dynamic(async (ctx, range) => {
+    if (
+        !ctx.chat ||
+        !ctx.from ||
+        !ctx.msg ||
+        !(ctx.msg.caption || ctx.msg.text) ||
+        !["group", "supergroup"].includes(ctx.chat.type)
+    ) {
+        return;
+    }
 
-        const nextBtn: MenuButton<IContext> = {
-            text: "↝",
-            middleware: [
-                async (ctx: IContext) => {
-                    changePage(ctx as IGroupTextContext, baseInfo, "next");
-                },
-            ],
-        };
-        const previousBtn: MenuButton<IContext> = {
-            text: "↜",
-            middleware: [
-                async (ctx: IContext) => {
-                    changePage(ctx as IGroupTextContext, baseInfo, "previous");
-                },
-            ],
-        };
+    const nextBtn: MenuButton<IContext> = {
+        text: "↝",
+        middleware: [
+            async (ctx: IContext) => {
+                changePage(ctx as IGroupTextContext, baseInfo, "next");
+            },
+        ],
+    };
+    const previousBtn: MenuButton<IContext> = {
+        text: "↜",
+        middleware: [
+            async (ctx: IContext) => {
+                changePage(ctx as IGroupTextContext, baseInfo, "previous");
+            },
+        ],
+    };
 
-        range.add(previousBtn).add(nextBtn);
-        if (!isHasMetadata(ctx)) {
-            return range;
-        }
-
-        const baseInfo = await getBaseInfo(ctx as IGroupTextContext);
+    range.add(previousBtn).add(nextBtn);
+    if (!isHasMetadata(ctx)) {
         return range;
     }
-);
+
+    const baseInfo = await getBaseInfo(ctx as IGroupTextContext);
+    return range;
+});
 
 const chopMetadataPart = "http://t.me/meta?";
 
