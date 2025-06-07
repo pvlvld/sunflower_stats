@@ -5,6 +5,7 @@ import { getCachedOrDBChatSettings } from "../../utils/chatSettingsUtils.js";
 import { getStatsChatRating } from "../../utils/getStatsRating.js";
 import { DBStats } from "../../db/stats.js";
 import { MessageEntity } from "@grammyjs/types";
+import { active } from "../../redis/active.js";
 
 const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").dynamic(
     async (ctx, range) => {
@@ -99,7 +100,10 @@ async function changePage(
 }
 
 async function getPage(baseInfo: Awaited<ReturnType<typeof getBaseInfo>>, direction: "previous" | "next") {
-    const stats = await DBStats.chat.inRage(baseInfo.chat_id, baseInfo.dateRange as IDateRange);
+    const [stats, activeUsers] = await Promise.all([
+        DBStats.chat.inRage(baseInfo.chat_id, baseInfo.dateRange as IDateRange),
+        active.getChatUsers(baseInfo.chat_id),
+    ]);
     let target_page = 1;
     if (direction === "next") {
         if (baseInfo.currentPage + 1 > baseInfo.pagesCount) {
@@ -117,7 +121,7 @@ async function getPage(baseInfo: Awaited<ReturnType<typeof getBaseInfo>>, direct
 
     const statsMsesage = await getStatsChatRating(
         stats,
-        baseInfo.chat_id,
+        activeUsers,
         baseInfo.settings,
         target_page,
         baseInfo.dateRange as IDateRange,

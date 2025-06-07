@@ -7,7 +7,7 @@ import Escape from "./escape.js";
 
 export async function getStatsChatRating(
     stats: IDBChatUserStatsAndTotal[],
-    chat_id: number,
+    activeUsers: Awaited<ReturnType<typeof active.getChatUsers>>,
     settings: IChatSettings,
     page: number,
     dateRange: IDateRange | "date",
@@ -16,7 +16,6 @@ export async function getStatsChatRating(
     const replyParts: string[] = [];
 
     const statsRowLimit = Math.min(type === "text" ? 50 : 25, stats.length);
-    const users = await active.getChatUsers(chat_id);
 
     let statsRowsCount = 0;
     const offset = statsRowLimit * page - statsRowLimit;
@@ -27,7 +26,7 @@ export async function getStatsChatRating(
 
     for (let i = 0; i < stats.length; i++) {
         user = stats[i];
-        userData = users?.[user.user_id];
+        userData = activeUsers?.[user.user_id];
         if (!userData) continue;
         validUsersCount++;
 

@@ -7,6 +7,7 @@ import parseCmdArgs from "../utils/parseCmdArgs.js";
 import { DBStats } from "../db/stats.js";
 import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
 import Escape from "../utils/escape.js";
+import { active } from "../redis/active.js";
 
 async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true) {
     const dateRange = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption) as string[];
@@ -23,9 +24,14 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
         ));
     }
     const chat_id = ctx.chat.id;
-    const chatSettings = await getCachedOrDBChatSettings(chat_id);
 
     if (dateRange.length === 2) {
+        const [stats, chatSettings, activeUsers] = await Promise.all([
+            DBStats.chat.inRage(chat_id, [dateRange[0], dateRange[1]]),
+            getCachedOrDBChatSettings(chat_id),
+            active.getChatUsers(chat_id),
+        ]);
+
         return void (await sendSelfdestructMessage(
             ctx,
             {
@@ -34,40 +40,31 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
                     `📊 Статистика${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}» за ${
                         dateRange[0]
                     } - ${dateRange[1]}:\n\n` +
-                    (await getStatsChatRating(
-                        await DBStats.chat.inRage(chat_id, [dateRange[0], dateRange[1]]),
-                        chat_id,
-                        chatSettings,
-                        1,
-                        "date",
-                        "text"
-                    )),
+                    (await getStatsChatRating(stats, activeUsers, chatSettings, 1, "date", "text")),
+                chart: undefined,
+            },
+            chatSettings.selfdestructstats
+        ));
+    } else {
+        const [stats, chatSettings, activeUsers] = await Promise.all([
+            DBStats.chat.date(chat_id, dateRange[0]),
+            getCachedOrDBChatSettings(chat_id),
+            active.getChatUsers(chat_id),
+        ]);
+
+        return void (await sendSelfdestructMessage(
+            ctx,
+            {
+                isChart: false,
+                text:
+                    `📊 Статистика${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}» за ${
+                        dateRange[0]
+                    }:\n\n` + (await getStatsChatRating(stats, activeUsers, chatSettings, 1, "date", "text")),
                 chart: undefined,
             },
             chatSettings.selfdestructstats
         ));
     }
-
-    return void (await sendSelfdestructMessage(
-        ctx,
-        {
-            isChart: false,
-            text:
-                `📊 Статистика${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}» за ${
-                    dateRange[0]
-                }:\n\n` +
-                (await getStatsChatRating(
-                    await DBStats.chat.date(chat_id, dateRange[0]),
-                    chat_id,
-                    chatSettings,
-                    1,
-                    "date",
-                    "text"
-                )),
-            chart: undefined,
-        },
-        chatSettings.selfdestructstats
-    ));
 }
 
 export default stats_chat_range_cmd;

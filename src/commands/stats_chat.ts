@@ -48,9 +48,10 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     const rawCmdDateRange = (splittedCommand[1] ?? "сьогодні").toLowerCase() as keyof typeof cmdToDateRangeMap;
     const dateRange = cmdToDateRangeMap[rawCmdDateRange];
 
-    const [stats, chatSettings] = await Promise.all([
+    const [stats, chatSettings, activeUsers] = await Promise.all([
         DBStats.chat.inRage(chat_id, dateRange),
         getCachedOrDBChatSettings(chat_id),
+        active.getChatUsers(chat_id),
     ]);
 
     const queryTime = String(process.hrtime.bigint());
@@ -76,7 +77,8 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
                 chatSettings,
                 1,
                 true,
-                ctx.chat.title
+                ctx.chat.title,
+                activeUsers
             );
             msgTime = String(process.hrtime.bigint());
             chartTime = msgTime;
@@ -115,7 +117,8 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
                 chatSettings,
                 1,
                 true,
-                ctx.chat.title
+                ctx.chat.title,
+                activeUsers
             );
             msgTime = String(process.hrtime.bigint());
 
@@ -157,7 +160,8 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
             chatSettings,
             1,
             false,
-            ctx.chat.title
+            ctx.chat.title,
+            activeUsers
         );
         msgTime = String(process.hrtime.bigint());
 
@@ -199,12 +203,13 @@ async function getStatsMessage(
     settings: IChatSettings,
     page: number,
     chart: boolean,
-    title: string
+    title: string,
+    activeUsers: Awaited<ReturnType<typeof active.getChatUsers>>
 ) {
     return (
         `📊 Статистика${await getPremiumMarkSpaced(chat_id)}«${Escape.html(title)}» за ${
             dateRange === "all" ? "весь час" : rawCmdDateRange
-        }:\n\n` + (await getStatsChatRating(stats, chat_id, settings, page, dateRange, chart ? "caption" : "text"))
+        }:\n\n` + (await getStatsChatRating(stats, activeUsers, settings, page, dateRange, chart ? "caption" : "text"))
     );
 }
 
