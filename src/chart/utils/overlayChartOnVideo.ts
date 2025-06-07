@@ -5,10 +5,9 @@ import { isPremium } from "../../utils/isPremium.js";
 import { getCachedOrDBChatSettings } from "../../utils/chatSettingsUtils.js";
 
 async function overlayChartOnVideo(chartBuffer: Buffer, target_id: number, chat_id: number): Promise<Buffer> {
+    const [isPremiumUser, chatSettings] = await Promise.all([isPremium(chat_id), getCachedOrDBChatSettings(chat_id)]);
     const imageStream = Readable.from(chartBuffer);
     const outputChunks: Buffer[] = [];
-
-    const [isPremiumUser, chatSettings] = await Promise.all([isPremium(chat_id), getCachedOrDBChatSettings(chat_id)]);
 
     if (isPremiumUser && chatSettings.usechatbgforall) {
         target_id = chat_id;
