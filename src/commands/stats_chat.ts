@@ -39,12 +39,11 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
     const splittedCommand = (ctx.msg.text ?? ctx.msg.caption).split(" ");
     const externalChatTarget = Number(splittedCommand[2]);
-    let chat_id = 0;
+    let chat_id = ctx.chat.id;
     if (externalChatTarget && cfg.ADMINS.includes(ctx.from.id)) {
         chat_id = externalChatTarget;
-    } else {
-        chat_id = ctx.chat.id;
     }
+
     const rawCmdDateRange = (splittedCommand[1] ?? "сьогодні").toLowerCase() as keyof typeof cmdToDateRangeMap;
     const dateRange = cmdToDateRangeMap[rawCmdDateRange];
 

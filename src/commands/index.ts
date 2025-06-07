@@ -95,14 +95,18 @@ function regCommands() {
     });
 
     // STATS
+
+    groupStats.hears(
+        /^(!|\/)?(стата|статистика|stats)(@[a-zA-Z_]+)? \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/i,
+        async (ctx) => {
+            botStatsManager.commandUse("стата дата");
+            stats_chat_range_cmd(ctx);
+        }
+    );
+
     //@ts-expect-error
     groupStats.command("stats", stats_chat);
     groupStats.hears(/^(стата|статистика)$/i, stats_chat);
-
-    groupStats.hears(/^(!?)(стата|статистика) \d{4}\.\d{2}\.\d{2}( \d{4}\.\d{2}\.\d{2})?$/i, async (ctx) => {
-        botStatsManager.commandUse("стата дата");
-        stats_chat_range_cmd(ctx);
-    });
 
     groupStats.command("statsall", async (ctx) => {
         ctx.msg.text = "стата вся";
