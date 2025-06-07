@@ -5,7 +5,7 @@ import { bgImagePlugin } from "../plugins/bgImagePlugin.js";
 import { hexToGgbString } from "./hexToGgbString.js";
 import { bgColorPlugin } from "../plugins/bgColorPlugin.js";
 
-type IChartConfiguration = ChartConfiguration & {
+export type IChartConfiguration = ChartConfiguration & {
     custom: {
         transparent: boolean;
     };
@@ -109,7 +109,7 @@ async function getDefaultChartConfig(chat_id: number, user_id: number, type: ICh
     };
 }
 
-function getTopChatsMonthlyChartConfig(positions: number): ChartConfiguration {
+function getTopChatsMonthlyChartConfig(positions: number): IChartConfiguration {
     return {
         type: "line",
         data: {

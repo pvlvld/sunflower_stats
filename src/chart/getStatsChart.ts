@@ -1,12 +1,12 @@
 import type { IAllowedChartStatsRanges } from "../commands/stats_chat.js";
 import { ChartCanvasManager } from "./chartCanvas.js";
-import type { Chart, ChartConfiguration } from "chart.js";
+import type { Chart } from "chart.js";
 import { DBPoolManager } from "../db/poolManager.js";
 import chartJs from "chart.js/auto";
 import { InputFile } from "grammy";
-import { type Image, loadImage } from "canvas";
+import { Canvas, type Image, loadImage } from "canvas";
 import fs from "node:fs";
-import { getChartConfig } from "./utils/getChartConfig.js";
+import { getChartConfig, IChartConfiguration } from "./utils/getChartConfig.js";
 import { getChartData } from "./utils/getChartData.js";
 import { downloadAvatar } from "./utils/downloadAvatar.js";
 import bot from "../bot.js";
@@ -284,19 +284,25 @@ async function getStatsChartFromData(
     }
 }
 
-function renderToBuffer(configuration: ChartConfiguration) {
-    const canvas = ChartCanvasManager.get;
+function renderToBuffer(configuration: IChartConfiguration) {
+    const canvas = ChartCanvasManager.get; // 0ms
     const chart = new chartJs(canvas, configuration); // 50-70ms
-    const buffer = chart.canvas.toBuffer("image/jpeg", { quality: 0.9, chromaSubsampling: true });
+    let buffer;
+    if (configuration.custom?.transparent) {
+        buffer = chart.canvas.toBuffer("image/png", { compressionLevel: 0, filters: Canvas.PNG_NO_FILTERS }); // 15ms
+    } else {
+        buffer = chart.canvas.toBuffer("image/jpeg", { quality: 0.9, chromaSubsampling: true }); // 3ms
+    }
+    // 1ms
     destroyChart_Async(chart);
     ChartCanvasManager.recycle(canvas);
     return buffer;
 }
 
-function renderToBufferX2(configuration: ChartConfiguration) {
+function renderToBufferX2(configuration: IChartConfiguration) {
     const canvas = ChartCanvasManager.getX2;
     const chart = new chartJs(canvas, configuration);
-    const buffer = chart.canvas.toBuffer("image/png", { quality: 1 });
+    const buffer = chart.canvas.toBuffer("image/png", { compressionLevel: 0 });
     destroyChart_Async(chart);
     ChartCanvasManager.recycleX2(canvas);
     return buffer;
