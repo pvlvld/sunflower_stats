@@ -45,7 +45,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     }
 
     const rawCmdDateRange = (splittedCommand[1] ?? "сьогодні").toLowerCase() as keyof typeof cmdToDateRangeMap;
-    const dateRange = cmdToDateRangeMap[rawCmdDateRange];
+    const dateRange = cmdToDateRangeMap[rawCmdDateRange] || "today";
 
     const [stats, chatSettings, activeUsers] = await Promise.all([
         DBStats.chat.inRage(chat_id, dateRange),
