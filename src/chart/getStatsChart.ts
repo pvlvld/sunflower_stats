@@ -302,7 +302,7 @@ function renderToBuffer(configuration: IChartConfiguration) {
 function renderToBufferX2(configuration: IChartConfiguration) {
     const canvas = ChartCanvasManager.getX2;
     const chart = new chartJs(canvas, configuration);
-    const buffer = chart.canvas.toBuffer("image/png", { compressionLevel: 0 });
+    const buffer = chart.canvas.toBuffer("image/jpeg", { quality: 0.9, chromaSubsampling: true });
     destroyChart_Async(chart);
     ChartCanvasManager.recycleX2(canvas);
     return buffer;
