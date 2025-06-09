@@ -9,8 +9,6 @@ async function getUserStatsMessage(user_id: number, userStats: IDBChatUserStatsA
 Статистика${await getPremiumMarkSpaced(user_id)}${
         userActive?.nickname ? `${userActive.nickname} (${userActive?.name})` : `${userActive?.name}`
     }
-    
-📊 Актив: 
 
 - за день: ${(userStats.today || 0).toLocaleString("fr-FR")}
 - за тиждень: ${(userStats.week || 0).toLocaleString("fr-FR")}
@@ -18,7 +16,7 @@ async function getUserStatsMessage(user_id: number, userStats: IDBChatUserStatsA
 - за рік: ${(userStats.year || 0).toLocaleString("fr-FR")}
 - за весь час: ${(userStats.total || 0).toLocaleString("fr-FR")}
 
-📅 Перша поява в чаті: ${`${userStats.first_seen} (${moment(userStats.first_seen).fromNow()})`}`);
+📅 Перше повідомлення: ${`${userStats.first_seen} (${moment(userStats.first_seen).fromNow()})`}`);
 }
 
 export default getUserStatsMessage;
