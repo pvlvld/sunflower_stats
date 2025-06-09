@@ -206,9 +206,9 @@ function regCommands() {
 
     bot.command("tchats", statsChatGlobal);
 
-    group.hears(/^!дата вступу/, (ctx) => {
-        setUserJoinDate_cmd(ctx);
-    });
+    // group.hears(/^!дата вступу/, (ctx) => {
+    //     setUserJoinDate_cmd(ctx);
+    // });
 
     // -------- STAFF COMMANDS --------
 
