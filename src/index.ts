@@ -143,7 +143,7 @@ async function main() {
 }
 
 main();
-
+// addButtonToThePost(16, -1002188288504, "Welcome to Unicorn Mafia 🦄", "https://t.me/+ucM55jyWpK5iY2My");
 function addButtonToThePost(messageId: number, chatId: number, text: string, url: string) {
     return bot.api.editMessageReplyMarkup(chatId, messageId, {
         reply_markup: {
