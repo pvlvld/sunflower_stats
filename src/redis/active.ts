@@ -1,5 +1,4 @@
 import Redis from "ioredis";
-import * as OldActive from "../data/active.js";
 import { getUserFirstStatsDate } from "../utils/getUserFirstStatsDate.js";
 import formattedDate from "../utils/date.js";
 
@@ -257,29 +256,6 @@ class ChatUserStore {
 
     async close(): Promise<void> {
         await this.redis.quit();
-    }
-
-    async seedFromYAML() {
-        const chats = Object.keys(OldActive.active.data);
-        let users = [];
-        let user = {} as OldActive.IActiveUser | undefined;
-        for (const chatId of chats) {
-            users = Object.keys(OldActive.active.data[chatId]!);
-            for (const userId of users) {
-                user = OldActive.active.data[chatId]![userId];
-                if (user?.name && user?.active_first && user?.active_last) {
-                    await this.upsertUser(
-                        parseInt(chatId, 10),
-                        parseInt(userId, 10),
-                        user.active_first,
-                        user.active_last,
-                        user.name,
-                        user.nickname || "",
-                        user.username || ""
-                    );
-                }
-            }
-        }
     }
 }
 
