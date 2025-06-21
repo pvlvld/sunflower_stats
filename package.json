@@ -56,7 +56,6 @@
         "@grammyjs/types": "^3.20.0",
         "@types/big.js": "^6.2.2",
         "@types/bun": "^1.2.15",
-        "@types/dotenv": "^8.2.3",
         "@types/fluent-ffmpeg": "^2.1.27",
         "@types/js-yaml": "^4.0.9",
         "@types/node": "^22.15.28",
