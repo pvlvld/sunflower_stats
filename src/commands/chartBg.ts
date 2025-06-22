@@ -17,6 +17,33 @@ import Escape from "../utils/escape.js";
 
 const baseBgPath = "./data/chartBg/";
 
+const changeBgMessages = {
+    success: {
+        status: true,
+        message: "chart-bg-change-success",
+    },
+    howToUse: {
+        status: false,
+        message: "chart-bg-how-to-use",
+    },
+    cantSaveImage: {
+        status: false,
+        message: "chart-bg-save-fail",
+    },
+    cantResizeImage: {
+        status: false,
+        message: "chart-bg-resize-fail",
+    },
+    restricted: {
+        status: false,
+        message: "chart-bg-change-restricted",
+    },
+    animationDonateOnly: {
+        status: false,
+        message: "chart-bg-animation-donate-only",
+    },
+};
+
 async function setChartBg(
     ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext | IGroupAnimationCaptionContext,
     type: "chat" | "user"
@@ -27,12 +54,12 @@ async function setChartBg(
         !ctx.msg.reply_to_message?.photo &&
         !ctx.msg.reply_to_message?.animation
     ) {
-        return void ctx.reply("Щоб змінити фон, наділшіть зображення чи гіф з цією команою в описі.");
+        return void ctx.reply(ctx.t(changeBgMessages.howToUse.message));
     }
     let target_id = -1;
 
     if (cacheManager.RestrictedUsersCache.isRestricted(ctx.from.id, "chartBg")) {
-        return void (await ctx.reply("Вам тимчасово заборонено змінювати фони.").catch((e) => {}));
+        return void (await ctx.reply(ctx.t("chart-bg-change-restricted")).catch((e) => {}));
     }
 
     if (type === "chat") {
@@ -42,16 +69,14 @@ async function setChartBg(
     }
 
     if (ctx.from.id === ctx.chat.id || cfg.IGNORE_IDS.includes(target_id)) {
-        return void (await ctx
-            .reply("Схоже, що ви пишете від імені чату або каналу. Це не підтримується.")
-            .catch((e) => {}));
+        return void (await ctx.reply(ctx.t("anon-user-unsupported-error")).catch((e) => {}));
     }
 
     if (
         (ctx.msg.animation || ctx.msg.reply_to_message?.animation) &&
         !((await isPremium(target_id)) || cfg.ADMINS.includes(ctx.from.id))
     ) {
-        return void (await ctx.reply("Анімовані фони доступні лише донатерам /donate").catch((e) => {}));
+        return void (await ctx.reply(ctx.t("chart-bg-animation-donate-only")).catch((e) => {}));
     }
     // TODO:
     //@ts-expect-error
@@ -65,19 +90,8 @@ async function setChartBg(
         cacheManager.ChartCache_User.removeUser(target_id);
     }
 
-    void (await ctx.reply(donwloadRes.message).catch((e) => {}));
+    void (await ctx.reply(ctx.t(donwloadRes.message)).catch((e) => {}));
 }
-
-const donloadBgErrors = {
-    cantSaveImage: {
-        status: false,
-        message: "Не вдалося зберегти зображення. Спробуйте знову.",
-    },
-    cantResizeImage: {
-        status: false,
-        message: "Не вдалося змінити розмір зображення. Спробуйте знову.",
-    },
-};
 
 async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptionContext, type: "user" | "chat") {
     let bgFormat: "photo" | "animation" = "photo";
@@ -99,7 +113,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
     const isDownloaded = await (await ctx.api.getFile(file.file_id).catch((e) => {}))?.download(path);
 
     if (isDownloaded === undefined) {
-        return donloadBgErrors.cantSaveImage;
+        return changeBgMessages.cantSaveImage;
     }
 
     if (file.width !== cfg.CHART.width || file.height !== cfg.CHART.height) {
@@ -111,16 +125,16 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
                     console.error(e);
                 }
 
-                return donloadBgErrors.cantResizeImage;
+                return changeBgMessages.cantResizeImage;
             }
         } else {
             readFile(path, async (err, data) => {
                 if (err) {
-                    return await cantSaveImageError();
+                    return changeBgMessages.cantSaveImage;
                 }
                 writeFile(path, resizeImage(data), async (err) => {
                     if (err) {
-                        return await cantSaveImageError();
+                        return changeBgMessages.cantSaveImage;
                     }
                     unlink(`${baseBgPath}/${target_id}.mp4`, (e) => {});
                 });
@@ -160,14 +174,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
             })
             .catch((e) => {});
     }
-    return { status: true, message: "💅🏻 Фон успішно оновлено!" };
-}
-
-async function cantSaveImageError() {
-    return {
-        status: false,
-        message: "Не вдалося зберегти зображення. Спробуйте знову.",
-    };
+    return changeBgMessages.success;
 }
 
 export { setChartBg };

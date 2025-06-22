@@ -8,32 +8,40 @@ const PAGE_LENGTH = 25;
 async function chatInactive_cmd(ctx: IGroupTextContext) {
     const page = parseInt(parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0] ?? "");
     if (!page) {
-        await ctx.reply("Введіть номер сторінки.\n!неактив 1");
+        await ctx.reply(ctx.t("inactive-enter-page"));
         return;
     }
 
-    await ctx.reply(await getInactivePageMessage(ctx.chat.id, Math.abs(page)), {
+    await ctx.reply((await getInactivePageMessage(ctx.chat.id, Math.abs(page))).message, {
         link_preview_options: { is_disabled: true },
         disable_notification: true,
     });
 }
 
+const EmptyPageError = {
+    status: false,
+    message: "empty-page-error",
+};
+
 async function getInactivePageMessage(chat_id: number, page: number) {
     const users = await active.getChatUsers(chat_id);
     const inactiveUsers = getInactivePage(users, page);
-    if (inactiveUsers.length === 0) return "Ця сторінка порожня.";
+    if (inactiveUsers.length === 0) return EmptyPageError;
 
-    return inactiveUsers
-        .map((target, i) => `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(chat_id, users, target)}`)
-        .join("\n");
+    return {
+        status: true,
+        message: inactiveUsers
+            .map((target, i) => `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(users, target)}`)
+            .join("\n"),
+    };
 }
 
-function genUserPageRecord(chat_id: number, users: Awaited<ReturnType<typeof active.getChatUsers>>, target: string) {
+function genUserPageRecord(users: Awaited<ReturnType<typeof active.getChatUsers>>, target: string) {
     return `<b>${getUserNameLink.html(
-        users[target]?.nickname || users[target]?.name || "невідомо",
+        users[target]?.nickname || users[target]?.name || "🌻",
         users[target]?.username,
         target
-    )}</b> — ${users[target]?.active_last || "невідомо"}`;
+    )}</b> — ${users[target]?.active_last || "🌻"}`;
 }
 
 function getInactivePage(users: Awaited<ReturnType<typeof active.getChatUsers>>, page: number) {

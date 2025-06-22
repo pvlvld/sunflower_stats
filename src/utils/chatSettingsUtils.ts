@@ -25,13 +25,13 @@ async function getChatSettingsMessageText(ctx: IContext) {
 
     return `
 ${ctx.chat!.title}
-Налаштування Соняшник | Статистика
-
-Графіки статистики ${chatSettings.charts ? "✅" : "❌"}
-Фон чату для команд !я та !ти ${chatSettings.usechatbgforall ? "✅" : "❌"}
-Команди статистики лише для адмінів ${chatSettings.statsadminsonly ? "✅" : "❌"}
-Самознищення повідомлень ${chatSettings.selfdestructstats ? "✅" : "❌"}
-Покликання на акаунти ${chatSettings.userstatslink ? "✅" : "❌"}
+${ctx.t("settings-message", {
+    charts: chatSettings.charts ? "✅" : "❌",
+    usechatbgforall: chatSettings.usechatbgforall ? "✅" : "❌",
+    statsadminsonly: chatSettings.statsadminsonly ? "✅" : "❌",
+    selfdestructstats: chatSettings.selfdestructstats ? "✅" : "❌",
+    userstatslink: chatSettings.userstatslink ? "✅" : "❌",
+})}
 `;
 }
 

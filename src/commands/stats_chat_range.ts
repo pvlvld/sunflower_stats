@@ -17,7 +17,7 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
             ctx,
             {
                 isChart: false,
-                text: 'Команда має мати такий формат:\n"стата 2022.04.13" або стата "2022.04.13 2022.04.14"',
+                text: ctx.t("stats-date-help"),
                 chart: undefined,
             },
             true
@@ -31,6 +31,18 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
             getCachedOrDBChatSettings(chat_id),
             active.getChatUsers(chat_id),
         ]);
+
+        if (stats.length === 0) {
+            return void (await sendSelfdestructMessage(
+                ctx,
+                {
+                    isChart: false,
+                    text: ctx.t("stats-empty-date"),
+                    chart: undefined,
+                },
+                true
+            ));
+        }
 
         return void (await sendSelfdestructMessage(
             ctx,
@@ -51,6 +63,18 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
             getCachedOrDBChatSettings(chat_id),
             active.getChatUsers(chat_id),
         ]);
+
+        if (stats.length === 0) {
+            return void (await sendSelfdestructMessage(
+                ctx,
+                {
+                    isChart: false,
+                    text: ctx.t("stats-empty-date"),
+                    chart: undefined,
+                },
+                true
+            ));
+        }
 
         return void (await sendSelfdestructMessage(
             ctx,
