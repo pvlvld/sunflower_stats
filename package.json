@@ -5,7 +5,7 @@
     "exports": "./build/index.js",
     "type": "module",
     "engines": {
-        "node": "23"
+        "node": "24"
     },
     "scripts": {
         "start-pm2": "export NODE_ENV='production' && pm2 start build/index.js --no-pmx --node-args=\"--expose-gc --optimize_for_size\" --name stats --kill-timeout 60000 --log-date-format 'MM-DD HH:mm:ss'",
