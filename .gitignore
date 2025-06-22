@@ -10,3 +10,4 @@ bun.lockb
 *.session
 data/chartBg
 data/profileImages
+redis_data
