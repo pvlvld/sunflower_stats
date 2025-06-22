@@ -8,3 +8,5 @@ build
 bun.lockb
 .vscode/
 *.session
+data/chartBg
+data/profileImages
