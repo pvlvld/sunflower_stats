@@ -11,3 +11,4 @@ bun.lockb
 data/chartBg
 data/profileImages
 redis_data
+.husky/_
