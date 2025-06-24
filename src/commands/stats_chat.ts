@@ -1,7 +1,7 @@
 import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage.js";
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import { getStatsChatRating } from "../utils/getStatsRating.js";
-import type { IGroupTextContext } from "../types/context.js";
+import type { IGroupContext, IGroupTextContext } from "../types/context.js";
 import { getStatsChart } from "../chart/getStatsChart.js";
 import { IDBChatUserStatsAndTotal } from "../types/stats.js";
 import { IChatSettings } from "../types/settings.js";
@@ -25,6 +25,14 @@ const cmdToDateRangeMap = {
     рік: "yearRange",
     вся: "all",
     undefined: "today",
+    today: "today",
+    yesterday: "yesterday",
+    week: "weekRange",
+    month: "monthRange",
+    year: "yearRange",
+    all: "all",
+    full: "all",
+    total: "all",
 } as const;
 
 export type IDateRange = (typeof cmdToDateRangeMap)[keyof typeof cmdToDateRangeMap];
