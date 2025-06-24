@@ -52,7 +52,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         chat_id = externalChatTarget;
     }
 
-    const rawCmdDateRange = (splittedCommand[1] ?? "сьогодні").toLowerCase() as keyof typeof cmdToDateRangeMap;
+    const rawCmdDateRange = (splittedCommand[1] ?? "today").toLowerCase() as keyof typeof cmdToDateRangeMap;
     const dateRange = cmdToDateRangeMap[rawCmdDateRange] || "today";
 
     const [stats, chatSettings, activeUsers] = await Promise.all([
@@ -68,7 +68,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
     if (stats.length === 0) {
         return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats, {
-            caption: `👀 Схоже, що повідомлень за ${rawCmdDateRange} ще немає.`,
+            caption: ctx.t("stats-empty-date"),
         }));
     }
     const isPagination = await isPaginationNeeded(chat_id, stats, chatSettings);
@@ -76,16 +76,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         const cachedChart = cacheManager.ChartCache_Chat.get(chat_id, dateRange as IAllowedChartStatsRanges);
 
         if (cachedChart.status === "ok") {
-            const statsMessage = await getStatsMessage(
-                ctx,
-                dateRange,
-                rawCmdDateRange,
-                stats,
-                chatSettings,
-                1,
-                true,
-                activeUsers
-            );
+            const statsMessage = await getStatsMessage(ctx, dateRange, stats, chatSettings, 1, true, activeUsers);
             msgTime = String(process.hrtime.bigint());
             chartTime = msgTime;
 
@@ -115,16 +106,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
                 );
             }
         } else if (cachedChart.status === "unrendered") {
-            const statsMessage = await getStatsMessage(
-                ctx,
-                dateRange,
-                rawCmdDateRange,
-                stats,
-                chatSettings,
-                1,
-                true,
-                activeUsers
-            );
+            const statsMessage = await getStatsMessage(ctx, dateRange, stats, chatSettings, 1, true, activeUsers);
             msgTime = String(process.hrtime.bigint());
 
             const chart = await getStatsChart(chat_id, chat_id, "chat", dateRange as IAllowedChartStatsRanges);
@@ -157,16 +139,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
     }
 
     if (reply === undefined) {
-        const statsMessage = await getStatsMessage(
-            ctx,
-            dateRange,
-            rawCmdDateRange,
-            stats,
-            chatSettings,
-            1,
-            false,
-            activeUsers
-        );
+        const statsMessage = await getStatsMessage(ctx, dateRange, stats, chatSettings, 1, false, activeUsers);
         msgTime = String(process.hrtime.bigint());
 
         reply = await sendSelfdestructMessage(
@@ -202,19 +175,16 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 async function getStatsMessage(
     ctx: IGroupContext,
     dateRange: IDateRange,
-    rawCmdDateRange: keyof typeof cmdToDateRangeMap,
     stats: IDBChatUserStatsAndTotal[],
     settings: IChatSettings,
     page: number,
     chart: boolean,
     activeUsers: Awaited<ReturnType<typeof active.getChatUsers>>
 ) {
-    return (
-        `📊 Статистика${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}» за ${
-            dateRange === "all" ? "весь час" : rawCmdDateRange
-        }:\n\n` +
-        (await getStatsChatRating(ctx, stats, activeUsers, settings, page, dateRange, chart ? "caption" : "text"))
-    );
+    return `${ctx.t("stats-chat-period", {
+        title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
+        period: ctx.t(`stats-period-${dateRange}`),
+    })}\n\n${await getStatsChatRating(ctx, stats, activeUsers, settings, page, dateRange, chart ? "caption" : "text")}`;
 }
 
 async function getStatsUsersCount(chat_id: number, stats: IDBChatUserStatsAndTotal[]) {
