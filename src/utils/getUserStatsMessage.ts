@@ -3,20 +3,27 @@ import { IActiveUser } from "../redis/active.js";
 import Escape from "./escape.js";
 import moment from "moment";
 import { getPremiumMarkSpaced } from "./getPremiumMarkSpaced.js";
+import { IGroupContext } from "../types/context.js";
 
-async function getUserStatsMessage(user_id: number, userStats: IDBChatUserStatsAll, userActive: IActiveUser | null) {
-    return Escape.html(`
-Статистика${await getPremiumMarkSpaced(user_id)}${
-        userActive?.nickname ? `${userActive.nickname} (${userActive?.name})` : `${userActive?.name}`
-    }
+async function getUserStatsMessage(
+    ctx: IGroupContext,
+    user_id: number,
+    userStats: IDBChatUserStatsAll,
+    userActive: IActiveUser | null
+) {
+    const firstSeen = moment(userStats.first_seen).locale(await ctx.i18n.getLocale());
 
-- за день: ${(userStats.today || 0).toLocaleString("fr-FR")}
-- за тиждень: ${(userStats.week || 0).toLocaleString("fr-FR")}
-- за місяць: ${(userStats.month || 0).toLocaleString("fr-FR")}
-- за рік: ${(userStats.year || 0).toLocaleString("fr-FR")}
-- за весь час: ${(userStats.total || 0).toLocaleString("fr-FR")}
-
-📅 Перше повідомлення: ${`${userStats.first_seen} (${moment(userStats.first_seen).fromNow()})`}`);
+    return ctx.t("stats-user-message", {
+        name: `${await getPremiumMarkSpaced(user_id)}${Escape.html(
+            userActive?.nickname ? `${userActive.nickname} (${userActive?.name})` : `${userActive?.name}`
+        )}`,
+        today: (userStats.today || 0).toLocaleString("fr-FR"),
+        week: (userStats.week || 0).toLocaleString("fr-FR"),
+        month: (userStats.month || 0).toLocaleString("fr-FR"),
+        year: (userStats.year || 0).toLocaleString("fr-FR"),
+        total: (userStats.total || 0).toLocaleString("fr-FR"),
+        firstSeen: `${userStats.first_seen} (${firstSeen.fromNow()})`,
+    });
 }
 
 export default getUserStatsMessage;

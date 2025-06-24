@@ -60,22 +60,24 @@ async function generateUserGlobalTop(
     ctx: ChatTypeContext<ICommandContext, "private">,
     data: Awaited<ReturnType<typeof Database.stats.user.topChats>>
 ) {
-    let text = `Особистий топ чатів${await getPremiumMarkSpaced(ctx.from.id)}${getUserNameLink.html(
-        ctx.from.first_name,
-        ctx.from.username,
-        ctx.from.id
-    )}\n\n<blockquote>`;
-
+    const top: string[] = [];
     for (let i = 0; i < data.length; i++) {
-        text += `${1 + i}. «${Escape.html(data[i].title)}» - ${(data[i].chat_count as number).toLocaleString(
-            "fr-FR"
-        )} повідомлень\n`;
+        top.push(
+            `${i === 0 ? "" : "\n"}${1 + i}. «${Escape.html(data[i].title)}» - ${(
+                data[i].chat_count as number
+            ).toLocaleString("fr-FR")} повідомлень`
+        );
     }
 
-    text += "</blockquote>";
-    text += `\nЗагалом: ${(+data[0].total_count as number).toLocaleString("fr-FR")} повідомлень`;
-
-    return text;
+    return ctx.t("stats-user-top-chats", {
+        name: `${await getPremiumMarkSpaced(ctx.from.id)}${getUserNameLink.html(
+            ctx.from.first_name,
+            ctx.from.username,
+            ctx.from.id
+        )}`,
+        top: top.join(""),
+        totalMessages: (+data[0].total_count as number).toLocaleString("fr-FR"),
+    });
 }
 
 export { stats_user_global };

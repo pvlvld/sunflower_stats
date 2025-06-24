@@ -17,7 +17,7 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
         user_id = ctx.from.id;
     } else {
         if (ctx.msg.reply_to_message?.from?.is_bot) {
-            return void (await ctx.reply("🤖 біп-буп"));
+            return void (await ctx.reply(ctx.t("robot-sounds")));
         }
         user_id =
             ctx.msg.reply_to_message?.from?.id ||
@@ -38,13 +38,13 @@ async function stats_user(ctx: IGroupTextContext, type: "я" | "ти" = "я") {
     if (isUserStatsEmpty(userStats)) {
         if (type === "я") {
             return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats),
-            { caption: "Схоже, що це ваше перше повідомлення в цьому чаті 🎉" });
+            { caption: ctx.t("first-user-message") });
         } else {
             return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats));
         }
     }
 
-    const statsMessage = await getUserStatsMessage(user_id, userStats, userActive);
+    const statsMessage = await getUserStatsMessage(ctx, user_id, userStats, userActive);
 
     if (!chatSettings.charts) {
         return void (await sendSelfdestructMessage(
