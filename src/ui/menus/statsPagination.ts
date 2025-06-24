@@ -89,15 +89,19 @@ async function changePage(
     direction: "previous" | "next"
 ) {
     if (ctx.msg.caption) {
-        ctx.editMessageCaption({ caption: await getPage(baseInfo, direction) });
+        ctx.editMessageCaption({ caption: await getPage(ctx, baseInfo, direction) });
     } else {
-        ctx.editMessageText(await getPage(baseInfo, direction), {
+        ctx.editMessageText(await getPage(ctx, baseInfo, direction), {
             link_preview_options: { is_disabled: true },
         });
     }
 }
 
-async function getPage(baseInfo: Awaited<ReturnType<typeof getBaseInfo>>, direction: "previous" | "next") {
+async function getPage(
+    ctx: IContext,
+    baseInfo: Awaited<ReturnType<typeof getBaseInfo>>,
+    direction: "previous" | "next"
+) {
     const [stats, activeUsers] = await Promise.all([
         DBStats.chat.inRage(baseInfo.chat_id, baseInfo.dateRange as IDateRange),
         active.getChatUsers(baseInfo.chat_id),
@@ -118,6 +122,7 @@ async function getPage(baseInfo: Awaited<ReturnType<typeof getBaseInfo>>, direct
     }
 
     const statsMsesage = await getStatsChatRating(
+        ctx,
         stats,
         activeUsers,
         baseInfo.settings,

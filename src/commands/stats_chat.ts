@@ -69,14 +69,13 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
         if (cachedChart.status === "ok") {
             const statsMessage = await getStatsMessage(
-                chat_id,
+                ctx,
                 dateRange,
                 rawCmdDateRange,
                 stats,
                 chatSettings,
                 1,
                 true,
-                ctx.chat.title,
                 activeUsers
             );
             msgTime = String(process.hrtime.bigint());
@@ -109,14 +108,13 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
             }
         } else if (cachedChart.status === "unrendered") {
             const statsMessage = await getStatsMessage(
-                chat_id,
+                ctx,
                 dateRange,
                 rawCmdDateRange,
                 stats,
                 chatSettings,
                 1,
                 true,
-                ctx.chat.title,
                 activeUsers
             );
             msgTime = String(process.hrtime.bigint());
@@ -152,14 +150,13 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 
     if (reply === undefined) {
         const statsMessage = await getStatsMessage(
-            chat_id,
+            ctx,
             dateRange,
             rawCmdDateRange,
             stats,
             chatSettings,
             1,
             false,
-            ctx.chat.title,
             activeUsers
         );
         msgTime = String(process.hrtime.bigint());
@@ -195,20 +192,20 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
 }
 
 async function getStatsMessage(
-    chat_id: number,
+    ctx: IGroupContext,
     dateRange: IDateRange,
     rawCmdDateRange: keyof typeof cmdToDateRangeMap,
     stats: IDBChatUserStatsAndTotal[],
     settings: IChatSettings,
     page: number,
     chart: boolean,
-    title: string,
     activeUsers: Awaited<ReturnType<typeof active.getChatUsers>>
 ) {
     return (
-        `📊 Статистика${await getPremiumMarkSpaced(chat_id)}«${Escape.html(title)}» за ${
+        `📊 Статистика${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}» за ${
             dateRange === "all" ? "весь час" : rawCmdDateRange
-        }:\n\n` + (await getStatsChatRating(stats, activeUsers, settings, page, dateRange, chart ? "caption" : "text"))
+        }:\n\n` +
+        (await getStatsChatRating(ctx, stats, activeUsers, settings, page, dateRange, chart ? "caption" : "text"))
     );
 }
 

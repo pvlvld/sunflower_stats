@@ -4,8 +4,10 @@ import { IChatSettings } from "../types/settings.js";
 import { IDateRange } from "../commands/stats_chat.js";
 import { active, IActiveUser } from "../redis/active.js";
 import Escape from "./escape.js";
+import { IContext } from "../types/context.js";
 
 export async function getStatsChatRating(
+    ctx: IContext,
     stats: IDBChatUserStatsAndTotal[],
     activeUsers: Awaited<ReturnType<typeof active.getChatUsers>>,
     settings: IChatSettings,
@@ -44,7 +46,7 @@ export async function getStatsChatRating(
     }
 
     replyParts.push(
-        `\nЗагальна кількість повідомлень<a href="${encodeStatsMetadata(
+        `\n${ctx.t("stats-total-amount")}<a href="${encodeStatsMetadata(
             validUsersCount,
             statsRowLimit,
             dateRange,
