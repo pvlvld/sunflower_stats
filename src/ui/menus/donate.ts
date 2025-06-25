@@ -1,8 +1,9 @@
 import { Menu } from "@grammyjs/menu";
 import { Context } from "grammy";
+import type { IContext } from "../../types/context.js";
 
-const donate_menu = new Menu("donate-menu").dynamic(async (ctx, range) => {
-    range.url("Задонатити 💸🫰🏻", getDonateUrl(ctx));
+const donate_menu = new Menu<IContext>("donate-menu").dynamic(async (ctx, range) => {
+    range.url((ctx) => ctx.t("donate-menu-text"), getDonateUrl(ctx));
 });
 
 function getDonateUrl(ctx: Context): string {

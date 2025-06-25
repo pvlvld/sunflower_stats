@@ -1,4 +1,4 @@
-import { ICommandContext } from "../types/context.js";
+import type { ICommandContext } from "../types/context.js";
 import { Database } from "../db/db.js";
 import { getChartTopChatsMonthly } from "../chart/getStatsChart.js";
 import cacheManager from "../cache/cache.js";
@@ -31,7 +31,7 @@ async function _statsChatGlobal(ctx: ICommandContext) {
     ctx.api.sendChatAction(ctx.from!.id, "typing").catch((e) => {});
 
     try {
-        const [chart, caption] = await Promise.all([getChartImage(), getChartText()]);
+        const [chart, caption] = await Promise.all([getChartImage(), getChartText(ctx)]);
         const msg = await ctx.replyWithPhoto(chart, { caption });
 
         if (typeof chart !== "string" && msg?.photo !== undefined) {
@@ -51,20 +51,24 @@ async function _statsChatGlobal(ctx: ICommandContext) {
     }
 }
 
-async function generateTopMessage(data: Awaited<ReturnType<typeof Database.stats.bot.topChatsWeeklyRating>>) {
-    let message = "Топ чатів за останні сім днів:\n\n<blockquote>";
-    let chat: (typeof data)[0];
-
+async function generateTopMessage(
+    ctx: ICommandContext,
+    data: Awaited<ReturnType<typeof Database.stats.bot.topChatsWeeklyRating>>
+) {
+    let chat = data[0];
+    const top: string[] = [];
     for (let i = 0; i < data.length; i++) {
         chat = data[i];
-        message += `${1 + i}.${await getPremiumMarkSpaced(chat.chat_id)}«${Escape.html(
-            chat.title
-        )}» - ${chat.total_messages.toLocaleString("fr-FR")}\n`;
+        top.push(
+            `${i === 0 ? "" : "\n"}${1 + i}.${await getPremiumMarkSpaced(chat.chat_id)}«${Escape.html(
+                chat.title
+            )}» - ${chat.total_messages.toLocaleString("fr-FR")}`
+        );
     }
 
-    message += "</blockquote>";
-
-    return message;
+    return ctx.t("stats-global-chats-weekly", {
+        top: top.join(""),
+    });
 }
 
 async function getChartImage(): Promise<InputFile | string> {
@@ -74,11 +78,11 @@ async function getChartImage(): Promise<InputFile | string> {
     return await getChartTopChatsMonthly(await Database.stats.bot.topChatsMonthlyRating());
 }
 
-async function getChartText(): Promise<string> {
+async function getChartText(ctx: ICommandContext): Promise<string> {
     const cached = cacheManager.TextCache.get("statsChatGlobalWeekly");
 
     if (cached !== undefined) return cached;
-    return await generateTopMessage(await Database.stats.bot.topChatsWeeklyRating());
+    return await generateTopMessage(ctx, await Database.stats.bot.topChatsWeeklyRating());
 }
 
 export { statsChatGlobal };

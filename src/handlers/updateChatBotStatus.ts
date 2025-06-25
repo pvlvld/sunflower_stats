@@ -30,7 +30,7 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
             if (ctx.chat.username) {
                 historyScanner.scanChat(ctx.chat.username, ctx.chat.id);
             } else {
-                await ctx.reply("Відсканувати історію чату, щоб старі повідомлення відображались в статистиці чату?", {
+                await ctx.reply(ctx.t("hitory-scan-prompt"), {
                     reply_markup: historyScanProposal_menu,
                     reply_parameters: {
                         //@ts-expect-error
