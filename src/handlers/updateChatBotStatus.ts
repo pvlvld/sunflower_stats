@@ -2,7 +2,7 @@ import { historyScanProposal_menu } from "../ui/menus/historyScanProposal.js";
 import type { IGroupMyChatMemberContext } from "../types/context.js";
 import { historyScanner } from "../scanner/historyScanner.js";
 import { botStatsManager } from "../commands/botStats.js";
-import { leftGroup_menu } from "../ui/menus/leftGroup.js";
+// import { leftGroup_menu } from "../ui/menus/leftGroup.js";
 import { sleepAsync } from "../utils/sleep.js";
 import { hello } from "../commands/hello.js";
 import formattedDate from "../utils/date.js";
@@ -93,7 +93,7 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
                     ctx.from.id
                 })\n${admins_text}`,
                 {
-                    reply_markup: leftGroup_menu,
+                    // reply_markup: leftGroup_menu,
                     reply_parameters: { message_id: -1, allow_sending_without_reply: true },
                     link_preview_options: { is_disabled: true },
                     disable_notification: true,
