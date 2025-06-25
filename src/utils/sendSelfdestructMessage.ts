@@ -86,11 +86,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
                 });
                 void Database.chatSettings.set(chat_id, cacheManager.ChatSettingsCache.get(chat_id)!);
 
-                void (await ctx
-                    .reply(
-                        "У бота немає прав надсилати зображення, графіки статистики було вимкнуто.\nЩоб увімкнути їх, видайте боту права та змініть налаштування в /settings"
-                    )
-                    .catch((e) => {}));
+                void (await ctx.reply(ctx.t("error-ner-photos")).catch((e) => {}));
                 return undefined;
             }
         }

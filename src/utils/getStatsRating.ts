@@ -35,7 +35,7 @@ export async function getStatsChatRating(
         if (statsRowsCount < statsRowLimit) {
             if (validUsersCount > offset) {
                 replyParts.push(
-                    `${displayRank}. ${getUserNameString(settings, userData, user.user_id)} — ${(
+                    `${displayRank}. ${getUserNameString(ctx, settings, userData, user.user_id)} — ${(
                         user.count || 0
                     ).toLocaleString("fr-FR")}\n`
                 );
@@ -56,11 +56,15 @@ export async function getStatsChatRating(
     return replyParts.join("");
 }
 
-function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_id: number) {
+function getUserNameString(ctx: IContext, settings: IChatSettings, userData: IActiveUser, user_id: number) {
     let result = "";
 
     if (settings.userstatslink) {
-        result = getUserNameLink.html(userData.nickname || userData.name || "Невідомо", userData.username, user_id);
+        result = getUserNameLink.html(
+            userData.nickname || userData.name || ctx.t("unknown"),
+            userData.username,
+            user_id
+        );
     } else {
         if (userData.nickname) {
             result = `${userData.nickname} (${Escape.html(userData.name)})`;

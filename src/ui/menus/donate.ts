@@ -3,7 +3,7 @@ import { Context } from "grammy";
 import type { IContext } from "../../types/context.js";
 
 const donate_menu = new Menu<IContext>("donate-menu").dynamic(async (ctx, range) => {
-    range.url((ctx) => ctx.t("donate-menu-text"), getDonateUrl(ctx));
+    range.url((ctx) => ctx.t("button-plz-donate"), getDonateUrl(ctx));
 });
 
 function getDonateUrl(ctx: Context): string {

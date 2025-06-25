@@ -7,8 +7,8 @@ const start_menu = new Menu<IContext>("sart-menu", {
 })
     .text("Команди бота", (ctx) => void help_cmd(ctx))
     .row()
-    .url("Додати бота в чат", "https://t.me/soniashnyk_statistics_bot?startgroup")
+    .url((ctx) => ctx.t("button-add-bot"), "https://t.me/soniashnyk_statistics_bot?startgroup")
     .row()
-    .url("Підтримати існування соняха.", "https://send.monobank.ua/jar/6TjRWExdMt");
+    .url((ctx) => ctx.t("button-plz-donate "), "https://send.monobank.ua/jar/6TjRWExdMt");
 
 export default start_menu;
