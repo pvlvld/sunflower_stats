@@ -8,43 +8,6 @@ import { Database } from "../../db/db.js";
 import { getCachedOrDBChatSettings, getChatSettingsMessageText } from "../../utils/chatSettingsUtils.js";
 import cfg from "../../config.js";
 
-function getSettingButtonsText(setting: keyof IChatSettings, status: boolean) {
-    switch (setting) {
-        case "charts":
-            if (status) {
-                return "Вимкнути графіки";
-            } else {
-                return "Увімкнути графіки";
-            }
-        case "usechatbgforall":
-            if (status) {
-                return "Фон чату лише для стати чату";
-            } else {
-                return "Фон чату для стати учасників";
-            }
-        case "statsadminsonly":
-            if (status) {
-                return "Команди статистики для всіх";
-            } else {
-                return "Команди статистики лише для адмінів";
-            }
-        case "selfdestructstats":
-            if (status) {
-                return "Вимкнути  самознищення повіомлень";
-            } else {
-                return "Увімкнути самознищення повіомлень";
-            }
-        case "userstatslink":
-            if (status) {
-                return "Вимкнути покликання на акаунти в статі";
-            } else {
-                return "Увімкнути покликання на акаунти в статі";
-            }
-        default:
-            throw new Error("Unknown chat setting!");
-    }
-}
-
 async function toggleSetting(
     ctx: IContext & MenuFlavor,
     chat_id: number,
@@ -68,40 +31,55 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
     const chatSettings = await getCachedOrDBChatSettings(chat_id);
 
     range
-        .text(`${getSettingButtonsText("charts", chatSettings.charts)}`, async (ctx) => {
-            if (await isChatOwner(chat_id, from_id)) {
-                toggleSetting(ctx, chat_id, chatSettings, "charts");
-            }
-        })
-        .row()
-        .text(`${getSettingButtonsText("usechatbgforall", chatSettings.usechatbgforall)}`, async (ctx) => {
-            if (await isChatOwner(chat_id, from_id)) {
-                if (cfg.ADMINS.includes(from_id) || (await isPremium(chat_id))) {
-                    toggleSetting(ctx, chat_id, chatSettings, "usechatbgforall");
-                    cacheManager.ChartCache_User.removeChat(chat_id);
-                } else {
-                    ctx.reply("Ця функція доступна донатерам — введіть команду /donate в потрібному чаті!");
+        .text(
+            (ctx) => ctx.t("settings-menu-charts"),
+            async (ctx) => {
+                if (await isChatOwner(chat_id, from_id)) {
+                    toggleSetting(ctx, chat_id, chatSettings, "charts");
                 }
             }
-        })
+        )
         .row()
-        .text(`${getSettingButtonsText("statsadminsonly", chatSettings.statsadminsonly)}`, async (ctx) => {
-            if (await isChatOwner(chat_id, from_id)) {
-                toggleSetting(ctx, chat_id, chatSettings, "statsadminsonly");
+        .text(
+            (ctx) => ctx.t("settings-menu-chat-bg-for-members"),
+            async (ctx) => {
+                if (await isChatOwner(chat_id, from_id)) {
+                    if (cfg.ADMINS.includes(from_id) || (await isPremium(chat_id))) {
+                        toggleSetting(ctx, chat_id, chatSettings, "usechatbgforall");
+                        cacheManager.ChartCache_User.removeChat(chat_id);
+                    } else {
+                        ctx.reply(ctx.t("settings-menu-donate-alert"));
+                    }
+                }
             }
-        })
+        )
         .row()
-        .text(`${getSettingButtonsText("selfdestructstats", chatSettings.selfdestructstats)}`, async (ctx) => {
-            if (await isChatOwner(chat_id, from_id)) {
-                toggleSetting(ctx, chat_id, chatSettings, "selfdestructstats");
+        .text(
+            (ctx) => ctx.t("settings-menu-stats-cmd-admins-only"),
+            async (ctx) => {
+                if (await isChatOwner(chat_id, from_id)) {
+                    toggleSetting(ctx, chat_id, chatSettings, "statsadminsonly");
+                }
             }
-        })
+        )
         .row()
-        .text(`${getSettingButtonsText("userstatslink", chatSettings.userstatslink)}`, async (ctx) => {
-            if (await isChatOwner(chat_id, from_id)) {
-                toggleSetting(ctx, chat_id, chatSettings, "userstatslink");
+        .text(
+            (ctx) => ctx.t("settings-menu-selfdestruct-stats"),
+            async (ctx) => {
+                if (await isChatOwner(chat_id, from_id)) {
+                    toggleSetting(ctx, chat_id, chatSettings, "selfdestructstats");
+                }
             }
-        });
+        )
+        .row()
+        .text(
+            (ctx) => ctx.t("settings-menu-users-link"),
+            async (ctx) => {
+                if (await isChatOwner(chat_id, from_id)) {
+                    toggleSetting(ctx, chat_id, chatSettings, "userstatslink");
+                }
+            }
+        );
 });
 
 export { settings_menu };
