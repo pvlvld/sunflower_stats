@@ -17,6 +17,7 @@ class DbUserSettingWrapper {
 
     public async get(user_id: number) {
         // TODO: reset to default in db if no premium
+        // TODO: update types to a whole user settings
         let settings_db: undefined | IChartSettings;
         try {
             settings_db = (
