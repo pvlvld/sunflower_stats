@@ -21,7 +21,7 @@ class DbUserSettingWrapper {
         try {
             settings_db = (
                 await this._poolManager.getPoolRead.query(
-                    `SELECT line_color, font_color FROM users WHERE user_id = ${user_id};`
+                    `SELECT line_color, font_color, locale FROM users WHERE user_id = ${user_id};`
                 )
             ).rows[0] as any;
         } catch (e) {
