@@ -1,15 +1,6 @@
 import { IDBPoolManager } from "./poolManager.js";
 import { isPremium } from "../utils/isPremium.js";
-
-const _defaultUserSettings = {
-    locale: "en",
-    line_color: "e9bd07",
-    font_color: "eeeeee",
-};
-
-const DefaultUserSettings = Object.freeze(_defaultUserSettings);
-
-type IUserSettings = typeof _defaultUserSettings;
+import { DefaultUserSettings, IUserSettings } from "../sonsts/defaultUserSettings.js";
 
 class DbUserSettingWrapper {
     private _poolManager: IDBPoolManager;
