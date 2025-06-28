@@ -34,10 +34,9 @@ async function scanNewChat(ctx: IGroupContext, automatic = true) {
     const result = await historyScanner.scanChat(identifier, ctx.chat.id);
 
     if (!result.status) {
-        const error = result.error instanceof Error ? result.error.message : result.error;
-        console.error(error);
+        console.error(result.error);
         if (!automatic) {
-            void (await ctx.reply(error).catch((e) => {}));
+            void (await ctx.reply(ctx.t(result.localeError.message, result.localeError.variables)).catch((e) => {}));
         }
         return;
     } else {

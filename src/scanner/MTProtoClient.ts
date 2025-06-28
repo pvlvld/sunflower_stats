@@ -32,29 +32,32 @@ class MTProtoClient {
         } catch (e) {
             console.error(e);
             if ((e as Error).message?.includes("haven't joined")) {
+                console.error("Chat not joined or invalid ID/username provided:", id);
                 return {
                     success: true,
                     needToJoin: true,
                     chat_id: undefined,
-                    errorMessage: "haven't joined",
+                    errorMessage: "error-smtn-went-wrong-call-admin",
                 };
             }
 
             if ((e as Error).message?.includes("link has expired")) {
+                console.error("Chat link has expired or is invalid:", id);
                 return {
                     success: false,
                     needToJoin: true,
                     chat_id: undefined,
-                    error: "link has expired",
+                    error: "error-smtn-went-wrong-call-admin",
                 };
             }
 
             if ((e as Error).message?.includes("provided username is not valid")) {
+                console.error("Invalid username or chat ID provided:", id);
                 return {
                     success: true,
                     needToJoin: true,
                     chat_id: undefined,
-                    errorMessage: "provided username is not valid",
+                    errorMessage: "error-smtn-went-wrong-call-admin",
                 };
             }
             errorMessage = (e as Error).message;

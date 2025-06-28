@@ -21,7 +21,10 @@ class HistoryScanner extends MTProtoClient {
 
     public async scanChat(identifier: string | number, chat_id: number) {
         if (this.isQueued(chat_id)) {
-            return new ScanReport(identifier, false, 0, `Чат ${chat_id} / ${identifier} вже в черзі на сканування.`);
+            return new ScanReport(identifier, false, 0, `Chat ${chat_id} / ${identifier} already in queue.`, {
+                message: "history-scan-already-queued",
+                variables: {},
+            });
         }
 
         const scanTask = async () => {
@@ -46,13 +49,10 @@ class HistoryScanner extends MTProtoClient {
 
         const chatInfo = await this.getPrejoinChatInfo(identifier);
         if (!chatInfo.success) {
-            return createReportAndLeave(
-                chat_id || -1,
-                false,
-                0,
-                chatInfo.errorMessage || "Prejoin failed",
-                this._client
-            );
+            return createReportAndLeave(chat_id || -1, false, 0, "prejoin", this._client, {
+                message: chatInfo.errorMessage || "error-smtn-went-wrong-call-admin",
+                variables: {},
+            });
         } else {
             chat_id = chatInfo.chat_id;
         }
@@ -62,13 +62,11 @@ class HistoryScanner extends MTProtoClient {
         }
 
         if (!chat_id) {
-            return createReportAndLeave(
-                chat_id || -1,
-                false,
-                0,
-                `Не вдалось отримати інформацію про чат ${identifier}`,
-                this._client
-            );
+            console.error(`HistoryScanner: Failed to join chat ${identifier}.`);
+            return createReportAndLeave(chat_id || -1, false, 0, "", this._client, {
+                message: "history-scan-cant-start",
+                variables: {},
+            });
         }
 
         const endDate = (await DBStats.chat.firstRecordDate(chat_id)) || new Date();
@@ -98,7 +96,11 @@ class HistoryScanner extends MTProtoClient {
         const firstMessageDate = await this._getFirstMessageDate(identifier);
 
         if (firstMessageDate === undefined) {
-            return createReportAndLeave(chat_id, false, 0, "Не вдалося отримати історію чату.", this._client);
+            console.error(`HistoryScanner: Failed to get first message date for ${identifier}.`);
+            return createReportAndLeave(chat_id, false, 0, "Не вдалося отримати історію чату.", this._client, {
+                message: "error-smtn-went-wrong-call-admin",
+                variables: {},
+            });
         }
 
         if (formattedDate.dateToYYYYMMDD(endDate) === "2023-12-31") {
@@ -112,7 +114,11 @@ class HistoryScanner extends MTProtoClient {
                 false,
                 0,
                 "Немає потреби в скануванні.\nДата першого запису статистики чату збігається з датою першого повідомлення в чаті.",
-                this._client
+                this._client,
+                {
+                    message: "history-scan-dont-needed",
+                    variables: {},
+                }
             );
         }
 
@@ -122,7 +128,11 @@ class HistoryScanner extends MTProtoClient {
                 false,
                 0,
                 "Перше збережене в статистиці повідомлення старіше за перше доступне в чаті.",
-                this._client
+                this._client,
+                {
+                    message: "history-scan-first-known-msg-older-than-chat",
+                    variables: {},
+                }
             );
         }
 
@@ -170,12 +180,19 @@ class HistoryScanner extends MTProtoClient {
                         offset: { id: lastScannedMsgId, date: currentMsgDate.getTime() },
                     });
                 } else {
-                    return createReportAndLeave(chat_id, false, totalCount, "", this._client);
+                    console.error(`HistoryScanner: Error while scanning ${identifier}:`, error);
+                    return createReportAndLeave(chat_id, false, totalCount, "Unknown error.", this._client, {
+                        message: "error-smtn-went-wrong-call-admin",
+                        variables: {},
+                    });
                 }
             }
         }
 
-        return createReportAndLeave(chat_id, true, totalCount, "", this._client);
+        return createReportAndLeave(chat_id, true, totalCount, "", this._client, {
+            message: "history-scan-finished",
+            variables: { count: totalCount.toString() },
+        });
     }
 
     public async joinChat(identifier: string | number): Promise<number | undefined> {
@@ -246,16 +263,17 @@ function createReportAndLeave(
     identifier: number | string,
     status: boolean,
     count: number,
-    error: Error | string,
-    client: TelegramClient
+    error: string,
+    client: TelegramClient,
+    localeError: { message: string; variables: { [key: string]: string } }
 ) {
     bot.api
-        .sendMessage(cfg.ANALYTICS_CHAT, `Відскановано ${count} повідомлень в  ${identifier}`, {
+        .sendMessage(cfg.ANALYTICS_CHAT, `Successfully scanned ${count} msg in ${identifier}`, {
             message_thread_id: 3123,
         })
         .catch((e) => {});
     client.leaveChat(identifier).catch((e) => {});
-    return new ScanReport(identifier, status, count, error);
+    return new ScanReport(identifier, status, count, error, localeError);
 }
 
 class ScanReport {
@@ -263,7 +281,8 @@ class ScanReport {
         public identifier: number | string,
         public status: boolean,
         public count: number,
-        public error: Error | string
+        public error: string,
+        public localeError: { message: string; variables: { [key: string]: string } }
     ) {}
 }
 
