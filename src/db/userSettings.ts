@@ -1,8 +1,11 @@
-import { DefaultChartSettings, IChartSettings } from "./chartSettings.js";
 import { IDBPoolManager } from "./poolManager.js";
 import { isPremium } from "../utils/isPremium.js";
 
-const _defaultUserSettings = { ...DefaultChartSettings };
+const _defaultUserSettings = {
+    locale: "en",
+    line_color: "e9bd07",
+    font_color: "eeeeee",
+};
 
 const DefaultUserSettings = Object.freeze(_defaultUserSettings);
 
@@ -16,9 +19,7 @@ class DbUserSettingWrapper {
     }
 
     public async get(user_id: number) {
-        // TODO: reset to default in db if no premium
-        // TODO: update types to a whole user settings
-        let settings_db: undefined | IChartSettings;
+        let settings_db: undefined | IUserSettings;
         try {
             settings_db = (
                 await this._poolManager.getPoolRead.query(
@@ -29,29 +30,51 @@ class DbUserSettingWrapper {
             console.error("Error fetching user settings:", e);
         }
 
-        if (!settings_db) {
-            return DefaultChartSettings;
-        }
+        if (!settings_db) return DefaultUserSettings;
 
         if (
-            settings_db.line_color !== DefaultChartSettings.line_color ||
-            settings_db.font_color !== DefaultChartSettings.font_color
+            settings_db.line_color !== DefaultUserSettings.line_color ||
+            settings_db.font_color !== DefaultUserSettings.font_color
         ) {
             if (!(await isPremium(user_id))) {
-                await this.set(user_id, Object.assign(settings_db, { ...DefaultChartSettings }));
-                return DefaultChartSettings;
+                settings_db.line_color = DefaultUserSettings.line_color;
+                settings_db.font_color = DefaultUserSettings.font_color;
+                this.set(user_id, settings_db);
+                return settings_db;
             }
         }
         return settings_db;
     }
 
-    public async set(user_id: number, settings: IUserSettings) {
+    public async set(user_id: number, settings: Partial<IUserSettings>) {
         try {
-            void (await this._poolManager.getPoolWrite.query(`UPDATE users
-      SET line_color = '${settings.line_color}',
-          font_color = '${settings.font_color}'
-      WHERE user_id = ${user_id};
-      `));
+            const fields = [];
+            const values = [];
+            let idx = 2;
+
+            if (settings.line_color) {
+                fields.push(`line_color = $${idx++}`);
+                values.push(settings.line_color);
+            }
+            if (settings.font_color) {
+                fields.push(`font_color = $${idx++}`);
+                values.push(settings.font_color);
+            }
+            if (settings.locale) {
+                fields.push(`locale = $${idx++}`);
+                values.push(settings.locale);
+            }
+
+            if (fields.length === 0) return;
+
+            await this._poolManager.getPoolWrite.query(
+                `
+                UPDATE users
+                SET ${fields.join(", ")}
+                WHERE user_id = $1
+                `,
+                [user_id, ...values]
+            );
         } catch (error) {
             console.error(error);
         }

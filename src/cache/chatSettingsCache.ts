@@ -1,4 +1,4 @@
-import { DefaultChartSettings } from "../db/chartSettings.js";
+import { DefaultUserSettings } from "../db/userSettings.js";
 import type { IChatSettings } from "../types/settings.js";
 
 const DefaultChatSettings = Object.freeze(
@@ -10,7 +10,7 @@ const DefaultChatSettings = Object.freeze(
             selfdestructstats: false,
             userstatslink: true,
         },
-        DefaultChartSettings
+        DefaultUserSettings
     )
 );
 
