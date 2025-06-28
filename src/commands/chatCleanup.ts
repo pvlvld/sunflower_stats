@@ -1,7 +1,6 @@
 import type { IGroupTextContext } from "../types/context.js";
 import chatCleanup_menu from "../ui/menus/chatCleanup.js";
 import isValidNumbers from "../utils/isValidNumbers.js";
-import { DBPoolManager } from "../db/poolManager.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
 import isChatOwner from "../utils/isChatOwner.js";
 import cacheManager from "../cache/cache.js";
@@ -13,9 +12,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
 
     if (args.length !== 2 || !isValidNumbers([args[0], args[1]])) {
-        return void (await ctx.reply(
-            "Це робиться не так. Спробуйте щось на кшталт:\n!чистка 7 100\n7 - кількість днів, 100 - мінімальна кількість повідомлень за цей час"
-        ));
+        return void (await ctx.reply(ctx.t("chat-cleanup-usage")));
     }
 
     const chat_id = ctx.chat.id;
@@ -26,7 +23,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     }
 
     if (cacheManager.TTLCache.get(`cleanup_${chat_id}`) !== undefined) {
-        return void (await ctx.reply("В чаті вже запущено іншу чистку. Відмініть її або зачекайте хвилину."));
+        return void (await ctx.reply(ctx.t("chat-cleanup-already-running")));
     }
 
     const [targetDaysCount, targetMessagesCount] = args as string[];
@@ -45,15 +42,24 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     });
 
     if (targetMembers.length === 0) {
-        return void (await ctx.reply("За вказаними параметрами знайдено 0 учасників."));
+        return void (await ctx.reply(ctx.t("chat-cleanup-nothing-found")));
     }
 
     cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
-    void (await ctx.reply(getChatCleanupText(String(targetMembers.length), targetDaysCount, targetMessagesCount), {
+    void (await ctx.reply(getChatCleanupText(ctx, String(targetMembers.length), targetDaysCount, targetMessagesCount), {
         reply_markup: chatCleanup_menu,
     }));
 }
 
-export function getChatCleanupText(targetMembersCount: string, targetDaysCount: string, targetMessagesCount: string) {
-    return `Знайдено ${targetMembersCount} учасників, котрі за останні ${targetDaysCount} днів написали менше ${targetMessagesCount} повідомлень.`;
+export function getChatCleanupText(
+    ctx: IGroupTextContext,
+    targetMembersCount: string,
+    targetDaysCount: string,
+    targetMessagesCount: string
+) {
+    return ctx.t("chat-cleanup-text", {
+        targetMembersCount,
+        targetDaysCount,
+        targetMessagesCount,
+    });
 }
