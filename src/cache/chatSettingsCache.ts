@@ -1,5 +1,4 @@
-import { DefaultChatSettings } from "../consts/defaultChatSettings.js";
-import type { IChatSettings } from "../types/settings.js";
+import { DefaultChatSettings, IChatSettings } from "../consts/defaultChatSettings.js";
 
 class ChatSettingsCache {
     private _settingsCache: Record<number, IChatSettings | undefined>;

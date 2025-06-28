@@ -1,5 +1,4 @@
 import { DefaultUserSettings } from "./defaultUserSettings.js";
-import { DefaultChatSettings } from "../cache/chatSettingsCache.js";
 import { FixBooleanProperties } from "../types/utilityTypes.js";
 
 const DefaultChatSettings = Object.freeze(

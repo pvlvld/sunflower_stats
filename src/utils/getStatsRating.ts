@@ -1,10 +1,10 @@
 import type { IDBChatUserStatsAndTotal } from "../types/stats.js";
 import getUserNameLink from "./getUserNameLink.js";
-import { IChatSettings } from "../types/settings.js";
 import { IDateRange } from "../commands/stats_chat.js";
 import { active, IActiveUser } from "../redis/active.js";
 import Escape from "./escape.js";
 import { IContext } from "../types/context.js";
+import { IChatSettings } from "../consts/defaultChatSettings.js";
 
 export async function getStatsChatRating(
     ctx: IContext,

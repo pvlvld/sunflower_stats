@@ -4,7 +4,7 @@ import { getStatsChatRating } from "../utils/getStatsRating.js";
 import type { IGroupContext, IGroupTextContext } from "../types/context.js";
 import { getStatsChart } from "../chart/getStatsChart.js";
 import { IDBChatUserStatsAndTotal } from "../types/stats.js";
-import { IChatSettings } from "../types/settings.js";
+import { IChatSettings } from "../consts/defaultChatSettings.js";
 import { botStatsManager } from "./botStats.js";
 import cacheManager from "../cache/cache.js";
 import { DBStats } from "../db/stats.js";

@@ -1,4 +1,4 @@
-import type { IChatSettings } from "../../types/settings.js";
+import { IChatSettings } from "../../consts/defaultChatSettings.js";
 import type { IContext } from "../../types/context.js";
 import { Menu, type MenuFlavor } from "@grammyjs/menu";
 import { isPremium } from "../../utils/isPremium.js";
