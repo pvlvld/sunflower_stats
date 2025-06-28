@@ -1,18 +1,5 @@
-import { DefaultUserSettings } from "../sonsts/defaultUserSettings.js";
+import { DefaultChatSettings } from "../sonsts/defaultChatSettings.js";
 import type { IChatSettings } from "../types/settings.js";
-
-const DefaultChatSettings = Object.freeze(
-    Object.assign(
-        {
-            charts: true,
-            statsadminsonly: false,
-            usechatbgforall: false,
-            selfdestructstats: false,
-            userstatslink: true,
-        },
-        DefaultUserSettings
-    )
-);
 
 class ChatSettingsCache {
     private _settingsCache: Record<number, IChatSettings | undefined>;
@@ -45,4 +32,4 @@ class ChatSettingsCache {
     }
 }
 
-export { ChatSettingsCache, DefaultChatSettings };
+export { ChatSettingsCache };
