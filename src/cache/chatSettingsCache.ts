@@ -1,4 +1,4 @@
-import { DefaultUserSettings } from "../db/userSettings.js";
+import { DefaultUserSettings } from "../sonsts/defaultUserSettings.js";
 import type { IChatSettings } from "../types/settings.js";
 
 const DefaultChatSettings = Object.freeze(

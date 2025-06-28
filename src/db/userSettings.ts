@@ -72,4 +72,4 @@ class DbUserSettingWrapper {
     }
 }
 
-export { DbUserSettingWrapper, IUserSettings, DefaultUserSettings };
+export { DbUserSettingWrapper, IUserSettings };

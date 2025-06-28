@@ -1,5 +1,5 @@
 import { RGB } from "../utils/hexToRGB.js";
-import { DefaultUserSettings } from "./userSettings.js";
+import { DefaultUserSettings } from "../sonsts/defaultUserSettings.js";
 
 const DefaultChartSettings = DefaultUserSettings;
 
