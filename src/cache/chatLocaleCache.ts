@@ -29,8 +29,15 @@ class LocaleService {
         return settings.locale || this._defaultLocale;
     }
 
-    public static seed(): void {
-        // TODO:
+    public static async seed() {
+        await this.seedChats();
+    }
+
+    private static async seedChats() {
+        const data = await Database.chatSettings.getChatsLocaleWithActiveUsersSinceNDays(2);
+        for (let i = 0; i < data.length; i++) {
+            this.cache.set(data[i][0], data[i][1]);
+        }
     }
 
     public static flush(): void {
