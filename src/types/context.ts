@@ -6,6 +6,8 @@ import { I18nFlavor } from "@grammyjs/i18n";
 
 export type IContext = FileFlavor<ParseModeFlavor<Context>> & I18nFlavor;
 
+export type ITextContext = Filter<IContext, ":text" | ":caption">;
+
 export type IGroupContext = ChatTypeContext<IContext, "supergroup" | "group">;
 
 export type IGroupMyChatMemberContext = Filter<IGroupContext, "my_chat_member">;

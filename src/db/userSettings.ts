@@ -1,6 +1,6 @@
 import { IDBPoolManager } from "./poolManager.js";
 import { isPremium } from "../utils/isPremium.js";
-import { DefaultUserSettings, IUserSettings } from "../sonsts/defaultUserSettings.js";
+import { DefaultUserSettings, IUserSettings } from "../consts/defaultUserSettings.js";
 
 class DbUserSettingWrapper {
     private _poolManager: IDBPoolManager;

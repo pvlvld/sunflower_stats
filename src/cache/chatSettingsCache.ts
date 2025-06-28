@@ -1,4 +1,4 @@
-import { DefaultChatSettings } from "../sonsts/defaultChatSettings.js";
+import { DefaultChatSettings } from "../consts/defaultChatSettings.js";
 import type { IChatSettings } from "../types/settings.js";
 
 class ChatSettingsCache {

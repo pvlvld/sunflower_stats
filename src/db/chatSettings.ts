@@ -3,7 +3,7 @@ import { DefaultChartSettings } from "./chartSettings.js";
 import type { Writeable } from "../types/utilityTypes.js";
 import { IDBPoolManager } from "./poolManager.js";
 import { isPremium } from "../utils/isPremium.js";
-import { DefaultChatSettings, IChatSettings } from "../sonsts/defaultChatSettings.js";
+import { DefaultChatSettings, IChatSettings } from "../consts/defaultChatSettings.js";
 
 class DbChatSettingWrapper {
     private _poolManager: IDBPoolManager;
