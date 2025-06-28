@@ -69,27 +69,24 @@ class DbChatSettingWrapper {
         }
     }
 
-    public async getChatsLocaleWithActiveUsersSinceNDays(nDays: number): Promise<Map<number, string>> {
-        const chatsLocale = new Map<number, string>();
+    public async getChatsLocaleWithActiveUsersSinceNDays(nDays: number): Promise<Array<[number, string]>> {
         try {
-            const result = await this._poolManager.getPoolRead.query(
-                `SELECT c.chat_id, c.locale
+            const result = await this._poolManager.getPoolRead.query({
+                text: `SELECT c.chat_id, c.locale
                  FROM chats c
                  WHERE EXISTS (
                      SELECT 1
                      FROM stats_daily s
                      WHERE s.chat_id = c.chat_id
                        AND s.date >= CURRENT_DATE - INTERVAL '${nDays} days'
-                 );`
-            );
-            console.log(result);
-            for (const row of result.rows) {
-                chatsLocale.set(row.chat_id, row.locale);
-            }
+                 );`,
+                rowMode: "array",
+            });
+            return result.rows as unknown as Array<[number, string]>;
         } catch (error) {
             console.error("Error fetching chats locale with active users:", error);
         }
-        return chatsLocale;
+        return [];
     }
 }
 
