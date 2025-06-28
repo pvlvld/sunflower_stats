@@ -20,6 +20,7 @@ import bot from "./bot.js";
 import { chatMigrationHandler } from "./handlers/chatMigrationHandler.js";
 import { messagesStatsBatchStore } from "./data/messagesStatsBatchStore.js";
 import cacheManager from "./cache/cache.js";
+import { LocaleService } from "./cache/localeService.js";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -61,7 +62,7 @@ async function main() {
     bot.use(autoQuote({ allowSendingWithoutReply: true }));
     bot.use(autoThread());
     regCommands();
-
+    await LocaleService.seed();
     collectGarbage();
 
     createScheduler();
