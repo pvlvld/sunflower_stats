@@ -65,7 +65,7 @@ async function generateUserGlobalTop(
         top.push(
             `${i === 0 ? "" : "\n"}${1 + i}. «${Escape.html(data[i].title)}» - ${(
                 data[i].chat_count as number
-            ).toLocaleString("fr-FR")} повідомлень`
+            ).toLocaleString("fr-FR")}`
         );
     }
 

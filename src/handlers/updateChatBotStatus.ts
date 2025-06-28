@@ -30,7 +30,7 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
             if (ctx.chat.username) {
                 historyScanner.scanChat(ctx.chat.username, ctx.chat.id);
             } else {
-                await ctx.reply(ctx.t("hitory-scan-prompt"), {
+                await ctx.reply(ctx.t("history-scan-prompt"), {
                     reply_markup: historyScanProposal_menu,
                     reply_parameters: {
                         //@ts-expect-error
@@ -110,9 +110,9 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     Database.poolManager.getPool
         .query(
             `INSERT INTO public.chats (chat_id, title)
-                                                VALUES (${ctx.chat.id}, '$1')
-                                                ON CONFLICT (chat_id)
-                                                DO UPDATE SET title = EXCLUDED.title;`,
+                VALUES (${ctx.chat.id}, '$1')
+                ON CONFLICT (chat_id)
+                DO UPDATE SET title = EXCLUDED.title;`,
             [ctx.chat.title]
         )
         .catch((e) => {});

@@ -16,11 +16,7 @@ async function scanNewChat(ctx: IGroupContext, automatic = true) {
         } catch (e) {
             if (e instanceof GrammyError) {
                 if (e.description.includes("not enough rights")) {
-                    void (await ctx
-                        .reply(
-                            "Видайте мені дозвіл запрошувати учасників або зробіть чат публічним, щоб я зміг додати сканер."
-                        )
-                        .catch((e) => {}));
+                    void (await ctx.reply(ctx.t("history-scan-nor-invite")).catch((e) => {}));
                     return "not enough rights";
                 }
             }
@@ -30,11 +26,7 @@ async function scanNewChat(ctx: IGroupContext, automatic = true) {
 
     if (identifier.length == 0) {
         if (!automatic) {
-            void (await ctx
-                .reply(
-                    "Не вдалось отримати ідентифікатор чату для додавання сканеру. Переконайтеся, що я маю право додавати нових учасників або зробіть чат публічним."
-                )
-                .catch((e) => {}));
+            void (await ctx.reply(ctx.t("history-scan-cant-start")).catch((e) => {}));
         }
 
         return;
@@ -50,9 +42,7 @@ async function scanNewChat(ctx: IGroupContext, automatic = true) {
         return;
     } else {
         if (!automatic) {
-            void (await ctx
-                .reply(`Успішно відскановано та додано в статистику ${result.count} повідомлень!`)
-                .catch((e) => {}));
+            void (await ctx.reply(ctx.t("history-scan-finished", { count: result.count })).catch((e) => {}));
         }
         return;
     }
