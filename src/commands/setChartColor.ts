@@ -15,6 +15,7 @@ const types = {
     chat: ["чат"],
 };
 
+// TODO: UI color picker
 async function setChartColor(ctx: IGroupHearsContext) {
     const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
     const target = resolveTarget(args[1]?.toLowerCase());
