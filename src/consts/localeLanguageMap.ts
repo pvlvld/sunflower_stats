@@ -14,6 +14,8 @@ const LOCALE_LANGUAGE_MAP = Object.freeze({
     zh_HK: "中文 (繁體)",
 } as const);
 
+type ILocaleCode = keyof typeof LOCALE_LANGUAGE_MAP;
+
 const LOCALE_LANGUAGE_MAP_REVERSED = Object.freeze(
     Object.fromEntries(Object.entries(LOCALE_LANGUAGE_MAP).map(([locale, language]) => [language, locale]))
 );
@@ -23,4 +25,4 @@ type ILocaleLanguageMap = {
     [K in keyof _ILocaleLanguageMap | (string & {})]: string;
 };
 
-export { LOCALE_LANGUAGE_MAP, ILocaleLanguageMap, LOCALE_LANGUAGE_MAP_REVERSED };
+export { LOCALE_LANGUAGE_MAP, ILocaleLanguageMap, LOCALE_LANGUAGE_MAP_REVERSED, ILocaleCode };
