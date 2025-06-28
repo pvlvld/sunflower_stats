@@ -49,6 +49,7 @@ import { updateDbChatsInfo } from "./staff/updateDbChatsInfo.js";
 import { stats_user_global } from "./stats_user_global.js";
 import { statsChatGlobal } from "./statsChatGlobal.js";
 import { changeLocaleCommand } from "./changeLocale.js";
+import { updateBotLocalization } from "./staff/updateBotLocalization.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -294,6 +295,10 @@ function regCommands() {
                 reply_parameters: { message_id: ctx.msg.reply_to_message.message_id },
             });
         }
+    });
+
+    botAdmin.hears("!updateLocale", async (ctx) => {
+        updateBotLocalization(ctx);
     });
 
     // MUST BE THE LAST ONE
