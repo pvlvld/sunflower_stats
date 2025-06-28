@@ -1,28 +1,41 @@
-class ChatLocaleCache {
-    private readonly cache: Map<number, string> = new Map<number, string>();
-    readonly _defaultLocale: string = "uk";
+import { LRUCache } from "lru-cache";
+import { Database } from "../db/db.js";
 
-    public get(chat_id: number): string {
-        return this.cache.get(chat_id) ?? this._defaultLocale;
+class LocaleService {
+    private static readonly cache = new LRUCache<number, string>({ max: 3000, allowStale: true });
+    static readonly _defaultLocale: string = "en";
+
+    public static async get(id: number): Promise<string> {
+        let locale = this.cache.get(id);
+
+        if (locale) return locale;
+
+        locale = await this.fetch(id);
+        this.cache.set(id, locale);
+
+        return locale;
     }
 
-    public set(chat_id: number, value: string): void {
-        this.cache.set(chat_id, value);
+    public static set(id: number, value: string): void {
+        this.cache.set(id, value);
     }
 
-    public delete(chat_id: number): void {
-        this.cache.delete(chat_id);
+    public static delete(id: number): void {
+        this.cache.delete(id);
     }
 
-    public seed(): void {
+    public static async fetch(id: number) {
+        const settings = id > 0 ? await Database.userSettings.get(id) : await Database.chatSettings.get(id);
+        return settings.locale || this._defaultLocale;
+    }
+
+    public static seed(): void {
         // TODO:
     }
 
-    public flush(): void {
+    public static flush(): void {
         this.cache.clear();
     }
 }
 
-const chatLocaleCache = new ChatLocaleCache();
-
-export { chatLocaleCache };
+export { LocaleService };
