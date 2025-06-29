@@ -61,7 +61,7 @@ class DbChatSettingWrapper {
           line_color = '${settings.line_color}',
           font_color = '${settings.font_color}',
           userstatslink = '${settings.userstatslink}',
-          selfdestructstats = '${settings.selfdestructstats}'
+          selfdestructstats = '${settings.selfdestructstats}',
           locale = '${settings.locale}'
       WHERE chat_id = ${chat_id};
       `));
