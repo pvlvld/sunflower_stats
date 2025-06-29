@@ -36,9 +36,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     // Filter left chat members & members that in chat less than targetDaysCount
     const beforeTargetDaysCount = moment().subtract(targetDaysCount + 1, "days");
     targetMembers = targetMembers.filter((m) => {
-        return (
-            users?.[m.user_id]?.active_first && beforeTargetDaysCount.isSameOrBefore(users?.[m.user_id]?.active_first)
-        );
+        return users?.[m.user_id]?.active_last && beforeTargetDaysCount.isSameOrBefore(users?.[m.user_id]?.active_last);
     });
 
     if (targetMembers.length === 0) {
