@@ -30,12 +30,12 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
             });
         }
 
-        const help_msg = await help_cmd(ctx);
+        const start_msg = await start_cmd(ctx);
         // if (hello_msg) {
         //     hello_msg.message_id;
         // }
         // History scan only if there is more than 500 messages.
-        if (help_msg && help_msg.message_id > 500) {
+        if (start_msg && start_msg.message_id > 500) {
             if (ctx.chat.username) {
                 historyScanner.scanChat(ctx.chat.username, ctx.chat.id);
             } else {
