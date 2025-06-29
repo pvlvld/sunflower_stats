@@ -7,6 +7,9 @@ import cacheManager from "../../cache/cache.js";
 import { Database } from "../../db/db.js";
 import { getCachedOrDBChatSettings, getChatSettingsMessageText } from "../../utils/chatSettingsUtils.js";
 import cfg from "../../config.js";
+import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../../consts/localeLanguageMap.js";
+import { localeNegotiator } from "../../utils/localeNegotiator.js";
+import changeLocale_menu from "./changeLocaleMenu.js";
 
 async function toggleSetting(
     ctx: IContext & MenuFlavor,
@@ -31,6 +34,20 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
     const chatSettings = await getCachedOrDBChatSettings(chat_id);
 
     range
+        .submenu(
+            (ctx) => ctx.t("button-change-language-menu"),
+            "changeLocale-menu",
+            async (ctx) => {
+                ctx.editMessageText(
+                    ctx.t("change-locale", {
+                        language: (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)],
+                    })
+                ).catch((e) => {
+                    console.error("Error while entering locale menu from settings:", e);
+                });
+            }
+        )
+        .row()
         .text(
             (ctx) => ctx.t("settings-menu-charts"),
             async (ctx) => {
@@ -81,5 +98,7 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
             }
         );
 });
+
+settings_menu.register(changeLocale_menu);
 
 export { settings_menu };

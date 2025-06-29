@@ -65,12 +65,12 @@ bot.use(hydrateReply);
 bot.use(i18n);
 
 // MENUS
+bot.use(settings_menu);
 bot.use(help_menu);
 bot.use(start_menu);
 bot.use(chatCleanup_menu);
 // bot.use(leftGroup_menu);
 bot.use(donate_menu);
-bot.use(settings_menu);
 bot.use(personalChartBgControl_menu);
 bot.use(historyScanProposal_menu);
 bot.use(chatStatsPagination_menu);
