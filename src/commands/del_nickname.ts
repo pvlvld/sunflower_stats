@@ -1,7 +1,7 @@
-import type { IGroupTextContext } from "../types/context.js";
+import type { IGroupHearsCommandContext } from "../types/context.js";
 import { active } from "../redis/active.js";
 
-async function del_nickname(ctx: IGroupTextContext) {
+async function del_nickname(ctx: IGroupHearsCommandContext) {
     await active.updateUserField(ctx.chat.id, ctx.from.id, "nickname", null);
     await ctx
         .reply(ctx.t("nick-del-success"), {

@@ -36,7 +36,6 @@ import { setChartBg } from "./chartBg.js";
 import stats_chat from "./stats_chat.js";
 import { ban_cmd } from "./staff/ban.js";
 import botTest_cmd from "./botTets.js";
-import { hello } from "./hello.js";
 import help_cmd from "./help.js";
 import cfg from "../config.js";
 import memes from "./memes.js";
@@ -139,7 +138,6 @@ function regCommands() {
         await stats_user(ctx, "ти");
     });
 
-    //@ts-expect-error
     group.command("nick", set_nickname);
     group.hears(/^(\+(нік|нікнейм))/i, async (ctx) => {
         botStatsManager.commandUse("нік");
@@ -149,6 +147,11 @@ function regCommands() {
     group.hears(/^-(нік|нікнейм)/i, async (ctx) => {
         botStatsManager.commandUse("нік");
         del_nickname(ctx);
+    });
+
+    groupStats.command("inactive", async (ctx) => {
+        botStatsManager.commandUse("інактив");
+        chatInactive_cmd(ctx);
     });
 
     groupStats.hears(/^!(інактив|неактив)/i, async (ctx) => {
@@ -254,8 +257,6 @@ function regCommands() {
     group.hears("/getid", getId_cmd);
 
     botAdmin.hears("!sdel", delMessage);
-
-    botAdmin.hears("!hello", hello);
 
     group.hears("!sban", ban_cmd);
 

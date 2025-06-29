@@ -1,11 +1,11 @@
-import type { IGroupTextContext } from "../types/context.js";
+import type { IGroupHearsCommandContext } from "../types/context.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
 import { active } from "../redis/active.js";
 
 const PAGE_LENGTH = 25;
 
-async function chatInactive_cmd(ctx: IGroupTextContext) {
+async function chatInactive_cmd(ctx: IGroupHearsCommandContext) {
     const page = parseInt(parseCmdArgs(ctx.msg.text ?? ctx.msg.caption)[0] ?? "");
     if (!page) {
         await ctx.reply(ctx.t("inactive-enter-page"));
