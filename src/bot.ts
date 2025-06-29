@@ -18,6 +18,7 @@ import { chatStatsPagination_menu } from "./ui/menus/statsPagination.js";
 import { blacklist } from "./middlewares/blacklist.js";
 import start_menu from "./ui/menus/start.js";
 import { localeNegotiator } from "./utils/localeNegotiator.js";
+import changeLocale_menu from "./ui/menus/changeLocaleMenu.js";
 
 const bot = new Bot<IContext, IApi>(cfg.BOT_TOKEN);
 
@@ -30,6 +31,7 @@ const i18n = new I18n<IContext>({
     defaultLocale: "uk",
     directory: "locales",
     localeNegotiator,
+    useSession: false,
 });
 
 // PLUGINS
@@ -72,4 +74,5 @@ bot.use(settings_menu);
 bot.use(personalChartBgControl_menu);
 bot.use(historyScanProposal_menu);
 bot.use(chatStatsPagination_menu);
+bot.use(changeLocale_menu);
 export default bot;
