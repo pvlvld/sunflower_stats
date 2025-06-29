@@ -1,7 +1,9 @@
+// Alphabetical order (almost)
 const LOCALE_LANGUAGE_MAP = Object.freeze({
+    uk: "Українська",
+    en: "English",
     be: "Беларуская",
     de: "Deutsch",
-    en: "English",
     es: "Español",
     fr: "Français",
     hi: "हिंदी",
@@ -9,7 +11,6 @@ const LOCALE_LANGUAGE_MAP = Object.freeze({
     ja: "日本語",
     ko: "한국어",
     pl: "Polski",
-    uk: "Українська",
     zh_CN: "中文 (简体)",
     zh_HK: "中文 (繁體)",
 } as const);
