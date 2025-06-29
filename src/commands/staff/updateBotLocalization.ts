@@ -11,6 +11,7 @@ async function updateBotLocalization(ctx: IGroupTextContext) {
     ctx.api.config.use(autoRetry());
 
     for (let locale of Object.keys(LOCALE_LANGUAGE_MAP)) {
+        if (locale === "en") continue; // Skip English as it is the default
         LocaleService.set(ctx.chat.id, locale);
         await ctx.i18n.renegotiateLocale();
 
