@@ -4,7 +4,6 @@ import { historyScanner } from "../scanner/historyScanner.js";
 import { botStatsManager } from "../commands/botStats.js";
 // import { leftGroup_menu } from "../ui/menus/leftGroup.js";
 import { sleepAsync } from "../utils/sleep.js";
-import { hello } from "../commands/hello.js";
 import formattedDate from "../utils/date.js";
 import cacheManager from "../cache/cache.js";
 import { active } from "../redis/active.js";
@@ -20,7 +19,6 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.myChatMember.old_chat_member.status)) {
         botStatsManager.joinGroup();
 
-        // const hello_msg = await hello(ctx);
         const help_msg = await help_cmd(ctx);
         // if (hello_msg) {
         //     hello_msg.message_id;
