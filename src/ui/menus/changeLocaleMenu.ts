@@ -20,7 +20,7 @@ const changeLocale_menu = new Menu<IContext>("changeLocale-menu", {
         range
             .text(language === currentLanguage ? `${language} ✅` : language, async (ctx) => {
                 ctx.answerCallbackQuery().catch((e) => {});
-                if (!(await isChatOwner(chat_id, ctx.from?.id))) return;
+                if (ctx.chat?.type !== "private" && !(await isChatOwner(chat_id, ctx.from?.id))) return;
 
                 if (currentLocale !== locale) {
                     LocaleService.set(chat_id, locale);
