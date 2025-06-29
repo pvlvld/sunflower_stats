@@ -14,6 +14,7 @@ import getUserNameLink from "../utils/getUserNameLink.js";
 import { Database } from "../db/db.js";
 import Escape from "../utils/escape.js";
 import { LocaleService } from "../cache/localeService.js";
+import { start_cmd } from "../commands/start.js";
 
 async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     // Bot join chat
