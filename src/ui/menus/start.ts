@@ -12,11 +12,11 @@ const start_menu = new Menu<IContext>("sart-menu", {
         (ctx) => ctx.t("button-change-language-menu"),
         "changeLocale-menu",
         async (ctx) => {
-            ctx.editMessageText(
-                ctx.t("change-locale", {
+            ctx.editMessageCaption({
+                caption: ctx.t("change-locale", {
                     language: (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)],
-                })
-            ).catch((e) => {
+                }),
+            }).catch((e) => {
                 console.error("Error while changing locale:", e);
             });
         }
