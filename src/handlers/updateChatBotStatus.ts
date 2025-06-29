@@ -13,11 +13,22 @@ import cfg from "../config.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import { Database } from "../db/db.js";
 import Escape from "../utils/escape.js";
+import { LocaleService } from "../cache/localeService.js";
 
 async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     // Bot join chat
     if (cfg.STATUSES.LEFT_STATUSES.includes(ctx.myChatMember.old_chat_member.status)) {
         botStatsManager.joinGroup();
+
+        let chatLocale = ctx.from.language_code;
+
+        if (chatLocale) {
+            LocaleService.set(ctx.chat.id, chatLocale);
+            await ctx.i18n.renegotiateLocale();
+            Database.chatSettings.set(ctx.chat.id, {
+                locale: chatLocale,
+            });
+        }
 
         const help_msg = await help_cmd(ctx);
         // if (hello_msg) {
