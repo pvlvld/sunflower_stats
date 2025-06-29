@@ -4,7 +4,7 @@ const LOCALE_LANGUAGE_MAP = Object.freeze({
     en: "English", //           Main
     // be: "Беларуская",
     // cs: "Čeština", //           Top priority
-    de: "Deutsch", //           Top priority
+    // de: "Deutsch", //           Top priority
     // es: "Español", //           Top priority
     // fr: "Français",
     // hi: "हिंदी", //               Top priority
