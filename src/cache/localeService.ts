@@ -8,9 +8,10 @@ class LocaleService {
     public static async get(id: number): Promise<string> {
         let locale = this.cache.get(id);
 
-        if (locale) return locale;
+        if (!locale) {
+            locale = await this.fetch(id);
+        }
 
-        locale = await this.fetch(id);
         this.cache.set(id, locale);
 
         return locale;
