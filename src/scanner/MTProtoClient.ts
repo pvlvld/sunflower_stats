@@ -30,7 +30,6 @@ class MTProtoClient {
             chat = await this._client.getChat(id);
             return { success: true, needToJoin: false, chat_id: chat.id, errorMessage } as const;
         } catch (e) {
-            console.error(e);
             if ((e as Error).message?.includes("haven't joined")) {
                 console.error("Chat not joined or invalid ID/username provided:", id);
                 return {
@@ -60,6 +59,8 @@ class MTProtoClient {
                     errorMessage: "error-smtn-went-wrong-call-admin",
                 };
             }
+
+            console.error(`getPrejoinChatInfo ID: ${id} err:`, e);
             errorMessage = (e as Error).message;
             return { success: false, needToJoin: true, chat_id: undefined, errorMessage } as const;
         }
