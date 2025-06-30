@@ -55,6 +55,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
         BASE_BG_PATH: string;
     };
     DEBUG: boolean;
+    DEFAULT_LOCALE?: string;
 };
 
 function getCfg() {
@@ -89,6 +90,7 @@ function getCfg() {
         BASE_BG_PATH: "./data/chartBg",
     };
     cfg.DEBUG = false;
+    cfg.DEFAULT_LOCALE = process.env.DEFAULT_LOCALE || "en";
     return Object.freeze(cfg);
 }
 
