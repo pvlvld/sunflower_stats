@@ -28,7 +28,7 @@ const autoRetryTransformer = autoRetry({
 });
 
 const i18n = new I18n<IContext>({
-    defaultLocale: "uk",
+    defaultLocale: cfg.DEFAULT_LOCALE,
     directory: "locales",
     localeNegotiator,
     useSession: false,
