@@ -1,4 +1,5 @@
 const VISIBLE_BOT_COMMANDS = [
+    "about",
     "help",
     "donate",
     "i",

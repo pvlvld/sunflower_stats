@@ -92,7 +92,7 @@ function regCommands() {
     });
 
     bot.command("refreshDonate", refreshDonate_cmd);
-    bot.command("start", start_cmd);
+    bot.command(["start", "about"], start_cmd);
     group.command(["help"], async (ctx) => {
         botStatsManager.commandUse("help");
         help_cmd(ctx);
