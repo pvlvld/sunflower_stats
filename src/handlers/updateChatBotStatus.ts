@@ -15,6 +15,7 @@ import { Database } from "../db/db.js";
 import Escape from "../utils/escape.js";
 import { LocaleService } from "../cache/localeService.js";
 import { start_cmd } from "../commands/start.js";
+import { changeLocaleCommand } from "../commands/changeLocale.js";
 
 async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     // Bot join chat
@@ -31,12 +32,12 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
             });
         }
 
-        const start_msg = await start_cmd(ctx);
+        const locale_msg = await changeLocaleCommand(ctx, true);
         // if (hello_msg) {
         //     hello_msg.message_id;
         // }
         // History scan only if there is more than 500 messages.
-        if (start_msg && start_msg.message_id > 500) {
+        if (locale_msg && locale_msg.message_id > 500) {
             if (ctx.chat.username) {
                 historyScanner.scanChat(ctx.chat.username, ctx.chat.id);
             } else {

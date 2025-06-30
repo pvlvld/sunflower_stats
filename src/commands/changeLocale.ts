@@ -4,7 +4,7 @@ import changeLocale_menu from "../ui/menus/changeLocaleMenu.js";
 import isChatOwner from "../utils/isChatOwner.js";
 import { localeNegotiator } from "../utils/localeNegotiator.js";
 
-async function changeLocaleCommand(ctx: IContext, isForced = false): Promise<void> {
+async function changeLocaleCommand(ctx: IContext, isForced = false) {
     if (!isForced) {
         if (ctx.chat?.type !== "private" && !(ctx.from && ctx.chat && (await isChatOwner(ctx.chat.id, ctx.from.id)))) {
             return;
@@ -14,7 +14,7 @@ async function changeLocaleCommand(ctx: IContext, isForced = false): Promise<voi
     const localeCode = await localeNegotiator(ctx);
     const language = (LOCALE_LANGUAGE_MAP as Record<string, string>)[localeCode] || localeCode;
 
-    await ctx.reply(ctx.t("change-locale", { language }), {
+    return await ctx.reply(ctx.t("change-locale", { language }), {
         reply_markup: changeLocale_menu,
     });
 }
