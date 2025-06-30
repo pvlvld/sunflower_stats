@@ -9,9 +9,21 @@ async function scanNewChat(ctx: IGroupContext, automatic = true) {
         identifier = ctx.chat.username;
     } else {
         try {
-            const invite = await ctx.createChatInviteLink({
-                creates_join_request: false,
-            });
+            const invite = await ctx
+                .createChatInviteLink({
+                    creates_join_request: false,
+                })
+                .catch(async (e) => {
+                    if (e instanceof GrammyError) {
+                        if (e.parameters.migrate_to_chat_id) {
+                            return await ctx.api.createChatInviteLink(e.parameters.migrate_to_chat_id, {
+                                creates_join_request: false,
+                            });
+                        }
+                    }
+
+                    throw e;
+                });
             identifier = invite.invite_link;
         } catch (e) {
             if (e instanceof GrammyError) {
