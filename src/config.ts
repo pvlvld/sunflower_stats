@@ -90,7 +90,7 @@ function getCfg() {
         BASE_BG_PATH: "./data/chartBg",
     };
     cfg.DEBUG = false;
-    cfg.DEFAULT_LOCALE = process.env.DEFAULT_LOCALE || "en";
+    cfg.DEFAULT_LOCALE = process.env.DEFAULT_LOCALE || "uk";
     return Object.freeze(cfg);
 }
 
