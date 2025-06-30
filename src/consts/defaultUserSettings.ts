@@ -1,5 +1,7 @@
+import cfg from "../config.js";
+
 const _defaultUserSettings = {
-    locale: "en",
+    locale: cfg.DEFAULT_LOCALE,
     line_color: "e9bd07",
     font_color: "eeeeee",
 };

@@ -49,6 +49,7 @@ import { stats_user_global } from "./stats_user_global.js";
 import { statsChatGlobal } from "./statsChatGlobal.js";
 import { changeLocaleCommand } from "./changeLocale.js";
 import { updateBotLocalization } from "./staff/updateBotLocalization.js";
+import { pinMessage } from "./staff/pinMessage.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -300,6 +301,10 @@ function regCommands() {
 
     botAdmin.hears("!updateLocale", async (ctx) => {
         updateBotLocalization(ctx);
+    });
+
+    botAdmin.hears("!sspin", async (ctx) => {
+        pinMessage(ctx);
     });
 
     // MUST BE THE LAST ONE

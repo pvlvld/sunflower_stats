@@ -55,7 +55,7 @@ type ICfg = Record<(typeof requiredEnv)[number], string> & {
         BASE_BG_PATH: string;
     };
     DEBUG: boolean;
-    DEFAULT_LOCALE?: string;
+    DEFAULT_LOCALE: string;
 };
 
 function getCfg() {
