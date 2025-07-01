@@ -6,8 +6,44 @@ import { active } from "../redis/active.js";
 class ChatMigrationHandler {
     private async handle(from_id: string, to_id: string): Promise<void> {
         console.info(`Chat migration ${from_id} -> ${to_id}`);
-        const query = `
+
+        const prepareChatQuery = `
             DELETE FROM public.stats_daily WHERE chat_id = ${to_id};
+            INSERT INTO public.chats (
+                chat_id,
+                is_premium,
+                stats_bot_in,
+                charts,
+                statsadminsonly,
+                usechatbgforall,
+                selfdestructstats,
+                line_color,
+                font_color,
+                userstatslink,
+                title,
+                locale
+            )
+            SELECT
+                ${to_id} AS chat_id,
+                is_premium,
+                stats_bot_in,
+                charts,
+                statsadminsonly,
+                usechatbgforall,
+                selfdestructstats,
+                line_color,
+                font_color,
+                userstatslink,
+                title,
+                locale
+            FROM
+                public.chats
+            WHERE
+                chat_id = ${from_id}
+            ON CONFLICT (chat_id) DO NOTHING;
+            `;
+
+        const moveStatsQuery = `
             INSERT INTO public.stats_daily (chat_id, user_id, count, date)
             SELECT
                 ${to_id} AS chat_id,
@@ -21,7 +57,13 @@ class ChatMigrationHandler {
             ON CONFLICT (chat_id, user_id, date)
             DO NOTHING;
         `;
-        await Database.poolManager.getPool.query(query);
+
+        await Database.poolManager.getPool.query(prepareChatQuery).catch((e) => {
+            console.error("ChatMigrationHandler: Error preparing:", e);
+        });
+        await Database.poolManager.getPool.query(moveStatsQuery).catch((e) => {
+            console.error("ChatMigrationHandler: Error moving stats:", e);
+        });
         active.migrateChatId(Number(from_id), Number(to_id));
     }
 
