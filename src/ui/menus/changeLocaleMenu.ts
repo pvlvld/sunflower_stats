@@ -50,7 +50,13 @@ const changeLocale_menu = new Menu<IContext>("changeLocale-menu", {
         (ctx) => ctx.t("bot-command-settings"),
         "settings-menu",
         async (ctx) => {
-            ctx.editMessageText(await getChatSettingsMessageText(ctx));
+            if (ctx.msg?.caption) {
+                ctx.editMessageCaption({
+                    caption: await getChatSettingsMessageText(ctx),
+                }).catch((e) => {});
+            } else {
+                ctx.editMessageText(await getChatSettingsMessageText(ctx));
+            }
         }
     );
     return range;
