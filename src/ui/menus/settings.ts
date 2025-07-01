@@ -38,13 +38,23 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
             (ctx) => ctx.t("button-change-language-menu"),
             "changeLocale-menu",
             async (ctx) => {
-                ctx.editMessageText(
-                    ctx.t("change-locale", {
-                        language: (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)],
-                    })
-                ).catch((e) => {
-                    console.error("Error while entering locale menu from settings:", e);
-                });
+                if (ctx.msg?.caption) {
+                    ctx.editMessageCaption({
+                        caption: ctx.t("change-locale", {
+                            language: (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)],
+                        }),
+                    }).catch((e) => {
+                        console.error("Error while entering locale menu from settings:", e);
+                    });
+                } else {
+                    ctx.editMessageText(
+                        ctx.t("change-locale", {
+                            language: (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)],
+                        })
+                    ).catch((e) => {
+                        console.error("Error while entering locale menu from settings:", e);
+                    });
+                }
             }
         )
         .row()
