@@ -12,3 +12,4 @@ data/chartBg
 data/profileImages
 redis_data
 .husky/_
+client.session*
