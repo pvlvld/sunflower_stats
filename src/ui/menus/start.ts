@@ -32,5 +32,6 @@ const start_menu = new Menu<IContext>("sart-menu", {
     .url((ctx) => ctx.t("button-plz-donate"), "https://send.monobank.ua/jar/6TjRWExdMt");
 
 start_menu.register(changeLocale_menu);
+start_menu.register(help_menu);
 
 export default start_menu;
