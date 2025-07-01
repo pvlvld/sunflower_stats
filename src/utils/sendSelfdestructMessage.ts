@@ -63,10 +63,8 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
         }
 
         if (selfdestructstats) {
-            setTimeout(() => {
-                ctx.api.deleteMessage(chat_id, message.message_id).catch((error) => {
-                    console.error("Cannot self destruct the message. Error:", error);
-                });
+            setTimeout(async () => {
+                await ctx.api.deleteMessage(chat_id, message.message_id);
             }, cfg.STATS_DEFAULT_TTL * 1000);
         }
 
@@ -90,7 +88,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
                 return undefined;
             }
         }
-        console.error(e);
+        console.error(`Error with selfdestruct message:`, e);
         return undefined;
     }
 }
