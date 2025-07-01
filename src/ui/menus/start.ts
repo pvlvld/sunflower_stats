@@ -4,6 +4,7 @@ import { Menu } from "@grammyjs/menu";
 import changeLocale_menu from "./changeLocaleMenu.js";
 import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../../consts/localeLanguageMap.js";
 import { localeNegotiator } from "../../utils/localeNegotiator.js";
+import help_menu from "./help.js";
 
 const start_menu = new Menu<IContext>("sart-menu", {
     autoAnswer: true,
