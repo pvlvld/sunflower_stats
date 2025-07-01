@@ -29,9 +29,16 @@ const changeLocale_menu = new Menu<IContext>("changeLocale-menu", {
                 if (currentLocale !== locale) {
                     LocaleService.set(chat_id, locale);
                     await ctx.i18n.renegotiateLocale();
-                    ctx.editMessageText(ctx.t("change-locale", { language }), {
-                        reply_markup: changeLocale_menu,
-                    }).catch((e) => {});
+                    if (ctx.msg?.caption) {
+                        ctx.editMessageCaption({
+                            caption: ctx.t("change-locale", { language }),
+                            reply_markup: changeLocale_menu,
+                        }).catch((e) => {});
+                    } else {
+                        ctx.editMessageText(ctx.t("change-locale", { language }), {
+                            reply_markup: changeLocale_menu,
+                        }).catch((e) => {});
+                    }
                     Database.chatSettings.set(chat_id, {
                         locale: locale,
                     });
