@@ -40,11 +40,14 @@ class MessagesStatsBatchStore {
         setInterval(() => this.writeBatch(), 5 * 1000);
     }
 
-    public writeBatch() {
+    public async writeBatch() {
+        const promises = [];
         let stats = {} as UserStats;
         for (stats of this._writeIterator()) {
-            DBStats.user.countUserMessage(stats.chat_id, stats.user_id, stats.count);
+            promises.push(DBStats.user.countUserMessage(stats.chat_id, stats.user_id, stats.count));
         }
+
+        await Promise.all(promises);
     }
 }
 

@@ -116,7 +116,6 @@ async function main() {
                 console.log("- Bot stopped.");
             })
             .catch(console.error);
-        messagesStatsBatchStore.writeBatch();
 
         await bot.api
             .deleteWebhook({ drop_pending_updates: true })
@@ -131,6 +130,7 @@ async function main() {
             });
         }
 
+        await messagesStatsBatchStore.writeBatch();
         await DBPoolManager.shutdown().catch(console.error);
 
         await botStatsManager.sendToAnalyticsChat().catch(console.error);
