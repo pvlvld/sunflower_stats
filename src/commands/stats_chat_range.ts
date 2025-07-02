@@ -81,7 +81,7 @@ async function stats_chat_range_cmd(ctx: IGroupTextContext, validateDate = true)
                 isChart: false,
                 text: `${ctx.t("stats-chat-period", {
                     title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}»`,
-                    date: dateRange[0],
+                    period: dateRange[0],
                 })}\n\n${await getStatsChatRating(ctx, stats, activeUsers, chatSettings, 1, "date", "text")}`,
                 chart: undefined,
             },
