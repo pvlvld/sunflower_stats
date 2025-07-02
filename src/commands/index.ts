@@ -165,6 +165,8 @@ function regCommands() {
         del_user_active(ctx);
     });
 
+    group.command("peakdays", peakDays);
+
     group.hears(/^!чистка \d+ \d/, async (ctx) => {
         botStatsManager.commandUse("чистка");
         chatCleanup(ctx);
