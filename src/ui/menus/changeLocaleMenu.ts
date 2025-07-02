@@ -46,19 +46,22 @@ const changeLocale_menu = new Menu<IContext>("changeLocale-menu", {
             })
             .row();
     });
-    range.row().submenu(
-        (ctx) => ctx.t("bot-command-settings"),
-        "settings-menu",
-        async (ctx) => {
-            if (ctx.msg?.caption) {
-                ctx.editMessageCaption({
-                    caption: await getChatSettingsMessageText(ctx),
-                }).catch((e) => {});
-            } else {
-                ctx.editMessageText(await getChatSettingsMessageText(ctx));
+
+    if (ctx.chat.type !== "private") {
+        range.row().submenu(
+            (ctx) => ctx.t("bot-command-settings"),
+            "settings-menu",
+            async (ctx) => {
+                if (ctx.msg?.caption) {
+                    ctx.editMessageCaption({
+                        caption: await getChatSettingsMessageText(ctx),
+                    }).catch((e) => {});
+                } else {
+                    ctx.editMessageText(await getChatSettingsMessageText(ctx));
+                }
             }
-        }
-    );
+        );
+    }
     return range;
 });
 
