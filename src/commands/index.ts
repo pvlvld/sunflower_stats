@@ -50,6 +50,7 @@ import { statsChatGlobal } from "./statsChatGlobal.js";
 import { changeLocaleCommand } from "./changeLocale.js";
 import { updateBotLocalization } from "./staff/updateBotLocalization.js";
 import { pinMessage } from "./staff/pinMessage.js";
+import { peakDays } from "./peakDays.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
