@@ -19,7 +19,7 @@ class LocaleService {
     }
 
     public static set(id: number, value: string): void {
-        this.cache.set(id, value);
+        this.cache.set(id, value || this._defaultLocale);
     }
 
     public static delete(id: number): void {
