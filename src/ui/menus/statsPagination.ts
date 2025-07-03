@@ -6,6 +6,7 @@ import { getStatsChatRating } from "../../utils/getStatsRating.js";
 import { DBStats } from "../../db/stats.js";
 import { MessageEntity } from "@grammyjs/types";
 import { active } from "../../redis/active.js";
+import { GrammyError } from "grammy";
 
 const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").dynamic(async (ctx, range) => {
     if (
@@ -88,12 +89,25 @@ async function changePage(
     baseInfo: Awaited<ReturnType<typeof getBaseInfo>>,
     direction: "previous" | "next"
 ) {
-    if (ctx.msg.caption) {
-        ctx.editMessageCaption({ caption: await getPage(ctx, baseInfo, direction) });
-    } else {
-        ctx.editMessageText(await getPage(ctx, baseInfo, direction), {
-            link_preview_options: { is_disabled: true },
-        });
+    try {
+        if (ctx.msg.caption) {
+            ctx.editMessageCaption({ caption: await getPage(ctx, baseInfo, direction) });
+        } else {
+            ctx.editMessageText(await getPage(ctx, baseInfo, direction), {
+                link_preview_options: { is_disabled: true },
+            });
+        }
+    } catch (error) {
+        if (error instanceof GrammyError) {
+            if (
+                error.description.startsWith("Bad Request: message is not modified") ||
+                error.description.startsWith("Too Many Requests")
+            ) {
+                return;
+            }
+        }
+
+        console.error("Error while changing page:", error);
     }
 }
 
