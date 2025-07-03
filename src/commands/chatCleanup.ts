@@ -29,7 +29,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     const [targetDaysCount, targetMessagesCount] = args as string[];
 
     let [targetMembers, users] = await Promise.all([
-        Database.stats.chat.usersBelowTargetMessagesLastXDays(chat_id, targetDaysCount, targetMessagesCount),
+        Database.stats.chat.usersBelowTargetMessagesLastXDays(chat_id, targetMessagesCount, targetDaysCount),
         active.getChatUsers(chat_id),
     ]);
 

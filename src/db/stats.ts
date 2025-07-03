@@ -70,10 +70,10 @@ const queries = Object.freeze({
              *
              * $3 - days count
              */
-            usersBelowTargetMessagesLastXDays: `WITH chat_activity AS (
+            usersBelowTargetMessagesLastXDays: (daysCount: string) => `WITH chat_activity AS (
                   SELECT user_id, SUM(count) AS total_count
                   FROM public.stats_daily
-                  WHERE date >= current_date - INTERVAL '$3 DAY' AND chat_id = $1
+                  WHERE date >= current_date - INTERVAL '${daysCount} DAY' AND chat_id = $1
                   GROUP BY user_id
                 )
                 SELECT user_id
@@ -389,8 +389,8 @@ class DBChatStats {
         try {
             return (
                 await this._dbPoolManager.getPoolRead.query({
-                    text: queries.stats.chat.usersBelowTargetMessagesLastXDays,
-                    values: [chat_id, targetMessagesCount, targetDaysCount],
+                    text: queries.stats.chat.usersBelowTargetMessagesLastXDays(targetDaysCount),
+                    values: [chat_id, targetMessagesCount],
                 })
             ).rows as { user_id: number }[];
         } catch (error) {
