@@ -15,11 +15,11 @@ async function peakDays(ctx: IGroupHearsCommandContext) {
 
     const peakDays = data
         .map((row) => {
-            return `${row[1]} - ${(<number>row[0]).toLocaleString("fr-FR")}`;
+            return `${row[1]}: ${(<number>row[0]).toLocaleString("fr-FR")}`;
         })
         .join("\n");
 
-    ctx.reply(peakDays).catch((e) => {});
+    ctx.reply(`${ctx.t("chat-peak-days")}\n\n${peakDays}`).catch((e) => {});
 }
 
 export { peakDays };
