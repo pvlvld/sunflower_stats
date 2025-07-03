@@ -7,7 +7,7 @@ async function getCachedOrDBChatSettings(chat_id: number): Promise<IChatSettings
     let chatSettings = cacheManager.ChatSettingsCache.get(chat_id);
 
     if (chatSettings === undefined) {
-        chatSettings = await Database.chatSettings.get(chat_id);
+        chatSettings = await Database.chat.settings.get(chat_id);
 
         if (chatSettings === undefined) {
             chatSettings = { ...DefaultChatSettings };

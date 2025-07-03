@@ -27,7 +27,7 @@ class LocaleService {
     }
 
     public static async fetch(id: number) {
-        const settings = id > 0 ? await Database.userSettings.get(id) : await Database.chatSettings.get(id);
+        const settings = id > 0 ? await Database.user.settings.get(id) : await Database.chat.settings.get(id);
         return settings.locale || this._defaultLocale;
     }
 
@@ -36,7 +36,7 @@ class LocaleService {
     }
 
     private static async seedChats() {
-        const data = await Database.chatSettings.getChatsLocaleWithActiveUsersSinceNDays(2);
+        const data = await Database.chat.settings.getChatsLocaleWithActiveUsersSinceNDays(2);
         for (let i = 0; i < data.length; i++) {
             this.cache.set(data[i][0], data[i][1]);
         }

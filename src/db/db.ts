@@ -11,8 +11,8 @@ await DBPoolManager.createPool();
 class DatabaseWrapper {
     public poolManager: IDBPoolManager;
     public stats: DBStatsWrapper;
-    public chatSettings: DbChatSettingWrapper;
-    public userSettings: DbUserSettingWrapper;
+    public chat: { settings: DbChatSettingWrapper };
+    public user: { settings: DbUserSettingWrapper };
 
     constructor() {
         this.poolManager = DBPoolManager;
@@ -22,8 +22,14 @@ class DatabaseWrapper {
         }
 
         this.stats = new DBStatsWrapper(this.poolManager);
-        this.chatSettings = new DbChatSettingWrapper(this.poolManager);
-        this.userSettings = new DbUserSettingWrapper(this.poolManager);
+
+        this.chat = {
+            settings: new DbChatSettingWrapper(this.poolManager),
+        };
+
+        this.user = {
+            settings: new DbUserSettingWrapper(this.poolManager),
+        };
     }
 }
 

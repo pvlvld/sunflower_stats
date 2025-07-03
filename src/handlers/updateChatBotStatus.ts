@@ -27,7 +27,7 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
         if (chatLocale) {
             LocaleService.set(ctx.chat.id, chatLocale);
             await ctx.i18n.renegotiateLocale();
-            Database.chatSettings.set(ctx.chat.id, {
+            Database.chat.settings.set(ctx.chat.id, {
                 locale: chatLocale,
             });
         }

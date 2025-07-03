@@ -21,7 +21,7 @@ async function toggleSetting(
         [parametr]: !chatSettings[parametr],
     });
     void ctx.editMessageText(await getChatSettingsMessageText(ctx)).catch((e) => {});
-    void Database.chatSettings.set(chat_id, cacheManager.ChatSettingsCache.get(chat_id)!);
+    void Database.chat.settings.set(chat_id, cacheManager.ChatSettingsCache.get(chat_id)!);
 }
 
 const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).dynamic(async (ctx, range) => {

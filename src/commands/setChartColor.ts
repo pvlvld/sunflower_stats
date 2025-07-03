@@ -76,8 +76,8 @@ async function setChartColor(ctx: IGroupHearsContext) {
 
     const settings = {
         ...(type === "personal"
-            ? await Database.userSettings.get(ctx.from.id)
-            : await Database.chatSettings.get(ctx.from.id)),
+            ? await Database.user.settings.get(ctx.from.id)
+            : await Database.chat.settings.get(ctx.from.id)),
     };
 
     if (target === "line") {
@@ -87,10 +87,10 @@ async function setChartColor(ctx: IGroupHearsContext) {
     }
 
     if (type === "chat") {
-        await Database.chatSettings.set(ctx.chat.id, settings);
+        await Database.chat.settings.set(ctx.chat.id, settings);
         cacheManager.ChartCache_Chat.removeChat(ctx.chat.id);
     } else {
-        await Database.userSettings.set(ctx.from.id, settings);
+        await Database.user.settings.set(ctx.from.id, settings);
         cacheManager.ChartCache_User.removeUser(ctx.from.id);
     }
 

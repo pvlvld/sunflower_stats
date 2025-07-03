@@ -39,7 +39,7 @@ const changeLocale_menu = new Menu<IContext>("changeLocale-menu", {
                             reply_markup: changeLocale_menu,
                         }).catch((e) => {});
                     }
-                    Database.chatSettings.set(chat_id, {
+                    Database.chat.settings.set(chat_id, {
                         locale: locale,
                     });
                 }

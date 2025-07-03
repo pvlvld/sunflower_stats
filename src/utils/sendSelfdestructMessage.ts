@@ -82,7 +82,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
                 void cacheManager.ChatSettingsCache.set(chat_id, {
                     charts: false,
                 });
-                void Database.chatSettings.set(chat_id, cacheManager.ChatSettingsCache.get(chat_id)!);
+                void Database.chat.settings.set(chat_id, cacheManager.ChatSettingsCache.get(chat_id)!);
 
                 void (await ctx.reply(ctx.t("error-ner-photos")).catch((e) => {}));
                 return undefined;
