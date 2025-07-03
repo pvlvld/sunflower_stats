@@ -76,7 +76,7 @@ async function generateUserGlobalTop(
             ctx.from.id
         )}`,
         top: top.join(""),
-        totalMessages: (+data[0].total_count as number).toLocaleString("fr-FR"),
+        totalMessages: (+data[0]?.total_count || 0).toLocaleString("fr-FR"),
     });
 }
 
