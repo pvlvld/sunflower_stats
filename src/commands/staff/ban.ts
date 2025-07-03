@@ -12,7 +12,9 @@ async function ban_cmd(ctx: IGroupHearsContext) {
     //     (await getUserId((ctx.msg.text ?? ctx.msg.caption).slice(6), chat_id)) ||
     //     -1;
     //@ts-expect-error
-    return void (await ctx.banChatMember(target_id[0]).catch((e) => {}));
+    return void (await ctx.banChatMember(target_id[0]).catch((e) => {
+        console.error("Error while banning user:", e);
+    }));
 }
 
 export { ban_cmd };
