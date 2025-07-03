@@ -19,7 +19,7 @@ async function peakDays(ctx: IGroupHearsCommandContext) {
         })
         .join("\n");
 
-    ctx.reply(`${ctx.t("chat-peak-days")}\n\n${peakDays}`).catch((e) => {});
+    ctx.reply(`${ctx.t("chat-peak-days")}\n\n<code>${peakDays}</code>`).catch((e) => {});
 }
 
 export { peakDays };
