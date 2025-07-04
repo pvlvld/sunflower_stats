@@ -64,7 +64,17 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
 
         if (selfdestructstats) {
             setTimeout(async () => {
-                await ctx.api.deleteMessage(chat_id, message.message_id);
+                try {
+                    await ctx.api.deleteMessage(chat_id, message.message_id);
+                } catch (e) {
+                    if (e instanceof GrammyError) {
+                        if (e.description.includes("message to delete not found")) {
+                            return undefined;
+                        }
+                    }
+                    console.error(`Error with selfdestruct message:`, e);
+                    return undefined;
+                }
             }, cfg.STATS_DEFAULT_TTL * 1000);
         }
 
@@ -75,9 +85,6 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
             : Message.TextMessage;
     } catch (e) {
         if (e instanceof GrammyError) {
-            if (e.description.includes("message to delete not found")) {
-                return undefined;
-            }
             if (e.description.includes("not enough rights to send photos to the chat")) {
                 void cacheManager.ChatSettingsCache.set(chat_id, {
                     charts: false,
