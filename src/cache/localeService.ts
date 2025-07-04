@@ -1,6 +1,7 @@
 import { LRUCache } from "lru-cache";
 import { Database } from "../db/db.js";
 import cfg from "../config.js";
+import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../consts/localeLanguageMap.js";
 
 class LocaleService {
     private static readonly cache = new LRUCache<number, string>({ max: 3000, allowStale: true });
@@ -29,6 +30,10 @@ class LocaleService {
     public static async fetch(id: number) {
         const settings = id > 0 ? await Database.user.settings.get(id) : await Database.chat.settings.get(id);
         return settings.locale || this._defaultLocale;
+    }
+
+    public static isValid(locale: string): boolean {
+        return !!(<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[locale];
     }
 
     public static async seed() {
