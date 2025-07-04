@@ -7,10 +7,7 @@ function createScheduler() {
     return cron.schedule(
         "0 0 * * *", // at midnight
         async (date) => {
-            if (date instanceof Date && date.getHours() === 0) {
-                await startNewDay();
-            }
-
+            await startNewDay();
             collectGarbage();
         },
         {
