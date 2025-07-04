@@ -91,9 +91,9 @@ async function changePage(
 ) {
     try {
         if (ctx.msg.caption) {
-            ctx.editMessageCaption({ caption: await getPage(ctx, baseInfo, direction) });
+            await ctx.editMessageCaption({ caption: await getPage(ctx, baseInfo, direction) });
         } else {
-            ctx.editMessageText(await getPage(ctx, baseInfo, direction), {
+            await ctx.editMessageText(await getPage(ctx, baseInfo, direction), {
                 link_preview_options: { is_disabled: true },
             });
         }
