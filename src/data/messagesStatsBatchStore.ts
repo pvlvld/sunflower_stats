@@ -47,7 +47,7 @@ class MessagesStatsBatchStore {
             promises.push(DBStats.user.countUserMessage(stats.chat_id, stats.user_id, stats.count));
         }
 
-        await Promise.all(promises);
+        return void (await Promise.all(promises));
     }
 }
 

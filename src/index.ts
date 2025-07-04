@@ -104,25 +104,17 @@ async function main() {
 
     async function shutdown(DBPoolManager: IDBPoolManager) {
         if (isShuttingDown) return;
+        isShuttingDown = true;
         cfg.SET_STATUS("stopping");
         console.log("Shutting down.");
-        isShuttingDown = true;
 
         await runner?.stop().catch(console.error);
 
-        await bot
-            .stop()
-            .then(() => {
-                console.log("- Bot stopped.");
-            })
-            .catch(console.error);
+        await bot.stop().catch(console.error);
+        console.log("- Bot stopped.");
 
-        await bot.api
-            .deleteWebhook({ drop_pending_updates: true })
-            .then(() => {
-                console.log("Webhook removed");
-            })
-            .catch(console.error);
+        await bot.api.deleteWebhook({ drop_pending_updates: true }).catch(console.error);
+        console.log("- Webhook removed");
 
         if (server && "close" in server) {
             server.close(() => {
@@ -131,15 +123,15 @@ async function main() {
         }
 
         await messagesStatsBatchStore.writeBatch();
-        await DBPoolManager.shutdown().catch(console.error);
-
         await botStatsManager.sendToAnalyticsChat().catch(console.error);
+        await DBPoolManager.shutdown().catch(console.error);
 
         console.log("Done.");
         console.log(`Running NodeJS ${process.version}`);
         process.exit();
     }
 
+    console.log(`Running NodeJS ${process.version}`);
     await cacheManager.PremiumStatusCache.seed_chats();
 }
 
