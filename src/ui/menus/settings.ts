@@ -41,7 +41,9 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
                 if (ctx.msg?.caption) {
                     ctx.editMessageCaption({
                         caption: ctx.t("change-locale", {
-                            language: (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)],
+                            language:
+                                (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)] ||
+                                cfg.DEFAULT_LOCALE,
                         }),
                     }).catch((e) => {
                         console.error("Error while entering locale menu from settings:", e);
@@ -49,7 +51,9 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
                 } else {
                     ctx.editMessageText(
                         ctx.t("change-locale", {
-                            language: (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)],
+                            language:
+                                (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)] ||
+                                cfg.DEFAULT_LOCALE,
                         })
                     ).catch((e) => {
                         console.error("Error while entering locale menu from settings:", e);
