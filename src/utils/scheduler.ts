@@ -5,7 +5,7 @@ import * as cron from "node-cron";
 
 function createScheduler() {
     return cron.schedule(
-        "0 * * * *", //Every hour at 00 minutes
+        "0 0 * * *", // at midnight
         async (date) => {
             if (date instanceof Date && date.getHours() === 0) {
                 await startNewDay();
