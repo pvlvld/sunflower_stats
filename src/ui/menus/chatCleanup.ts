@@ -24,7 +24,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
 
         const targetMembers = cacheManager.TTLCache.get(`cleanup_${ctx.chat.id}`) as { user_id: number, messages: number }[];
 
-        range.text("Видалити ✅", async (ctx) => {
+        range.text("Запустити ✅", async (ctx) => {
             ctx.answerCallbackQuery().catch((e) => {});
 
             if (!(await isChatOwner(chat_id, from_id))) {
