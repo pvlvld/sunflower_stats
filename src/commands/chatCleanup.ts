@@ -33,10 +33,29 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
         active.getChatUsers(chat_id),
     ]);
 
-    // Filter left chat members & members that in chat less than targetDaysCount
-    const beforeTargetDaysCount = moment().subtract(targetDaysCount + 1, "days");
+    const cutoffDate = moment().subtract(targetDaysCount, "days");
+    
+    // Filter out users who are not in the chat anymore or are active in the last targetDaysCount days
     targetMembers = targetMembers.filter((m) => {
-        return users?.[m.user_id]?.active_last && beforeTargetDaysCount.isSameOrBefore(users?.[m.user_id]?.active_last);
+        const user = users?.[m.user_id];
+        if (!user?.active_last) {
+            return false; // User not in chat
+        }
+        return moment(user.active_last).isBefore(cutoffDate);
+    });
+
+    // Add users who are in the chat but haven't written any messages in the last targetDaysCount days
+    Object.entries(users).forEach(([userId, user]) => {
+        if (targetMembers.some((m) => m.user_id === Number(userId))) {
+            return; // Skip if already in targetMembers
+        }
+        
+        // Add user if they haven't been active in the last targetDaysCount days
+        if (moment(user.active_last).isBefore(cutoffDate)) {
+            targetMembers.push({
+                user_id: Number(userId),
+            });
+        }
     });
 
     if (targetMembers.length === 0) {
