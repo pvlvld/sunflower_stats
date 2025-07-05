@@ -71,14 +71,15 @@ const queries = Object.freeze({
              * $3 - days count
              */
             usersBelowTargetMessagesLastXDays: (daysCount: string) => `WITH chat_activity AS (
-                  SELECT user_id, SUM(count) AS total_count
+                  SELECT user_id, SUM(count) AS messages
                   FROM public.stats_daily
                   WHERE date >= current_date - INTERVAL '${daysCount} DAY' AND chat_id = $1
                   GROUP BY user_id
                 )
-                SELECT user_id
+                SELECT user_id, messages
                 FROM chat_activity
-                WHERE total_count < $2;`,
+                WHERE total_count < $2
+                ORDER BY messages DESC`,
         },
         global: {
             topChats: {
