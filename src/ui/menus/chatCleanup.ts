@@ -22,7 +22,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
             return;
         }
 
-        const targetMembers = cacheManager.TTLCache.get(`cleanup_${ctx.chat.id}`) as { user_id: number }[] | undefined;
+        const targetMembers = cacheManager.TTLCache.get(`cleanup_${ctx.chat.id}`) as { user_id: number, messages: number }[];
 
         range.text("Видалити ✅", async (ctx) => {
             ctx.answerCallbackQuery().catch((e) => {});
@@ -38,7 +38,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
             ctx.deleteMessage().catch((e) => {});
 
             const statusMessage = await ctx.reply("Починаю чистку!").catch((e) => {});
-            const cleanupStatus = await chatCleanupWorker(ctx, chat_id, targetMembers as { user_id: number }[]);
+            const cleanupStatus = await chatCleanupWorker(ctx, chat_id, targetMembers);
 
             if (statusMessage && cleanupStatus) {
                 return void (await ctx.api
@@ -90,7 +90,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
                 messageText = `${messageText.replace(
                     /\d+/,
                     String(targetMembers!.length)
-                )}\n\nСписок:\n${await getTargetMembersList(chat_id, targetMembers as { user_id: number }[])}`;
+                )}\n\nСписок:\n${await getTargetMembersList(chat_id, targetMembers)}`;
 
                 await ctx.editMessageText(messageText, {
                     link_preview_options: { is_disabled: true },
@@ -124,14 +124,14 @@ async function destroyMenuIfOutdated(
 
 const targetMembersListMaxSize = 100;
 
-async function getTargetMembersList(chat_id: number, targetMembers: { user_id: number }[]): Promise<string> {
+async function getTargetMembersList(chat_id: number, targetMembers: { user_id: number, messages: number }[]): Promise<string> {
     const targetMemberNames: string[] = [];
     let user: IActiveUser | undefined;
     const users = await active.getChatUsers(chat_id);
     for (let i = 0; i < Math.min(targetMembersListMaxSize, targetMembers.length); i++) {
         user = users?.[targetMembers[i].user_id];
         if (user) {
-            targetMemberNames.push(getUserNameLink.html(user.name, undefined, targetMembers[i].user_id));
+            targetMemberNames.push(`${getUserNameLink.html(user.name, undefined, targetMembers[i].user_id)}: ${targetMembers[i].messages}`);
         }
     }
 

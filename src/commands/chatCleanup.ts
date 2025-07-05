@@ -54,6 +54,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
         if (moment(user.active_last).isBefore(cutoffDate)) {
             targetMembers.push({
                 user_id: Number(userId),
+                messages: 0
             });
         }
     });
