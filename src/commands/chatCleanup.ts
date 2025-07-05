@@ -41,7 +41,7 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
         if (!user?.active_last) {
             return false; // User not in chat
         }
-        return moment(user.active_last).isBefore(cutoffDate);
+        return true;
     });
 
     // Add users who are in the chat but haven't written any messages in the last targetDaysCount days
