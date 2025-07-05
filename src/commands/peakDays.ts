@@ -6,7 +6,6 @@ async function peakDays(ctx: IGroupHearsCommandContext) {
     let peakDays = cacheManager.TextCache.get(`peakDays:${ctx.chat.id}`) || "";
 
     if (!peakDays) {
-        console.log("cache miss");
         const data = (
             await Database.poolManager.getPool.query({
                 text: `SELECT sum(count) as count, TO_CHAR(date, 'YYYY-MM-DD') FROM stats_daily WHERE chat_id = ${ctx.chat.id} GROUP BY date ORDER BY count DESC LIMIT 25;`,
