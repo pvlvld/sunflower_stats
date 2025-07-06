@@ -39,6 +39,8 @@ async function updateBotLocalization(ctx: IGroupTextContext) {
     }
 
     LocaleService.set(ctx.chat.id, startLocale);
+
+    await ctx.reply("Localization updated successfully!").catch((e) => {});
 }
 
 export { updateBotLocalization };
