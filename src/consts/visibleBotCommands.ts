@@ -15,6 +15,7 @@ const VISIBLE_BOT_COMMANDS = [
     "setchatbg",
     "setmybg",
     "lang",
+    "peakdays",
 ];
 
 // ftl locale commands
