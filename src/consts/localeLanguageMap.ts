@@ -16,7 +16,10 @@ const LOCALE_LANGUAGE_MAP = Object.freeze({
     // pt: "Língua portuguesa", // Top priority
     // zh_CN: "中文 (简体)",
     // zh_HK: "中文 (繁體)",
+    ks: "котяча", //    Hidden, used for meme cat lang
 } as const);
+
+const HIDDEN_LOCALES = Object.freeze(["ks"]);
 
 type ILocaleCode = keyof typeof LOCALE_LANGUAGE_MAP;
 
@@ -29,4 +32,4 @@ type ILocaleLanguageMap = {
     [K in keyof _ILocaleLanguageMap | (string & {})]: string;
 };
 
-export { LOCALE_LANGUAGE_MAP, ILocaleLanguageMap, LOCALE_LANGUAGE_MAP_REVERSED, ILocaleCode };
+export { LOCALE_LANGUAGE_MAP, ILocaleLanguageMap, LOCALE_LANGUAGE_MAP_REVERSED, ILocaleCode, HIDDEN_LOCALES };

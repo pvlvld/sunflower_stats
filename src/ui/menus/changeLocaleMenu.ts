@@ -1,7 +1,7 @@
 import type { IContext } from "../../types/context.js";
 import { Menu } from "@grammyjs/menu";
 import isChatOwner from "../../utils/isChatOwner.js";
-import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../../consts/localeLanguageMap.js";
+import { HIDDEN_LOCALES, ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../../consts/localeLanguageMap.js";
 import { LocaleService } from "../../cache/localeService.js";
 import { Database } from "../../db/db.js";
 import { getChatSettingsMessageText } from "../../utils/chatSettingsUtils.js";
@@ -18,6 +18,8 @@ const changeLocale_menu = new Menu<IContext>("changeLocale-menu", {
     const currentLanguage = (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[currentLocale];
 
     Object.entries(LOCALE_LANGUAGE_MAP).forEach(([locale, language]) => {
+        if (HIDDEN_LOCALES.includes(locale)) return; // Skip Niaw's language, it's hidden
+
         range
             .text(language === currentLanguage ? `${language} ✅` : language, async (ctx) => {
                 ctx.answerCallbackQuery().catch((e) => {});
