@@ -35,6 +35,7 @@ async function updateActive_command(ctx: IHearsCommandContext) {
         .sort((a, b) => (moment(a.active_last).isBefore(moment(b.active_last)) ? 1 : -1));
 
     let membersVerified = 0;
+    let membersRemoved = 0;
     let apiChatMember = {} as Awaited<ReturnType<IContext["api"]["getChatMember"]>>;
     for (const user of members) {
         if (membersVerified >= memberCount) {
@@ -45,7 +46,15 @@ async function updateActive_command(ctx: IHearsCommandContext) {
         apiChatMember = await ctx.api.getChatMember(ctx.chat.id, parseInt(user.user_id)).catch((e) => {
             return { status: "left" } as Awaited<ReturnType<IContext["api"]["getChatMember"]>>;
         });
+
+        // Skip bots
+        if (apiChatMember.user.is_bot) {
+            membersVerified++;
+            continue;
+        }
+
         if (cfg.STATUSES.LEFT_STATUSES.includes(apiChatMember.status)) {
+            membersRemoved++;
             await active.removeUser(ctx.chat.id, parseInt(user.user_id));
         } else {
             membersVerified++;
@@ -54,9 +63,7 @@ async function updateActive_command(ctx: IHearsCommandContext) {
 
     await ctx
         .reply(
-            `Successfully updated active members list.\n\nTotal members: ${memberCount}\nRemoved members: ${
-                memberCount - membersVerified
-            }\n`
+            `Successfully updated active members list.\n\nTotal members: ${memberCount}\nRemoved members: ${membersRemoved}`
         )
         .catch((e) => {});
 }
