@@ -4,12 +4,20 @@ import { IContext, IHearsCommandContext } from "../types/context.js";
 import isChatOwner from "../utils/isChatOwner.js";
 import { autoRetry } from "@grammyjs/auto-retry";
 import cfg from "../config.js";
+import cacheManager from "../cache/cache.js";
 
 type IActiveMember = IActiveUser & { user_id: string };
 
 async function updateActive_command(ctx: IHearsCommandContext) {
-    if (!ctx.from) return;
-    if (!(await isChatOwner(ctx.chat.id, ctx.from.id))) await ctx.reply(ctx.t("error-chat-owner-only")).catch((e) => {});
+    const cacheKey = `${ctx.chat.id}:updateActive`;
+    if (cacheManager.TextCache.has(cacheKey)) return;
+    cacheManager.TextCache.set(cacheKey, "true");
+
+    if (!ctx.from || !(await isChatOwner(ctx.chat.id, ctx.from.id))) {
+        await ctx.reply(ctx.t("error-chat-owner-only")).catch((e) => {});
+        cacheManager.TextCache.delete(cacheKey);
+        return;
+    }
 
     ctx.api.config.use(autoRetry());
 
@@ -48,6 +56,7 @@ async function updateActive_command(ctx: IHearsCommandContext) {
             }\n`
         )
         .catch((e) => {});
+    cacheManager.TextCache.delete(cacheKey);
 }
 
 export { updateActive_command };
