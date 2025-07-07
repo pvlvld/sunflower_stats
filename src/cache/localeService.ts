@@ -39,6 +39,10 @@ class LocaleService {
     // Alias for isValid
     public static isLocale = this.isValid;
 
+    public static resolveFromLocaleName(localeName: string): string | undefined {
+        return LOCALE_LANGUAGE_MAP_REVERSED[localeName as keyof typeof LOCALE_LANGUAGE_MAP_REVERSED];
+    }
+
     public static async seed() {
         await this.seedChats();
     }
