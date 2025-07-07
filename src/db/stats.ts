@@ -78,7 +78,7 @@ const queries = Object.freeze({
                 )
                 SELECT user_id, messages
                 FROM chat_activity
-                WHERE total_count < $2
+                WHERE messages < $2
                 ORDER BY messages DESC`,
         },
         global: {
