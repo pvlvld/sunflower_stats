@@ -51,6 +51,7 @@ import { changeLocaleCommand } from "./changeLocale.js";
 import { updateBotLocalization } from "./staff/updateBotLocalization.js";
 import { pinMessage } from "./staff/pinMessage.js";
 import { peakDays } from "./peakDays.js";
+import { updateActive_command } from "./updateActive.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -216,6 +217,10 @@ function regCommands() {
     group.command("settings", chatSettings_cmd);
 
     bot.command("tchats", statsChatGlobal);
+
+    group.hears("!updatemembers", async (ctx) => {
+        updateActive_command(ctx);
+    });
 
     // group.hears(/^!дата вступу/, (ctx) => {
     //     setUserJoinDate_cmd(ctx);
