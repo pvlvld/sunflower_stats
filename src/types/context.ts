@@ -16,6 +16,8 @@ export type IGroupHearsContext = HearsContext<IGroupContext>;
 
 export type ICommandContext = CommandContext<IContext>;
 
+export type IHearsCommandContext = CommandContext<IContext> | CommandContext<IContext>;
+
 export type IGroupCommandContext = CommandContext<IGroupContext>;
 
 export type IGroupHearsCommandContext = IGroupHearsContext | IGroupCommandContext;
