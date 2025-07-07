@@ -1,7 +1,7 @@
 import { LRUCache } from "lru-cache";
 import { Database } from "../db/db.js";
 import cfg from "../config.js";
-import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../consts/localeLanguageMap.js";
+import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP, LOCALE_LANGUAGE_MAP_REVERSED } from "../consts/localeLanguageMap.js";
 
 class LocaleService {
     private static readonly cache = new LRUCache<number, string>({ max: 3000, allowStale: true });
