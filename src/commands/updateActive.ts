@@ -10,7 +10,10 @@ type IActiveMember = IActiveUser & { user_id: string };
 
 async function updateActive_command(ctx: IHearsCommandContext) {
     const cacheKey = `${ctx.chat.id}:updateActive`;
-    if (cacheManager.TextCache.has(cacheKey)) return;
+    if (cacheManager.TextCache.has(cacheKey)) {
+        await ctx.reply(ctx.t("error-comamnd-once-per-day")).catch((e) => {});
+        return;
+    }
     cacheManager.TextCache.set(cacheKey, "true");
 
     if (!ctx.from || !(await isChatOwner(ctx.chat.id, ctx.from.id))) {
@@ -56,7 +59,6 @@ async function updateActive_command(ctx: IHearsCommandContext) {
             }\n`
         )
         .catch((e) => {});
-    cacheManager.TextCache.delete(cacheKey);
 }
 
 export { updateActive_command };
