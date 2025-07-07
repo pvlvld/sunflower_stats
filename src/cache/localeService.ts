@@ -36,6 +36,9 @@ class LocaleService {
         return !!(<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[locale];
     }
 
+    // Alias for isValid
+    public static isLocale = this.isValid;
+
     public static async seed() {
         await this.seedChats();
     }
