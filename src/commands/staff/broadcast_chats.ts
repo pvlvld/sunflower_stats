@@ -34,6 +34,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     let chatMembersCount: number = 0;
     for (let chat of chats) {
         if (chat > 0) continue;
+        if ((await LocaleService.get(chat)) != "uk") return;
         users = await active.getChatUsers(chat);
         for (let user in users) {
             if (moment().diff(moment(users[user].active_last), "days") < 7) {
