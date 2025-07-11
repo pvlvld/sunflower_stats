@@ -52,6 +52,7 @@ import { updateBotLocalization } from "./staff/updateBotLocalization.js";
 import { pinMessage } from "./staff/pinMessage.js";
 import { peakDays } from "./peakDays.js";
 import { updateActive_command } from "./updateActive.js";
+import { setPremium_command } from "./staff/setPremium.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -268,6 +269,8 @@ function regCommands() {
     botAdmin.hears("!sdel", delMessage);
 
     group.hears("!sban", ban_cmd);
+
+    botAdmin.hears(/^\/prem/, setPremium_command);
 
     botAdmin.hears(/^!sscanh/, scanChatHistory_cmd);
 
