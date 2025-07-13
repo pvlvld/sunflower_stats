@@ -33,11 +33,22 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     const chats = await active.getAllChatIds();
     let users: Awaited<ReturnType<typeof active.getChatUsers>> = {};
     let chatMembersCount: number = 0;
+    let locale = "";
+    let isSkipped = false;
     for (let chat of chats) {
         if (chat > 0) continue;
 
         // Skip if the chat uses a locale other than Ukrainian
-        if ((await LocaleService.get(chat)) != "uk") return;
+        locale = await LocaleService.get(chat);
+        if (locale != "uk") {
+            isSkipped = true;
+            continue;
+        }
+
+        // Skip until first chat skipped (TODO: remove after 2025.07.13)
+        if (isSkipped == false) {
+            continue;
+        }
 
         users = await active.getChatUsers(chat);
         for (let user in users) {
