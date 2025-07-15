@@ -34,19 +34,12 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     let users: Awaited<ReturnType<typeof active.getChatUsers>> = {};
     let chatMembersCount: number = 0;
     let locale = "";
-    let isSkipped = false;
     for (let chat of chats) {
         if (chat > 0) continue;
 
         // Skip if the chat uses a locale other than Ukrainian
         locale = await LocaleService.get(chat);
         if (locale != "uk") {
-            isSkipped = true;
-            continue;
-        }
-
-        // Skip until first chat skipped (TODO: remove after 2025.07.13)
-        if (isSkipped == false) {
             continue;
         }
 
