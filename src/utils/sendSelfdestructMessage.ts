@@ -66,6 +66,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
             setTimeout(async () => {
                 try {
                     await ctx.api.deleteMessage(chat_id, message.message_id);
+                    await ctx.deleteMessage();
                 } catch (e) {
                     if (e instanceof GrammyError) {
                         if (e.description.includes("message to delete not found")) {
