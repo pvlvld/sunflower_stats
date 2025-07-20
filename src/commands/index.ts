@@ -180,11 +180,11 @@ function regCommands() {
     // CHARTS
     group.on("edited_message:caption", async (ctx, next) => {
         // TODO: fix types
-        if (["!стата фон я", "стата фон я", "/setmybg"].includes(ctx.msg.caption)) {
+        if (/^((!)?стата фон я|\/setmybg)/.test(ctx.msg.caption)) {
             // @ts-expect-error
             setChartBg(ctx, "user");
             console.log(ctx);
-        } else if (["!стата фон чат", "стата фон чат", "/setchatbg"].includes(ctx.msg.caption)) {
+        } else if (/^((!)?стата фон чат|\/setchatbg)/.test(ctx.msg.caption)) {
             if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
                 // @ts-expect-error
                 setChartBg(ctx, "chat");
@@ -193,19 +193,11 @@ function regCommands() {
         return await next();
     });
 
-    group.hears(/(!?)стата фон я/i, (ctx) => {
-        setChartBg(ctx, "user");
-    });
-    group.hears(/^\/setmybg/i, (ctx) => {
+    group.hears(/^((!?)(стата фон я|\/setmybg))/i, (ctx) => {
         setChartBg(ctx, "user");
     });
 
-    group.hears(/(!?)стата фон чат/i, async (ctx) => {
-        if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
-            setChartBg(ctx, "chat");
-        }
-    });
-    group.hears(/^\/setchatbg/i, async (ctx) => {
+    group.hears(/^((!?)(стата фон чат|\/setchatbg))/i, async (ctx) => {
         if (await isChatOwner(ctx.chat.id, ctx.from.id)) {
             setChartBg(ctx, "chat");
         }
