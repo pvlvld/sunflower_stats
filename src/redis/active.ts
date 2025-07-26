@@ -277,7 +277,8 @@ class ChatUserStore {
                 userData = await this.redis.hgetall(userKey);
 
                 if (userData && !userData.active_first) {
-                    userData.active_first = userData.active_last;
+                    userData.active_first =
+                        (await getUserFirstStatsDate(chatId, parseInt(userId, 10))) || userData.active_last;
                     await this.redis.hmset(userKey, userData);
                 }
 
