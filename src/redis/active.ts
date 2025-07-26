@@ -269,6 +269,8 @@ class ChatUserStore {
         let userData: Record<string, string> | null = {};
         let processed = 0;
 
+        console.log("Fixing missed active_first dates for all users...");
+
         for (const chatId of chatIds) {
             userIds = userIds.concat(await this.redis.smembers(this.getChatKey(chatId)));
 
