@@ -114,6 +114,10 @@ class ChatUserStore {
             } else {
                 userData.active_first = formattedDate.today[0];
             }
+
+            this.updateUserField(chatId, userId, "active_first", userData.active_first).catch((err) => {
+                console.error("Error updating active_first:", err);
+            });
         }
 
         return {
