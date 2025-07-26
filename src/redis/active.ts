@@ -261,6 +261,34 @@ class ChatUserStore {
     async close(): Promise<void> {
         await this.redis.quit();
     }
+
+    async fixMissedActiveFirstDate(): Promise<void> {
+        const chatIds = await this.getAllChatIds();
+        let userIds: string[] = [];
+        let userKey = "";
+        let userData: Record<string, string> | null = {};
+        let processed = 0;
+
+        for (const chatId of chatIds) {
+            userIds = userIds.concat(await this.redis.smembers(this.getChatKey(chatId)));
+
+            for (const userId of userIds) {
+                userKey = this.getUserKey(chatId, parseInt(userId, 10));
+                userData = await this.redis.hgetall(userKey);
+
+                if (userData && !userData.active_first) {
+                    userData.active_first = userData.active_last;
+                    await this.redis.hmset(userKey, userData);
+                }
+
+                if (++processed % 1000 === 0) {
+                    console.log(`Processed ${processed} users...`);
+                }
+            }
+        }
+
+        console.log("Fixed missed active_first dates for all users.");
+    }
 }
 
 const active = new ChatUserStore();
