@@ -284,7 +284,7 @@ class ChatUserStore {
                     await this.redis.hmset(userKey, userData);
                 }
 
-                if (++processed % 1000 === 0) {
+                if (++processed % 100 === 0) {
                     console.log(`Processed ${processed} users...`);
                 }
             }
