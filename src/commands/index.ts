@@ -54,6 +54,10 @@ import { peakDays } from "./peakDays.js";
 import { updateActive_command } from "./updateActive.js";
 import { setPremium_command } from "./staff/setPremium.js";
 import { rescanChatHistory_command } from "./rescanChatHistory.js";
+import { oldUsers } from "./old.js";
+import { active } from "../redis/active.js";
+import getUserNameLink from "../utils/getUserNameLink.js";
+import { GrammyError } from "grammy";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -219,6 +223,8 @@ function regCommands() {
     group.hears("!updatemembers", async (ctx) => {
         updateActive_command(ctx);
     });
+
+    group.command("old", oldUsers);
 
     // group.hears(/^!дата вступу/, (ctx) => {
     //     setUserJoinDate_cmd(ctx);
