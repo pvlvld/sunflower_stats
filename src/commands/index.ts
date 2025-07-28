@@ -315,6 +315,28 @@ function regCommands() {
         pinMessage(ctx);
     });
 
+    botAdmin.hears(/^!listmembers -\d+/, async (ctx) => {
+        console.log("List members command received");
+        const targetChatId = parseCmdArgs(ctx.msg?.text ?? ctx.msg?.caption)[0]!;
+        let membersMsg = "List of members:";
+
+        const chatMembers = await active.getChatUsers(+targetChatId);
+
+        for (const [userId, userData] of Object.entries(chatMembers)) {
+            membersMsg += `\n${await getUserNameLink.html(userData.name, userData.username, userId)}`;
+        }
+
+        await ctx.reply(membersMsg).catch((e) => {
+            if (e instanceof GrammyError && e.description.includes("too long")) {
+                ctx.reply("The list is too long to send in one message. Check the logs for details.").catch((e) => {});
+                console.log(`Members list for chat ${targetChatId}:`, membersMsg);
+            } else {
+                ctx.reply("Failed to send members list. Check the logs for details.").catch((e) => {});
+                console.error("Failed to send members list:", e);
+            }
+        });
+    });
+
     // MUST BE THE LAST ONE
     bot.on("message", async (ctx) => {
         memes(ctx);
