@@ -277,15 +277,16 @@ class ChatUserStore {
             for (const userId of userIds) {
                 userKey = this.getUserKey(chatId, parseInt(userId, 10));
                 userData = await this.redis.hgetall(userKey);
+                processed++;
+
+                if (processed % 100 === 0) {
+                    console.log(`Processed ${processed} users...`);
+                }
 
                 if (userData && !userData.active_first) {
                     userData.active_first =
                         (await getUserFirstStatsDate(chatId, parseInt(userId, 10))) || userData.active_last;
                     await this.redis.hmset(userKey, userData);
-                }
-
-                if (++processed % 100 === 0) {
-                    console.log(`Processed ${processed} users...`);
                 }
             }
         }
