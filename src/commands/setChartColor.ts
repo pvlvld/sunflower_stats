@@ -16,6 +16,7 @@ const types = {
 };
 
 // TODO: UI color picker
+// TODO: /setfontcolor & /setchartcolor commands
 async function setChartColor(ctx: IGroupHearsContext) {
     const args = parseCmdArgs(ctx.msg.text ?? ctx.msg.caption);
     const target = resolveTarget(args[1]?.toLowerCase());
@@ -27,7 +28,7 @@ async function setChartColor(ctx: IGroupHearsContext) {
     if (!target) {
         void ctx
             .reply(
-                'Некоректно вказано ціль. Доступні: графік / лінія та шрифт / текст.\nПриклад: стата колір <u>графік</u> я <a href="https://g.co/kgs/5UEQqFv">#066666</a>'
+                'Некоректно вказано ціль. Доступні: графік та шрифт.\nПриклад: стата колір <u>графік</u> я <a href="https://g.co/kgs/5UEQqFv">#066666</a>'
             )
             .catch((e) => {});
         return;
