@@ -403,10 +403,10 @@ class DBChatStats {
                     text: queries.stats.chat.usersBelowTargetMessagesLastXDays(targetDaysCount),
                     values: [chat_id, targetMessagesCount],
                 })
-            ).rows as { user_id: number, messages: number }[];
+            ).rows as { user_id: number; messages: number }[];
         } catch (error) {
             console.error(error);
-            return [] as { user_id: number, messages: number }[];
+            return [] as { user_id: number; messages: number }[];
         }
     }
 }
