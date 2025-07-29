@@ -2,9 +2,26 @@ services:
   redis:
     image: redis:8-alpine
     container_name: sun_redis
+    hostname: sun_redis
     ports:
       - "127.0.0.1:6379:6379"
     volumes:
       - ./redis_data:/data
     restart: unless-stopped
     command: redis-server --appendonly yes
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: sun_rabbitmq
+    hostname: sun_rabbitmq
+    ports:
+      - "127.0.0.1:15672:15672"
+      - "127.0.0.1:5672:5672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=vld
+      - RABBITMQ_DEFAULT_PASS=vldpassword
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,error},{default,error}] disk_free_limit 2147483648 # 2GB disk free limit
+    volumes:
+      - ./rabbitmq_data/data:/var/lib/rabbitmq
+      - ./rabbitmq_data/log:/var/log/rabbitmq
+    restart: unless-stopped
