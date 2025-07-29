@@ -21,6 +21,7 @@ import { chatMigrationHandler } from "./handlers/chatMigrationHandler.js";
 import { messagesStatsBatchStore } from "./data/messagesStatsBatchStore.js";
 import cacheManager from "./cache/cache.js";
 import { LocaleService } from "./cache/localeService.js";
+import { active } from "./redis/active.js";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -136,18 +137,19 @@ async function main() {
 }
 
 main();
-// addButtonToThePost(16, -1002188288504, "Welcome to Unicorn Mafia 🦄", "https://t.me/+ucM55jyWpK5iY2My");
+addButtonToThePost(599, -1001898930678, "конкурс закінчився", "https://t.me/+ucM55jyWpK5iY2My");
 function addButtonToThePost(messageId: number, chatId: number, text: string, url: string) {
-    return bot.api.editMessageReplyMarkup(chatId, messageId, {
-        reply_markup: {
-            inline_keyboard: [
-                [
-                    {
-                        text,
-                        url,
-                    },
-                ],
-            ],
-        },
-    });
+    bot.api.editMessageReplyMarkup(chatId, messageId, { reply_markup: undefined });
+    // return bot.api.editMessageReplyMarkup(chatId, messageId, {
+    //     reply_markup: {
+    //         inline_keyboard: [
+    //             [
+    //                 {
+    //                     text,
+    //                     url: "t.me/soniashnyk/" + messageId,
+    //                 },
+    //             ],
+    //         ],
+    //     },
+    // });
 }

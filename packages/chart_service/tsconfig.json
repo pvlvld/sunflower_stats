@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../dist/chart_service",
+    "composite": true
+  },
+  "include": ["./**/*"],
+  "references": [
+    { "path": "../shared" }
+  ]
+}

@@ -1,28 +1,8 @@
 {
-    "$schema": "https://json.schemastore.org/tsconfig",
-    "display": "Node 23",
-
-    "compileOnSave": true,
-    "compilerOptions": {
-        "lib": ["ES2024"],
-        "module": "NodeNext",
-        "target": "ES2024",
-
-        "allowUnreachableCode": false,
-        "allowUnusedLabels": false,
-        "removeComments": true,
-        "alwaysStrict": true,
-        "strict": true,
-        "noUncheckedIndexedAccess": false,
-        "noImplicitAny": true,
-        "rootDir": "src",
-        "outDir": "build",
-        "esModuleInterop": true,
-        "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true,
-        "moduleResolution": "nodenext",
-        "skipDefaultLibCheck": true
-    },
-    "include": ["src/**/*"],
-    "exclude": ["node_modules"]
+  "files": [],
+  "references": [
+    { "path": "./packages/bot" },
+    { "path": "./packages/chart_service" },
+    { "path": "./packages/shared" }
+  ]
 }
