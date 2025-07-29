@@ -13,5 +13,8 @@
     "start-node-i": "export NODE_ENV='production' && pm2 start build/index.js --node-args=\"--expose-gc --inspect --no-compilation-cache --optimize_for_size\" --name stats --kill-timeout 60000 --log-date-format 'MM-DD HH:mm:ss'",
     "compile": "tsc",
     "dev": "DEV=true bun --watch src/index.ts"
+  },
+  "dependencies": {
+    "@sunflower-stats/shared": "^0.1.0"
   }
 }

@@ -4,9 +4,7 @@
     "description": "",
     "private": true,
     "workspaces": [
-        "packages/bot",
-        "packages/chart_service",
-        "packages/shared"
+        "packages/*"
     ],
     "type": "module",
     "scripts": {
@@ -40,6 +38,7 @@
         "@grammyjs/runner": "^2.0.3",
         "@mtcute/node": "^0.24.3",
         "@roziscoding/grammy-autoquote": "^2.0.9",
+        "@sunflower-stats/shared": "^0.1.0",
         "@types/amqplib": "^0.10.7",
         "amqplib": "^0.10.8",
         "big-js": "^3.1.3",

@@ -1,6 +1,10 @@
 {
   "name": "@sunflower-stats/chart_service",
   "version": "0.1.0",
-  "main": "index.js",
-  "type": "module"
+  "main": "../../dist/chart_service/index.js",
+  "types": "../../dist/chart_service/index.d.ts",
+  "type": "module",
+  "dependencies": {
+    "@sunflower-stats/shared": "^0.1.0"
+  }
 }
