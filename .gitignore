@@ -13,3 +13,5 @@ data/profileImages
 redis_data
 .husky/_
 client.session*
+/dist
+/data
