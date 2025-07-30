@@ -3,9 +3,14 @@
   "compilerOptions": {
     "rootDir": ".",
     "outDir": "../../dist/chart_service",
-    "composite": true
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@sunflower-stats/shared": ["../shared"],
+      "@sunflower-stats/shared/*": ["../shared/*"]
+    }
   },
-  "include": ["./**/*"],
+  "include": ["./**/*", "../shared/**/*"],
   "references": [
     { "path": "../shared" }
   ]
