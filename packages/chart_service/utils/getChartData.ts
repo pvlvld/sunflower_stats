@@ -25,9 +25,23 @@ async function getUserData(task: IChartTask) {
     ).rows;
 }
 
+async function getBotData(task: IChartTask) {
+    return (
+        await DBPoolManager.getPoolRead.query(
+            `SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y
+                    FROM stats_daily
+                    WHERE date > CURRENT_DATE - INTERVAL '1 year' 
+                      AND date < CURRENT_DATE
+                    GROUP BY date
+                    ORDER BY date;`
+        )
+    ).rows;
+}
+
 const getChartData = {
     chatInChat: getChatData,
     userInChat: getUserData,
+    botTotal: getBotData,
 };
 
 export { getChartData };
