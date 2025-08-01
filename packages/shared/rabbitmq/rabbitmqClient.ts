@@ -132,8 +132,8 @@ export class RabbitMQClient {
             throw new Error("No channel available");
         }
 
-        if (!task.taskId) {
-            task.taskId = this.generateTaskId(task);
+        if (!task.task_id) {
+            task.task_id = this.generateTaskId(task);
         }
 
         const message = JSON.stringify(task);
@@ -142,7 +142,7 @@ export class RabbitMQClient {
             priority: priority,
         });
 
-        return task.taskId;
+        return task.task_id;
     }
 
     /**
