@@ -36,11 +36,11 @@ interface BumpChartSeries {
 
 /**Rerutns @InputFile success @undefined stats contain less than 7 records*/
 export async function getStatsChart(
-    task: IChartTask,
-    type: IChartType
+    task: IChartTask
 ): Promise<{ chart: InputFile; chartFormat: IChartFormat } | undefined> {
-    let data: any[];
     const targetId = task.target_id;
+    const type = targetId === config.BOT_ID ? "bot-all" : targetId > 0 ? "user" : "chat";
+    let data: any[];
 
     // Shitty workaround? Yes it is!
     if (targetId === config.BOT_ID) {
