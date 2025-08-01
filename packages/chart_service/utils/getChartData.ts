@@ -4,6 +4,7 @@ import { DBPoolManager } from "../db/db.js";
 // TODO: Database
 
 async function getChatData(task: IChartTask) {
+    await DBPoolManager.ensureConnection();
     return (
         await DBPoolManager.getPool.query(`
       SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y
@@ -15,6 +16,7 @@ async function getChatData(task: IChartTask) {
 }
 
 async function getUserData(task: IChartTask) {
+    await DBPoolManager.ensureConnection();
     return (
         await DBPoolManager.getPool.query(
             `SELECT to_char(date, 'YYYY-MM-DD') AS x, count AS y
@@ -26,6 +28,7 @@ async function getUserData(task: IChartTask) {
 }
 
 async function getBotData() {
+    await DBPoolManager.ensureConnection();
     return (
         await DBPoolManager.getPool.query(
             `SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y
