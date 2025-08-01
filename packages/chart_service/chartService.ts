@@ -31,13 +31,13 @@ export class ChartService {
             console.warn("ChartService is stopping, skipping task processing.");
             return;
         }
-        console.log(`Processing chart task with ID: ${task.taskId}`);
+        console.log(`Processing chart task with ID: ${task.task_id}`);
 
         const chart = await getStatsChart(task);
 
         if (!chart) {
             await this.rabbitMQClient.sendChartResult({
-                task_id: task.taskId,
+                task_id: task.task_id,
                 chat_id: task.chat_id,
                 reply_to_message_id: task.reply_to_message_id,
                 thread_id: task.thread_id,
@@ -49,16 +49,8 @@ export class ChartService {
             return;
         }
 
-        // Acknowledge the message after processing
-        if (message) {
-            // this.rabbitMQClient.channel?.ack(message);
-            console.log(`Task ${task.taskId} processed and message acknowledged.`);
-        } else {
-            console.warn(`No message to acknowledge for task ${task.taskId}.`);
-        }
-
         await this.rabbitMQClient.sendChartResult({
-            task_id: task.taskId,
+            task_id: task.task_id,
             chat_id: task.chat_id,
             reply_to_message_id: task.reply_to_message_id,
             thread_id: task.thread_id,
