@@ -11,6 +11,18 @@ class PgSQLPoolManager {
         this._isReady = false;
     }
 
+    async ensureConnection() {
+        if (this._isReady) return;
+        try {
+            this.pool = new pg.Pool(this.config);
+            await this.pool.query("SELECT 1");
+            this._isReady = true;
+        } catch (error) {
+            console.error("Error ensuring connection to the database:", error);
+            throw error;
+        }
+    }
+
     get isReady() {
         return this._isReady;
     }
