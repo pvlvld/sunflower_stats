@@ -19,7 +19,7 @@ export interface IChartTask {
 }
 
 export interface IChartResult {
-    taskId: string; // chat_id:user_id
+    task_id: string; // chat_id:user_id
     chat_id: number;
     reply_to_message_id: number;
     thread_id: number;
