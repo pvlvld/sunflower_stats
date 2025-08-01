@@ -25,7 +25,7 @@ export interface IChartResult {
     thread_id: number;
     error: string | null;
     raw: Buffer | null;
-    format: "video" | "image";
+    format: IChartFormat;
 }
 
 export type IChartType = "user" | "chat" | "bot-all";

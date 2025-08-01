@@ -2,14 +2,13 @@ import type { Chart } from "chart.js";
 import chartJs from "chart.js/auto";
 import { Canvas } from "canvas";
 import { overlayChartOnVideo } from "utils/overlayChartOnVideo.js";
-import { IChartTask } from "@sunflower-stats/shared/index.js";
+import { IChartFormat, IChartTask } from "@sunflower-stats/shared/index.js";
 import { getChartData } from "utils/getChartData.js";
 import { config } from "consts/config.js";
 import { getChartConfig, IChartConfiguration } from "utils/getChartConfig.js";
 import { ChartCanvasManager } from "utils/chartCanvas.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
-export type IChartFormat = "video" | "image";
 
 interface SQLQueryResult {
     month: string;
