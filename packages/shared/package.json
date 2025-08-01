@@ -6,8 +6,8 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "../../dist/shared/index.js",
-      "types": "../../dist/shared/index.d.ts"
+      "import": "./dist/shared/index.js",
+      "types": "./dist/shared/index.d.ts"
     }
   }
 }
