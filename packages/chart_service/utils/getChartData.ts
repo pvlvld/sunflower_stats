@@ -25,7 +25,7 @@ async function getUserData(task: IChartTask) {
     ).rows;
 }
 
-async function getBotData(task: IChartTask) {
+async function getBotData() {
     return (
         await DBPoolManager.getPoolRead.query(
             `SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y
