@@ -1,0 +1,49 @@
+import { IChartTask } from "@sunflower-stats/shared/index.js";
+import { RabbitMQClient } from "@sunflower-stats/shared/rabbitmq/rabbitmqClient.js";
+import { ConsumeMessage } from "amqplib";
+import { getStatsChart } from "getStatsChart.js";
+
+export class ChartService {
+    constructor(private readonly rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance()) {}
+    private isProcessing: boolean = false;
+    private isStopping: boolean = false;
+    async start() {
+        await this.rabbitMQClient.consumeChartTasks(this.handleChartTask.bind(this));
+    }
+
+    async stop() {
+        this.isStopping = true;
+        if (this.isStopping) {
+            console.warn("ChartService is already stopping.");
+            return;
+        }
+
+        while (this.isProcessing) {
+            await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
+        await this.rabbitMQClient.close();
+    }
+
+    private async handleChartTask(task: IChartTask, message: ConsumeMessage | null): Promise<void> {
+        this.isProcessing = true;
+        if (this.isStopping) {
+            console.warn("ChartService is stopping, skipping task processing.");
+            return;
+        }
+        console.log(`Processing chart task with ID: ${task.taskId}`);
+
+        getStatsChart(task);
+
+        // Acknowledge the message after processing
+        if (message) {
+            // this.rabbitMQClient.channel?.ack(message);
+            console.log(`Task ${task.taskId} processed and message acknowledged.`);
+        } else {
+            console.warn(`No message to acknowledge for task ${task.taskId}.`);
+        }
+
+        await this.rabbitMQClient.sendChartResult({});
+        this.isProcessing = false;
+    }
+}
