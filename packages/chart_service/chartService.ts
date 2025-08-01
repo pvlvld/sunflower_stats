@@ -33,7 +33,21 @@ export class ChartService {
         }
         console.log(`Processing chart task with ID: ${task.taskId}`);
 
-        getStatsChart(task);
+        const chart = await getStatsChart(task);
+
+        if (!chart) {
+            await this.rabbitMQClient.sendChartResult({
+                task_id: task.taskId,
+                chat_id: task.chat_id,
+                reply_to_message_id: task.reply_to_message_id,
+                thread_id: task.thread_id,
+                raw: null,
+                format: "image",
+                error: "Failed to generate chart",
+            });
+            this.isProcessing = false;
+            return;
+        }
 
         // Acknowledge the message after processing
         if (message) {
@@ -43,7 +57,16 @@ export class ChartService {
             console.warn(`No message to acknowledge for task ${task.taskId}.`);
         }
 
-        await this.rabbitMQClient.sendChartResult({});
+        await this.rabbitMQClient.sendChartResult({
+            task_id: task.taskId,
+            chat_id: task.chat_id,
+            reply_to_message_id: task.reply_to_message_id,
+            thread_id: task.thread_id,
+            raw: chart.chart,
+            format: chart.chartFormat,
+
+            error: null,
+        });
         this.isProcessing = false;
     }
 }
