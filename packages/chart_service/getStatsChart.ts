@@ -44,7 +44,7 @@ export async function getStatsChart(
 
     // Shitty workaround? Yes it is!
     if (targetId === config.BOT_ID) {
-        data = (await getChartData.botTotal()).rows;
+        data = await getChartData.botTotal();
     } else if (targetId > 0) {
         data = await getChartData.userInChat(task);
     } else if (targetId < 0) {
