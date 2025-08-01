@@ -20,6 +20,9 @@ export interface IChartTask {
 
 export interface IChartResult {
     taskId: string; // chat_id:user_id
+    chat_id: number;
+    reply_to_message_id: number;
+    thread_id: number;
     error: string | null;
     raw: Buffer | null;
     format: "video" | "image";
