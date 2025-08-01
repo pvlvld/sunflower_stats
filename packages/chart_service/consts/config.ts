@@ -3,4 +3,5 @@ export const config = {
     PATHS: {
         BASE_BG_PATH: "../data/chartBg",
     },
+    BOT_ID: 6081112363,
 } as const;
