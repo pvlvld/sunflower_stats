@@ -64,8 +64,4 @@ async function downloadChatPic(chat_id: number) {
     return true;
 }
 
-const downloadAvatar = {
-    chat: downloadChatPic,
-};
-
-export { downloadAvatar };
+export { downloadChatPic };
