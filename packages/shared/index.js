@@ -1,0 +1,2 @@
+// fuck
+export * from "../../dist/shared/index.js";

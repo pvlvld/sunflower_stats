@@ -1,5 +1,5 @@
 import { Canvas, createCanvas } from "canvas";
-import { config } from "consts/config.js";
+import { config } from "../consts/config.js";
 //@ts-expect-error
 import deePool from "deepool";
 

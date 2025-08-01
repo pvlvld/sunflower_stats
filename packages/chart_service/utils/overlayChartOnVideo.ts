@@ -1,8 +1,8 @@
 import Ffmpeg from "fluent-ffmpeg";
 import { Readable, Stream } from "stream";
 import { isPremium } from "./isPremium.js";
-import { config } from "consts/config.js";
-import { IChartTask } from "@sunflower-stats/shared/index.js";
+import { config } from "../consts/config.js";
+import type { IChartTask } from "@sunflower-stats/shared";
 
 async function overlayChartOnVideo(chartBuffer: Buffer, task: IChartTask): Promise<Buffer> {
     const imageStream = Readable.from(chartBuffer);

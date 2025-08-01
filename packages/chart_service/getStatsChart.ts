@@ -1,34 +1,14 @@
 import type { Chart } from "chart.js";
 import chartJs from "chart.js/auto";
 import { Canvas } from "canvas";
-import { overlayChartOnVideo } from "utils/overlayChartOnVideo.js";
-import { IChartFormat, IChartTask } from "@sunflower-stats/shared/index.js";
-import { getChartData } from "utils/getChartData.js";
-import { config } from "consts/config.js";
-import { getChartConfig, IChartConfiguration } from "utils/getChartConfig.js";
-import { ChartCanvasManager } from "utils/chartCanvas.js";
+import { overlayChartOnVideo } from "./utils/overlayChartOnVideo.js";
+import { IChartFormat, IChartTask } from "@sunflower-stats/shared";
+import { getChartData } from "./utils/getChartData.js";
+import { config } from "./consts/config.js";
+import { getChartConfig, IChartConfiguration } from "./utils/getChartConfig.js";
+import { ChartCanvasManager } from "./utils/chartCanvas.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
-
-interface SQLQueryResult {
-    month: string;
-    chat_id: number;
-    title: string;
-    total_messages: number;
-    rank: number;
-}
-
-interface BumpChartDataPoint {
-    x: string;
-    y: number;
-    chat_id: number; // Chat pic
-}
-
-interface BumpChartSeries {
-    label: string;
-    chat_id: number; // Chat pic
-    data: BumpChartDataPoint[];
-}
 
 /**Rerutns @Buffer success @undefined stats contain less than 7 records*/
 export async function getStatsChart(

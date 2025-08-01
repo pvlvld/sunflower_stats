@@ -1,7 +1,7 @@
-import { IChartTask } from "@sunflower-stats/shared/index.js";
-import { RabbitMQClient } from "@sunflower-stats/shared/rabbitmq/rabbitmqClient.js";
+import type { IChartTask } from "@sunflower-stats/shared";
+import { RabbitMQClient } from "@sunflower-stats/shared";
 import { ConsumeMessage } from "amqplib";
-import { getStatsChart } from "getStatsChart.js";
+import { getStatsChart } from "./getStatsChart.js";
 
 export class ChartService {
     constructor(private readonly rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance()) {}

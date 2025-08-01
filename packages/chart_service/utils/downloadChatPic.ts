@@ -1,4 +1,4 @@
-import { config } from "consts/config.js";
+import { config } from "../consts/config.js";
 import * as fs from "node:fs";
 
 interface IChatResponse {

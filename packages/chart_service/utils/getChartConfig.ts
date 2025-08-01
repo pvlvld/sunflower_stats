@@ -3,7 +3,7 @@ import type { IChartType } from "../getStatsChart.js";
 import { bgImagePlugin } from "../plugins/bgImagePlugin.js";
 import { bgColorPlugin } from "../plugins/bgColorPlugin.js";
 import { hexToGgbString } from "./hexToGgbString.js";
-import { IChartTask } from "@sunflower-stats/shared/index.js";
+import type { IChartTask } from "@sunflower-stats/shared";
 
 export type IChartConfiguration = ChartConfiguration & {
     custom: {

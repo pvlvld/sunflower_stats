@@ -1,13 +1,7 @@
 {
   "name": "@sunflower-stats/shared",
   "version": "0.1.0",
-  "main": "../../dist/shared/index.js",
-  "types": "../../dist/shared/index.d.ts",
-  "type": "module",
-  "exports": {
-    ".": {
-      "import": "./dist/shared/index.js",
-      "types": "./dist/shared/index.d.ts"
-    }
-  }
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "type": "module"
 }

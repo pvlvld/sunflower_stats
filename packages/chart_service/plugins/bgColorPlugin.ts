@@ -13,4 +13,3 @@ const bgColorPlugin = {
 };
 
 export { bgColorPlugin };
-//     sqlResults.forEach((row) => {

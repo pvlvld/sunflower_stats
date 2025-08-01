@@ -1,5 +1,5 @@
-import { IChartTask } from "@sunflower-stats/shared/index.js";
-import { DBPoolManager } from "db/db.js";
+import type { IChartTask } from "@sunflower-stats/shared";
+import { DBPoolManager } from "../db/db.js";
 
 // TODO: Database
 
