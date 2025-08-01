@@ -1,5 +1,6 @@
 import bot from "../../bot.js";
 
+// TODO: Always download if existing file is not the same as the one on the server (u file id?)
 async function downloadChatPic(chat_id: number) {
     const chat = await bot.api.getChat(chat_id).catch((e) => {
         console.error(e);
