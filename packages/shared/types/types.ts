@@ -1,5 +1,6 @@
 export interface IChartTask {
     taskId: string; // chat_id:user_id
+    target_id: number; // user_id or chat_id
     chat_id: number;
     user_id: number;
     reply_to_message_id: number;
