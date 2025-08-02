@@ -15,6 +15,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     const ignorePremium = args.includes("-prem");
     const skipMafia = args.includes("-mafia");
     const skipNew = args.includes("-new");
+    const wakeup = args.includes("-wakeup");
 
     if (!ctx.msg.reply_to_message) {
         return void ctx.reply("Команда має бути у відповідь на цільове повідомлення.");
@@ -22,6 +23,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
 
     ctx.api.config.use(autoRetry());
 
+    const activeThreshold = wakeup ? 14 : 7;
     let successfullySent = 0;
     let totalAttemptsSent = 0;
     ctx.reply(
@@ -45,7 +47,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
 
         users = await active.getChatUsers(chat);
         for (let user in users) {
-            if (moment().diff(moment(users[user].active_last), "days") < 7) {
+            if (moment().diff(moment(users[user].active_last), "days") < activeThreshold) {
                 if (ignorePremium && cacheManager.PremiumStatusCache.get(chat).status) break;
 
                 if (skipNew) {
