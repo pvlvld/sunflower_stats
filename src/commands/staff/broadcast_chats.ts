@@ -23,7 +23,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
 
     ctx.api.config.use(autoRetry());
 
-    const activeThreshold = wakeup ? 14 : 7;
+    const activeThreshold = wakeup ? Infinity : 7;
     let successfullySent = 0;
     let totalAttemptsSent = 0;
     ctx.reply(
