@@ -12,10 +12,10 @@ import { LocaleService } from "../../cache/localeService.js";
 
 async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     const args = ctx.message.text!.split(" ");
-    const ignorePremium = args.includes("-prem");
-    const skipMafia = args.includes("-mafia");
-    const skipNew = args.includes("-new");
-    const wakeup = args.includes("-wakeup");
+    const ignorePremium = args.includes("-prem"); // Skip premium chats
+    const skipMafia = args.includes("-mafia"); // Skip mafia chats
+    const skipNew = args.includes("-new"); // Skip new chats (less than 5 days old)
+    const wakeup = args.includes("-wakeup"); // Send to inactive chats with last activity more than 7 days ago
 
     if (!ctx.msg.reply_to_message) {
         return void ctx.reply("Команда має бути у відповідь на цільове повідомлення.");
