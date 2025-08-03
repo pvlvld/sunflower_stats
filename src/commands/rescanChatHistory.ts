@@ -73,7 +73,7 @@ async function rescanChatHistory(ctx: IGroupContext) {
     }
 }
 
-const rescan_menu = new Menu<IContext>("rescan-menu", {
+export const rescan_menu = new Menu<IContext>("rescan-menu", {
     autoAnswer: true,
 })
     .text(

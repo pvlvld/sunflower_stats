@@ -19,6 +19,7 @@ import { blacklist } from "./middlewares/blacklist.js";
 import start_menu from "./ui/menus/start.js";
 import { localeNegotiator } from "./utils/localeNegotiator.js";
 import changeLocale_menu from "./ui/menus/changeLocaleMenu.js";
+import { rescan_menu } from "./commands/rescanChatHistory.js";
 
 const bot = new Bot<IContext, IApi>(cfg.BOT_TOKEN);
 
@@ -75,4 +76,5 @@ bot.use(personalChartBgControl_menu);
 bot.use(historyScanProposal_menu);
 bot.use(chatStatsPagination_menu);
 bot.use(changeLocale_menu);
+bot.use(rescan_menu);
 export default bot;
