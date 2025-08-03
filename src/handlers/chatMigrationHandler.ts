@@ -79,16 +79,16 @@ class ChatMigrationHandler {
         active.migrateChatId(Number(from_id), Number(to_id));
 
         if (!isErrorMigrating) {
-            await Database.poolManager.getPool
-                .query(
-                    `
-                DELETE FROM public.chats
-                WHERE chat_id = ${from_id};
-            `
-                )
-                .catch((e) => {
-                    console.error("ChatMigrationHandler: Error deleting old chat:", e);
-                });
+            // await Database.poolManager.getPool
+            //     .query(
+            //         `
+            //     DELETE FROM public.chats
+            //     WHERE chat_id = ${from_id};
+            // `
+            //     )
+            //     .catch((e) => {
+            //         console.error("ChatMigrationHandler: Error deleting old chat:", e);
+            //     });
         }
     }
 
