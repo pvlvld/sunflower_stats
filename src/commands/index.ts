@@ -53,6 +53,7 @@ import { pinMessage } from "./staff/pinMessage.js";
 import { peakDays } from "./peakDays.js";
 import { updateActive_command } from "./updateActive.js";
 import { setPremium_command } from "./staff/setPremium.js";
+import { rescanChatHistory_command } from "./rescanChatHistory.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -204,7 +205,7 @@ function regCommands() {
     });
 
     group.command("rescan", async (ctx) => {
-        await rescanChatHistory(ctx);
+        await rescanChatHistory_command(ctx);
     });
 
     group.hears(/^(!?)стата колір/, async (ctx) => {

@@ -2,7 +2,7 @@ import { historyScanner } from "../scanner/historyScanner.js";
 import { IGroupHearsCommandContext } from "../types/context.js";
 import isChatOwner from "../utils/isChatOwner.js";
 
-export async function rescanChatHistory(ctx: IGroupHearsCommandContext) {
+export async function rescanChatHistory_command(ctx: IGroupHearsCommandContext) {
     if (!(await isChatOwner(ctx.chat.id, ctx.from.id))) {
         await ctx.reply(ctx.t("error-chat-owner-only")).catch((e) => {});
         return;
