@@ -54,10 +54,6 @@ async function rescanChatHistory(ctx: IGroupContext) {
         })
         .then((link) => link.invite_link)
         .catch((e) => {
-            console.log(
-                `[RescanChatHistory] Failed to create invite link for chat: ${ctx.chat.id} / ${ctx.chat.username}`
-            );
-            ctx.reply(ctx.t("history-scan-cant-start")).catch((e) => {});
             return undefined;
         });
 
