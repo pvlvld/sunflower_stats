@@ -81,6 +81,7 @@ export const rescan_menu = new Menu<IContext>("rescan-menu", {
                 (await isChatOwner(ctx.chat.id, ctx.from.id))
             ) {
                 ctx.deleteMessage().catch((e) => {});
+                await ctx.reply("Чат додано в чергу на сканування. Будь ласка, зачекайте.").catch((e) => {});
                 await rescanChatHistory(ctx as IGroupContext);
             }
             return;
