@@ -386,6 +386,16 @@ class DBChatStats {
         }
     }
 
+    async dropChatStatsBeforeToday(chat_id: number) {
+        const query = `DELETE FROM stats_daily WHERE chat_id = ${chat_id} AND date < CURRENT_DATE`;
+        try {
+            void (await this._dbPoolManager.getPoolWrite.query(query));
+            return true;
+        } catch (error) {
+            return false;
+        }
+    }
+
     async usersBelowTargetMessagesLastXDays(chat_id: number, targetMessagesCount: string, targetDaysCount: string) {
         try {
             return (
