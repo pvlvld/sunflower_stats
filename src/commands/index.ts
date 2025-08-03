@@ -203,6 +203,10 @@ function regCommands() {
         }
     });
 
+    group.command("rescan", async (ctx) => {
+        await rescanChatHistory(ctx);
+    });
+
     group.hears(/^(!?)стата колір/, async (ctx) => {
         await setChartColor(ctx);
     });
