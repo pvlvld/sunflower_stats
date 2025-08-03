@@ -19,7 +19,7 @@ class HistoryScanner extends MTProtoClient {
         super(cfg.API_ID, cfg.API_HASH);
     }
 
-    public async scanChat(identifier: string | number, chat_id: number) {
+    public async scanChat(identifier: string | number, chat_id: number, rescan = false): Promise<ScanReport> {
         if (this.isQueued(chat_id)) {
             return new ScanReport(identifier, false, 0, `Chat ${chat_id} / ${identifier} already in queue.`, {
                 message: "history-scan-already-queued",
@@ -28,7 +28,7 @@ class HistoryScanner extends MTProtoClient {
         }
 
         const scanTask = async () => {
-            const res = await this._scanChat(identifier, chat_id);
+            const res = await this._scanChat(identifier, chat_id, rescan);
             const endScanLog = `HistoryScanner: finished scanning ${identifier}. ${res.count} messages${
                 res.error ? `, err: ${res.error}` : ""
             }.`;
@@ -42,7 +42,8 @@ class HistoryScanner extends MTProtoClient {
         return await this._queue.enqueue(scanTask, chat_id);
     }
 
-    private async _scanChat(identifier: string | number, chat_id?: number): Promise<ScanReport> {
+    private async _scanChat(identifier: string | number, chat_id?: number, rescan = false): Promise<ScanReport> {
+        const chat_id_original = chat_id!;
         const startLogMsg = `HistoryScanner: scanning ${identifier}. Queue size: ${this._queue.size}`;
         console.info(startLogMsg);
         this._log(startLogMsg);
@@ -69,7 +70,12 @@ class HistoryScanner extends MTProtoClient {
             });
         }
 
-        const endDate = (await DBStats.chat.firstRecordDate(chat_id)) || new Date();
+        let endDate: Date = new Date();
+        if (rescan) {
+            await DBStats.chat.dropChatStatsBeforeToday(chat_id_original);
+        } else {
+            endDate = (await DBStats.chat.firstRecordDate(chat_id)) || new Date();
+        }
 
         // if (!endDate) {
         //   return createReportAndLeave(
