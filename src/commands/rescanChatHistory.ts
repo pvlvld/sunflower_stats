@@ -80,10 +80,10 @@ export const rescan_menu = new Menu<IContext>("rescan-menu", {
                 ["supergroup", "group"].includes(ctx.chat?.type!) &&
                 (await isChatOwner(ctx.chat.id, ctx.from.id))
             ) {
+                ctx.deleteMessage().catch((e) => {});
                 await rescanChatHistory(ctx as IGroupContext);
-            } else {
-                return;
             }
+            return;
         }
     )
     .text(
@@ -94,9 +94,8 @@ export const rescan_menu = new Menu<IContext>("rescan-menu", {
                 ["supergroup", "group"].includes(ctx.chat?.type!) &&
                 (await isChatOwner(ctx.chat.id, ctx.from.id))
             ) {
-                await ctx.deleteMessage().catch((e) => {});
-            } else {
-                return;
+                ctx.deleteMessage().catch((e) => {});
             }
+            return;
         }
     );
