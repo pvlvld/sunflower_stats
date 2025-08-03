@@ -6,9 +6,9 @@ import { active } from "../redis/active.js";
 class ChatMigrationHandler {
     private async handle(from_id: string, to_id: string): Promise<void> {
         console.info(`Chat migration ${from_id} -> ${to_id}`);
+        let isErrorMigrating = false;
 
         const prepareChatQuery = `
-            DELETE FROM public.stats_daily WHERE chat_id = ${to_id};
             INSERT INTO public.chats (
                 chat_id,
                 is_premium,
@@ -40,7 +40,18 @@ class ChatMigrationHandler {
                 public.chats
             WHERE
                 chat_id = ${from_id}
-            ON CONFLICT (chat_id) DO NOTHING;
+            ON CONFLICT (chat_id) DO UPDATE SET
+                is_premium = EXCLUDED.is_premium,
+                stats_bot_in = EXCLUDED.stats_bot_in,
+                charts = EXCLUDED.charts,
+                statsadminsonly = EXCLUDED.statsadminsonly,
+                usechatbgforall = EXCLUDED.usechatbgforall,
+                selfdestructstats = EXCLUDED.selfdestructstats,
+                line_color = EXCLUDED.line_color,
+                font_color = EXCLUDED.font_color,
+                userstatslink = EXCLUDED.userstatslink,
+                title = EXCLUDED.title,
+                locale = EXCLUDED.locale;
             `;
 
         const moveStatsQuery = `
@@ -55,16 +66,30 @@ class ChatMigrationHandler {
             WHERE
                 chat_id = ${from_id}
             ON CONFLICT (chat_id, user_id, date)
-            DO NOTHING;
+            DO UPDATE SET count = stats_daily.count + EXCLUDED.count;
         `;
 
         await Database.poolManager.getPool.query(prepareChatQuery).catch((e) => {
             console.error("ChatMigrationHandler: Error preparing:", e);
         });
         await Database.poolManager.getPool.query(moveStatsQuery).catch((e) => {
+            isErrorMigrating = true;
             console.error("ChatMigrationHandler: Error moving stats:", e);
         });
         active.migrateChatId(Number(from_id), Number(to_id));
+
+        if (!isErrorMigrating) {
+            await Database.poolManager.getPool
+                .query(
+                    `
+                DELETE FROM public.chats
+                WHERE chat_id = ${from_id};
+            `
+                )
+                .catch((e) => {
+                    console.error("ChatMigrationHandler: Error deleting old chat:", e);
+                });
+        }
     }
 
     async handleFromError(e: GrammyError): Promise<void> {
