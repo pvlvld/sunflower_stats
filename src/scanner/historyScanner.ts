@@ -114,7 +114,7 @@ class HistoryScanner extends MTProtoClient {
             endDate = new Date("2024-01-01");
         }
 
-        if (!this._isDifferentDay(firstMessageDate, endDate)) {
+        if (this._isTheSameDay(firstMessageDate, endDate)) {
             return createReportAndLeave(
                 chat_id,
                 false,
@@ -162,13 +162,13 @@ class HistoryScanner extends MTProtoClient {
                     }
 
                     // Reached endDate (first stats record date of the chat)
-                    if (!this._isDifferentDay(currentMsgDate, endDate)) {
+                    if (this._isTheSameDay(currentMsgDate, endDate)) {
                         console.log("exit on date:", currentMsgDate, endDate);
                         break main_loop;
                     }
 
                     // Each new day perform stats writing
-                    if (this._isDifferentDay(currentMsgDate, previousMsgDate)) {
+                    if (!this._isTheSameDay(currentMsgDate, previousMsgDate)) {
                         previousMsgDate = currentMsgDate;
                         await this._writeHistoryStats(chat_id, stats, message.date);
                     }
@@ -222,11 +222,11 @@ class HistoryScanner extends MTProtoClient {
         return date;
     }
 
-    private _isDifferentDay(date1: Date, date2: Date): boolean {
+    private _isTheSameDay(date1: Date, date2: Date): boolean {
         return (
-            date1.getDate() !== date2.getDate() ||
-            date1.getMonth() !== date2.getMonth() ||
-            date1.getFullYear() !== date2.getFullYear()
+            date1.getDate() === date2.getDate() &&
+            date1.getMonth() === date2.getMonth() &&
+            date1.getFullYear() === date2.getFullYear()
         );
     }
 
