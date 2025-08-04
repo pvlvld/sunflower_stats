@@ -36,7 +36,7 @@ export async function getStatsChatRating(
         if (statsRowsCount < statsRowLimit) {
             if (validUsersCount > offset) {
                 replyParts.push(
-                    `${displayRank}. ${getPremiumMarkSpaced(user.user_id)}${getUserNameString(
+                    `${displayRank}. ${await getPremiumMarkSpaced(user.user_id)}${getUserNameString(
                         ctx,
                         settings,
                         userData,
