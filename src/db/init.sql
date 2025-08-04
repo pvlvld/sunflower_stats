@@ -14,6 +14,8 @@ CREATE TABLE
     line_color char(6),
     font_color char(6),
     title varchar(768) -- can be up to 768+ chars, bruh
+    locale varchar(5) NOT NULL DEFAULT 'uk',
+    rescanned_at date DEFAULT NULL
     ),
 ALTER TABLE
   public.chats
