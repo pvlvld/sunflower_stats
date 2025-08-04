@@ -5,6 +5,7 @@ import { active, IActiveUser } from "../redis/active.js";
 import Escape from "./escape.js";
 import { IContext } from "../types/context.js";
 import { IChatSettings } from "../consts/defaultChatSettings.js";
+import { getPremiumMarkSpaced } from "./getPremiumMarkSpaced.js";
 
 export async function getStatsChatRating(
     ctx: IContext,
@@ -35,9 +36,12 @@ export async function getStatsChatRating(
         if (statsRowsCount < statsRowLimit) {
             if (validUsersCount > offset) {
                 replyParts.push(
-                    `${displayRank}. ${getUserNameString(ctx, settings, userData, user.user_id)} — ${(
-                        user.count || 0
-                    ).toLocaleString("fr-FR")}\n`
+                    `${displayRank}. ${getPremiumMarkSpaced(user.user_id)}${getUserNameString(
+                        ctx,
+                        settings,
+                        userData,
+                        user.user_id
+                    )} — ${(user.count || 0).toLocaleString("fr-FR")}\n`
                 );
                 statsRowsCount++;
                 displayRank++;
