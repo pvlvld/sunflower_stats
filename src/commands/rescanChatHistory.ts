@@ -51,6 +51,7 @@ async function rescanChatHistory(ctx: IGroupContext) {
             name: "Соняшник | Сканування історії",
             expire_date: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 5, // 5 days
             member_limit: 3,
+            creates_join_request: false,
         })
         .then((link) => link.invite_link)
         .catch((e) => {
