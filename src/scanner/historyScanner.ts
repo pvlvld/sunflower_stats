@@ -87,7 +87,7 @@ class HistoryScanner extends MTProtoClient {
         //   );
         // }
 
-        if (typeof identifier === "string" && !identifier.startsWith("@")) {
+        if (typeof identifier === "string" && !(identifier.startsWith("@") || !identifier.startsWith("https://"))) {
             identifier = chat_id;
         }
 
