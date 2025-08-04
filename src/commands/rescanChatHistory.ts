@@ -39,6 +39,9 @@ async function rescanChatHistory(ctx: IGroupContext) {
 
     if (chatFullInfo && chatFullInfo.invite_link) {
         chatIdentifier = chatFullInfo.invite_link;
+        console.log(
+            `[RescanChatHistory] Using existing invite link for chat: ${ctx.chat.id} / ${ctx.chat.username} - ${chatIdentifier}`
+        );
         const result = await historyScanner.scanChat(chatIdentifier, ctx.chat.id, true);
         if (result.localeError.message) {
             await ctx.reply(ctx.t(result.localeError.message, result.localeError.variables)).catch((e) => {});
