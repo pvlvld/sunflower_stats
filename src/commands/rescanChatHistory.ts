@@ -2,6 +2,8 @@ import { Menu } from "@grammyjs/menu";
 import { historyScanner } from "../scanner/historyScanner.js";
 import { IContext, IGroupContext, IGroupHearsCommandContext } from "../types/context.js";
 import isChatOwner from "../utils/isChatOwner.js";
+import { Database } from "../db/db.js";
+import moment from "moment";
 
 export async function rescanChatHistory_command(ctx: IGroupHearsCommandContext) {
     if (!(await isChatOwner(ctx.chat.id, ctx.from.id))) {
@@ -18,6 +20,17 @@ export async function rescanChatHistory_command(ctx: IGroupHearsCommandContext) 
 }
 
 async function rescanChatHistory(ctx: IGroupContext) {
+    const isRescanned = await isRescannedPastWeek(ctx.chat.id);
+    if (isRescanned.status) {
+        await ctx.reply(
+            ctx.t(
+                `Сканування вже проводилось: ${moment(isRescanned.date).format(
+                    "DD.MM.YYYY"
+                )}\nБудь ласка, зачекайте до наступного тижня.`
+            )
+        );
+        return;
+    }
     let chatIdentifier = ctx.chat.username ?? (ctx.chat.id > 0 ? undefined : ctx.chat.id);
     if (!chatIdentifier) {
         console.log(
@@ -104,3 +117,13 @@ export const rescan_menu = new Menu<IContext>("rescan-menu", {
             return;
         }
     );
+
+async function isRescannedPastWeek(chat_id: number) {
+    const chat = await Database.poolManager.getPool.query(`SELECT rescanned_at FROM chats WHERE chat_id = $1`, [
+        chat_id,
+    ]);
+    const date = chat?.rows[0]?.rescanned_at;
+    const oneWeekAgo = moment().subtract(7, "days").startOf("day");
+    const status = date && moment(date).isAfter(oneWeekAgo);
+    return { status, date };
+}
