@@ -6,6 +6,11 @@ import type { IChartTask, IChartResult } from "../types/types.js";
 // - Normal logging
 // - Limit requeue attempts
 
+type IQueues = {
+    chart_tasks: IChartTask;
+    chart_results: IChartResult;
+};
+
 export class RabbitMQClient {
     private static instance: RabbitMQClient;
     private connection: amqp.ChannelModel | null = null;
