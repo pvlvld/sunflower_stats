@@ -7,7 +7,7 @@ import type { IChartStatsTask, IChartResult } from "../types/types.js";
 // - Limit requeue attempts
 
 type IQueues = {
-    chart_tasks: IChartStatsTask;
+    chart_stats_tasks: IChartStatsTask;
     chart_results: IChartResult;
 };
 
@@ -22,8 +22,8 @@ export class RabbitMQClient {
     private reconnectDelay: number = 5000;
 
     // Queue names
-    private readonly CHART_TASKS_QUEUE = "chart_tasks";
-    private readonly CHART_RESULTS_QUEUE = "chart_results";
+    private readonly CHART_STATS_TASKS_QUEUE: keyof IQueues = "chart_stats_tasks";
+    private readonly CHART_RESULTS_QUEUE: keyof IQueues = "chart_results";
 
     private constructor(connectionUrl: string = "amqp://localhost") {
         console.log("RabbitMQClient instance initialized with connection URL:", connectionUrl);
@@ -86,7 +86,7 @@ export class RabbitMQClient {
             throw new Error("No channel available");
         }
 
-        await this.channel.assertQueue(this.CHART_TASKS_QUEUE, {
+        await this.channel.assertQueue(this.CHART_STATS_TASKS_QUEUE, {
             durable: true,
             autoDelete: false,
             maxPriority: 1,
@@ -140,7 +140,7 @@ export class RabbitMQClient {
         }
 
         const message = JSON.stringify(task);
-        const sent = this.channel.sendToQueue(this.CHART_TASKS_QUEUE, Buffer.from(message), {
+        const sent = this.channel.sendToQueue(this.CHART_STATS_TASKS_QUEUE, Buffer.from(message), {
             persistent: true,
             priority: priority,
         });
@@ -180,7 +180,7 @@ export class RabbitMQClient {
 
         await this.channel.prefetch(1);
 
-        await this.channel.consume(this.CHART_TASKS_QUEUE, async (message: amqp.ConsumeMessage | null) => {
+        await this.channel.consume(this.CHART_STATS_TASKS_QUEUE, async (message: amqp.ConsumeMessage | null) => {
             if (!message) return;
 
             try {
