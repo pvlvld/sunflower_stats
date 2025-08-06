@@ -1,5 +1,5 @@
 import * as amqp from "amqplib";
-import type { IChartTask, IChartResult } from "../types/types.js";
+import type { IChartStatsTask, IChartResult } from "../types/types.js";
 
 // TODO:
 // - Implement deduplication logic. Set? Map?
@@ -7,7 +7,7 @@ import type { IChartTask, IChartResult } from "../types/types.js";
 // - Limit requeue attempts
 
 type IQueues = {
-    chart_tasks: IChartTask;
+    chart_tasks: IChartStatsTask;
     chart_results: IChartResult;
 };
 
@@ -42,7 +42,7 @@ export class RabbitMQClient {
      *
      * Returns a string in the format "chat_id:user_id:reply_to_message_id:thread_id" to uniquely identify a task.
      */
-    public generateTaskId(task: IChartTask): string {
+    public generateTaskId(task: IChartStatsTask): string {
         return `${task.chat_id}:${task.user_id}`;
     }
 
@@ -128,7 +128,7 @@ export class RabbitMQClient {
      * Send a chart rendering task to the queue
      * Returns the taskId for correlation
      */
-    public async sendChartTask(task: IChartTask, priority: 0 | 1 = 0): Promise<string> {
+    public async sendChartTask(task: IChartStatsTask, priority: 0 | 1 = 0): Promise<string> {
         await this.ensureConnection();
 
         if (!this.channel) {
@@ -170,7 +170,7 @@ export class RabbitMQClient {
      * @returns Promise that resolves when the consumer is set up
      */
     public async consumeChartTasks(
-        onTask: (task: IChartTask, message: amqp.ConsumeMessage | null) => void | Promise<void>
+        onTask: (task: IChartStatsTask, message: amqp.ConsumeMessage | null) => void | Promise<void>
     ): Promise<void> {
         await this.ensureConnection();
 
@@ -184,7 +184,7 @@ export class RabbitMQClient {
             if (!message) return;
 
             try {
-                const task: IChartTask = JSON.parse(message.content.toString());
+                const task: IChartStatsTask = JSON.parse(message.content.toString());
                 await onTask(task, message);
                 this.channel?.ack(message);
             } catch (error) {
