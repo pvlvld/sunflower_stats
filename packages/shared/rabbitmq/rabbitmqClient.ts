@@ -21,8 +21,6 @@ export class RabbitMQClient {
     private maxReconnectAttempts: number = 5;
     private reconnectDelay: number = 5000;
 
-    private deduplicationMap = new Map<string, Promise<IChartResult>>();
-
     // Queue names
     private readonly CHART_TASKS_QUEUE = "chart_tasks";
     private readonly CHART_RESULTS_QUEUE = "chart_results";
