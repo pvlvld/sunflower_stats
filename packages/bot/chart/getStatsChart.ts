@@ -115,6 +115,11 @@ export async function getStatsChart(
 
 export class StatsChartManager {
     private static instance: StatsChartManager;
+    public STATS_COMMANDS = Object.freeze({
+        user: ["!я", "йа", "/me", "/i", "/you", "!ти", "/u"],
+        chat: ["!стата", "!статистика", "стата", "статистика", "/stats"],
+        otherUser: ["!ти", "/you", "/u"],
+    });
     private pendingCharts: Map<string, unknown> = new Map();
 
     private constructor(
@@ -234,11 +239,11 @@ export class StatsChartManager {
     public handleCommand(ctx: IGroupHearsCommandContext) {
         const parts = (ctx.msg.text || ctx.msg.caption)!.split(" ");
 
-        if (STATS_COMMANDS.user.includes(parts[0].toLowerCase())) {
+        if (this.STATS_COMMANDS.user.includes(parts[0].toLowerCase())) {
             //
         }
 
-        if (STATS_COMMANDS.chat.includes(parts[0].toLowerCase())) {
+        if (this.STATS_COMMANDS.chat.includes(parts[0].toLowerCase())) {
             //
         }
     }
