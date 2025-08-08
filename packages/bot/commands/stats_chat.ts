@@ -72,7 +72,7 @@ async function stats_chat(ctx: IGroupTextContext): Promise<void> {
         }));
     }
     const isPagination = await isPaginationNeeded(chat_id, stats, chatSettings);
-    if (allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges) && chatSettings.charts) {
+    if (chatSettings.charts && allowedChartStatsRanges.includes(dateRange as IAllowedChartStatsRanges)) {
         const cachedChart = cacheManager.ChartCache_Chat.get(chat_id, dateRange as IAllowedChartStatsRanges);
 
         if (cachedChart.status === "ok") {
