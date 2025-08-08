@@ -22,7 +22,7 @@ class ChartCache_Chat {
 
         const chatCache = this._chartCache.get(chat_id);
         if (chatCache) {
-            const chart = chatCache.get(range);
+            const chart = chatCache.get(range || "all");
             if (chart) {
                 return chart;
             }
