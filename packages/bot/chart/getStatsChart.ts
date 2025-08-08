@@ -12,8 +12,20 @@ import { downloadAvatar } from "./utils/downloadAvatar.js";
 import bot from "../bot.js";
 import cfg from "../config.js";
 import { overlayChartOnVideo } from "./utils/overlayChartOnVideo.js";
+import { RabbitMQClient } from "@sunflower-stats/shared";
+import cacheManager from "../cache/cache.js";
+import { IChartCache } from "../cache/chartCache_User.js";
+import { IChartResult, IChartStatsTask } from "@sunflower-stats/shared/types/types.js";
+import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
+import { DefaultChartSettings, IChartSettings } from "../db/chartSettings.js";
+import { Database } from "../db/db.js";
+import { IChatSettings } from "../consts/defaultChatSettings.js";
+import { IGroupContext, IGroupHearsCommandContext } from "../types/context.js";
+import { isPremium } from "../utils/isPremium.js";
+import { ConsumeMessage } from "amqplib";
+import formattedDate from "../utils/date.js";
 
-export type IChartType = "user" | "chat" | "bot-all";
+export type IChartType = "user" | "chat";
 export type IChartFormat = "video" | "image";
 
 interface SQLQueryResult {
