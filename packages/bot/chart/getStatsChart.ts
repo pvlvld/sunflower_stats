@@ -101,6 +101,148 @@ export async function getStatsChart(
     }
 }
 
+export class StatsChartManager {
+    private static instance: StatsChartManager;
+    private pendingCharts: Map<string, unknown> = new Map();
+
+    private constructor(
+        private rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(),
+        private cache = { chat: cacheManager.ChartCache_Chat, user: cacheManager.ChartCache_User }
+    ) {
+        this.rabbitMQClient
+            .assertQueue("chart_results", {
+                durable: true,
+                autoDelete: false,
+                maxPriority: 1,
+            })
+            .then(() => {
+                console.log("Chart results queue initialized");
+            });
+        this.rabbitMQClient
+            .assertQueue("chart_stats_tasks", {
+                durable: true,
+                autoDelete: false,
+                maxPriority: 1,
+            })
+            .then(() => {
+                console.log("Chart stats tasks queue initialized");
+            });
+        this.initChartConsumer();
+    }
+
+    public getInstance(): StatsChartManager {
+        if (!StatsChartManager.instance) {
+            StatsChartManager.instance = new StatsChartManager();
+        }
+        return StatsChartManager.instance;
+    }
+
+    public async enqueueStatsChart(
+        ctx: IGroupHearsCommandContext,
+        type: IChartType,
+        rawDateRange?: IAllowedChartStatsRanges
+    ) {
+        const user_id = ctx.from.id;
+        const chat_id = ctx.chat.id;
+        const target_id = type === "user" ? user_id : chat_id;
+        // const cachedChart = this.getCachedChart(chat_id, user_id, type, rawDateRange);
+
+        // if (cachedChart.status === "ok") {
+        //     return {
+        //         chart: new InputFile(cachedChart.file_id, "Соняшник_Статистика"),
+        //         chartFormat: cachedChart.chartFormat,
+        //     };
+        // }
+
+        const [chartSettings, chat_premium, user_premium] = await Promise.all([
+            this.getChartSettings(chat_id, user_id, type),
+            isPremium(chat_id),
+            isPremium(user_id),
+        ]);
+        const date = formattedDate[rawDateRange || "all"];
+
+        this.rabbitMQClient.produce<"chart_stats_tasks">(
+            "chart_stats_tasks",
+            {
+                task_id: `${chat_id}:${target_id}}`,
+                chat_id,
+                user_id,
+                target_id,
+                font_color: chartSettings.font_color,
+                line_color: chartSettings.line_color,
+                usechatbgforall: chartSettings.usechatbgforall,
+                reply_to_message_id: ctx.msg.message_id,
+                thread_id: ctx.msg.message_thread_id || 0,
+                date_from: date[0],
+                date_until: date[1],
+                chat_premium,
+                user_premium,
+            },
+            {
+                priority: +(chat_premium || user_premium),
+            }
+        );
+        return undefined;
+    }
+
+    private async getChartSettings(
+        chat_id: number,
+        user_id: number,
+        type: IChartType
+    ): Promise<IChartSettings & Pick<IChatSettings, "usechatbgforall">> {
+        const [chatSettings, userSettings] = await Promise.all([
+            getCachedOrDBChatSettings(chat_id),
+            Database.user.settings.get(user_id),
+        ]);
+
+        const settings = {
+            line_color: userSettings.line_color,
+            font_color: userSettings.font_color,
+            usechatbgforall: chatSettings.usechatbgforall,
+        };
+
+        if (settings.usechatbgforall || type === "chat") {
+            settings.line_color = chatSettings.line_color;
+            settings.font_color = chatSettings.font_color;
+        }
+
+        return settings;
+    }
+
+    private initChartConsumer() {
+        this.rabbitMQClient.consume<"chart_results">("chart_results", this.chartConsumer.bind(this));
+
+        console.log("Chart consumer initialized");
+    }
+
+    private chartConsumer(res: IChartResult, msg: ConsumeMessage | null) {
+        //
+    }
+
+    public handleCommand(ctx: IGroupHearsCommandContext) {
+        const parts = (ctx.msg.text || ctx.msg.caption)!.split(" ");
+
+        if (STATS_COMMANDS.user.includes(parts[0].toLowerCase())) {
+            //
+        }
+
+        if (STATS_COMMANDS.chat.includes(parts[0].toLowerCase())) {
+            //
+        }
+    }
+
+    private getCachedChart(
+        chat_id: number,
+        user_id: number,
+        type: IChartType,
+        rawDateRange?: IAllowedChartStatsRanges
+    ): IChartCache {
+        return type === "chat"
+            ? this.cache.chat.get(chat_id, rawDateRange || "all")
+            : this.cache.user.get(chat_id, user_id);
+    }
+}
+
 async function getChatImage(chat_id: number): Promise<Image> {
     // If bot is not the main bot, return default image
     if (bot.botInfo.id != cfg.MAIN_BOT_ID) {
