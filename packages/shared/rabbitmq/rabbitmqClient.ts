@@ -89,12 +89,7 @@ export class RabbitMQClient {
             throw new Error("No channel available");
         }
 
-        const defaultConfig: IQueueConfig = {
-            durable: true,
-            autoDelete: false,
-        };
-
-        await this.channel.assertQueue(queueName, { ...defaultConfig, ...config });
+        await this.channel.assertQueue(queueName, config);
         this.assertedQueues.add(queueName);
         console.log(`Queue "${queueName}" asserted successfully`);
     }
