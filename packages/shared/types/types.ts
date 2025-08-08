@@ -15,10 +15,8 @@ export interface IChartStatsTask extends IChartBaseTask {
 
     // TODO: Refactor out these settings to handle them on the bot side to minimize data transfer
     usechatbgforall: boolean; // Use chat background for all charts
-    chat_line: string; // Color of the chat line
-    user_line: string; // Color of the user line
-    chat_font: string; // Font color for the chat
-    user_font: string; // Font color for the user
+    line_color: string;
+    font_color: string;
 }
 
 export interface IChartChatTopTask extends IChartBaseTask {}
