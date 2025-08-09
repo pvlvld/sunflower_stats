@@ -166,6 +166,8 @@ export class StatsChartManager {
 
         if (this.pendingCharts.has(task_id)) {
             return;
+        } else {
+            this.pendingCharts.set(task_id, {});
         }
         // const cachedChart = this.getCachedChart(chat_id, user_id, type, rawDateRange);
 
