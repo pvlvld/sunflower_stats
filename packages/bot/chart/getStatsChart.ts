@@ -154,7 +154,7 @@ export class StatsChartManager {
         return StatsChartManager.instance;
     }
 
-    public async enqueueStatsChart(
+    public async requestStatsChart(
         ctx: IGroupHearsCommandContext,
         type: IChartType,
         rawDateRange?: IAllowedChartStatsRanges
