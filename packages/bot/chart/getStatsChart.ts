@@ -178,34 +178,40 @@ export class StatsChartManager {
         //     };
         // }
 
-        const [chartSettings, chat_premium, user_premium] = await Promise.all([
-            this.getChartSettings(chat_id, user_id, type),
-            isPremium(chat_id),
-            isPremium(user_id),
-        ]);
-        const date = formattedDate[rawDateRange || "all"];
+        try {
+            const [chartSettings, chat_premium, user_premium] = await Promise.all([
+                this.getChartSettings(chat_id, user_id, type),
+                isPremium(chat_id),
+                isPremium(user_id),
+            ]);
+            const date = formattedDate[rawDateRange || "all"];
 
-        this.rabbitMQClient.produce<"chart_stats_tasks">(
-            "chart_stats_tasks",
-            {
-                task_id,
-                chat_id,
-                user_id,
-                target_id,
-                font_color: chartSettings.font_color,
-                line_color: chartSettings.line_color,
-                usechatbgforall: chartSettings.usechatbgforall,
-                reply_to_message_id: ctx.msg.message_id,
-                thread_id: ctx.msg.message_thread_id || 0,
-                date_from: date[0],
-                date_until: date[1],
-                chat_premium,
-                user_premium,
-            },
-            {
-                priority: +(chat_premium || user_premium),
-            }
-        );
+            this.rabbitMQClient.produce<"chart_stats_tasks">(
+                "chart_stats_tasks",
+                {
+                    task_id,
+                    chat_id,
+                    user_id,
+                    target_id,
+                    font_color: chartSettings.font_color,
+                    line_color: chartSettings.line_color,
+                    usechatbgforall: chartSettings.usechatbgforall,
+                    reply_to_message_id: ctx.msg.message_id,
+                    thread_id: ctx.msg.message_thread_id || 0,
+                    date_from: date[0],
+                    date_until: date[1],
+                    chat_premium,
+                    user_premium,
+                },
+                {
+                    priority: +(chat_premium || user_premium),
+                }
+            );
+        } catch (error) {
+            console.error("Error requesting stats chart:", error);
+            this.pendingCharts.delete(task_id);
+        }
+
         return undefined;
     }
 
