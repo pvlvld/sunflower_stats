@@ -162,6 +162,11 @@ export class StatsChartManager {
         const user_id = ctx.from.id;
         const chat_id = ctx.chat.id;
         const target_id = type === "user" ? user_id : chat_id;
+        const task_id = `${chat_id}:${target_id}`;
+
+        if (this.pendingCharts.has(task_id)) {
+            return;
+        }
         // const cachedChart = this.getCachedChart(chat_id, user_id, type, rawDateRange);
 
         // if (cachedChart.status === "ok") {
@@ -181,7 +186,7 @@ export class StatsChartManager {
         this.rabbitMQClient.produce<"chart_stats_tasks">(
             "chart_stats_tasks",
             {
-                task_id: `${chat_id}:${target_id}}`,
+                task_id,
                 chat_id,
                 user_id,
                 target_id,
