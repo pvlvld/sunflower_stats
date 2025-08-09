@@ -1,11 +1,9 @@
 import type { Context, NextFunction } from "grammy";
 import fs from "fs";
-import path, { dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 
 type IBlacklistData = { users: number[]; chats: number[] };
 
-const blacklistPath = path.join(dirname(fileURLToPath(import.meta.url)), "../../data/blacklist.json");
+const blacklistPath = `${process.cwd()}/data/blacklist.json`;
 
 const _blacklist = JSON.parse(fs.readFileSync(blacklistPath, "utf-8"));
 
