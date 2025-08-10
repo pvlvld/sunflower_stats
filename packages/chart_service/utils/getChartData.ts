@@ -1,9 +1,9 @@
-import type { IChartTask } from "@sunflower-stats/shared";
+import type { IChartStatsTask } from "@sunflower-stats/shared";
 import { DBPoolManager } from "../db/db.js";
 
 // TODO: Database
 
-async function getChatData(task: IChartTask) {
+async function getChatData(task: IChartStatsTask) {
     await DBPoolManager.ensureConnection();
     return (
         await DBPoolManager.getPool.query(`
@@ -15,7 +15,7 @@ async function getChatData(task: IChartTask) {
     ).rows;
 }
 
-async function getUserData(task: IChartTask) {
+async function getUserData(task: IChartStatsTask) {
     await DBPoolManager.ensureConnection();
     return (
         await DBPoolManager.getPool.query(
