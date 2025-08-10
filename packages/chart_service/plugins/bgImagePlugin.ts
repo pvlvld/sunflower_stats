@@ -1,7 +1,7 @@
 import { Image, loadImage } from "canvas";
 import { Chart } from "chart.js/auto";
 import fs from "fs";
-import type { IChartTask, IChartType } from "@sunflower-stats/shared";
+import type { IChartStatsTask, IChartType } from "@sunflower-stats/shared";
 import { isPremium } from "../utils/isPremium.js";
 
 type IBackground = { bg: Image; transparent: boolean };
@@ -16,7 +16,7 @@ async function getDefaultBg() {
     return defaultBg;
 }
 
-async function loadBgImage(task: IChartTask, target: number): Promise<IBackground> {
+async function loadBgImage(task: IChartStatsTask, target: number): Promise<IBackground> {
     let path = `${baseBgPath}/${target}.jpg`;
 
     if (isPremium(task, target) && fs.existsSync(`${baseBgPath}/${target}.mp4`)) {
@@ -49,7 +49,7 @@ function createPlugin(image: IBackground | undefined) {
     };
 }
 
-async function bgImagePlugin(task: IChartTask, type: IChartType) {
+async function bgImagePlugin(task: IChartStatsTask, type: IChartType) {
     let pluginBgImage: IBackground;
     const { chat_id, user_id } = task;
 
