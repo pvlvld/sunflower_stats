@@ -157,27 +157,18 @@ export class StatsChartService {
     public async requestStatsChart(
         ctx: IGroupHearsCommandContext,
         type: IChartType,
-        rawDateRange?: IAllowedChartStatsRanges
+        rawDateRange: IAllowedChartStatsRanges = "all"
     ) {
         const user_id = ctx.from.id;
         const chat_id = ctx.chat.id;
         const target_id = type === "user" ? user_id : chat_id;
         const task_id = `${chat_id}:${target_id}`;
-        rawDateRange ??= "all";
 
         if (this.pendingCharts.has(task_id)) {
             return;
         } else {
             this.pendingCharts.set(task_id, {});
         }
-        // const cachedChart = this.getCachedChart(chat_id, user_id, type, rawDateRange);
-
-        // if (cachedChart.status === "ok") {
-        //     return {
-        //         chart: new InputFile(cachedChart.file_id, "Соняшник_Статистика"),
-        //         chartFormat: cachedChart.chartFormat,
-        //     };
-        // }
 
         try {
             const [chartSettings, chat_premium, user_premium] = await Promise.all([
