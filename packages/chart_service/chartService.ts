@@ -1,4 +1,4 @@
-import type { IChartTask } from "@sunflower-stats/shared";
+import type { IChartStatsTask } from "@sunflower-stats/shared";
 import { RabbitMQClient } from "@sunflower-stats/shared";
 import { ConsumeMessage } from "amqplib";
 import { getStatsChart } from "./getStatsChart.js";
@@ -8,7 +8,17 @@ export class ChartService {
     private isProcessing: boolean = false;
     private isStopping: boolean = false;
     async start() {
-        await this.rabbitMQClient.consumeChartTasks(this.handleChartTask.bind(this));
+        await this.rabbitMQClient.assertQueue("chart_stats_tasks", {
+            durable: true,
+            autoDelete: false,
+            maxPriority: 1,
+        });
+        await this.rabbitMQClient.assertQueue("chart_stats_tasks", {
+            durable: true,
+            autoDelete: false,
+            maxPriority: 1,
+        });
+        await this.rabbitMQClient.consume("chart_stats_tasks", this.handleChartTask.bind(this));
     }
 
     async stop() {
@@ -25,7 +35,7 @@ export class ChartService {
         await this.rabbitMQClient.close();
     }
 
-    private async handleChartTask(task: IChartTask, message: ConsumeMessage | null): Promise<void> {
+    private async handleChartTask(task: IChartStatsTask, message: ConsumeMessage | null): Promise<void> {
         this.isProcessing = true;
         if (this.isStopping) {
             console.warn("ChartService is stopping, skipping task processing.");
@@ -36,29 +46,41 @@ export class ChartService {
         const chart = await getStatsChart(task);
 
         if (!chart) {
-            await this.rabbitMQClient.sendChartResult({
-                task_id: task.task_id,
-                chat_id: task.chat_id,
-                reply_to_message_id: task.reply_to_message_id,
-                thread_id: task.thread_id,
-                raw: null,
-                format: "image",
-                error: "Failed to generate chart",
-            });
+            await this.rabbitMQClient.produce(
+                "chart_results",
+                {
+                    task_id: task.task_id,
+                    chat_id: task.chat_id,
+                    reply_to_message_id: task.reply_to_message_id,
+                    thread_id: task.thread_id,
+                    raw: null,
+                    format: "image",
+                    error: "Failed to generate chart",
+                },
+                {
+                    priority: +(task.chat_premium || task.user_premium),
+                }
+            );
             this.isProcessing = false;
             return;
         }
 
-        await this.rabbitMQClient.sendChartResult({
-            task_id: task.task_id,
-            chat_id: task.chat_id,
-            reply_to_message_id: task.reply_to_message_id,
-            thread_id: task.thread_id,
-            raw: chart.chart,
-            format: chart.chartFormat,
+        await this.rabbitMQClient.produce(
+            "chart_results",
+            {
+                task_id: task.task_id,
+                chat_id: task.chat_id,
+                reply_to_message_id: task.reply_to_message_id,
+                thread_id: task.thread_id,
+                raw: chart.chart,
+                format: chart.chartFormat,
 
-            error: null,
-        });
+                error: null,
+            },
+            {
+                priority: +(task.chat_premium || task.user_premium),
+            }
+        );
         this.isProcessing = false;
     }
 }
