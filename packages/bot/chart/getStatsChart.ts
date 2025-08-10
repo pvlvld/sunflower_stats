@@ -156,12 +156,12 @@ export class StatsChartService {
 
     public async requestStatsChart(
         ctx: IGroupHearsCommandContext,
+        target_id: number,
         type: IChartType,
         rawDateRange: IAllowedChartStatsRanges = "all"
     ) {
         const user_id = ctx.from.id;
         const chat_id = ctx.chat.id;
-        const target_id = type === "user" ? user_id : chat_id;
         const task_id = `${chat_id}:${target_id}`;
 
         if (this.pendingCharts.has(task_id)) {
