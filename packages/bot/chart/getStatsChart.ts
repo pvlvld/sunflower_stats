@@ -113,8 +113,8 @@ export async function getStatsChart(
     }
 }
 
-export class StatsChartManager {
-    private static instance: StatsChartManager;
+export class StatsChartService {
+    private static instance: StatsChartService;
     public STATS_COMMANDS = Object.freeze({
         user: ["!я", "йа", "/me", "/i", "/you", "!ти", "/u"],
         chat: ["!стата", "!статистика", "стата", "статистика", "/stats"],
@@ -147,11 +147,11 @@ export class StatsChartManager {
         this.initChartConsumer();
     }
 
-    public getInstance(): StatsChartManager {
-        if (!StatsChartManager.instance) {
-            StatsChartManager.instance = new StatsChartManager();
+    public getInstance(): StatsChartService {
+        if (!StatsChartService.instance) {
+            StatsChartService.instance = new StatsChartService();
         }
-        return StatsChartManager.instance;
+        return StatsChartService.instance;
     }
 
     public async requestStatsChart(
