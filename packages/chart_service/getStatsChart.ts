@@ -2,7 +2,7 @@ import type { Chart } from "chart.js";
 import chartJs from "chart.js/auto";
 import { Canvas } from "canvas";
 import { overlayChartOnVideo } from "./utils/overlayChartOnVideo.js";
-import { IChartFormat, IChartTask } from "@sunflower-stats/shared";
+import { IChartFormat, IChartStatsTask } from "@sunflower-stats/shared";
 import { getChartData } from "./utils/getChartData.js";
 import { config } from "./consts/config.js";
 import { getChartConfig, IChartConfiguration } from "./utils/getChartConfig.js";
@@ -12,7 +12,7 @@ export type IChartType = "user" | "chat" | "bot-all";
 
 /**Rerutns @Buffer success @undefined stats contain less than 7 records*/
 export async function getStatsChart(
-    task: IChartTask
+    task: IChartStatsTask
 ): Promise<{ chart: Buffer; chartFormat: IChartFormat } | undefined> {
     const targetId = task.target_id;
     const type = targetId === config.BOT_ID ? "bot-all" : targetId > 0 ? "user" : "chat";
