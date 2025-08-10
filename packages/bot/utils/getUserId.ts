@@ -21,10 +21,10 @@ async function getUserId(wantedUser: string | undefined, chat_id: number | strin
             }
         }
         return -1;
-    } else {
-        if (users?.[wantedUser]) {
-            return +wantedUser;
-        }
+    }
+
+    if (users?.[wantedUser]) {
+        return +wantedUser;
     }
 
     return -1;
