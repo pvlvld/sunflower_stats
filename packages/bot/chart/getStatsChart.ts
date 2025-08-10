@@ -163,6 +163,7 @@ export class StatsChartManager {
         const chat_id = ctx.chat.id;
         const target_id = type === "user" ? user_id : chat_id;
         const task_id = `${chat_id}:${target_id}`;
+        rawDateRange ??= "all";
 
         if (this.pendingCharts.has(task_id)) {
             return;
@@ -184,7 +185,7 @@ export class StatsChartManager {
                 isPremium(chat_id),
                 isPremium(user_id),
             ]);
-            const date = formattedDate[rawDateRange || "all"];
+            const date = formattedDate[rawDateRange];
 
             this.rabbitMQClient.produce<"chart_stats_tasks">(
                 "chart_stats_tasks",
