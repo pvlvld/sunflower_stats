@@ -3,7 +3,7 @@ import type { IChartType } from "../getStatsChart.js";
 import { bgImagePlugin } from "../plugins/bgImagePlugin.js";
 import { bgColorPlugin } from "../plugins/bgColorPlugin.js";
 import { hexToGgbString } from "./hexToGgbString.js";
-import type { IChartTask } from "@sunflower-stats/shared";
+import type { IChartStatsTask } from "@sunflower-stats/shared";
 
 export type IChartConfiguration = ChartConfiguration & {
     custom: {
@@ -11,10 +11,10 @@ export type IChartConfiguration = ChartConfiguration & {
     };
 };
 
-async function getDefaultChartConfig(task: IChartTask, type: IChartType): Promise<IChartConfiguration> {
+async function getDefaultChartConfig(task: IChartStatsTask, type: IChartType): Promise<IChartConfiguration> {
     // TODO: Debug. Refactor. Why rgb? There is no alpha channel in hexToGgbString.
-    const line_rgbValuesString = hexToGgbString(task.target_id > 0 ? task.user_line : task.chat_line);
-    const fontColor = task.target_id > 0 ? task.user_font : task.chat_font;
+    const line_rgbValuesString = hexToGgbString(task.line_color);
+    const fontColor = task.font_color;
     const _bgImagePlugin = await bgImagePlugin(task, type);
 
     return {
