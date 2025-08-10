@@ -147,7 +147,7 @@ export class StatsChartService {
         this.initChartConsumer();
     }
 
-    public getInstance(): StatsChartService {
+    public static getInstance(): StatsChartService {
         if (!StatsChartService.instance) {
             StatsChartService.instance = new StatsChartService();
         }
