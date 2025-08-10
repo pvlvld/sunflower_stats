@@ -36,7 +36,7 @@ const cmdToDateRangeMap = {
 } as const;
 
 export type IDateRange = (typeof cmdToDateRangeMap)[keyof typeof cmdToDateRangeMap];
-export type IAllowedChartStatsRanges = Exclude<IDateRange, "today" | "yesterday" | "weekRange">;
+export type IAllowedChartStatsRanges = Exclude<IDateRange, "today" | "yesterday">;
 
 const allowedChartStatsRanges: IAllowedChartStatsRanges[] = ["monthRange", "yearRange", "all"] as const;
 
