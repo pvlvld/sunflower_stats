@@ -54,23 +54,23 @@ async function getStatsMsg() {
 }
 
 async function bot_stats_cmd(ctx: IContext) {
-    const chart = await getStatsChart(-1, -1, "bot-all");
+    // const chart = await getStatsChart(-1, -1, "bot-all");
     const statsMsg = await getStatsMsg();
     if (!statsMsg) {
         console.error("statsMsg is empty");
         return;
     }
-    if (chart) {
-        await ctx.replyWithPhoto(chart.chart, {
-            caption: statsMsg,
-        });
-    } else {
-        await ctx
-            .reply(statsMsg, {
-                link_preview_options: { is_disabled: true },
-            })
-            .catch(console.error);
-    }
+    // if (chart) {
+    //     await ctx.replyWithPhoto(chart.chart, {
+    //         caption: statsMsg,
+    //     });
+    // } else {
+    await ctx
+        .reply(statsMsg, {
+            link_preview_options: { is_disabled: true },
+        })
+        .catch(console.error);
+    // }
 }
 
 export const botStatsManager = {
