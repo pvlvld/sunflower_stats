@@ -354,7 +354,7 @@ export class StatsChartService {
         const task_id = getTaskId(chat_id, target_id);
 
         if (this.cache.pendingCharts.has(task_id)) {
-            console.log("Chart is already pending");
+            console.log(`Chart is already pending: ${task_id}`);
             return;
         } else {
             this.cache.pendingCharts.set(task_id, {});
