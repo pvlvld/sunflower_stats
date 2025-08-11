@@ -79,11 +79,11 @@ async function getDefaultChartConfig(chat_id: number, user_id: number, type: ICh
                     },
                 },
                 y: {
-                    min: type === "bot-all" ? 600000 : undefined,
+                    // min: type === "bot-all" ? 600000 : undefined,
                     afterBuildTicks: (scale: Scale) => {
-                        if (type === "bot-all") {
-                            scale.ticks[0].value = 600000;
-                        }
+                        // if (type === "bot-all") {
+                        //     scale.ticks[0].value = 600000;
+                        // }
                     },
                     grid: {
                         display: false,
