@@ -11,12 +11,13 @@ export class ChartService {
         await this.rabbitMQClient.assertQueue("chart_stats_tasks", {
             durable: true,
             autoDelete: false,
-            maxPriority: 1,
+            arguments: {
+                "x-max-priority": 1,
+            },
         });
-        await this.rabbitMQClient.assertQueue("chart_stats_tasks", {
+        await this.rabbitMQClient.assertQueue("chart_results", {
             durable: true,
             autoDelete: false,
-            maxPriority: 1,
         });
         await this.rabbitMQClient.consume("chart_stats_tasks", this.handleChartTask.bind(this));
     }

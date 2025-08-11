@@ -24,6 +24,11 @@ import { IGroupContext, IGroupHearsCommandContext } from "../types/context.js";
 import { isPremium } from "../utils/isPremium.js";
 import { ConsumeMessage } from "amqplib";
 import formattedDate from "../utils/date.js";
+import getUserId from "../utils/getUserId.js";
+import { active, IActiveUser } from "../redis/active.js";
+import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage.js";
+import getUserStatsMessage from "../utils/getUserStatsMessage.js";
+import { IDBChatUserStatsAll } from "../types/stats.js";
 
 export type IChartType = "user" | "chat";
 export type IChartFormat = "video" | "image";
@@ -113,41 +118,221 @@ export async function getStatsChart(
     }
 }
 
-export class StatsChartService {
-    private static instance: StatsChartService;
+function getTaskId(chat_id: number, user_id: number): string {
+    return `chat:${chat_id}:user:${user_id}`;
+}
+
+const CACHE = {
+    chat: cacheManager.ChartCache_Chat,
+    user: cacheManager.ChartCache_User,
+    ttl: cacheManager.TTLCache,
+    statsText: new Map<string, string>(),
+    pendingCharts: new Map<string, unknown>(),
+};
+
+export class StatsService {
+    private static instance: StatsService;
     public STATS_COMMANDS = Object.freeze({
         user: ["!я", "йа", "/me", "/i", "/you", "!ти", "/u"],
         chat: ["!стата", "!статистика", "стата", "статистика", "/stats"],
-        otherUser: ["!ти", "/you", "/u"],
+        otherUser: ["!ти", "/you", "/u", "хто ти", "!хто ти"],
     });
-    private pendingCharts: Map<string, unknown> = new Map();
+    private cache = CACHE;
+    private statsChartService: StatsChartService | null = null;
+    private isInitialized = false;
+    private constructor() {}
 
-    private constructor(
-        private rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(),
-        private cache = { chat: cacheManager.ChartCache_Chat, user: cacheManager.ChartCache_User }
-    ) {
-        this.rabbitMQClient
+    public static getInstance(): StatsService {
+        if (!StatsService.instance) {
+            StatsService.instance = new StatsService();
+        }
+        return StatsService.instance;
+    }
+
+    public async init() {
+        this.statsChartService = await StatsChartService.getInstance();
+        await this.statsChartService.init();
+        this.isInitialized = true;
+    }
+
+    // TODO: refactor user resolving
+    public async userStatsCallback(ctx: IGroupHearsCommandContext, isPersonal = true) {
+        if (!this.isInitialized || !this.statsChartService) {
+            throw new Error("StatsService is not initialized");
+        }
+        const chat_id = ctx.chat.id;
+        let target_id = isPersonal && ctx.msg.reply_to_message?.from ? ctx.msg.reply_to_message.from.id : ctx.from.id;
+        const original_target = target_id;
+        let userStatsPromise = Database.stats.user.all(chat_id, target_id);
+        let userSettingsPromise = Database.user.settings.get(target_id);
+        const [users, chatSettings] = await Promise.all([
+            active.getChatUsers(chat_id),
+            getCachedOrDBChatSettings(chat_id),
+        ]);
+
+        if (!isPersonal) {
+            target_id = this.resolveTargetUser(ctx, users);
+        }
+
+        if (cfg.IGNORE_IDS.includes(target_id)) {
+            return void (await ctx.replyWithAnimation(cfg.MEDIA.ANIMATIONS.no_stats));
+        }
+
+        // Stupid but may considerably speed up things
+        // Better to write two separate functions for self / target user stats
+        if (original_target !== target_id) {
+            userStatsPromise = Database.stats.user.all(chat_id, target_id);
+        }
+
+        if (!chatSettings.charts) {
+            const statsText = await this.prepareUserStatsText(ctx, target_id, await userStatsPromise, users[target_id]);
+            this.removeCachedStatsText(chat_id, target_id);
+            await sendSelfdestructMessage(
+                ctx,
+                {
+                    isChart: false,
+                    text: statsText,
+                    chart: undefined,
+                },
+                chatSettings.selfdestructstats
+            );
+            return;
+        }
+
+        const cachedChart = this.getCachedChart(chat_id, target_id, "user", "all");
+
+        if (cachedChart.status === "ok") {
+            const statsText = await this.prepareUserStatsText(ctx, target_id, await userStatsPromise, users[target_id]);
+            this.removeCachedStatsText(chat_id, target_id);
+            await sendSelfdestructMessage(
+                ctx,
+                {
+                    isChart: true,
+                    text: statsText,
+                    chart: cachedChart.file_id,
+                    chartFormat: cachedChart.chartFormat,
+                },
+                chatSettings.selfdestructstats
+            );
+            return;
+        }
+
+        this.statsChartService.requestStatsChart(ctx, target_id, "user", "all");
+        await this.prepareUserStatsText(ctx, target_id, await userStatsPromise, users[target_id]);
+    }
+
+    private async prepareUserStatsText(
+        ctx: IGroupHearsCommandContext,
+        user_id: number,
+        stats: IDBChatUserStatsAll,
+        active: IActiveUser
+    ): Promise<string> {
+        const text = await getUserStatsMessage(ctx, user_id, stats, active);
+        this.cache.statsText.set(getTaskId(ctx.chat.id, user_id), text);
+        return text;
+    }
+
+    private removeCachedStatsText(chat_id: number, user_id: number) {
+        this.cache.statsText.delete(getTaskId(chat_id, user_id));
+    }
+
+    private getCachedChart(
+        chat_id: number,
+        user_id: number,
+        type: IChartType,
+        rawDateRange: IAllowedChartStatsRanges = "all"
+    ): IChartCache {
+        return type === "chat" ? this.cache.chat.get(chat_id, rawDateRange) : this.cache.user.get(chat_id, user_id);
+    }
+
+    private resolveTargetUser(
+        ctx: IGroupHearsCommandContext,
+        users: Awaited<ReturnType<(typeof active)["getChatUsers"]>>
+    ): number {
+        if (ctx.msg.reply_to_message?.from?.is_bot) {
+            ctx.reply(ctx.t("robot-sounds")).catch((e) => {});
+            return 0;
+        }
+
+        if (ctx.msg.reply_to_message?.from) {
+            return ctx.msg.reply_to_message?.from?.id;
+        }
+
+        let userHint = (ctx.msg.text ?? ctx.msg.caption).split(" ")[-1];
+        if (userHint.startsWith("@")) {
+            userHint = userHint.slice(1);
+            for (const user in users) {
+                if (users?.[user]?.username === userHint) {
+                    return +user;
+                }
+            }
+            return -1;
+        }
+
+        if (isNaN(Number(userHint))) {
+            for (const user in users) {
+                if (users?.[user]?.name === userHint) {
+                    return +user;
+                }
+            }
+            return -1;
+        }
+
+        if (users?.[userHint]) {
+            return +userHint;
+        }
+
+        return -1;
+    }
+
+    private groupStatsCallback(ctx: IGroupHearsCommandContext) {
+        // Implementation for group stats callback
+    }
+}
+
+export class StatsChartService {
+    private static instance: StatsChartService;
+    private isInitialized = false;
+
+    private constructor(private rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(), private cache = CACHE) {
+        const pendingChartsSet = this.cache.pendingCharts.set;
+        this.cache.pendingCharts.set = function (key: string, value: unknown) {
+            return pendingChartsSet.call(this, key, value);
+        };
+    }
+
+    public async init() {
+        await this.rabbitMQClient
             .assertQueue("chart_results", {
                 durable: true,
                 autoDelete: false,
-                maxPriority: 1,
             })
             .then(() => {
                 console.log("Chart results queue initialized");
             });
-        this.rabbitMQClient
-            .assertQueue("chart_stats_tasks", {
+        try {
+            await this.rabbitMQClient.assertQueue("chart_stats_tasks", {
                 durable: true,
                 autoDelete: false,
-                maxPriority: 1,
-            })
-            .then(() => {
-                console.log("Chart stats tasks queue initialized");
+                arguments: {
+                    "x-max-priority": 1,
+                },
             });
+        } catch (error) {
+            console.error("Error initializing chart stats tasks queue:", error);
+            await this.rabbitMQClient.assertQueue("chart_stats_tasks", {
+                durable: true,
+                autoDelete: false,
+            });
+            console.log("Reinitialized chart stats tasks queue without priority");
+        } finally {
+            console.log("Chart stats tasks queue initialized");
+        }
         this.initChartConsumer();
+        this.isInitialized = true;
     }
 
-    public static getInstance(): StatsChartService {
+    public static async getInstance(): Promise<StatsChartService> {
         if (!StatsChartService.instance) {
             StatsChartService.instance = new StatsChartService();
         }
@@ -160,14 +345,19 @@ export class StatsChartService {
         type: IChartType,
         rawDateRange: IAllowedChartStatsRanges = "all"
     ) {
+        if (!this.isInitialized) {
+            throw new Error("StatsChartService is not initialized");
+        }
+
         const user_id = ctx.from.id;
         const chat_id = ctx.chat.id;
-        const task_id = `${chat_id}:${target_id}`;
+        const task_id = getTaskId(chat_id, target_id);
 
-        if (this.pendingCharts.has(task_id)) {
+        if (this.cache.pendingCharts.has(task_id)) {
+            console.log("Chart is already pending");
             return;
         } else {
-            this.pendingCharts.set(task_id, {});
+            this.cache.pendingCharts.set(task_id, {});
         }
 
         try {
@@ -196,12 +386,13 @@ export class StatsChartService {
                     user_premium,
                 },
                 {
-                    priority: +(chat_premium || user_premium),
+                    // priority: +(chat_premium || user_premium),
+                    priority: 1,
                 }
             );
         } catch (error) {
             console.error("Error requesting stats chart:", error);
-            this.pendingCharts.delete(task_id);
+            this.cache.pendingCharts.delete(task_id);
         }
 
         return undefined;
@@ -237,32 +428,30 @@ export class StatsChartService {
         console.log("Chart consumer initialized");
     }
 
-    private chartConsumer(res: IChartResult, msg: ConsumeMessage | null) {
-        //
-    }
+    private async chartConsumer(res: IChartResult, msg: ConsumeMessage | null) {
+        let text = this.cache.statsText.get(res.task_id);
+        text ??= "TODO: fix possible race condition";
+        this.removeCachedStatsText(res.task_id);
+        this.cache.pendingCharts.delete(res.task_id);
 
-    public handleCommand(ctx: IGroupHearsCommandContext) {
-        const parts = (ctx.msg.text || ctx.msg.caption)!.split(" ");
-
-        if (this.STATS_COMMANDS.user.includes(parts[0].toLowerCase())) {
-            //
+        if (!res.raw) {
+            return void (await bot.api.sendMessage(res.chat_id, text));
         }
 
-        if (this.STATS_COMMANDS.chat.includes(parts[0].toLowerCase())) {
-            //
+        if (res.format === "image") {
+            return void (await bot.api.sendPhoto(res.chat_id, new InputFile(Buffer.from(res.raw)), { caption: text }));
+        } else if (res.format === "video") {
+            return void (await bot.api.sendAnimation(res.chat_id, new InputFile(Buffer.from(res.raw)), {
+                caption: text,
+            }));
         }
     }
 
-    private getCachedChart(
-        chat_id: number,
-        user_id: number,
-        type: IChartType,
-        rawDateRange?: IAllowedChartStatsRanges
-    ): IChartCache {
-        return type === "chat"
-            ? this.cache.chat.get(chat_id, rawDateRange || "all")
-            : this.cache.user.get(chat_id, user_id);
+    private removeCachedStatsText(taskId: string) {
+        this.cache.statsText.delete(taskId);
     }
+
+    public commandResolver(command: string) {}
 }
 
 async function getChatImage(chat_id: number): Promise<Image> {
