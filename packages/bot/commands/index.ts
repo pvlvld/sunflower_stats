@@ -58,6 +58,7 @@ import { oldUsers } from "./old.js";
 import { active } from "../redis/active.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import { GrammyError } from "grammy";
+import { StatsService } from "../chart/getStatsChart.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
@@ -127,25 +128,14 @@ function regCommands() {
     });
     groupStats.hears(/^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i, stats_chat);
 
-    //@ts-expect-error
-    groupStats.command(["me", "i"], async (ctx) => stats_user(ctx, "я"));
-    groupStats.hears(/^(!?)(!я|йа|хто я)$/i, async (ctx) => {
-        botStatsManager.commandUse("я");
-        await stats_user(ctx, "я");
-    });
+    groupStats.command(["me", "i"], async (ctx) => await StatsService.getInstance().userStatsCallback(ctx, true));
+    groupStats.hears(
+        /^(!?)(!я|йа|хто я)$/i,
+        async (ctx) => await StatsService.getInstance().userStatsCallback(ctx, true)
+    );
 
-    //@ts-expect-error
-    groupStats.command("you", stats_user);
-    groupStats.hears(/^(!?)(ти|хто ти)/i, async (ctx) => {
-        if (
-            (!ctx.msg.reply_to_message && !ctx.msg?.text?.startsWith("!ти ")) ||
-            (ctx.msg.reply_to_message && !["!ти", "хто ти"].includes(ctx.msg?.text || ""))
-        ) {
-            return;
-        }
-        botStatsManager.commandUse("ти");
-        await stats_user(ctx, "ти");
-    });
+    groupStats.command("you", async (ctx) => await StatsService.getInstance().userStatsCallback(ctx, false));
+    groupStats.hears(/^(!?)(ти|хто ти)/i, async (ctx) => await StatsService.getInstance().userStatsCallback(ctx, false));
 
     group.command("nick", set_nickname);
     group.hears(/^(\+(нік|нікнейм))/i, async (ctx) => {
