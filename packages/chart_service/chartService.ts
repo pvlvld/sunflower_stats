@@ -52,6 +52,7 @@ export class ChartService {
                 {
                     task_id: task.task_id,
                     chat_id: task.chat_id,
+                    target_id: task.target_id,
                     reply_to_message_id: task.reply_to_message_id,
                     thread_id: task.thread_id,
                     date_range: task.date_range,
@@ -72,6 +73,7 @@ export class ChartService {
             {
                 task_id: task.task_id,
                 chat_id: task.chat_id,
+                target_id: task.target_id,
                 reply_to_message_id: task.reply_to_message_id,
                 thread_id: task.thread_id,
                 date_range: task.date_range,
