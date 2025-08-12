@@ -1,6 +1,14 @@
 import dotenv from "dotenv";
 dotenv.config();
-const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE"] as const;
+const requiredEnv = [
+    "BOT_TOKEN",
+    "DB_HOST",
+    "DB_USER",
+    "DB_PASSWORD",
+    "DB_DATABASE",
+    "RABBITMQ_USER",
+    "RABBITMQ_PASSWORD",
+] as const;
 
 type ICfg = Record<(typeof requiredEnv)[number], string> & {
     CHART: { width: number; height: number; ratio: number };

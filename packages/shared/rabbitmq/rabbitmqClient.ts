@@ -30,14 +30,14 @@ export class RabbitMQClient {
     private reconnectDelay: number = 5000;
     private assertedQueues: Set<string> = new Set();
 
-    private constructor(connectionUrl: string = "amqp://localhost") {
-        console.log("RabbitMQClient instance initialized with connection URL:", connectionUrl);
+    private constructor(connectionUrl: string) {
+        console.log("RabbitMQClient instance initialized");
         this.connectionUrl = connectionUrl;
     }
 
-    public static getInstance(connectionUrl?: string): RabbitMQClient {
+    public static getInstance(username?: string, password?: string): RabbitMQClient {
         if (!RabbitMQClient.instance) {
-            RabbitMQClient.instance = new RabbitMQClient(connectionUrl);
+            RabbitMQClient.instance = new RabbitMQClient(`amqp://${username}:${password}@localhost`);
         }
         return RabbitMQClient.instance;
     }

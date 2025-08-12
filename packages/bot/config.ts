@@ -8,7 +8,16 @@ const DefaultConfigSettings = {
 
 type IConfigSettings = typeof DefaultConfigSettings;
 
-const requiredEnv = ["BOT_TOKEN", "DB_HOST", "DB_USER", "DB_PASSWORD", "DB_DATABASE", "API_HASH"] as const;
+const requiredEnv = [
+    "BOT_TOKEN",
+    "DB_HOST",
+    "DB_USER",
+    "DB_PASSWORD",
+    "DB_DATABASE",
+    "API_HASH",
+    "RABBITMQ_USER",
+    "RABBITMQ_PASSWORD",
+] as const;
 
 const ANIMATIONS = Object.freeze({
     no_stats: "CgACAgQAAx0Cf9EqrAACDUJmaJE8Jw9eTnlvmTG_GLslPqJJ8gACeQMAAr3JBFN7f2AJi52nTTUE",
