@@ -1,8 +1,7 @@
+import { IDateRange } from "@sunflower-stats/shared";
 import { IChartFormat } from "../chart/getStatsChart.js";
 import cfg from "../config.js";
 import { IChartCache } from "./chartCache_User.js";
-
-type IDateRange = "weekRange" | "monthRange" | "yearRange" | "all";
 
 class ChartCache_Chat {
     private _chartCache: Map<number, Map<IDateRange, IChartCache>>;

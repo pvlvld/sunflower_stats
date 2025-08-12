@@ -1,4 +1,5 @@
 export type {
+    IDateRange,
     IChartBaseTask,
     IChartStatsTask,
     IChartChatTopTask,
