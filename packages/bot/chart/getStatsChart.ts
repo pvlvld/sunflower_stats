@@ -29,6 +29,7 @@ import { active, IActiveUser } from "../redis/active.js";
 import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage.js";
 import getUserStatsMessage from "../utils/getUserStatsMessage.js";
 import { IDBChatUserStatsAll } from "../types/stats.js";
+import { Message } from "@grammyjs/types";
 
 export type IChartType = "user" | "chat";
 export type IChartFormat = "video" | "image";
@@ -427,22 +428,38 @@ export class StatsChartService {
         console.log("Chart consumer initialized");
     }
 
-    private async chartConsumer(res: IChartResult, msg: ConsumeMessage | null) {
-        let text = this.cache.statsText.get(res.task_id);
-        text ??= "TODO: fix possible race condition";
-        this.removeCachedStatsText(res.task_id);
-        this.cache.pendingCharts.delete(res.task_id);
+    private async chartConsumer(task: IChartResult, msg: ConsumeMessage | null) {
+        let text = this.cache.statsText.get(task.task_id);
+        // TODO: fix possible race condition
+        text ??= "oopsie";
 
-        if (!res.raw) {
-            return void (await bot.api.sendMessage(res.chat_id, text));
+        let statsMsg: Message.PhotoMessage | Message.AnimationMessage | undefined;
+        if (!task.raw) {
+            void (await bot.api.sendMessage(task.chat_id, text));
+        } else if (task.format === "image") {
+            statsMsg = await bot.api.sendPhoto(task.chat_id, new InputFile(Buffer.from(task.raw)), { caption: text });
+        } else if (task.format === "video") {
+            statsMsg = await bot.api.sendAnimation(task.chat_id, new InputFile(Buffer.from(task.raw)), {
+                caption: text,
+            });
         }
 
-        if (res.format === "image") {
-            return void (await bot.api.sendPhoto(res.chat_id, new InputFile(Buffer.from(res.raw)), { caption: text }));
-        } else if (res.format === "video") {
-            return void (await bot.api.sendAnimation(res.chat_id, new InputFile(Buffer.from(res.raw)), {
-                caption: text,
-            }));
+        if (statsMsg) {
+            // TODO: fix type
+            this.cacheChart(statsMsg, task as any);
+        }
+
+        this.removeCachedStatsText(task.task_id);
+        this.cache.pendingCharts.delete(task.task_id);
+    }
+
+    private cacheChart(msg: Message.AnimationMessage | Message.PhotoMessage | undefined, task: IChartResult) {
+        if (!msg) return;
+        const file_id = "animation" in msg ? msg.animation?.file_id : msg.photo[msg.photo.length - 1].file_id;
+        if (task.target_id > 0) {
+            cacheManager.ChartCache_User.set(msg.chat.id, task.target_id, file_id, task.format);
+        } else {
+            cacheManager.ChartCache_Chat.set(msg.chat.id, task.date_range[2], file_id, task.format);
         }
     }
 
