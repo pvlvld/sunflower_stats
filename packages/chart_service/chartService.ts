@@ -2,9 +2,15 @@ import type { IChartStatsTask } from "@sunflower-stats/shared";
 import { RabbitMQClient } from "@sunflower-stats/shared";
 import { ConsumeMessage } from "amqplib";
 import { getStatsChart } from "./getStatsChart.js";
+import { config } from "consts/config.js";
 
 export class ChartService {
-    constructor(private readonly rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance()) {}
+    constructor(
+        private readonly rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(
+            config.RABBITMQ_USER,
+            config.RABBITMQ_PASSWORD
+        )
+    ) {}
     private isProcessing: boolean = false;
     private isStopping: boolean = false;
     async start() {

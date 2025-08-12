@@ -297,7 +297,10 @@ export class StatsChartService {
     private static instance: StatsChartService;
     private isInitialized = false;
 
-    private constructor(private rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(), private cache = CACHE) {
+    private constructor(
+        private rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(cfg.RABBITMQ_USER, cfg.RABBITMQ_PASSWORD),
+        private cache = CACHE
+    ) {
         const pendingChartsSet = this.cache.pendingCharts.set;
         this.cache.pendingCharts.set = function (key: string, value: unknown) {
             return pendingChartsSet.call(this, key, value);
