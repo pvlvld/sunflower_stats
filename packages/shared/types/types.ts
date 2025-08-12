@@ -1,3 +1,5 @@
+export type IDateRange = "weekRange" | "monthRange" | "yearRange" | "all";
+
 export interface IChartBaseTask {
     task_id: string; // chat_id:user_id
     chat_id: number;
@@ -14,7 +16,7 @@ export interface IChartStatsTask extends IChartBaseTask {
      *
      * [date_from, date_until, date_range_name for chats]
      */
-    date_range: [string, string, string];
+    date_range: [string, string, IDateRange];
     chat_premium: boolean;
     user_premium: boolean;
 
@@ -31,7 +33,7 @@ export interface IChartBaseResult {
     chat_id: number;
     reply_to_message_id: number;
     thread_id: number;
-    date_range: [string, string, string];
+    date_range: [string, string, IDateRange];
     error: string | null;
     raw: Buffer | null;
 }
