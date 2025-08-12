@@ -54,6 +54,7 @@ export class ChartService {
                     chat_id: task.chat_id,
                     reply_to_message_id: task.reply_to_message_id,
                     thread_id: task.thread_id,
+                    date_range: task.date_range,
                     raw: null,
                     format: "image",
                     error: "Failed to generate chart",
@@ -73,6 +74,7 @@ export class ChartService {
                 chat_id: task.chat_id,
                 reply_to_message_id: task.reply_to_message_id,
                 thread_id: task.thread_id,
+                date_range: task.date_range,
                 raw: chart.chart,
                 format: chart.chartFormat,
 

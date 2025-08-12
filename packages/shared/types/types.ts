@@ -6,10 +6,15 @@ export interface IChartBaseTask {
     thread_id: number;
 }
 
+// TODO: bruh
 export interface IChartStatsTask extends IChartBaseTask {
     target_id: number; // user_id or chat_id
-    date_from: string;
-    date_until: string;
+    /**
+     * Dates are in the 'YYYY-MM-DD' format
+     *
+     * [date_from, date_until, date_range_name for chats]
+     */
+    date_range: [string, string, string];
     chat_premium: boolean;
     user_premium: boolean;
 
@@ -26,6 +31,7 @@ export interface IChartBaseResult {
     chat_id: number;
     reply_to_message_id: number;
     thread_id: number;
+    date_range: [string, string, string];
     error: string | null;
     raw: Buffer | null;
 }

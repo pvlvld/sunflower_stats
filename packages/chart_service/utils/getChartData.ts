@@ -9,7 +9,7 @@ async function getChatData(task: IChartStatsTask) {
         await DBPoolManager.getPool.query(`
       SELECT to_char(date, 'YYYY-MM-DD') AS x, SUM(count) AS y
           FROM stats_daily
-          WHERE chat_id = ${task.chat_id} AND date BETWEEN '${task.date_from}' AND '${task.date_until}'
+          WHERE chat_id = ${task.chat_id} AND date BETWEEN '${task.date_range[0]}' AND '${task.date_range[1]}'
           GROUP BY date
           ORDER BY date;`)
     ).rows;
