@@ -30,6 +30,7 @@ import { sendSelfdestructMessage } from "../utils/sendSelfdestructMessage.js";
 import getUserStatsMessage from "../utils/getUserStatsMessage.js";
 import { IDBChatUserStatsAll } from "../types/stats.js";
 import { Message } from "@grammyjs/types";
+import { botStatsManager } from "../commands/botStats.js";
 
 export type IChartType = "user" | "chat";
 export type IChartFormat = "video" | "image";
@@ -161,6 +162,7 @@ export class StatsService {
         if (!this.isInitialized || !this.statsChartService) {
             throw new Error("StatsService is not initialized");
         }
+        botStatsManager.commandUse("я");
         const chat_id = ctx.chat.id;
         let target_id = isPersonal && ctx.msg.reply_to_message?.from ? ctx.msg.reply_to_message.from.id : ctx.from.id;
         const original_target = target_id;
