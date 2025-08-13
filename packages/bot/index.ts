@@ -22,6 +22,7 @@ import { messagesStatsBatchStore } from "./data/messagesStatsBatchStore.js";
 import cacheManager from "./cache/cache.js";
 import { LocaleService } from "./cache/localeService.js";
 import { active } from "./redis/active.js";
+import { StatsService } from "./chart/getStatsChart.js";
 moment.locale("uk-UA");
 
 process.on("uncaughtException", function (err) {
@@ -67,7 +68,7 @@ async function main() {
     collectGarbage();
 
     createScheduler();
-
+    await StatsService.getInstance().init();
     bot.api.deleteWebhook({ drop_pending_updates: true }).then(async () => {
         if (process.env.WEBHOOK) {
             server = createServer();
