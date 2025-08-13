@@ -35,9 +35,9 @@ export async function getStatsChart(
     }
 
     // do not render chart if data points count less than 2
-    if (data.length < 2) {
-        return undefined;
-    }
+    // if (data.length < 2) {
+    //     return undefined;
+    // }
 
     const configuration = await getChartConfig.default(task, type);
     configuration.data.datasets[0].data = data;
