@@ -2,7 +2,7 @@ import type { IChartStatsTask } from "@sunflower-stats/shared";
 import { RabbitMQClient } from "@sunflower-stats/shared";
 import { ConsumeMessage } from "amqplib";
 import { getStatsChart } from "./getStatsChart.js";
-import { config } from "consts/config.js";
+import { config } from "./consts/config.js";
 
 export class ChartService {
     constructor(
