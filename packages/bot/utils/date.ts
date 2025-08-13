@@ -1,8 +1,8 @@
 import moment from "moment";
 
 export interface IFormattedRangeDateGetters {
-    today: string[];
-    yesterday: string[];
+    today: [string, string];
+    yesterday: [string, string];
     weekRange: [monday: string, sunday: string];
     monthRange: [firstDayOfTheMonth: string, lastDayOfTheMonth: string];
     yearRange: [firstDayOfYear: string, lastDayOfYear: string];
