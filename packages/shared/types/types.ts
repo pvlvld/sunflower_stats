@@ -1,4 +1,4 @@
-export type IDateRange = "today" | "weekRange" | "monthRange" | "yearRange" | "all" | "custom";
+export type IDateRange = "yesterday" | "today" | "weekRange" | "monthRange" | "yearRange" | "all" | "custom";
 
 export interface IChartBaseTask {
     task_id: string; // chat_id:user_id
