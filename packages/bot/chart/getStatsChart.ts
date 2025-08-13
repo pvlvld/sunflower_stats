@@ -391,8 +391,7 @@ export class StatsChartService {
                     user_premium,
                 },
                 {
-                    // priority: +(chat_premium || user_premium),
-                    priority: 1,
+                    priority: +(chat_premium || user_premium),
                 }
             );
         } catch (error) {
