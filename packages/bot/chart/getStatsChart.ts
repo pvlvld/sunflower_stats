@@ -235,6 +235,34 @@ export class StatsService {
         return text;
     }
 
+    private getChatStatsDateRange(ctx: IGroupHearsCommandContext): [string, string, IDateRange] {
+        const splittedCommand = (ctx.msg.text ?? ctx.msg.caption).split(" ");
+
+        if (splittedCommand.length < 2) {
+            return formattedDate["today"];
+        }
+
+        if (!isNaN(parseInt(splittedCommand[1][0]))) {
+            if (!isNaN(parseInt(splittedCommand[2][0]))) {
+                return [
+                    formattedDate.dateToYYYYMMDD(new Date(splittedCommand[1])),
+                    formattedDate.dateToYYYYMMDD(new Date(splittedCommand[2])),
+                    "custom",
+                ];
+            } else {
+                return [
+                    formattedDate.dateToYYYYMMDD(new Date(splittedCommand[1])),
+                    formattedDate.dateToYYYYMMDD(new Date()),
+                    "custom",
+                ];
+            }
+        }
+
+        const rawCmdDateRange = (splittedCommand[1] ?? "today").toLowerCase() as keyof typeof cmdToDateRangeMap;
+
+        return formattedDate[cmdToDateRangeMap[rawCmdDateRange]];
+    }
+
     private removeCachedStatsText(chat_id: number, user_id: number) {
         this.cache.statsText.delete(getTaskId(chat_id, user_id));
     }
