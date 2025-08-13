@@ -1,3 +1,4 @@
+import { IDateRange } from "@sunflower-stats/shared";
 import type {
     IDBChatUserStats,
     IDBChatUserStatsAll,
@@ -7,7 +8,7 @@ import type {
 import formattedDate, { type IFormattedRangeDateGetters } from "../utils/date.js";
 import { DBPoolManager, IDBPoolManager } from "./poolManager.js";
 
-type IDateRanges = keyof IFormattedRangeDateGetters | [from: string, to: string];
+type IDateRanges = keyof IFormattedRangeDateGetters | [from: string, to: string, IDateRange?];
 
 const queries = Object.freeze({
     stats: {
