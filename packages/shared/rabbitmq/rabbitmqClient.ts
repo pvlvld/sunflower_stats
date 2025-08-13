@@ -35,7 +35,7 @@ export class RabbitMQClient {
         this.connectionUrl = connectionUrl;
     }
 
-    public static getInstance(username?: string, password?: string): RabbitMQClient {
+    public static getInstance(username: string, password: string): RabbitMQClient {
         if (!RabbitMQClient.instance) {
             RabbitMQClient.instance = new RabbitMQClient(`amqp://${username}:${password}@localhost`);
         }
