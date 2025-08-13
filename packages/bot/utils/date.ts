@@ -22,24 +22,15 @@ export class FormattedDate {
     }
 
     get weekRange(): IFormattedRangeDateGetters["weekRange"] {
-        return [
-            moment().startOf("isoWeek").format("YYYY-MM-DD"),
-            moment().endOf("isoWeek").format("YYYY-MM-DD"),
-        ];
+        return [moment().startOf("isoWeek").format("YYYY-MM-DD"), moment().endOf("isoWeek").format("YYYY-MM-DD")];
     }
 
     get monthRange(): IFormattedRangeDateGetters["monthRange"] {
-        return [
-            moment().startOf("month").format("YYYY-MM-DD"),
-            moment().endOf("month").format("YYYY-MM-DD"),
-        ];
+        return [moment().startOf("month").format("YYYY-MM-DD"), moment().endOf("month").format("YYYY-MM-DD")];
     }
 
     get yearRange(): IFormattedRangeDateGetters["yearRange"] {
-        return [
-            moment().startOf("year").format("YYYY-MM-DD"),
-            moment().endOf("year").format("YYYY-MM-DD"),
-        ];
+        return [moment().startOf("year").format("YYYY-MM-DD"), moment().endOf("year").format("YYYY-MM-DD")];
     }
 
     get all(): IFormattedRangeDateGetters["all"] {
