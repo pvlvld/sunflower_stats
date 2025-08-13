@@ -39,6 +39,10 @@ export async function getStatsChart(
     //     return undefined;
     // }
 
+    // TODO: Implement redis daily stats with timestamp
+    // Use redis stats for the today chat stats
+    // and for users that have less that 3 days of stats in the main DB
+
     const configuration = await getChartConfig.default(task, type);
     configuration.data.datasets[0].data = data;
     configuration.data.labels = data.map((v) => v["x"]);
