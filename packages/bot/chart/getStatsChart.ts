@@ -251,11 +251,8 @@ export class StatsService {
                     "custom",
                 ];
             } else {
-                return [
-                    formattedDate.dateToYYYYMMDD(new Date(splittedCommand[1])),
-                    formattedDate.dateToYYYYMMDD(new Date()),
-                    "custom",
-                ];
+                const date = formattedDate.dateToYYYYMMDD(new Date(splittedCommand[1]));
+                return [date, date, "custom"];
             }
         }
 
