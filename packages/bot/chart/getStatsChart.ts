@@ -236,6 +236,88 @@ export class StatsService {
         return text;
     }
 
+    private async prepareChatStatsText(
+        ctx: IGroupHearsCommandContext,
+        chatSettings: IChatSettings,
+        stats: IDBChatUserStatsAndTotal[],
+        activeUsers: Record<string, IActiveUser>,
+        date_range: [string, string, IDateRange]
+    ) {
+        const text = await this.getChatStatsMessage(ctx, chatSettings, stats, activeUsers, date_range);
+        this.cache.statsText.set(getTaskId(ctx.chat.id, ctx.chat.id), text);
+        return text;
+    }
+
+    private async getChatStatsMessage(
+        ctx: IGroupHearsCommandContext,
+        chatSettings: IChatSettings,
+        stats: IDBChatUserStatsAndTotal[],
+        activeUsers: Record<string, IActiveUser>,
+        date_range: [string, string, IDateRange]
+    ) {
+        if (stats.length === 0) {
+            return ctx.t("stats-empty-date");
+        }
+
+        // Custom date
+        if (date_range[2] === "custom") {
+            // Single date
+            if (date_range[0] === date_range[1]) {
+                return ctx.t("stats-chat-period", {
+                    title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
+                    period: `${date_range[0]}}\n\n${await getStatsChatRating(
+                        ctx,
+                        stats,
+                        activeUsers,
+                        chatSettings,
+                        1,
+                        "date",
+                        "text"
+                    )}`,
+                });
+            } else {
+                return ctx.t("stats-chat-period", {
+                    title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
+                    period: `${date_range[0]} - ${date_range[1]}\n\n${await getStatsChatRating(
+                        ctx,
+                        stats,
+                        activeUsers,
+                        chatSettings,
+                        1,
+                        "date",
+                        "text"
+                    )}`,
+                });
+            }
+            // Predefined date range
+        } else {
+            return `${ctx.t("stats-chat-period", {
+                title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
+                period: ctx.t(`stats-period-${date_range[2]}`),
+            })}\n\n${await getStatsChatRating(
+                ctx,
+                stats,
+                activeUsers,
+                chatSettings,
+                1,
+                date_range[2],
+                // chart ? "caption" : "text"
+                "caption"
+            )}`;
+        }
+    }
+
+    private getStatsUsersCount(stats: IDBChatUserStatsAndTotal[], users: Record<string, IActiveUser>): number {
+        let user: IDBChatUserStatsAndTotal;
+        let counter = 0;
+        for (user of stats) {
+            if (users?.[user.user_id]) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
     private getChatStatsDateRange(ctx: IGroupHearsCommandContext): [string, string, IDateRange] {
         const splittedCommand = (ctx.msg.text ?? ctx.msg.caption).split(" ");
 
