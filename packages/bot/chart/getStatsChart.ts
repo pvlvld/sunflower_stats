@@ -121,8 +121,8 @@ export async function getStatsChart(
     }
 }
 
-function getTaskId(chat_id: number, user_id: number): string {
-    return `chat:${chat_id}:user:${user_id}`;
+function getTaskId(chat_id: number, target_id: number): string {
+    return `chat:${chat_id}:target:${target_id}`;
 }
 
 const CACHE = {
