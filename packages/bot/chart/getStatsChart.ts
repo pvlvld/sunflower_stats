@@ -307,6 +307,15 @@ export class StatsService {
         }
     }
 
+    private isPaginationNeeded(
+        stats: IDBChatUserStatsAndTotal[],
+        chatSettings: IChatSettings,
+        users: Record<string, IActiveUser>
+    ) {
+        const statsUsersCount = this.getStatsUsersCount(stats, users);
+        return chatSettings.charts ? statsUsersCount > 25 : statsUsersCount > 50;
+    }
+
     private getStatsUsersCount(stats: IDBChatUserStatsAndTotal[], users: Record<string, IActiveUser>): number {
         let user: IDBChatUserStatsAndTotal;
         let counter = 0;
