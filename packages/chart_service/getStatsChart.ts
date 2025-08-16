@@ -90,6 +90,15 @@ function renderToBuffer(configuration: IChartConfiguration): Promise<Buffer> {
     return buffer;
 }
 
+function renderToBufferX2(configuration: IChartConfiguration) {
+    const canvas = ChartCanvasManager.getX2;
+    const chart = new chartJs(canvas, configuration);
+    const buffer = chart.canvas.toBuffer("image/jpeg", { quality: 0.9, chromaSubsampling: true });
+    destroyChart_Async(chart);
+    ChartCanvasManager.recycleX2(canvas);
+    return buffer;
+}
+
 async function destroyChart_Async(chart: Chart) {
     chart.destroy();
 }
