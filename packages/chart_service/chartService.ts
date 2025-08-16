@@ -1,7 +1,7 @@
 import type { IChartStatsTask } from "@sunflower-stats/shared";
 import { RabbitMQClient } from "@sunflower-stats/shared";
 import { ConsumeMessage } from "amqplib";
-import { getStatsChart } from "./getStatsChart.js";
+import { getChartTopChatsMonthly, getStatsChart } from "./getStatsChart.js";
 import { config } from "./consts/config.js";
 
 export class ChartService {
@@ -22,6 +22,15 @@ export class ChartService {
             },
         });
         await this.rabbitMQClient.assertQueue("chart_stats_results", {
+            durable: true,
+            autoDelete: false,
+        });
+
+        await this.rabbitMQClient.assertQueue("bump_chart_rating_tasks", {
+            durable: true,
+            autoDelete: false,
+        });
+        await this.rabbitMQClient.assertQueue("bump_chart_rating_results", {
             durable: true,
             autoDelete: false,
         });
