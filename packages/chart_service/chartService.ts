@@ -117,27 +117,35 @@ export class ChartService {
         const chart = await getChartTopChatsMonthly(10);
 
         if (!chart) {
-            await this.rabbitMQClient.produce("bump_chart_rating_results", {
-                task_id: task.task_id,
-                chat_id: task.chat_id,
-                reply_to_message_id: task.reply_to_message_id,
-                thread_id: task.thread_id,
-                raw: null,
-                error: "Failed to generate chart",
-            });
+            await this.rabbitMQClient.produce(
+                "bump_chart_rating_results",
+                {
+                    task_id: task.task_id,
+                    chat_id: task.chat_id,
+                    reply_to_message_id: task.reply_to_message_id,
+                    thread_id: task.thread_id,
+                    raw: null,
+                    error: "Failed to generate chart",
+                },
+                {}
+            );
             this.isProcessing = false;
             return;
         }
 
-        await this.rabbitMQClient.produce("bump_chart_rating_results", {
-            task_id: task.task_id,
-            chat_id: task.chat_id,
-            reply_to_message_id: task.reply_to_message_id,
-            thread_id: task.thread_id,
-            raw: chart,
+        await this.rabbitMQClient.produce(
+            "bump_chart_rating_results",
+            {
+                task_id: task.task_id,
+                chat_id: task.chat_id,
+                reply_to_message_id: task.reply_to_message_id,
+                thread_id: task.thread_id,
+                raw: chart,
 
-            error: null,
-        });
+                error: null,
+            },
+            {}
+        );
         this.isProcessing = false;
     }
 }
