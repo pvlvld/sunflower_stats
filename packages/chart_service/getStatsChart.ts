@@ -7,7 +7,7 @@ import { getChartData } from "./utils/getChartData.js";
 import { config } from "./consts/config.js";
 import { getChartConfig, IChartConfiguration } from "./utils/getChartConfig.js";
 import { ChartCanvasManager } from "./utils/chartCanvas.js";
-import { createProfileImagesPlugin } from "plugins/profileImagesPlugin.js";
+import { createProfileImagesPlugin } from "./plugins/profileImagesPlugin.js";
 import fs from "node:fs";
 import { downloadChatPic } from "utils/downloadChatPic.js";
 
