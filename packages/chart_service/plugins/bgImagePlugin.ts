@@ -3,7 +3,7 @@ import { Chart } from "chart.js/auto";
 import fs from "fs";
 import type { IChartStatsTask, IChartType } from "@sunflower-stats/shared";
 import { isPremium } from "../utils/isPremium.js";
-import { config } from "consts/config.js";
+import { config } from "../consts/config.js";
 
 type IBackground = { bg: Image; transparent: boolean };
 
