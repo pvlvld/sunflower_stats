@@ -629,6 +629,7 @@ export class StatsChartService {
         return undefined;
     }
 
+    // TODO: implement correct logic
     private async getChartSettings(
         chat_id: number,
         user_id: number,
