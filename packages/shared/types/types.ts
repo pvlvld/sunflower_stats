@@ -31,7 +31,6 @@ export interface IChartChatTopTask extends IChartBaseTask {}
 export interface IChartBaseResult {
     task_id: string; // chat_id:user_id
     chat_id: number;
-    target_id: number;
     reply_to_message_id: number;
     thread_id: number;
     error: string | null;
@@ -39,6 +38,7 @@ export interface IChartBaseResult {
 }
 
 export interface IChartResult extends IChartBaseResult {
+    target_id: number;
     date_range: [string, string, IDateRange];
     format: IChartFormat;
 }
