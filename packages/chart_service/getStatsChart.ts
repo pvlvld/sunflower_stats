@@ -1,12 +1,14 @@
 import type { Chart } from "chart.js";
 import chartJs from "chart.js/auto";
-import { Canvas } from "canvas";
+import { Canvas, Image, loadImage } from "canvas";
 import { overlayChartOnVideo } from "./utils/overlayChartOnVideo.js";
 import { IChartFormat, IChartStatsTask } from "@sunflower-stats/shared";
 import { getChartData } from "./utils/getChartData.js";
 import { config } from "./consts/config.js";
 import { getChartConfig, IChartConfiguration } from "./utils/getChartConfig.js";
 import { ChartCanvasManager } from "./utils/chartCanvas.js";
+import { createProfileImagesPlugin } from "plugins/profileImagesPlugin.js";
+import fs from "node:fs";
 
 export type IChartType = "user" | "chat" | "bot-all";
 
