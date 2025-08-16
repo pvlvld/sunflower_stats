@@ -34,12 +34,12 @@ export interface IChartBaseResult {
     target_id: number;
     reply_to_message_id: number;
     thread_id: number;
-    date_range: [string, string, IDateRange];
     error: string | null;
     raw: Buffer | null;
 }
 
 export interface IChartResult extends IChartBaseResult {
+    date_range: [string, string, IDateRange];
     format: IChartFormat;
 }
 
