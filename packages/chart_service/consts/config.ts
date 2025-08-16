@@ -36,8 +36,8 @@ function getConfig() {
     };
 
     cfg.PATHS = {
-        BASE_BG_PATH: "../data/chartBg",
-        BASE_AVATAR_PATH: "../data/profileImages",
+        BASE_BG_PATH: process.cwd() + "/data/chartBg",
+        BASE_AVATAR_PATH: process.cwd() + "/data/profileImages",
     };
 
     cfg.BOT_ID = 6081112363;
