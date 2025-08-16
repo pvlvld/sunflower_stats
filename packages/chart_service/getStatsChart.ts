@@ -9,6 +9,7 @@ import { getChartConfig, IChartConfiguration } from "./utils/getChartConfig.js";
 import { ChartCanvasManager } from "./utils/chartCanvas.js";
 import { createProfileImagesPlugin } from "plugins/profileImagesPlugin.js";
 import fs from "node:fs";
+import { downloadChatPic } from "utils/downloadChatPic.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
 
@@ -114,7 +115,7 @@ async function getChatImage(chat_id: number): Promise<Image> {
         return await loadImage(`./data/profileImages/${chat_id}.jpg`);
     }
     // dont parallelized to avoid angering the telegram api
-    const isDownloaded = await downloadAvatar.chat(chat_id);
+    const isDownloaded = await downloadChatPic(chat_id);
     if (isDownloaded) {
         return await loadImage(`./data/profileImages/${chat_id}.jpg`);
     } else {
