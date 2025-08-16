@@ -92,3 +92,92 @@ function renderToBuffer(configuration: IChartConfiguration): Promise<Buffer> {
 async function destroyChart_Async(chart: Chart) {
     chart.destroy();
 }
+
+async function preloadChatImages(chatIds: number[]) {
+    const imageMap = new Map<number, Image>();
+
+    for (const chatId of chatIds) {
+        try {
+            const image = await getChatImage(chatId);
+            imageMap.set(chatId, image);
+        } catch (error) {
+            console.error(`Failed to load image for chat_id: ${chatId}`, error);
+        }
+    }
+
+    return imageMap;
+}
+
+async function getChatImage(chat_id: number): Promise<Image> {
+    // Load image from disk
+    if (fs.existsSync(`./data/profileImages/${chat_id}.jpg`)) {
+        return await loadImage(`./data/profileImages/${chat_id}.jpg`);
+    }
+    // dont parallelized to avoid angering the telegram api
+    const isDownloaded = await downloadAvatar.chat(chat_id);
+    if (isDownloaded) {
+        return await loadImage(`./data/profileImages/${chat_id}.jpg`);
+    } else {
+        return await loadImage(`./data/profileImages/!default.jpg`);
+    }
+}
+
+function prepareBumpChartData(sqlResults: any[]): BumpChartSeries[] {
+    // Group data by chat_id/title
+    const chatGroups = new Map<
+        number,
+        {
+            title: string;
+            dataPoints: Map<string, number>;
+        }
+    >();
+
+    // Get all unique months
+    const months = new Set<string>();
+
+    sqlResults.forEach((row) => {
+        const date = new Date(row.month);
+        // TODO: localizations
+        const monthStr = date.toLocaleDateString("uk-UA", {
+            year: "numeric",
+            month: "short",
+        });
+        months.add(monthStr);
+
+        if (!chatGroups.has(row.chat_id)) {
+            chatGroups.set(row.chat_id, {
+                title: row.title,
+                dataPoints: new Map(),
+            });
+        }
+
+        chatGroups.get(row.chat_id)!.dataPoints.set(monthStr, row.rank);
+    });
+
+    // Convert to array and sort chronologically
+    const sortedMonths = Array.from(months).sort((a, b) => {
+        const dateA = new Date(a);
+        const dateB = new Date(b);
+        return dateA.getTime() - dateB.getTime();
+    });
+
+    const series: BumpChartSeries[] = [];
+
+    chatGroups.forEach((groupData, chat_id) => {
+        months;
+        const data: BumpChartDataPoint[] = sortedMonths.map((month) => ({
+            x: month,
+            // fetch ~15, show 10, set 16 for 11th+ place to make chart less "fake" looking
+            y: groupData.dataPoints.get(month) || 16,
+            chat_id: chat_id,
+        }));
+
+        series.push({
+            label: groupData.title,
+            chat_id: chat_id,
+            data: data,
+        });
+    });
+
+    return series;
+}
