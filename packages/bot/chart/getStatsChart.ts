@@ -125,7 +125,7 @@ export async function getStatsChart(
     }
 }
 
-function getTaskId(chat_id: number, target_id: number): string {
+function getTaskId(chat_id: number, target_id: number | string): string {
     return `chat:${chat_id}:target:${target_id}`;
 }
 
