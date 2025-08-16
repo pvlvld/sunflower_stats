@@ -13,5 +13,8 @@
   "include": ["./**/*", "../shared/**/*"],
   "references": [
     { "path": "../shared" }
+  ],
+  "exclude": [
+    "../shared/**/*.example.ts"
   ]
 }
