@@ -515,6 +515,7 @@ export class StatsChartService {
     }
 
     public async init() {
+        // Linear statistics charts
         await this.rabbitMQClient
             .assertQueue("chart_stats_results", {
                 durable: true,
