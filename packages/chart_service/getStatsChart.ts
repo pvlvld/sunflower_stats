@@ -75,6 +75,20 @@ export async function getStatsChart(
     }
 }
 
+export async function getChartTopChatsMonthly(positions: number = 10) {
+    const data = await getChartData.chatsTopMonthly();
+    const config = getChartConfig.topChatsMonthly(positions);
+    config.data.datasets = prepareBumpChartData(data) as any; // FIX:
+    config.plugins!.push(
+        createProfileImagesPlugin(
+            await preloadChatImages([
+                ...new Set(config.data.datasets.map((dataset: any) => dataset.chat_id)),
+            ] as number[])
+        )
+    );
+    return await renderToBufferX2(config);
+}
+
 function renderToBuffer(configuration: IChartConfiguration): Promise<Buffer> {
     const canvas = ChartCanvasManager.get; // 0ms
     const chart = new chartJs(canvas, configuration); // 50-70ms
@@ -90,7 +104,7 @@ function renderToBuffer(configuration: IChartConfiguration): Promise<Buffer> {
     return buffer;
 }
 
-function renderToBufferX2(configuration: IChartConfiguration) {
+function renderToBufferX2(configuration: IChartConfiguration): Promise<Buffer> {
     const canvas = ChartCanvasManager.getX2;
     const chart = new chartJs(canvas, configuration);
     const buffer = chart.canvas.toBuffer("image/jpeg", { quality: 0.9, chromaSubsampling: true });
