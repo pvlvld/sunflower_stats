@@ -7,5 +7,7 @@ export type {
     IChartResult,
     IChartType,
     IChartFormat,
+    IBumpChartRatingTask,
+    IBumpChartRatingResult,
 } from "./types/types.js";
 export { RabbitMQClient } from "./rabbitmq/rabbitmqClient.js";
