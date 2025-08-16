@@ -536,7 +536,26 @@ export class StatsChartService {
         } finally {
             console.log("Chart stats tasks queue initialized");
         }
-        this.initChartConsumer();
+
+        // Bump rating charts
+        await this.rabbitMQClient
+            .assertQueue("bump_chart_rating_tasks", {
+                durable: true,
+                autoDelete: false,
+            })
+            .then(() => {
+                console.log("Bump chart rating tasks queue initialized");
+            });
+        await this.rabbitMQClient
+            .assertQueue("bump_chart_rating_results", {
+                durable: true,
+                autoDelete: false,
+            })
+            .then(() => {
+                console.log("Bump chart rating results queue initialized");
+            });
+
+        this.initChartConsumers();
         this.isInitialized = true;
     }
 
@@ -628,10 +647,14 @@ export class StatsChartService {
         return settings;
     }
 
-    private initChartConsumer() {
+    private initChartConsumers() {
         this.rabbitMQClient.consume<"chart_stats_results">("chart_stats_results", this.chartConsumer.bind(this));
+        this.rabbitMQClient.consume<"bump_chart_rating_results">(
+            "bump_chart_rating_results",
+            this.bumpChartRatingConsumer.bind(this)
+        );
 
-        console.log("Chart consumer initialized");
+        console.log("Chart consumers initialized");
     }
 
     private async chartConsumer(task: IChartResult, msg: ConsumeMessage | null) {
