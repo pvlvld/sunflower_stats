@@ -136,6 +136,25 @@ const CACHE = {
     pendingCharts: new Map<string, unknown>(),
 };
 
+const cmdToDateRangeMap = {
+    день: "today",
+    сьогодні: "today",
+    вчора: "yesterday",
+    тиждень: "weekRange",
+    місяць: "monthRange",
+    рік: "yearRange",
+    вся: "all",
+    undefined: "today",
+    today: "today",
+    yesterday: "yesterday",
+    week: "weekRange",
+    month: "monthRange",
+    year: "yearRange",
+    all: "all",
+    full: "all",
+    total: "all",
+} as const;
+
 export class StatsService {
     private static instance: StatsService;
     public STATS_COMMANDS = Object.freeze({
