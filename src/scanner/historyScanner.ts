@@ -235,6 +235,14 @@ class HistoryScanner extends MTProtoClient {
         );
     }
 
+    private _isBefore(date1: Date, date2: Date): boolean {
+        return date1 < date2;
+    }
+
+    private _isAfter(date1: Date, date2: Date): boolean {
+        return date1 > date2;
+    }
+
     private async _writeHistoryStats(chat_id: number, stats: IStats, date: Date) {
         if (stats.size === 0) {
             return;
