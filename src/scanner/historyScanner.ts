@@ -162,8 +162,13 @@ class HistoryScanner extends MTProtoClient {
                     }
 
                     // Reached endDate (first stats record date of the chat)
-                    if (this._isTheSameDay(currentMsgDate, endDate)) {
-                        console.log("exit on date:", currentMsgDate, endDate);
+                    // if (this._isTheSameDay(currentMsgDate, endDate)) {
+                    //     console.log("exit on date:", currentMsgDate, endDate);
+                    //     break main_loop;
+                    // }
+
+                    if (this._isAfter(currentMsgDate, endDate)) {
+                        console.log(`Reached beginning scan time point.\nCurrent: ${currentMsgDate} End: ${endDate}`);
                         break main_loop;
                     }
 
