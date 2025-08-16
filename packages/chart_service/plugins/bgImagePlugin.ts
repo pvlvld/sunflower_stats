@@ -10,7 +10,7 @@ type IBackground = { bg: Image; transparent: boolean };
 let defaultBg: Image;
 async function getDefaultBg() {
     if (defaultBg === undefined) {
-        defaultBg = await loadImage("data/chartBg/!default.jpg");
+        defaultBg = await loadImage(`${config.PATHS.BASE_BG_PATH}/!default.jpg`);
     }
     return defaultBg;
 }
