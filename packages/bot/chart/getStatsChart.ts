@@ -412,15 +412,12 @@ export class StatsService {
             return formattedDate["today"];
         }
 
-        if (!isNaN(parseInt(splittedCommand[1][0]))) {
-            if (!isNaN(parseInt(splittedCommand[2][0]))) {
-                return [
-                    formattedDate.dateToYYYYMMDD(new Date(splittedCommand[1])),
-                    formattedDate.dateToYYYYMMDD(new Date(splittedCommand[2])),
-                    "custom",
-                ];
+        if (!isNaN(parseInt(splittedCommand[1]))) {
+            // First character of the possible second date argument
+            if (!isNaN(parseInt(splittedCommand[2]?.[0]))) {
+                return [splittedCommand[1], splittedCommand[2], "custom"];
             } else {
-                const date = formattedDate.dateToYYYYMMDD(new Date(splittedCommand[1]));
+                const date = splittedCommand[1];
                 return [date, date, "custom"];
             }
         }
