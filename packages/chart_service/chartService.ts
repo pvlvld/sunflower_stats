@@ -25,7 +25,8 @@ export class ChartService {
             durable: true,
             autoDelete: false,
         });
-        await this.rabbitMQClient.consume("chart_stats_tasks", this.handleChartTask.bind(this));
+
+        await this.rabbitMQClient.consume("chart_stats_tasks", this.handleChartStatsTask.bind(this));
     }
 
     async stop() {
@@ -42,7 +43,7 @@ export class ChartService {
         await this.rabbitMQClient.close();
     }
 
-    private async handleChartTask(task: IChartStatsTask, message: ConsumeMessage | null): Promise<void> {
+    private async handleChartStatsTask(task: IChartStatsTask, message: ConsumeMessage | null): Promise<void> {
         this.isProcessing = true;
         if (this.isStopping) {
             console.warn("ChartService is stopping, skipping task processing.");
