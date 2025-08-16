@@ -343,7 +343,7 @@ export class StatsService {
             if (date_range[0] === date_range[1]) {
                 return ctx.t("stats-chat-period", {
                     title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
-                    period: `${date_range[0]}}\n\n${await getStatsChatRating(
+                    period: `${date_range[0]}\n\n${await getStatsChatRating(
                         ctx,
                         stats,
                         activeUsers,
