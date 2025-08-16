@@ -687,6 +687,19 @@ export class StatsChartService {
         this.cache.pendingCharts.delete(task.task_id);
     }
 
+    private async bumpChartRatingConsumer(task: IBumpChartRatingResult, msg: ConsumeMessage | null) {
+        if (!task.raw) {
+            console.error("Bump chart rating task has no raw data");
+            return;
+        }
+
+        let text = this.cache.statsText.get(task.task_id);
+        // TODO: fix possible race condition
+        text ??= "oopsie";
+
+        bot.api.sendPhoto(task.chat_id, new InputFile(Buffer.from(task.raw)), { caption: text });
+    }
+
     private cacheChart(msg: Message.AnimationMessage | Message.PhotoMessage | undefined, task: IChartResult) {
         if (!msg) return;
         const file_id = "animation" in msg ? msg.animation?.file_id : msg.photo[msg.photo.length - 1].file_id;
