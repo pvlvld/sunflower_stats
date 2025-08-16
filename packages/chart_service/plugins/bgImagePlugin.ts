@@ -3,12 +3,11 @@ import { Chart } from "chart.js/auto";
 import fs from "fs";
 import type { IChartStatsTask, IChartType } from "@sunflower-stats/shared";
 import { isPremium } from "../utils/isPremium.js";
+import { config } from "consts/config.js";
 
 type IBackground = { bg: Image; transparent: boolean };
 
-const baseBgPath = "../../data/chartBg";
 let defaultBg: Image;
-
 async function getDefaultBg() {
     if (defaultBg === undefined) {
         defaultBg = await loadImage("data/chartBg/!default.jpg");
@@ -17,9 +16,9 @@ async function getDefaultBg() {
 }
 
 async function loadBgImage(task: IChartStatsTask, target: number): Promise<IBackground> {
-    let path = `${baseBgPath}/${target}.jpg`;
+    let path = `${config.PATHS.BASE_BG_PATH}/${target}.jpg`;
 
-    if (isPremium(task, target) && fs.existsSync(`${baseBgPath}/${target}.mp4`)) {
+    if (isPremium(task, target) && fs.existsSync(`${config.PATHS.BASE_BG_PATH}/${target}.mp4`)) {
         return {
             bg: {} as Image,
             transparent: true,
