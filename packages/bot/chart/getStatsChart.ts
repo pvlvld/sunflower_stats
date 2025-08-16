@@ -412,6 +412,7 @@ export class StatsService {
             return formattedDate["today"];
         }
 
+        // TODO: add date validation
         if (!isNaN(parseInt(splittedCommand[1]))) {
             // First character of the possible second date argument
             if (!isNaN(parseInt(splittedCommand[2]?.[0]))) {
