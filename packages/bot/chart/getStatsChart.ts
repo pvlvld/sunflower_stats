@@ -15,7 +15,12 @@ import { overlayChartOnVideo } from "./utils/overlayChartOnVideo.js";
 import { RabbitMQClient } from "@sunflower-stats/shared";
 import cacheManager from "../cache/cache.js";
 import { IChartCache } from "../cache/chartCache_User.js";
-import { IChartResult, IChartStatsTask, IDateRange } from "@sunflower-stats/shared/types/types.js";
+import {
+    IBumpChartRatingResult,
+    IChartResult,
+    IChartStatsTask,
+    IDateRange,
+} from "@sunflower-stats/shared/types/types.js";
 import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import { DefaultChartSettings, IChartSettings } from "../db/chartSettings.js";
 import { Database } from "../db/db.js";
