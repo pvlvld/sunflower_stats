@@ -1,12 +1,12 @@
 import * as amqp from "amqplib";
-import type { IChartStatsTask, IChartResult } from "../types/types.js";
+import type { IChartStatsTask, IChartResult, IBumpChartRatingTask, IBumpChartRatingResult } from "../types/types.js";
 
 type IQueues = {
     chart_stats_tasks: IChartStatsTask;
     chart_stats_results: IChartResult;
 
-    bump_chart_rating_tasks: unknown;
-    bump_chart_rating_results: unknown;
+    bump_chart_rating_tasks: IBumpChartRatingTask;
+    bump_chart_rating_results: IBumpChartRatingResult;
 };
 
 export type IQueueConfig = amqp.Options.AssertQueue;
