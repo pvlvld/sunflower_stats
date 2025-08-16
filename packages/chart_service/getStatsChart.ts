@@ -10,6 +10,18 @@ import { ChartCanvasManager } from "./utils/chartCanvas.js";
 
 export type IChartType = "user" | "chat" | "bot-all";
 
+interface BumpChartDataPoint {
+    x: string;
+    y: number;
+    chat_id: number; // Chat pic
+}
+
+interface BumpChartSeries {
+    label: string;
+    chat_id: number; // Chat pic
+    data: BumpChartDataPoint[];
+}
+
 /**Rerutns @Buffer success @undefined stats contain less than 7 records*/
 export async function getStatsChart(
     task: IChartStatsTask
