@@ -114,33 +114,33 @@ class HistoryScanner extends MTProtoClient {
             endDate = new Date("2024-01-01");
         }
 
-        if (this._isTheSameDay(firstMessageDate, endDate)) {
-            return createReportAndLeave(
-                chat_id,
-                false,
-                0,
-                "Немає потреби в скануванні.\nДата першого запису статистики чату збігається з датою першого повідомлення в чаті.",
-                this._client,
-                {
-                    message: "history-scan-dont-needed",
-                    variables: {},
-                }
-            );
-        }
+        // if (this._isTheSameDay(firstMessageDate, endDate)) {
+        //     return createReportAndLeave(
+        //         chat_id,
+        //         false,
+        //         0,
+        //         "Немає потреби в скануванні.\nДата першого запису статистики чату збігається з датою першого повідомлення в чаті.",
+        //         this._client,
+        //         {
+        //             message: "history-scan-dont-needed",
+        //             variables: {},
+        //         }
+        //     );
+        // }
 
-        if (firstMessageDate > endDate) {
-            return createReportAndLeave(
-                chat_id,
-                false,
-                0,
-                "Перше збережене в статистиці повідомлення старіше за перше доступне в чаті.",
-                this._client,
-                {
-                    message: "history-scan-first-known-msg-older-than-chat",
-                    variables: {},
-                }
-            );
-        }
+        // if (firstMessageDate > endDate) {
+        //     return createReportAndLeave(
+        //         chat_id,
+        //         false,
+        //         0,
+        //         "Перше збережене в статистиці повідомлення старіше за перше доступне в чаті.",
+        //         this._client,
+        //         {
+        //             message: "history-scan-first-known-msg-older-than-chat",
+        //             variables: {},
+        //         }
+        //     );
+        // }
 
         let message: Message | undefined;
         let currentMsgDate = firstMessageDate!;
