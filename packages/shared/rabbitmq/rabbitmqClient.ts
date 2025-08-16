@@ -3,7 +3,10 @@ import type { IChartStatsTask, IChartResult } from "../types/types.js";
 
 type IQueues = {
     chart_stats_tasks: IChartStatsTask;
-    chart_results: IChartResult;
+    chart_stats_results: IChartResult;
+
+    bump_chart_rating_tasks: unknown;
+    bump_chart_rating_results: unknown;
 };
 
 export type IQueueConfig = amqp.Options.AssertQueue;

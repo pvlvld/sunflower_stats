@@ -511,12 +511,12 @@ export class StatsChartService {
 
     public async init() {
         await this.rabbitMQClient
-            .assertQueue("chart_results", {
+            .assertQueue("chart_stats_results", {
                 durable: true,
                 autoDelete: false,
             })
             .then(() => {
-                console.log("Chart results queue initialized");
+                console.log("Chart stats results queue initialized");
             });
         try {
             await this.rabbitMQClient.assertQueue("chart_stats_tasks", {
@@ -629,7 +629,7 @@ export class StatsChartService {
     }
 
     private initChartConsumer() {
-        this.rabbitMQClient.consume<"chart_results">("chart_results", this.chartConsumer.bind(this));
+        this.rabbitMQClient.consume<"chart_stats_results">("chart_stats_results", this.chartConsumer.bind(this));
 
         console.log("Chart consumer initialized");
     }

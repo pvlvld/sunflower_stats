@@ -21,7 +21,7 @@ export class ChartService {
                 "x-max-priority": 1,
             },
         });
-        await this.rabbitMQClient.assertQueue("chart_results", {
+        await this.rabbitMQClient.assertQueue("chart_stats_results", {
             durable: true,
             autoDelete: false,
         });
@@ -54,7 +54,7 @@ export class ChartService {
 
         if (!chart) {
             await this.rabbitMQClient.produce(
-                "chart_results",
+                "chart_stats_results",
                 {
                     task_id: task.task_id,
                     chat_id: task.chat_id,
@@ -75,7 +75,7 @@ export class ChartService {
         }
 
         await this.rabbitMQClient.produce(
-            "chart_results",
+            "chart_stats_results",
             {
                 task_id: task.task_id,
                 chat_id: task.chat_id,
