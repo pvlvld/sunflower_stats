@@ -43,5 +43,9 @@ export interface IChartResult extends IChartBaseResult {
     format: IChartFormat;
 }
 
+export interface IBumpChartRatingTask extends IChartBaseTask {}
+
+export interface IBumpChartRatingResult extends IChartBaseResult {}
+
 export type IChartType = "user" | "chat" | "bot-all";
 export type IChartFormat = "video" | "image";
