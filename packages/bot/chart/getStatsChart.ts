@@ -35,6 +35,7 @@ import { DBStats } from "../db/stats.js";
 import Escape from "../utils/escape.js";
 import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
 import { getStatsChatRating } from "../utils/getStatsRating.js";
+import { isValidDateOrDateRange } from "../utils/isValidDateOrDateRange.js";
 
 export type IChartType = "user" | "chat";
 export type IChartFormat = "video" | "image";
@@ -341,6 +342,10 @@ export class StatsService {
         if (date_range[2] === "custom") {
             // Single date
             if (date_range[0] === date_range[1]) {
+                if (!isValidDateOrDateRange([date_range[0]])) {
+                    return ctx.t("stats-date-help");
+                }
+
                 return ctx.t("stats-chat-period", {
                     title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
                     period: `${date_range[0]}\n\n${await getStatsChatRating(
@@ -354,6 +359,10 @@ export class StatsService {
                     )}`,
                 });
             } else {
+                if (!isValidDateOrDateRange([date_range[0], date_range[1]])) {
+                    return ctx.t("stats-date-help");
+                }
+
                 return ctx.t("stats-chat-period", {
                     title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
                     period: `${date_range[0]} - ${date_range[1]}\n\n${await getStatsChatRating(
