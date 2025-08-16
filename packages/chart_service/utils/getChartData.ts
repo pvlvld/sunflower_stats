@@ -41,10 +41,22 @@ async function getBotData() {
     ).rows;
 }
 
+async function getChatsTopMonthlyData() {
+    await DBPoolManager.ensureConnection();
+    return (await DBPoolManager.getPool.query(queries.stats.global.topChats.monthlyRankAndTotal)).rows as {
+        month: string;
+        chat_id: number;
+        title: string;
+        total_messages: number;
+        rank: number;
+    }[];
+}
+
 const getChartData = {
     chatInChat: getChatData,
     userInChat: getUserData,
     botTotal: getBotData,
+    chatsTopMonthly: getChatsTopMonthlyData,
 };
 
 export { getChartData };
