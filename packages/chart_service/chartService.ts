@@ -1,4 +1,4 @@
-import type { IChartStatsTask } from "@sunflower-stats/shared";
+import type { IBumpChartRatingTask, IChartStatsTask } from "@sunflower-stats/shared";
 import { RabbitMQClient } from "@sunflower-stats/shared";
 import { ConsumeMessage } from "amqplib";
 import { getChartTopChatsMonthly, getStatsChart } from "./getStatsChart.js";
@@ -36,6 +36,7 @@ export class ChartService {
         });
 
         await this.rabbitMQClient.consume("chart_stats_tasks", this.handleChartStatsTask.bind(this));
+        await this.rabbitMQClient.consume("bump_chart_rating_tasks", this.handleBumpChartRatingTask.bind(this));
     }
 
     async stop() {
@@ -102,6 +103,41 @@ export class ChartService {
                 priority: +(task.chat_premium || task.user_premium),
             }
         );
+        this.isProcessing = false;
+    }
+
+    private async handleBumpChartRatingTask(task: IBumpChartRatingTask, message: ConsumeMessage | null): Promise<void> {
+        this.isProcessing = true;
+        if (this.isStopping) {
+            console.warn("ChartService is stopping, skipping task processing.");
+            return;
+        }
+        console.log(`Processing bump chart rating task with ID: ${task.task_id}`);
+
+        const chart = await getChartTopChatsMonthly(10);
+
+        if (!chart) {
+            await this.rabbitMQClient.produce("bump_chart_rating_results", {
+                task_id: task.task_id,
+                chat_id: task.chat_id,
+                reply_to_message_id: task.reply_to_message_id,
+                thread_id: task.thread_id,
+                raw: null,
+                error: "Failed to generate chart",
+            });
+            this.isProcessing = false;
+            return;
+        }
+
+        await this.rabbitMQClient.produce("bump_chart_rating_results", {
+            task_id: task.task_id,
+            chat_id: task.chat_id,
+            reply_to_message_id: task.reply_to_message_id,
+            thread_id: task.thread_id,
+            raw: chart,
+
+            error: null,
+        });
         this.isProcessing = false;
     }
 }
