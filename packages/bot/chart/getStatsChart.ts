@@ -32,6 +32,9 @@ import { IDBChatUserStatsAll, IDBChatUserStatsAndTotal } from "../types/stats.js
 import { Message } from "@grammyjs/types";
 import { botStatsManager } from "../commands/botStats.js";
 import { DBStats } from "../db/stats.js";
+import Escape from "../utils/escape.js";
+import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
+import { getStatsChatRating } from "../utils/getStatsRating.js";
 
 export type IChartType = "user" | "chat";
 export type IChartFormat = "video" | "image";
@@ -223,6 +226,62 @@ export class StatsService {
 
         this.statsChartService.requestStatsChart(ctx, target_id, "user", "all");
         await this.prepareUserStatsText(ctx, target_id, await userStatsPromise, users[target_id]);
+    }
+
+    public async chatStatsCallback(ctx: IGroupHearsCommandContext) {
+        if (!this.isInitialized || !this.statsChartService) {
+            throw new Error("StatsService is not initialized");
+        }
+        botStatsManager.commandUse("stats chat");
+
+        const chat_id = ctx.chat.id;
+        const date_range = this.getChatStatsDateRange(ctx);
+        const [stats, chatSettings, activeUsers] = await Promise.all([
+            DBStats.chat.inRage(chat_id, date_range),
+            getCachedOrDBChatSettings(chat_id),
+            active.getChatUsers(chat_id),
+        ]);
+
+        if (
+            !chatSettings.charts ||
+            date_range[2] === "yesterday" ||
+            date_range[2] === "today" ||
+            date_range[2] === "custom"
+        ) {
+            const statsText = await this.prepareChatStatsText(ctx, chatSettings, stats, activeUsers, date_range);
+            this.removeCachedStatsText(chat_id, chat_id);
+            await sendSelfdestructMessage(
+                ctx,
+                {
+                    isChart: false,
+                    text: statsText,
+                    chart: undefined,
+                },
+                chatSettings.selfdestructstats
+            );
+            return;
+        }
+
+        const cachedChart = this.getCachedChart(chat_id, chat_id, "chat", date_range[2]);
+
+        if (cachedChart.status === "ok") {
+            const statsText = await this.prepareChatStatsText(ctx, chatSettings, stats, activeUsers, date_range);
+            this.removeCachedStatsText(chat_id, chat_id);
+            await sendSelfdestructMessage(
+                ctx,
+                {
+                    isChart: true,
+                    text: statsText,
+                    chart: cachedChart.file_id,
+                    chartFormat: cachedChart.chartFormat,
+                },
+                chatSettings.selfdestructstats
+            );
+            return;
+        }
+
+        this.statsChartService.requestStatsChart(ctx, chat_id, "chat", date_range[2]);
+        await this.prepareChatStatsText(ctx, chatSettings, stats, activeUsers, date_range);
     }
 
     private async prepareUserStatsText(
