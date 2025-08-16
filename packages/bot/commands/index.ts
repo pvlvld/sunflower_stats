@@ -113,20 +113,21 @@ function regCommands() {
         /^(!|\/)?(стата|статистика|stats)(@[a-zA-Z_]+)? \d{4}(\.|-)\d{2}(\.|-)\d{2}( \d{4}(\.|-)\d{2}(\.|-)\d{2})?$/i,
         async (ctx) => {
             botStatsManager.commandUse("стата дата");
-            stats_chat_range_cmd(ctx);
+            await StatsService.getInstance().chatStatsCallback(ctx);
         }
     );
 
-    //@ts-expect-error
-    groupStats.command("stats", stats_chat);
-    groupStats.hears(/^(стата|статистика)$/i, stats_chat);
+    groupStats.command("stats", async (ctx) => await StatsService.getInstance().chatStatsCallback(ctx));
+    groupStats.hears(/^(стата|статистика)$/i, async (ctx) => await StatsService.getInstance().chatStatsCallback(ctx));
 
     groupStats.command("statsall", async (ctx) => {
         ctx.msg.text = "стата вся";
-        //@ts-expect-error
-        stats_chat(ctx);
+        await StatsService.getInstance().chatStatsCallback(ctx);
     });
-    groupStats.hears(/^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i, stats_chat);
+    groupStats.hears(
+        /^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i,
+        async (ctx) => await StatsService.getInstance().chatStatsCallback(ctx)
+    );
 
     groupStats.command(["me", "i"], async (ctx) => await StatsService.getInstance().userStatsCallback(ctx, true));
     groupStats.hears(
