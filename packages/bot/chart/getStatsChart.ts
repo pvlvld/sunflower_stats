@@ -606,6 +606,16 @@ export class StatsChartService {
         return StatsChartService.instance;
     }
 
+    private initChartConsumers() {
+        this.rabbitMQClient.consume<"chart_stats_results">("chart_stats_results", this.chartConsumer.bind(this));
+        this.rabbitMQClient.consume<"bump_chart_rating_results">(
+            "bump_chart_rating_results",
+            this.bumpChartRatingConsumer.bind(this)
+        );
+
+        console.log("Chart consumers initialized");
+    }
+
     public async requestStatsChart(
         ctx: IGroupHearsCommandContext,
         target_id: number,
@@ -686,16 +696,6 @@ export class StatsChartService {
         }
 
         return settings;
-    }
-
-    private initChartConsumers() {
-        this.rabbitMQClient.consume<"chart_stats_results">("chart_stats_results", this.chartConsumer.bind(this));
-        this.rabbitMQClient.consume<"bump_chart_rating_results">(
-            "bump_chart_rating_results",
-            this.bumpChartRatingConsumer.bind(this)
-        );
-
-        console.log("Chart consumers initialized");
     }
 
     private async chartConsumer(task: IChartResult, msg: ConsumeMessage | null) {
