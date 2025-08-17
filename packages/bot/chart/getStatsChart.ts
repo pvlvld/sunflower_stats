@@ -191,7 +191,13 @@ export class StatsService {
         if (!this.isInitialized || !this.statsChartService) {
             throw new Error("StatsService is not initialized");
         }
-        botStatsManager.commandUse("я");
+
+        if (isPersonal) {
+            botStatsManager.commandUse("i");
+        } else {
+            botStatsManager.commandUse("you");
+        }
+
         const chat_id = ctx.chat.id;
         let target_id = isPersonal && ctx.msg.reply_to_message?.from ? ctx.msg.reply_to_message.from.id : ctx.from.id;
         const original_target = target_id;
