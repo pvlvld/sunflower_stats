@@ -193,28 +193,24 @@ export class StatsService {
         }
 
         const target_id = ctx.from.id;
-        const chart_cached = cacheManager.ChartCache_User.get(ctx.me.id, ctx.from.id);
-        let text = cacheManager.TextCache.get(`${ctx.from.id}_top_chats`);
-
-        if (text && chart_cached.status === "ok") {
-            await ctx.replyWithPhoto(chart_cached.file_id, {
-                caption: text,
-            });
-            return;
-        }
-
-        if (!text && chart_cached.status === "ok") {
-            text = await this.prepareUserTopChatsText(ctx, await Database.stats.user.topChats(target_id));
-            await bot.api.sendPhoto(ctx.chat.id, chart_cached.file_id, {
-                caption: text,
-            });
-            return;
-        }
-
+        const chart_cached = cacheManager.ChartCache_User.get(ctx.chat.id, ctx.from.id);
         if (chart_cached.status !== "ok") {
-            console.log("StatsService.userStatsGlobalCallback: requesting chart for user", target_id);
             this.statsChartService.requestStatsChart(ctx, target_id, "user", "global");
-            await this.prepareUserTopChatsText(ctx, await Database.stats.user.topChats(target_id));
+        }
+        let text =
+            cacheManager.TextCache.get(`${ctx.from.id}_top_chats`) ||
+            (await this.prepareUserTopChatsText(ctx, await Database.stats.user.topChats(target_id)));
+
+        if (chart_cached.status === "ok") {
+            if (chart_cached.chartFormat === "video") {
+                await ctx.replyWithVideo(chart_cached.file_id, {
+                    caption: text,
+                });
+            } else {
+                await ctx.replyWithPhoto(chart_cached.file_id, {
+                    caption: text,
+                });
+            }
         }
     }
 
