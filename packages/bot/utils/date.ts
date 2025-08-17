@@ -42,6 +42,10 @@ export class FormattedDate {
         return ["2013-08-14", moment().format("YYYY-MM-DD"), "all"];
     }
 
+    get global(): IFormattedRangeDateGetters["global"] {
+        return ["2013-08-14", moment().format("YYYY-MM-DD"), "global"];
+    }
+
     public dateToYYYYMMDD(date: Date) {
         return date.toISOString().split("T")[0];
     }
