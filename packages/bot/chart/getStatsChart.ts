@@ -366,8 +366,7 @@ export class StatsService {
                 ).toLocaleString("fr-FR")}`
             );
         }
-
-        return ctx.t("stats-user-top-chats", {
+        const text = ctx.t("stats-user-top-chats", {
             name: `${await getPremiumMarkSpaced(ctx.from.id)}${getUserNameLink.html(
                 ctx.from.first_name,
                 ctx.from.username,
@@ -376,6 +375,9 @@ export class StatsService {
             top: top.join(""),
             totalMessages: (+data[0]?.total_count || 0).toLocaleString("fr-FR"),
         });
+
+        this.cache.statsText.set(getTaskId(ctx.chat.id, ctx.from.id), text);
+        return text;
     }
 
     private async prepareChatStatsText(
