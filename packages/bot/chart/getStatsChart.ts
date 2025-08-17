@@ -199,6 +199,7 @@ export class StatsService {
         }
 
         const chat_id = ctx.chat.id;
+        // TODO: implement correct logic
         let target_id = isPersonal && ctx.msg.reply_to_message?.from ? ctx.msg.reply_to_message.from.id : ctx.from.id;
         const original_target = target_id;
         let userStatsPromise = Database.stats.user.all(chat_id, target_id);
