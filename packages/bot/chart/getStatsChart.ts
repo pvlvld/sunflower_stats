@@ -200,6 +200,7 @@ export class StatsService {
             await ctx.replyWithPhoto(chart_cached.file_id, {
                 caption: text,
             });
+            return;
         }
 
         if (chart_cached.status !== "ok") {
