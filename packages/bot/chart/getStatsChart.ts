@@ -203,12 +203,18 @@ export class StatsService {
             return;
         }
 
-        if (chart_cached.status !== "ok") {
-            this.statsChartService.requestStatsChart(ctx, target_id, "user", "global");
+        if (!text && chart_cached.status === "ok") {
+            text = await this.prepareUserTopChatsText(ctx, await Database.stats.user.topChats(target_id));
+            await bot.api.sendPhoto(ctx.chat.id, chart_cached.file_id, {
+                caption: text,
+            });
+            return;
         }
 
-        if (!text) {
-            text = await this.prepareUserTopChatsText(ctx, await Database.stats.user.topChats(target_id));
+        if (chart_cached.status !== "ok") {
+            console.log("StatsService.userStatsGlobalCallback: requesting chart for user", target_id);
+            this.statsChartService.requestStatsChart(ctx, target_id, "user", "global");
+            await this.prepareUserTopChatsText(ctx, await Database.stats.user.topChats(target_id));
         }
     }
 
