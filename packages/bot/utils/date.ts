@@ -1,13 +1,10 @@
 import moment from "moment";
 
-export interface IFormattedRangeDateGetters {
-    today: [string, string, "today"];
-    yesterday: [string, string, "yesterday"];
-    weekRange: [string, string, "weekRange"];
-    monthRange: [string, string, "monthRange"];
-    yearRange: [string, string, "yearRange"];
-    all: [string, string, "all"];
-}
+type DateRangeKey = "today" | "yesterday" | "weekRange" | "monthRange" | "yearRange" | "all" | "global";
+
+export type IFormattedRangeDateGetters = {
+    [K in DateRangeKey]: [string, string, K];
+};
 
 /** Dates in "YYY-MM-DD" format.*/
 export class FormattedDate {
