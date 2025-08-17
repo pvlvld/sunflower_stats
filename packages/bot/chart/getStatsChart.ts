@@ -41,6 +41,7 @@ import Escape from "../utils/escape.js";
 import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
 import { getStatsChatRating } from "../utils/getStatsRating.js";
 import { isValidDateOrDateRange } from "../utils/isValidDateOrDateRange.js";
+import getUserNameLink from "../utils/getUserNameLink.js";
 
 export type IChartType = "user" | "chat";
 export type IChartFormat = "video" | "image";
@@ -327,6 +328,30 @@ export class StatsService {
         const text = await getUserStatsMessage(ctx, user_id, stats, active);
         this.cache.statsText.set(getTaskId(ctx.chat.id, user_id), text);
         return text;
+    }
+
+    private async prepareUserTopChatsText(
+        ctx: IGroupHearsCommandContext,
+        data: Awaited<ReturnType<typeof Database.stats.user.topChats>>
+    ) {
+        const top: string[] = [];
+        for (let i = 0; i < data.length; i++) {
+            top.push(
+                `${i === 0 ? "" : "\n"}${1 + i}. «${Escape.html(data[i].title)}» - ${(
+                    data[i].chat_count as number
+                ).toLocaleString("fr-FR")}`
+            );
+        }
+
+        return ctx.t("stats-user-top-chats", {
+            name: `${await getPremiumMarkSpaced(ctx.from.id)}${getUserNameLink.html(
+                ctx.from.first_name,
+                ctx.from.username,
+                ctx.from.id
+            )}`,
+            top: top.join(""),
+            totalMessages: (+data[0]?.total_count || 0).toLocaleString("fr-FR"),
+        });
     }
 
     private async prepareChatStatsText(
