@@ -131,8 +131,8 @@ export async function getStatsChart(
     }
 }
 
-function getTaskId(chat_id: number, target_id: number | string): string {
-    return `chat:${chat_id}:target:${target_id}`;
+function getTaskId(chat_id: number, target_id: number | string, date_range: IDateRange): string {
+    return `chat:${chat_id}:target:${target_id}:date_range:${date_range}`;
 }
 
 const CACHE = {
@@ -252,7 +252,7 @@ export class StatsService {
 
         if (!chatSettings.charts) {
             const statsText = await this.prepareUserStatsText(ctx, target_id, await userStatsPromise, users[target_id]);
-            this.removeCachedStatsText(chat_id, target_id);
+            this.removeCachedStatsText(chat_id, target_id, "all");
             await sendSelfdestructMessage(
                 ctx,
                 {
@@ -269,7 +269,7 @@ export class StatsService {
 
         if (cachedChart.status === "ok") {
             const statsText = await this.prepareUserStatsText(ctx, target_id, await userStatsPromise, users[target_id]);
-            this.removeCachedStatsText(chat_id, target_id);
+            this.removeCachedStatsText(chat_id, target_id, "all");
             await sendSelfdestructMessage(
                 ctx,
                 {
@@ -308,7 +308,7 @@ export class StatsService {
             date_range[2] === "custom"
         ) {
             const statsText = await this.prepareChatStatsText(ctx, chatSettings, stats, activeUsers, date_range);
-            this.removeCachedStatsText(chat_id, chat_id);
+            this.removeCachedStatsText(chat_id, chat_id, date_range[2]);
             await sendSelfdestructMessage(
                 ctx,
                 {
@@ -325,7 +325,7 @@ export class StatsService {
 
         if (cachedChart.status === "ok") {
             const statsText = await this.prepareChatStatsText(ctx, chatSettings, stats, activeUsers, date_range);
-            this.removeCachedStatsText(chat_id, chat_id);
+            this.removeCachedStatsText(chat_id, chat_id, date_range[2]);
             await sendSelfdestructMessage(
                 ctx,
                 {
@@ -350,7 +350,7 @@ export class StatsService {
         active: IActiveUser
     ): Promise<string> {
         const text = await getUserStatsMessage(ctx, user_id, stats, active);
-        this.cache.statsText.set(getTaskId(ctx.chat.id, user_id), text);
+        this.cache.statsText.set(getTaskId(ctx.chat.id, user_id, "all"), text);
         return text;
     }
 
@@ -376,7 +376,7 @@ export class StatsService {
             totalMessages: (+data[0]?.total_count || 0).toLocaleString("fr-FR"),
         });
 
-        this.cache.statsText.set(getTaskId(ctx.chat.id, ctx.from.id), text);
+        this.cache.statsText.set(getTaskId(ctx.chat.id, ctx.from.id, "global"), text);
         return text;
     }
 
@@ -388,7 +388,7 @@ export class StatsService {
         date_range: [string, string, IDateRange]
     ) {
         const text = await this.getChatStatsMessage(ctx, chatSettings, stats, activeUsers, date_range);
-        this.cache.statsText.set(getTaskId(ctx.chat.id, ctx.chat.id), text);
+        this.cache.statsText.set(getTaskId(ctx.chat.id, ctx.chat.id, date_range[2]), text);
         return text;
     }
 
@@ -502,8 +502,8 @@ export class StatsService {
         return formattedDate[cmdToDateRangeMap[rawCmdDateRange]];
     }
 
-    private removeCachedStatsText(chat_id: number, user_id: number) {
-        this.cache.statsText.delete(getTaskId(chat_id, user_id));
+    private removeCachedStatsText(chat_id: number, user_id: number, date_range: IDateRange) {
+        this.cache.statsText.delete(getTaskId(chat_id, user_id, date_range));
     }
 
     private getCachedChart(
@@ -654,7 +654,7 @@ export class StatsChartService {
 
         const user_id = ctx.from.id;
         const chat_id = ctx.chat.id;
-        const task_id = getTaskId(chat_id, target_id);
+        const task_id = getTaskId(chat_id, target_id, rawDateRange);
 
         if (this.cache.pendingCharts.has(task_id)) {
             console.log(`Chart is already pending: ${task_id}`);
