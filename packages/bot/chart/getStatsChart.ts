@@ -693,6 +693,7 @@ export class StatsChartService {
             );
         } catch (error) {
             console.error("Error requesting stats chart:", error);
+        } finally {
             this.cache.pendingCharts.delete(task_id);
         }
 
