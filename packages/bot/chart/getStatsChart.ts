@@ -187,6 +187,30 @@ export class StatsService {
         this.isInitialized = true;
     }
 
+    public async userStatsGlobalCallback(ctx: ChatTypeContext<IHearsCommandContext, "private">) {
+        if (!this.isInitialized || !this.statsChartService) {
+            throw new Error("StatsService is not initialized");
+        }
+
+        const target_id = ctx.from.id;
+        const chart_cached = cacheManager.ChartCache_User.get(ctx.me.id, ctx.from.id);
+        let text = cacheManager.TextCache.get(`${ctx.from.id}_top_chats`);
+
+        if (text && chart_cached.status === "ok") {
+            await ctx.replyWithPhoto(chart_cached.file_id, {
+                caption: text,
+            });
+        }
+
+        if (chart_cached.status !== "ok") {
+            this.statsChartService.requestStatsChart(ctx, target_id, "user", "global");
+        }
+
+        if (!text) {
+            text = await this.prepareUserTopChatsText(ctx, await Database.stats.user.topChats(target_id));
+        }
+    }
+
     // TODO: refactor user resolving
     public async userStatsCallback(ctx: IGroupHearsCommandContext, isPersonal = true) {
         if (!this.isInitialized || !this.statsChartService) {
