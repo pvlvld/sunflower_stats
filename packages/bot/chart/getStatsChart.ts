@@ -203,7 +203,9 @@ export class StatsService {
         let target_id = isPersonal && ctx.msg.reply_to_message?.from ? ctx.msg.reply_to_message.from.id : ctx.from.id;
         const original_target = target_id;
         let userStatsPromise = Database.stats.user.all(chat_id, target_id);
-        let userSettingsPromise = Database.user.settings.get(target_id);
+
+        // TODO: implement user settings cache
+        // let userSettingsPromise = Database.user.settings.get(target_id);
         const [users, chatSettings] = await Promise.all([
             active.getChatUsers(chat_id),
             getCachedOrDBChatSettings(chat_id),
