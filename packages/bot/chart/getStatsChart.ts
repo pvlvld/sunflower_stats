@@ -617,7 +617,7 @@ export class StatsChartService {
     }
 
     public async requestStatsChart(
-        ctx: IGroupHearsCommandContext,
+        ctx: IGroupHearsCommandContext | ChatTypeContext<IHearsCommandContext, "private">,
         target_id: number,
         type: IChartType,
         rawDateRange: IAllowedChartStatsRanges = "all"
