@@ -3,7 +3,7 @@ import { ChartCanvasManager } from "./chartCanvas.js";
 import type { Chart } from "chart.js";
 import { DBPoolManager } from "../db/poolManager.js";
 import chartJs from "chart.js/auto";
-import { InputFile } from "grammy";
+import { ChatTypeContext, InputFile } from "grammy";
 import { Canvas, type Image, loadImage } from "canvas";
 import fs from "node:fs";
 import { getChartConfig, IChartConfiguration } from "./utils/getChartConfig.js";
@@ -25,7 +25,7 @@ import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import { DefaultChartSettings, IChartSettings } from "../db/chartSettings.js";
 import { Database } from "../db/db.js";
 import { IChatSettings } from "../consts/defaultChatSettings.js";
-import { IGroupContext, IGroupHearsCommandContext } from "../types/context.js";
+import { IGroupHearsCommandContext, IHearsCommandContext } from "../types/context.js";
 import { isPremium } from "../utils/isPremium.js";
 import { ConsumeMessage } from "amqplib";
 import formattedDate from "../utils/date.js";
@@ -331,7 +331,7 @@ export class StatsService {
     }
 
     private async prepareUserTopChatsText(
-        ctx: IGroupHearsCommandContext,
+        ctx: IGroupHearsCommandContext | ChatTypeContext<IHearsCommandContext, "private">,
         data: Awaited<ReturnType<typeof Database.stats.user.topChats>>
     ) {
         const top: string[] = [];
