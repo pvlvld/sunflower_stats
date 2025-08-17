@@ -33,6 +33,7 @@ const cmdToDateRangeMap = {
     all: "all",
     full: "all",
     total: "all",
+    global: "global",
 } as const;
 
 export type IDateRange = (typeof cmdToDateRangeMap)[keyof typeof cmdToDateRangeMap];
