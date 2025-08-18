@@ -35,13 +35,13 @@ async function stats_user_global(ctx: ChatTypeContext<ICommandContext, "private"
     if (chart_cached.chartFormat === "video" || chart?.chartFormat === "video") {
         msg = await ctx
             .replyWithAnimation(chart?.chart || chart_cached.file_id, {
-                caption: cacheManager.TextCache.get(`${ctx.from.id}_top_chats`),
+                caption: cacheManager.TextCache.get(`${ctx.from.id}_top_chats`) || "",
             })
             .catch(console.error);
     } else {
         msg = await ctx
             .replyWithPhoto(chart?.chart || chart_cached.file_id, {
-                caption: cacheManager.TextCache.get(`${ctx.from.id}_top_chats`),
+                caption: cacheManager.TextCache.get(`${ctx.from.id}_top_chats`) || "",
             })
             .catch(console.error);
     }

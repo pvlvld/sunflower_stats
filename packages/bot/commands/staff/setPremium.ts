@@ -1,8 +1,9 @@
 import moment from "moment";
 import { getOldDbPool } from "../../db/oldDb.js";
-import { IHearsCommandContext } from "../../types/context.js";
+import { IGroupHearsCommandContext } from "../../types/context.js";
 import formattedDate from "../../utils/date.js";
 import cacheManager from "../../cache/cache.js";
+import cfg from "../../config.js";
 
 type IUsers_son = {
     user_id: number;
@@ -10,7 +11,11 @@ type IUsers_son = {
     status_premium: 1 | 0;
 };
 
-async function setPremium_command(ctx: IHearsCommandContext) {
+async function setPremium_command(ctx: IGroupHearsCommandContext) {
+    if (!ctx.from || !cfg.ADMINS.includes(ctx.from.id)) {
+        return;
+    }
+
     const args = (ctx.msg.text ?? ctx.msg.caption).split(" ");
     args.shift();
 

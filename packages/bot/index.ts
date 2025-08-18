@@ -140,7 +140,7 @@ async function main() {
 main();
 addButtonToThePost(599, -1001898930678, "конкурс закінчився", "https://t.me/+ucM55jyWpK5iY2My");
 function addButtonToThePost(messageId: number, chatId: number, text: string, url: string) {
-    bot.api.editMessageReplyMarkup(chatId, messageId, { reply_markup: undefined });
+    bot.api.editMessageReplyMarkup(chatId, messageId, { reply_markup: { inline_keyboard: [] } });
     // return bot.api.editMessageReplyMarkup(chatId, messageId, {
     //     reply_markup: {
     //         inline_keyboard: [

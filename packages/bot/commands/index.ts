@@ -8,7 +8,6 @@ import { removeChatData_cmd } from "./staff/removeChatData.js";
 import broadcast_chats_cmd from "./staff/broadcast_chats.js";
 import { donate_cmd, refreshDonate_cmd } from "./donate.js";
 import stats_chat_range_cmd from "./stats_chat_range.js";
-import { broadcast_adv } from "./staff/broadcast_adv.js";
 import collectGarbage from "../utils/collectGarbage.js";
 import { toggleCharts } from "./staff/toggleCharts.js";
 import botMemoryUsage from "./staff/botMemoryUsage.js";
@@ -271,17 +270,6 @@ function regCommands() {
     botAdmin.hears("!toggleCharts", toggleCharts);
 
     botAdmin.hears(/^!loglvl/i, setLogLvl);
-
-    botAdmin.hears(/^!ssadv/, async (ctx) => await broadcast_adv(ctx));
-    bot.filter((ctx) => !!(ctx.msg?.caption ?? ctx.msg?.text)?.startsWith("!ssadv")).on("edited_message", (ctx) => {
-        if ((ctx.msg.caption || ctx.msg.text)?.startsWith("!ssadvt")) {
-            // @ts-expect-error
-            broadcast_adv(ctx);
-        } else {
-            // @ts-expect-error
-            broadcast_adv(ctx, false);
-        }
-    });
 
     botAdmin
         .filter((ctx) => !!ctx.msg?.reply_to_message)

@@ -13,8 +13,8 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
         await ctx
             .editMessageCaption({
                 caption: `${ctx.msg?.caption ?? ""}\n\nВидалено!`,
-                reply_markup: undefined,
-                caption_entities: ctx.msg?.caption_entities,
+                reply_markup: { inline_keyboard: [] },
+                caption_entities: ctx.msg?.caption_entities || [],
             })
             .catch((e) => {});
     })
@@ -27,8 +27,8 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
         await ctx
             .editMessageCaption({
                 caption: `${ctx.msg?.caption ?? ""}\n\nВидалено та обмежено!`,
-                reply_markup: undefined,
-                caption_entities: ctx.msg?.caption_entities,
+                reply_markup: { inline_keyboard: [] },
+                caption_entities: ctx.msg?.caption_entities || [],
             })
             .catch((e) => {});
     })
@@ -41,8 +41,8 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
         await ctx
             .editMessageCaption({
                 caption: `${ctx.msg?.caption ?? ""}\n\nАнтихорні!`,
-                reply_markup: undefined,
-                caption_entities: ctx.msg?.caption_entities,
+                reply_markup: { inline_keyboard: [] },
+                caption_entities: ctx.msg?.caption_entities || [],
             })
             .catch((e) => {});
     })
@@ -56,14 +56,14 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
         await ctx
             .editMessageCaption({
                 caption: `${ctx.msg?.caption ?? ""}\n\nДЕРЖАВНОЮ!`,
-                reply_markup: undefined,
-                caption_entities: ctx.msg?.caption_entities,
+                reply_markup: { inline_keyboard: [] },
+                caption_entities: ctx.msg?.caption_entities || [],
             })
             .catch((e) => {});
     })
     .row()
     .text("👌🏻", async (ctx) => {
-        void (await ctx.editMessageReplyMarkup({ reply_markup: undefined }).catch((e) => {}));
+        void (await ctx.editMessageReplyMarkup({ reply_markup: { inline_keyboard: [] } }).catch((e) => {}));
     });
 
 async function parseTargetUserId(ctx: IContext, start_mark = "User id: ") {

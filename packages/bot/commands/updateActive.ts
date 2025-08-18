@@ -1,6 +1,6 @@
 import moment from "moment";
 import { active, IActiveUser } from "../redis/active.js";
-import { IContext, IHearsCommandContext } from "../types/context.js";
+import { IContext, IGroupHearsCommandContext } from "../types/context.js";
 import isChatOwner from "../utils/isChatOwner.js";
 import { autoRetry } from "@grammyjs/auto-retry";
 import cfg from "../config.js";
@@ -8,7 +8,7 @@ import cacheManager from "../cache/cache.js";
 
 type IActiveMember = IActiveUser & { user_id: string };
 
-async function updateActive_command(ctx: IHearsCommandContext) {
+async function updateActive_command(ctx: IGroupHearsCommandContext) {
     const cacheKey = `${ctx.chat.id}:updateActive`;
     if (cacheManager.TextCache.has(cacheKey)) {
         await ctx.reply(ctx.t("error-comamnd-once-per-day")).catch((e) => {});

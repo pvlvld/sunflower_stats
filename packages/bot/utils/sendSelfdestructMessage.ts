@@ -41,24 +41,21 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
     try {
         let message: Message.PhotoMessage | Message.TextMessage | Message.AnimationMessage;
         if (data.isChart) {
+            const options = {
+                caption: data.text,
+                disable_notification: true,
+                reply_markup: reply_markup ? reply_markup : { inline_keyboard: [] },
+            };
             if (data.chartFormat === "image") {
-                message = await ctx.replyWithPhoto(data.chart, {
-                    caption: data.text,
-                    disable_notification: true,
-                    reply_markup,
-                });
+                message = await ctx.replyWithPhoto(data.chart, options);
             } else {
-                message = await ctx.replyWithAnimation(data.chart, {
-                    caption: data.text,
-                    disable_notification: true,
-                    reply_markup,
-                });
+                message = await ctx.replyWithAnimation(data.chart, options);
             }
         } else {
             message = await ctx.reply(data.text, {
                 disable_notification: true,
                 link_preview_options: { is_disabled: true },
-                reply_markup,
+                reply_markup: reply_markup ? reply_markup : { inline_keyboard: [] },
             });
         }
 

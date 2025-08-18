@@ -16,18 +16,18 @@ async function changeLocaleCommand(ctx: IHearsCommandContext | IGroupMyChatMembe
     const parts = (ctx.msg?.text || ctx.msg?.caption || "").split(" ");
     if (parts[1]) {
         LocaleService;
-        let localeCode = parts[1].toLowerCase() as string | undefined;
-        let isLocale = LocaleService.isLocale(localeCode || "");
+        let localeCode = parts[1].toLowerCase();
+        let isLocale = LocaleService.isLocale(localeCode);
 
         if (!isLocale) {
-            localeCode = LocaleService.resolveFromLocaleName(localeCode ?? "");
-            isLocale = LocaleService.isLocale(localeCode || "");
+            localeCode = LocaleService.resolveFromLocaleName(localeCode) || "";
+            isLocale = LocaleService.isLocale(localeCode);
         }
 
         if (isLocale) {
             const currentLocale = await localeNegotiator(ctx);
             if (currentLocale !== localeCode) {
-                LocaleService.set(ctx.chat.id, localeCode!);
+                LocaleService.set(ctx.chat.id, localeCode);
                 ctx.i18n.renegotiateLocale();
                 Database.chat.settings.set(ctx.chat.id, {
                     locale: localeCode,

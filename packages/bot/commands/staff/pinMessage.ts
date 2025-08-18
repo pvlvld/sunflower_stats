@@ -1,6 +1,6 @@
-import { ITextContext } from "../../types/context.js";
+import { IGroupHearsCommandContext } from "../../types/context.js";
 
-async function pinMessage(ctx: ITextContext) {
+async function pinMessage(ctx: IGroupHearsCommandContext) {
     if (ctx.msg.reply_to_message) {
         await ctx.api
             .pinChatMessage(ctx.chat.id, ctx.msg.reply_to_message.message_id)
