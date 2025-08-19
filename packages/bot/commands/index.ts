@@ -80,7 +80,10 @@ function regCommands() {
         changeLocaleCommand(ctx);
     });
 
-    dm.command(["me", "i"], stats_user_global);
+    dm.command(["me", "i"], async (ctx) => {
+        await StatsService.getInstance().userStatsGlobalCallback(ctx);
+    });
+
     bot.command("donate", donate_cmd);
 
     groupStats.command("w", async (ctx) => {
