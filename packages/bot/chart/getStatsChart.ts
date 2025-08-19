@@ -156,7 +156,8 @@ class PendingCharts {
     }
 
     public set(key: string) {
-        this.charts.set(key, undefined as any); // We don't need to pass value, it will be set by the timer
+        // We don't need to pass value, it will be set by the proxy
+        this.charts.set(key, undefined as any);
     }
 
     public get(key: string) {
