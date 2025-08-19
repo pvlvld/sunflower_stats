@@ -129,23 +129,22 @@ export class ChartService {
                 },
                 {}
             );
-            this.isProcessing = false;
-            return;
+        } else {
+            await this.rabbitMQClient.produce(
+                "bump_chart_rating_results",
+                {
+                    task_id: task.task_id,
+                    chat_id: task.chat_id,
+                    reply_to_message_id: task.reply_to_message_id,
+                    thread_id: task.thread_id,
+                    raw: chart,
+
+                    error: null,
+                },
+                {}
+            );
         }
 
-        await this.rabbitMQClient.produce(
-            "bump_chart_rating_results",
-            {
-                task_id: task.task_id,
-                chat_id: task.chat_id,
-                reply_to_message_id: task.reply_to_message_id,
-                thread_id: task.thread_id,
-                raw: chart,
-
-                error: null,
-            },
-            {}
-        );
         this.isProcessing = false;
     }
 }
