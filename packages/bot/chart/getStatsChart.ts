@@ -409,6 +409,7 @@ export class StatsService {
             await ctx.replyWithPhoto(cachedChart, {
                 caption: await this.prepareChatsRatingText(),
             });
+            this.cache.statsText.delete("chats_rating:monthly");
             return;
         }
 
