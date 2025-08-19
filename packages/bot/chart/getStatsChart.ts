@@ -849,8 +849,8 @@ export class StatsChartService {
         }
 
         let text = this.cache.statsText.get(task.task_id);
-        // TODO: fix possible race condition
-        text ??= "oopsie";
+        // TODO: fix possible race condition | Create separate charts text producer class
+        text ??= "";
 
         bot.api
             .sendPhoto(task.chat_id, new InputFile(Buffer.from(task.raw)), { caption: text })
