@@ -211,7 +211,7 @@ function regCommands() {
 
     group.command("settings", chatSettings_cmd);
 
-    bot.command("tchats", statsChatGlobal);
+    bot.command("tchats", async (ctx) => await StatsService.getInstance().chatsRatingCallback(ctx));
 
     group.hears("!updatemembers", async (ctx) => {
         updateActive_command(ctx);
