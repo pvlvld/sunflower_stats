@@ -464,6 +464,23 @@ export class StatsService {
         return text;
     }
 
+    private async prepareChatsRatingText() {
+        const data = await Database.stats.bot.topChatsWeeklyRating();
+        let chat = data[0];
+        const top: string[] = [];
+        for (let i = 0; i < data.length; i++) {
+            chat = data[i];
+            top.push(
+                `${i === 0 ? "" : "\n"}${1 + i}.${await getPremiumMarkSpaced(chat.chat_id)}«${Escape.html(
+                    chat.title
+                )}» - ${chat.total_messages.toLocaleString("fr-FR")}`
+            );
+        }
+        const text = top.join("");
+        this.cache.statsText.set("chats_rating:weekly", text);
+        return text;
+    }
+
     private async getChatStatsMessage(
         ctx: IGroupHearsCommandContext,
         chatSettings: IChatSettings,
