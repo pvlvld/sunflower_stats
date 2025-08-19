@@ -27,7 +27,6 @@ import { getId_cmd } from "./staff/get_id.js";
 import set_nickname from "./set_nickname.js";
 import { react_cmd } from "./staff/react.js";
 import del_nickname from "./del_nickname.js";
-import { stats_user } from "./stats_user.js";
 import { delMessage } from "./staff/del.js";
 import leaveChat_cmd from "./leaveChat.js";
 import { setChartBg } from "./chartBg.js";
