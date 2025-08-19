@@ -30,7 +30,6 @@ import del_nickname from "./del_nickname.js";
 import { delMessage } from "./staff/del.js";
 import leaveChat_cmd from "./leaveChat.js";
 import { setChartBg } from "./chartBg.js";
-import stats_chat from "./stats_chat.js";
 import { ban_cmd } from "./staff/ban.js";
 import botTest_cmd from "./botTets.js";
 import help_cmd from "./help.js";
