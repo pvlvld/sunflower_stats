@@ -7,7 +7,6 @@ import removeFromChatCleanup from "./removeFromChatCleanup.js";
 import { removeChatData_cmd } from "./staff/removeChatData.js";
 import broadcast_chats_cmd from "./staff/broadcast_chats.js";
 import { donate_cmd, refreshDonate_cmd } from "./donate.js";
-import stats_chat_range_cmd from "./stats_chat_range.js";
 import collectGarbage from "../utils/collectGarbage.js";
 import { toggleCharts } from "./staff/toggleCharts.js";
 import botMemoryUsage from "./staff/botMemoryUsage.js";
