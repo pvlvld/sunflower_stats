@@ -42,7 +42,6 @@ import { remote_ban_cmd } from "./staff/remote_ban.js";
 import { addToBlacklist } from "./staff/blacklist.js";
 import { start_cmd } from "./start.js";
 import { updateDbChatsInfo } from "./staff/updateDbChatsInfo.js";
-import { stats_user_global } from "./stats_user_global.js";
 import { statsChatGlobal } from "./statsChatGlobal.js";
 import { changeLocaleCommand } from "./changeLocale.js";
 import { updateBotLocalization } from "./staff/updateBotLocalization.js";
