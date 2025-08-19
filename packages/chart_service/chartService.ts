@@ -81,28 +81,27 @@ export class ChartService {
                     priority: +(task.chat_premium || task.user_premium),
                 }
             );
-            this.isProcessing = false;
-            return;
+        } else {
+            await this.rabbitMQClient.produce(
+                "chart_stats_results",
+                {
+                    task_id: task.task_id,
+                    chat_id: task.chat_id,
+                    target_id: task.target_id,
+                    reply_to_message_id: task.reply_to_message_id,
+                    thread_id: task.thread_id,
+                    date_range: task.date_range,
+                    raw: chart.chart,
+                    format: chart.chartFormat,
+
+                    error: null,
+                },
+                {
+                    priority: +(task.chat_premium || task.user_premium),
+                }
+            );
         }
 
-        await this.rabbitMQClient.produce(
-            "chart_stats_results",
-            {
-                task_id: task.task_id,
-                chat_id: task.chat_id,
-                target_id: task.target_id,
-                reply_to_message_id: task.reply_to_message_id,
-                thread_id: task.thread_id,
-                date_range: task.date_range,
-                raw: chart.chart,
-                format: chart.chartFormat,
-
-                error: null,
-            },
-            {
-                priority: +(task.chat_premium || task.user_premium),
-            }
-        );
         this.isProcessing = false;
     }
 
