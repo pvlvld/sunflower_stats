@@ -701,12 +701,12 @@ export class StatsChartService {
         return undefined;
     }
 
-    // TODO: implement correct logic
     private async getChartSettings(
         chat_id: number,
         user_id: number,
         type: IChartType
     ): Promise<IChartSettings & Pick<IChatSettings, "usechatbgforall">> {
+        // Turned out that this logic is correct, and old one was with a bug. lol
         const [chatSettings, userSettings] = await Promise.all([
             getCachedOrDBChatSettings(chat_id),
             Database.user.settings.get(user_id),
