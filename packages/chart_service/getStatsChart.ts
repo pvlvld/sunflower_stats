@@ -34,7 +34,9 @@ export async function getStatsChart(
     let data: any[];
 
     // Shitty workaround? Yes it is!
-    if (targetId === config.BOT_ID) {
+    if (task.date_range[2] === "global") {
+        data = await getChartData.userGlobal(task);
+    } else if (targetId === config.BOT_ID) {
         data = await getChartData.botTotal();
     } else if (targetId > 0) {
         data = await getChartData.userInChat(task);
