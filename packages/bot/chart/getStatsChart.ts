@@ -136,7 +136,7 @@ function getTaskId(chat_id: number, target_id: number | string, date_range: IDat
 }
 
 class PendingCharts {
-    private charts = new Map<string, { selfDestructTimer?: NodeJS.Timeout }>();
+    private charts = new Map<string, { selfDestructTimer: NodeJS.Timeout }>();
 
     constructor() {
         const pendingChartsSet = this.charts.set.bind(this.charts);
@@ -156,7 +156,7 @@ class PendingCharts {
     }
 
     public set(key: string) {
-        this.charts.set(key, {});
+        this.charts.set(key, undefined as any); // We don't need to pass value, it will be set by the timer
     }
 
     public get(key: string) {
