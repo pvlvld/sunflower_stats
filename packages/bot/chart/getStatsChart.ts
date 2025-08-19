@@ -766,6 +766,30 @@ export class StatsChartService {
         return undefined;
     }
 
+    public requestBumpChartRating(ctx: IHearsCommandContext) {
+        if (!this.isInitialized) {
+            throw new Error("StatsChartService is not initialized");
+        }
+        const task_id = "chats_rating:monthly";
+        if (this.cache.pendingCharts.has(task_id)) {
+            console.log(`Chart is already pending: ${task_id}`);
+            return;
+        } else {
+            this.cache.pendingCharts.set(task_id);
+        }
+
+        this.rabbitMQClient.produce<"bump_chart_rating_tasks">(
+            "bump_chart_rating_tasks",
+            {
+                chat_id: ctx.chat.id,
+                user_id: ctx.chat.id,
+                task_id,
+                reply_to_message_id: ctx.msg.message_id,
+                thread_id: ctx.msg.message_thread_id || 0,
+            },
+            {}
+        );
+    }
     private async getChartSettings(
         chat_id: number,
         user_id: number,
