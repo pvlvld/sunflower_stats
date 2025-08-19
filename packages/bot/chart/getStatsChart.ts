@@ -573,6 +573,7 @@ export class StatsChartService {
         const pendingChartsSet = this.cache.pendingCharts.set;
         this.cache.pendingCharts.set = function (key: string) {
             const selfDestructTimer = setTimeout(() => {
+                console.log(`Self-destructing pending chart: ${key}`);
                 this.delete(key);
             }, 30000); // 30s
             return pendingChartsSet.call(this, key, { selfDestructTimer });
@@ -659,7 +660,7 @@ export class StatsChartService {
             console.log(`Chart is already pending: ${task_id}`);
             return;
         } else {
-            this.cache.pendingCharts.set(task_id, {});
+            this.cache.pendingCharts.set(task_id);
         }
 
         try {
