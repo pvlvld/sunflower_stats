@@ -42,6 +42,7 @@ import { getPremiumMarkSpaced } from "../utils/getPremiumMarkSpaced.js";
 import { getStatsChatRating } from "../utils/getStatsRating.js";
 import { isValidDateOrDateRange } from "../utils/isValidDateOrDateRange.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
+import { getLastDayOfMonth } from "../utils/getLastDayOfMonth.js";
 
 export type IChartType = "user" | "chat";
 export type IChartFormat = "video" | "image";
