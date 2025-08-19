@@ -578,14 +578,10 @@ export class StatsChartService {
 
     public async init() {
         // Linear statistics charts
-        await this.rabbitMQClient
-            .assertQueue("chart_stats_results", {
-                durable: true,
-                autoDelete: false,
-            })
-            .then(() => {
-                console.log("Chart stats results queue initialized");
-            });
+        await this.rabbitMQClient.assertQueue("chart_stats_results", {
+            durable: true,
+            autoDelete: false,
+        });
         try {
             await this.rabbitMQClient.assertQueue("chart_stats_tasks", {
                 durable: true,
@@ -606,22 +602,14 @@ export class StatsChartService {
         }
 
         // Bump rating charts
-        await this.rabbitMQClient
-            .assertQueue("bump_chart_rating_tasks", {
-                durable: true,
-                autoDelete: false,
-            })
-            .then(() => {
-                console.log("Bump chart rating tasks queue initialized");
-            });
-        await this.rabbitMQClient
-            .assertQueue("bump_chart_rating_results", {
-                durable: true,
-                autoDelete: false,
-            })
-            .then(() => {
-                console.log("Bump chart rating results queue initialized");
-            });
+        await this.rabbitMQClient.assertQueue("bump_chart_rating_tasks", {
+            durable: true,
+            autoDelete: false,
+        });
+        await this.rabbitMQClient.assertQueue("bump_chart_rating_results", {
+            durable: true,
+            autoDelete: false,
+        });
 
         this.initChartConsumers();
         this.isInitialized = true;
