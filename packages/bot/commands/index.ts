@@ -84,18 +84,15 @@ function regCommands() {
 
     groupStats.command("w", async (ctx) => {
         ctx.msg.text = "стата тиждень";
-        // @ts-expect-error
-        await stats_chat(ctx);
+        await StatsService.getInstance().chatStatsCallback(ctx);
     });
     groupStats.command("m", async (ctx) => {
         ctx.msg.text = "стата місяць";
-        // @ts-expect-error
-        await stats_chat(ctx);
+        await StatsService.getInstance().chatStatsCallback(ctx);
     });
     groupStats.command("y", async (ctx) => {
         ctx.msg.text = "стата рік";
-        // @ts-expect-error
-        await stats_chat(ctx);
+        await StatsService.getInstance().chatStatsCallback(ctx);
     });
 
     bot.command("refreshDonate", refreshDonate_cmd);
