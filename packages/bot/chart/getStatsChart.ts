@@ -850,7 +850,18 @@ export class StatsChartService {
         // TODO: fix possible race condition
         text ??= "oopsie";
 
-        bot.api.sendPhoto(task.chat_id, new InputFile(Buffer.from(task.raw)), { caption: text });
+        bot.api
+            .sendPhoto(task.chat_id, new InputFile(Buffer.from(task.raw)), { caption: text })
+            .then((m) => {
+                cacheManager.ChartCache_Global.set(
+                    task.task_id,
+                    m.photo[m.photo.length - 1].file_id,
+                    getLastDayOfMonth()
+                );
+            })
+            .catch((e) => {
+                console.error("Error sending bump chart rating:", e);
+            });
     }
 
     private cacheChart(msg: Message.AnimationMessage | Message.PhotoMessage | undefined, task: IChartResult) {
