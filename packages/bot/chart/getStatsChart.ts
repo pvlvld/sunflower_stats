@@ -739,7 +739,7 @@ export class StatsChartService {
             ]);
             const date = formattedDate[rawDateRange];
 
-            this.rabbitMQClient.produce<"chart_stats_tasks">(
+            await this.rabbitMQClient.produce<"chart_stats_tasks">(
                 "chart_stats_tasks",
                 {
                     task_id,
