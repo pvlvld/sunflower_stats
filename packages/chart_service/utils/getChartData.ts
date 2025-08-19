@@ -81,6 +81,20 @@ async function getUserData(task: IChartStatsTask) {
     ).rows;
 }
 
+async function getUserDataGlobal(task: IChartStatsTask) {
+    await DBPoolManager.ensureConnection();
+    return (
+        await DBPoolManager.getPool.query(
+            `SELECT to_char(date, 'YYYY-MM-DD') AS x, sum(count) as y
+                                FROM stats_daily
+                                WHERE user_id = $1 AND date >= NOW() - INTERVAL '1 year'
+                                GROUP BY date
+                                ORDER by date`,
+            [task.user_id]
+        )
+    ).rows as { x: string; y: number }[];
+}
+
 async function getBotData() {
     await DBPoolManager.ensureConnection();
     return (
@@ -111,6 +125,7 @@ const getChartData = {
     userInChat: getUserData,
     botTotal: getBotData,
     chatsTopMonthly: getChatsTopMonthlyData,
+    userGlobal: getUserDataGlobal,
 };
 
 export { getChartData };
