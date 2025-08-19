@@ -384,6 +384,37 @@ export class StatsService {
         await this.prepareChatStatsText(ctx, chatSettings, stats, activeUsers, date_range);
     }
 
+    public async chatsRatingCallback(ctx: IHearsCommandContext) {
+        if (!this.isInitialized || !this.statsChartService) {
+            throw new Error("StatsService is not initialized");
+        }
+        botStatsManager.commandUse("chats rating");
+
+        if (ctx.chat.type !== "private" && !cfg.ADMINS.includes(ctx.from?.id || -1)) {
+            await ctx
+                .reply(ctx.t("only_private_cmd", { command: "/tchats" }), {
+                    link_preview_options: { is_disabled: true },
+                    disable_notification: true,
+                })
+                .catch(console.error);
+            return;
+        }
+
+        ctx.api.sendChatAction(ctx.from!.id, "typing").catch((e) => {});
+
+        const cachedChart = cacheManager.ChartCache_Global.get("chats_rating:monthly");
+
+        if (cachedChart) {
+            await ctx.replyWithPhoto(cachedChart, {
+                caption: await this.prepareChatsRatingText(),
+            });
+            return;
+        }
+
+        this.statsChartService.requestBumpChartRating(ctx);
+        await this.prepareChatsRatingText();
+    }
+
     private async prepareUserStatsText(
         ctx: IGroupHearsCommandContext,
         user_id: number,
@@ -593,10 +624,6 @@ export class StatsService {
         }
 
         return -1;
-    }
-
-    private groupStatsCallback(ctx: IGroupHearsCommandContext) {
-        // Implementation for group stats callback
     }
 }
 
