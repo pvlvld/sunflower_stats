@@ -140,7 +140,7 @@ const CACHE = {
     user: cacheManager.ChartCache_User,
     ttl: cacheManager.TTLCache,
     statsText: new Map<string, string>(),
-    pendingCharts: new Map<string, unknown>(),
+    pendingCharts: new Map<string, { selfDestructTimer: NodeJS.Timeout }>(),
 };
 
 const cmdToDateRangeMap = {
@@ -571,8 +571,17 @@ export class StatsChartService {
         private cache = CACHE
     ) {
         const pendingChartsSet = this.cache.pendingCharts.set;
-        this.cache.pendingCharts.set = function (key: string, value: unknown) {
-            return pendingChartsSet.call(this, key, value);
+        this.cache.pendingCharts.set = function (key: string) {
+            const selfDestructTimer = setTimeout(() => {
+                this.delete(key);
+            }, 30000); // 30s
+            return pendingChartsSet.call(this, key, { selfDestructTimer });
+        };
+
+        const pendingChartDelete = this.cache.pendingCharts.delete;
+        this.cache.pendingCharts.delete = function (key: string) {
+            clearTimeout(this.get(key)?.selfDestructTimer);
+            return pendingChartDelete.call(this, key);
         };
     }
 
