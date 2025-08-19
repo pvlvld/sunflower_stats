@@ -135,12 +135,49 @@ function getTaskId(chat_id: number, target_id: number | string, date_range: IDat
     return `chat:${chat_id}:target:${target_id}:date_range:${date_range}`;
 }
 
+class PendingCharts {
+    private charts = new Map<string, { selfDestructTimer?: NodeJS.Timeout }>();
+
+    constructor() {
+        const pendingChartsSet = this.charts.set.bind(this.charts);
+        this.charts.set = function (key: string, value: { selfDestructTimer?: NodeJS.Timeout }) {
+            const selfDestructTimer = setTimeout(() => {
+                console.log(`Self-destructing pending chart: ${key}`);
+                this.delete(key);
+            }, 30000); // 30s
+            return pendingChartsSet(key, { selfDestructTimer });
+        };
+
+        const pendingChartDelete = this.charts.delete.bind(this.charts);
+        this.charts.delete = function (key: string) {
+            clearTimeout(this.get(key)?.selfDestructTimer);
+            return pendingChartDelete(key);
+        };
+    }
+
+    public set(key: string) {
+        this.charts.set(key, {});
+    }
+
+    public get(key: string) {
+        return this.charts.get(key);
+    }
+
+    public delete(key: string) {
+        return this.charts.delete(key);
+    }
+
+    public has(key: string) {
+        return this.charts.has(key);
+    }
+}
+
 const CACHE = {
     chat: cacheManager.ChartCache_Chat,
     user: cacheManager.ChartCache_User,
     ttl: cacheManager.TTLCache,
     statsText: new Map<string, string>(),
-    pendingCharts: new Map<string, { selfDestructTimer: NodeJS.Timeout }>(),
+    pendingCharts: new PendingCharts(),
 };
 
 const cmdToDateRangeMap = {
@@ -569,22 +606,7 @@ export class StatsChartService {
     private constructor(
         private rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(cfg.RABBITMQ_USER, cfg.RABBITMQ_PASSWORD),
         private cache = CACHE
-    ) {
-        const pendingChartsSet = this.cache.pendingCharts.set;
-        this.cache.pendingCharts.set = function (key: string) {
-            const selfDestructTimer = setTimeout(() => {
-                console.log(`Self-destructing pending chart: ${key}`);
-                this.delete(key);
-            }, 30000); // 30s
-            return pendingChartsSet.call(this, key, { selfDestructTimer });
-        };
-
-        const pendingChartDelete = this.cache.pendingCharts.delete;
-        this.cache.pendingCharts.delete = function (key: string) {
-            clearTimeout(this.get(key)?.selfDestructTimer);
-            return pendingChartDelete.call(this, key);
-        };
-    }
+    ) {}
 
     public async init() {
         // Linear statistics charts
