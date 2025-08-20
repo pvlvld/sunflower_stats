@@ -824,6 +824,7 @@ export class StatsChartService {
         type: IChartType
     ): Promise<IChartSettings & Pick<IChatSettings, "usechatbgforall">> {
         // Turned out that this logic is correct, and old one was with a bug. lol
+        // TODO: Check non premium user / chat behavior
         const [chatSettings, userSettings] = await Promise.all([
             getCachedOrDBChatSettings(chat_id),
             Database.user.settings.get(user_id),
