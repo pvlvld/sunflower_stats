@@ -136,6 +136,32 @@ function getTaskId(chat_id: number, target_id: number | string, date_range: IDat
     return `chat:${chat_id}:target:${target_id}:date_range:${date_range}`;
 }
 
+async function getChartSettings(
+    chat_id: number,
+    user_id: number,
+    type: IChartType
+): Promise<IChartSettings & Pick<IChatSettings, "usechatbgforall">> {
+    // Turned out that this logic is correct, and old one was with a bug. lol
+    // TODO: Check non premium user / chat behavior
+    const [chatSettings, userSettings] = await Promise.all([
+        getCachedOrDBChatSettings(chat_id),
+        Database.user.settings.get(user_id),
+    ]);
+
+    const settings = {
+        line_color: userSettings.line_color,
+        font_color: userSettings.font_color,
+        usechatbgforall: chatSettings.usechatbgforall,
+    };
+
+    if (settings.usechatbgforall || type === "chat") {
+        settings.line_color = chatSettings.line_color;
+        settings.font_color = chatSettings.font_color;
+    }
+
+    return settings;
+}
+
 class PendingCharts {
     private charts = new Map<string, { selfDestructTimer: NodeJS.Timeout }>();
 
@@ -675,7 +701,8 @@ export class StatsService {
 export class StatsChartService {
     private static instance: StatsChartService;
     private isInitialized = false;
-
+    private statsTextService = StatsTextService.getInstance();
+    private getChartSettings = getChartSettings;
     private constructor(
         private rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(cfg.RABBITMQ_USER, cfg.RABBITMQ_PASSWORD),
         private cache = CACHE
@@ -817,31 +844,6 @@ export class StatsChartService {
             },
             {}
         );
-    }
-    private async getChartSettings(
-        chat_id: number,
-        user_id: number,
-        type: IChartType
-    ): Promise<IChartSettings & Pick<IChatSettings, "usechatbgforall">> {
-        // Turned out that this logic is correct, and old one was with a bug. lol
-        // TODO: Check non premium user / chat behavior
-        const [chatSettings, userSettings] = await Promise.all([
-            getCachedOrDBChatSettings(chat_id),
-            Database.user.settings.get(user_id),
-        ]);
-
-        const settings = {
-            line_color: userSettings.line_color,
-            font_color: userSettings.font_color,
-            usechatbgforall: chatSettings.usechatbgforall,
-        };
-
-        if (settings.usechatbgforall || type === "chat") {
-            settings.line_color = chatSettings.line_color;
-            settings.font_color = chatSettings.font_color;
-        }
-
-        return settings;
     }
 
     private async chartConsumer(task: IChartResult, msg: ConsumeMessage | null) {
