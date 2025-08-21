@@ -28,7 +28,7 @@ const autoRetryTransformer = autoRetry({
     maxRetryAttempts: 1,
 });
 
-const i18n = new I18n<IContext>({
+export const i18n = new I18n<IContext>({
     defaultLocale: cfg.DEFAULT_LOCALE,
     directory: "locales",
     localeNegotiator,
