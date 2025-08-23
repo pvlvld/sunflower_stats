@@ -296,13 +296,13 @@ export class StatsTextService {
     }
 
     private async getChatStatsMessage(
-        ctx: IGroupHearsCommandContext,
+        chat_id: number,
+        chat_title: string,
         chatSettings: IChatSettings,
         stats: IDBChatUserStatsAndTotal[],
         activeUsers: Record<string, IActiveUser>,
         date_range: [string, string, IDateRange]
     ) {
-        const chat_id = ctx.chat.id;
         if (stats.length === 0) {
             return i18n.t(await LocaleService.get(chat_id), "stats-empty-date");
         }
@@ -315,7 +315,7 @@ export class StatsTextService {
                 }
 
                 return i18n.t(await LocaleService.get(chat_id), "stats-chat-period", {
-                    title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}»`,
+                    title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(chat_title)}»`,
                     period: `${date_range[0]}\n\n${await getStatsChatRating(
                         chat_id,
                         stats,
@@ -332,7 +332,7 @@ export class StatsTextService {
                 }
 
                 return i18n.t(await LocaleService.get(chat_id), "stats-chat-period", {
-                    title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}»`,
+                    title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(chat_title)}»`,
                     period: `${date_range[0]} - ${date_range[1]}\n\n${await getStatsChatRating(
                         chat_id,
                         stats,
@@ -347,7 +347,7 @@ export class StatsTextService {
             // Predefined date range
         } else {
             return `${i18n.t(await LocaleService.get(chat_id), "stats-chat-period", {
-                title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}»`,
+                title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(chat_title)}»`,
                 period: i18n.t(await LocaleService.get(chat_id), `stats-period-${date_range[2]}`),
             })}\n\n${await getStatsChatRating(
                 chat_id,
@@ -854,12 +854,14 @@ export class StatsChartService {
 
         let statsMsg: Message.PhotoMessage | Message.AnimationMessage | undefined;
         if (!task.raw) {
-            void (await bot.api.sendMessage(task.chat_id, text));
+            void (await bot.api.sendMessage(task.chat_id, text || ""));
         } else if (task.format === "image") {
-            statsMsg = await bot.api.sendPhoto(task.chat_id, new InputFile(Buffer.from(task.raw)), { caption: text });
+            statsMsg = await bot.api.sendPhoto(task.chat_id, new InputFile(Buffer.from(task.raw)), {
+                caption: text || "",
+            });
         } else if (task.format === "video") {
             statsMsg = await bot.api.sendAnimation(task.chat_id, new InputFile(Buffer.from(task.raw)), {
-                caption: text,
+                caption: text || "",
             });
         }
 
