@@ -267,14 +267,15 @@ export class StatsTextService {
     }
 
     public async prepareChatStatsText(
-        ctx: IGroupHearsCommandContext,
+        chat_id: number,
+        chat_title: string,
         chatSettings: IChatSettings,
         stats: IDBChatUserStatsAndTotal[],
         activeUsers: Record<string, IActiveUser>,
         date_range: [string, string, IDateRange]
     ) {
-        const text = await this.getChatStatsMessage(ctx, chatSettings, stats, activeUsers, date_range);
-        this.cache.statsText.set(getTaskId(ctx.chat.id, ctx.chat.id, date_range[2]), text);
+        const text = await this.getChatStatsMessage(chat_id, chat_title, chatSettings, stats, activeUsers, date_range);
+        this.cache.statsText.set(getTaskId(chat_id, chat_id, date_range[2]), text);
         return text;
     }
 
@@ -513,7 +514,8 @@ export class StatsService {
             date_range[2] === "custom"
         ) {
             const statsText = await this.statsTextService.prepareChatStatsText(
-                ctx,
+                chat_id,
+                ctx.chat.title,
                 chatSettings,
                 stats,
                 activeUsers,
@@ -536,7 +538,8 @@ export class StatsService {
 
         if (cachedChart.status === "ok") {
             const statsText = await this.statsTextService.prepareChatStatsText(
-                ctx,
+                chat_id,
+                ctx.chat.title,
                 chatSettings,
                 stats,
                 activeUsers,
@@ -557,7 +560,14 @@ export class StatsService {
         }
 
         this.statsChartService.requestStatsChart(ctx, chat_id, "chat", date_range[2]);
-        await this.statsTextService.prepareChatStatsText(ctx, chatSettings, stats, activeUsers, date_range);
+        await this.statsTextService.prepareChatStatsText(
+            chat_id,
+            ctx.chat.title,
+            chatSettings,
+            stats,
+            activeUsers,
+            date_range
+        );
     }
 
     public async chatsRatingCallback(ctx: IHearsCommandContext) {
