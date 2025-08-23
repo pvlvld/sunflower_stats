@@ -304,19 +304,19 @@ export class StatsTextService {
         if (stats.length === 0) {
             return ctx.t("stats-empty-date");
         }
-
+        const chat_id = ctx.chat.id;
         // Custom date
         if (date_range[2] === "custom") {
             // Single date
             if (date_range[0] === date_range[1]) {
                 if (!isValidDateOrDateRange([date_range[0]])) {
-                    return ctx.t("stats-date-help");
+                    return i18n.t(await LocaleService.get(chat_id), "stats-date-help");
                 }
 
-                return ctx.t("stats-chat-period", {
-                    title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
+                return i18n.t(await LocaleService.get(chat_id), "stats-chat-period", {
+                    title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}»`,
                     period: `${date_range[0]}\n\n${await getStatsChatRating(
-                        ctx,
+                        chat_id,
                         stats,
                         activeUsers,
                         chatSettings,
@@ -327,13 +327,13 @@ export class StatsTextService {
                 });
             } else {
                 if (!isValidDateOrDateRange([date_range[0], date_range[1]])) {
-                    return ctx.t("stats-date-help");
+                    return i18n.t(await LocaleService.get(chat_id), "stats-date-help");
                 }
 
-                return ctx.t("stats-chat-period", {
-                    title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
+                return i18n.t(await LocaleService.get(chat_id), "stats-chat-period", {
+                    title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}»`,
                     period: `${date_range[0]} - ${date_range[1]}\n\n${await getStatsChatRating(
-                        ctx,
+                        chat_id,
                         stats,
                         activeUsers,
                         chatSettings,
@@ -345,11 +345,11 @@ export class StatsTextService {
             }
             // Predefined date range
         } else {
-            return `${ctx.t("stats-chat-period", {
-                title: `${await getPremiumMarkSpaced(ctx.chat.id)}«${Escape.html(ctx.chat.title)}»`,
-                period: ctx.t(`stats-period-${date_range[2]}`),
+            return `${i18n.t(await LocaleService.get(chat_id), "stats-chat-period", {
+                title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(ctx.chat.title)}»`,
+                period: i18n.t(await LocaleService.get(chat_id), `stats-period-${date_range[2]}`),
             })}\n\n${await getStatsChatRating(
-                ctx,
+                chat_id,
                 stats,
                 activeUsers,
                 chatSettings,
