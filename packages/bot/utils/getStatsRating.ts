@@ -3,12 +3,13 @@ import getUserNameLink from "./getUserNameLink.js";
 import { IDateRange } from "../commands/stats_chat.js";
 import { active, IActiveUser } from "../redis/active.js";
 import Escape from "./escape.js";
-import { IContext } from "../types/context.js";
 import { IChatSettings } from "../consts/defaultChatSettings.js";
 import { getPremiumMarkSpaced } from "./getPremiumMarkSpaced.js";
+import { i18n } from "../bot.js";
+import { LocaleService } from "../cache/localeService.js";
 
 export async function getStatsChatRating(
-    ctx: IContext,
+    chat_id: number,
     stats: IDBChatUserStatsAndTotal[],
     activeUsers: Awaited<ReturnType<typeof active.getChatUsers>>,
     settings: IChatSettings,
@@ -26,7 +27,7 @@ export async function getStatsChatRating(
     let user: IDBChatUserStatsAndTotal;
     let userData: IActiveUser | undefined;
     let validUsersCount = 0;
-
+    const locale = await LocaleService.get(chat_id);
     for (let i = 0; i < stats.length; i++) {
         user = stats[i];
         userData = activeUsers?.[user.user_id];
@@ -50,7 +51,7 @@ export async function getStatsChatRating(
     }
 
     replyParts.push(
-        `\n${ctx.t("stats-total-amount")}<a href="${encodeStatsMetadata(
+        `\n${i18n.t(locale, "stats-total-amount")}<a href="${encodeStatsMetadata(
             validUsersCount,
             statsRowLimit,
             dateRange,
@@ -60,12 +61,12 @@ export async function getStatsChatRating(
     return replyParts.join("");
 }
 
-function getUserNameString(ctx: IContext, settings: IChatSettings, userData: IActiveUser, user_id: number) {
+async function getUserNameString(chat_id: number, settings: IChatSettings, userData: IActiveUser, user_id: number) {
     let result = "";
 
     if (settings.userstatslink) {
         result = getUserNameLink.html(
-            userData.nickname || userData.name || ctx.t("unknown"),
+            userData.nickname || userData.name || i18n.t(await LocaleService.get(chat_id), "unknown"),
             userData.username,
             user_id
         );
