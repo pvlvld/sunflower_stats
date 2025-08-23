@@ -230,6 +230,7 @@ const cmdToDateRangeMap = {
 export class StatsTextService {
     private static instance: StatsTextService;
     private cache = CACHE;
+    private getChartSettings = getChartSettings;
     private constructor() {}
 
     public static getInstance() {
@@ -301,10 +302,10 @@ export class StatsTextService {
         activeUsers: Record<string, IActiveUser>,
         date_range: [string, string, IDateRange]
     ) {
-        if (stats.length === 0) {
-            return ctx.t("stats-empty-date");
-        }
         const chat_id = ctx.chat.id;
+        if (stats.length === 0) {
+            return i18n.t(await LocaleService.get(chat_id), "stats-empty-date");
+        }
         // Custom date
         if (date_range[2] === "custom") {
             // Single date
