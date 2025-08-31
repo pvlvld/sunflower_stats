@@ -881,7 +881,6 @@ export class StatsChartService {
 
     private async chartConsumer(task: IChartResult, msg: ConsumeMessage | null) {
         let text = this.cache.statsText.get(task.task_id);
-        // TODO: fix possible race condition
         if (!text) {
             if (task.target_id > 0) {
                 let [stats, userActive] = await Promise.all([
