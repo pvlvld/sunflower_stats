@@ -27,7 +27,7 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
     ctx: IGroupContext,
     data: T,
     selfdestructstats: boolean,
-    reply_markup?: Menu<any>
+    reply_markup?: Menu<any>,
 ): Promise<
     | (T extends ISelfdestructMsgChartData
           ? T["chartFormat"] extends "image"

@@ -8,42 +8,44 @@ import { active } from "../../redis/active.js";
 import { GrammyError } from "grammy";
 import { SettingsService } from "../../utils/settingsService.js";
 
-const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").dynamic(async (ctx, range) => {
-    if (
-        !ctx.chat ||
-        !ctx.from ||
-        !ctx.msg ||
-        !(ctx.msg.caption || ctx.msg.text) ||
-        !["group", "supergroup"].includes(ctx.chat.type)
-    ) {
-        return;
-    }
+const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").dynamic(
+    async (ctx, range) => {
+        if (
+            !ctx.chat ||
+            !ctx.from ||
+            !ctx.msg ||
+            !(ctx.msg.caption || ctx.msg.text) ||
+            !["group", "supergroup"].includes(ctx.chat.type)
+        ) {
+            return;
+        }
 
-    const nextBtn: MenuButton<IContext> = {
-        text: "↝",
-        middleware: [
-            async (ctx: IContext) => {
-                changePage(ctx as IGroupTextContext, baseInfo, "next");
-            },
-        ],
-    };
-    const previousBtn: MenuButton<IContext> = {
-        text: "↜",
-        middleware: [
-            async (ctx: IContext) => {
-                changePage(ctx as IGroupTextContext, baseInfo, "previous");
-            },
-        ],
-    };
+        const nextBtn: MenuButton<IContext> = {
+            text: "↝",
+            middleware: [
+                async (ctx: IContext) => {
+                    changePage(ctx as IGroupTextContext, baseInfo, "next");
+                },
+            ],
+        };
+        const previousBtn: MenuButton<IContext> = {
+            text: "↜",
+            middleware: [
+                async (ctx: IContext) => {
+                    changePage(ctx as IGroupTextContext, baseInfo, "previous");
+                },
+            ],
+        };
 
-    range.add(previousBtn).add(nextBtn);
-    if (!isHasMetadata(ctx)) {
+        range.add(previousBtn).add(nextBtn);
+        if (!isHasMetadata(ctx)) {
+            return range;
+        }
+
+        const baseInfo = await getBaseInfo(ctx as IGroupTextContext);
         return range;
-    }
-
-    const baseInfo = await getBaseInfo(ctx as IGroupTextContext);
-    return range;
-});
+    },
+);
 
 const chopMetadataPart = "http://t.me/meta?";
 
@@ -63,11 +65,14 @@ function parseMetadata(raw_medatada_text: string) {
     return raw_medatada_text
         .slice(chopMetadataPart.length)
         .split("?")
-        .reduce((prev, curr) => {
-            parts = curr.split("=");
-            prev[parts[0]] = parts[1];
-            return prev;
-        }, {} as Record<string, string>);
+        .reduce(
+            (prev, curr) => {
+                parts = curr.split("=");
+                prev[parts[0]] = parts[1];
+                return prev;
+            },
+            {} as Record<string, string>,
+        );
 }
 
 async function getBaseInfo(ctx: IGroupTextContext) {
@@ -87,7 +92,7 @@ async function getBaseInfo(ctx: IGroupTextContext) {
 async function changePage(
     ctx: IGroupTextContext,
     baseInfo: Awaited<ReturnType<typeof getBaseInfo>>,
-    direction: "previous" | "next"
+    direction: "previous" | "next",
 ) {
     try {
         if (ctx.msg.caption) {
@@ -111,7 +116,10 @@ async function changePage(
     }
 }
 
-async function getPage(baseInfo: Awaited<ReturnType<typeof getBaseInfo>>, direction: "previous" | "next") {
+async function getPage(
+    baseInfo: Awaited<ReturnType<typeof getBaseInfo>>,
+    direction: "previous" | "next",
+) {
     const [stats, activeUsers] = await Promise.all([
         DBStats.chat.inRage(baseInfo.chat_id, baseInfo.dateRange as IDateRange),
         active.getChatUsers(baseInfo.chat_id),
@@ -138,7 +146,7 @@ async function getPage(baseInfo: Awaited<ReturnType<typeof getBaseInfo>>, direct
         baseInfo.settings,
         target_page,
         baseInfo.dateRange as IDateRange,
-        "caption"
+        "caption",
     );
 
     return statsMsesage;

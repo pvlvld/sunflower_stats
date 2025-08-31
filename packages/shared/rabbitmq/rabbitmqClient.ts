@@ -1,5 +1,10 @@
 import * as amqp from "amqplib";
-import type { IChartStatsTask, IChartResult, IBumpChartRatingTask, IBumpChartRatingResult } from "../types/types.js";
+import type {
+    IChartStatsTask,
+    IChartResult,
+    IBumpChartRatingTask,
+    IBumpChartRatingResult,
+} from "../types/types.js";
 
 type IQueues = {
     chart_stats_tasks: IChartStatsTask;
@@ -40,7 +45,9 @@ export class RabbitMQClient {
 
     public static getInstance(username: string, password: string): RabbitMQClient {
         if (!RabbitMQClient.instance) {
-            RabbitMQClient.instance = new RabbitMQClient(`amqp://${username}:${password}@localhost`);
+            RabbitMQClient.instance = new RabbitMQClient(
+                `amqp://${username}:${password}@localhost`,
+            );
         }
         return RabbitMQClient.instance;
     }
@@ -100,7 +107,7 @@ export class RabbitMQClient {
     public async produce<T extends keyof IQueues>(
         queueName: T,
         message: IQueues[T],
-        options: IProduceOptions
+        options: IProduceOptions,
     ): Promise<boolean> {
         await this.ensureConnection();
 
@@ -118,8 +125,11 @@ export class RabbitMQClient {
 
     public async consume<T extends keyof IQueues>(
         queueName: T,
-        onMessage: (message: IQueues[T], rawMessage: amqp.ConsumeMessage | null) => void | Promise<void>,
-        options: IConsumeOptions = {}
+        onMessage: (
+            message: IQueues[T],
+            rawMessage: amqp.ConsumeMessage | null,
+        ) => void | Promise<void>,
+        options: IConsumeOptions = {},
     ): Promise<void> {
         await this.ensureConnection();
 
@@ -165,18 +175,22 @@ export class RabbitMQClient {
                 noAck: finalOptions.noAck,
                 exclusive: finalOptions.exclusive,
                 consumerTag: finalOptions.consumerTag,
-            }
+            },
         );
     }
 
     private scheduleReconnect(): void {
         if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-            console.error(`Max reconnect attempts (${this.maxReconnectAttempts}) reached. Giving up.`);
+            console.error(
+                `Max reconnect attempts (${this.maxReconnectAttempts}) reached. Giving up.`,
+            );
             return;
         }
 
         this.reconnectAttempts++;
-        console.log(`Scheduling reconnect attempt ${this.reconnectAttempts} in ${this.reconnectDelay}ms`);
+        console.log(
+            `Scheduling reconnect attempt ${this.reconnectAttempts} in ${this.reconnectDelay}ms`,
+        );
 
         setTimeout(async () => {
             try {

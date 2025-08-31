@@ -15,17 +15,19 @@ const start_menu = new Menu<IContext>("sart-menu", {
         async (ctx) => {
             ctx.editMessageCaption({
                 caption: ctx.t("change-locale", {
-                    language: (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[await localeNegotiator(ctx)],
+                    language: (<ILocaleLanguageMap>LOCALE_LANGUAGE_MAP)[
+                        await localeNegotiator(ctx)
+                    ],
                 }),
             }).catch((e) => {
                 console.error("Error while changing locale:", e);
             });
-        }
+        },
     )
     .row()
     .text(
         (ctx) => ctx.t("button-show-commands"),
-        (ctx) => void help_cmd(ctx)
+        (ctx) => void help_cmd(ctx),
     )
     .row()
     .url((ctx) => ctx.t("button-add-bot"), "https://t.me/soniashnyk_statistics_bot?startgroup")

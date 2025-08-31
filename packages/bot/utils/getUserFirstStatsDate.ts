@@ -2,7 +2,7 @@ import { Database } from "../db/db.js";
 
 async function getUserFirstStatsDate(
     chat_id: number,
-    user_id: number
+    user_id: number,
 ): Promise<string | undefined> {
     return (
         ((

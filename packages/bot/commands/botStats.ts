@@ -36,7 +36,7 @@ async function getStatsMsg() {
         statsMsg += "\n\nЧастота використання команд:\n";
     }
     const sortedCmdKeys = Object.keys(BOT_STATS.commands).sort(
-        (c1, c2) => BOT_STATS.commands[c2] - BOT_STATS.commands[c1]
+        (c1, c2) => BOT_STATS.commands[c2] - BOT_STATS.commands[c1],
     );
 
     for (const cmd of sortedCmdKeys) {
@@ -86,7 +86,9 @@ export const botStatsManager = {
     },
     sendToAnalyticsChat: async () => {
         return await bot.api
-            .sendMessage(cfg.ANALYTICS_CHAT, (await getStatsMsg()) ?? "error getting stats", { message_thread_id: 3126 })
+            .sendMessage(cfg.ANALYTICS_CHAT, (await getStatsMsg()) ?? "error getting stats", {
+                message_thread_id: 3126,
+            })
             .catch((e) => {});
     },
 };

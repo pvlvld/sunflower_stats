@@ -19,12 +19,22 @@ class HistoryScanner extends MTProtoClient {
         super(cfg.API_ID, cfg.API_HASH);
     }
 
-    public async scanChat(identifier: string | number, chat_id: number, rescan = false): Promise<ScanReport> {
+    public async scanChat(
+        identifier: string | number,
+        chat_id: number,
+        rescan = false,
+    ): Promise<ScanReport> {
         if (this.isQueued(chat_id)) {
-            return new ScanReport(identifier, false, 0, `Chat ${chat_id} / ${identifier} already in queue.`, {
-                message: "history-scan-already-queued",
-                variables: {},
-            });
+            return new ScanReport(
+                identifier,
+                false,
+                0,
+                `Chat ${chat_id} / ${identifier} already in queue.`,
+                {
+                    message: "history-scan-already-queued",
+                    variables: {},
+                },
+            );
         }
 
         const scanTask = async () => {
@@ -42,7 +52,11 @@ class HistoryScanner extends MTProtoClient {
         return await this._queue.enqueue(scanTask, chat_id);
     }
 
-    private async _scanChat(identifier: string | number, chat_id?: number, rescan = false): Promise<ScanReport> {
+    private async _scanChat(
+        identifier: string | number,
+        chat_id?: number,
+        rescan = false,
+    ): Promise<ScanReport> {
         const chat_id_original = chat_id!;
         const startLogMsg = `HistoryScanner: scanning ${identifier}. Queue size: ${this._queue.size}`;
         console.info(startLogMsg);
@@ -87,7 +101,10 @@ class HistoryScanner extends MTProtoClient {
         //   );
         // }
 
-        if (typeof identifier === "string" && !(identifier.startsWith("@") || !identifier.startsWith("https://"))) {
+        if (
+            typeof identifier === "string" &&
+            !(identifier.startsWith("@") || !identifier.startsWith("https://"))
+        ) {
             identifier = chat_id;
         }
 
@@ -95,7 +112,11 @@ class HistoryScanner extends MTProtoClient {
         return scanReport;
     }
 
-    private async _scanHistory(identifier: number | string, chat_id: number, endDate: Date): Promise<ScanReport> {
+    private async _scanHistory(
+        identifier: number | string,
+        chat_id: number,
+        endDate: Date,
+    ): Promise<ScanReport> {
         const stats: IStats = new Map<number, number>();
         let iterator = this._client.iterHistory(identifier, { reverse: true });
         let totalCount = 0;
@@ -103,10 +124,17 @@ class HistoryScanner extends MTProtoClient {
 
         if (firstMessageDate === undefined) {
             console.error(`HistoryScanner: Failed to get first message date for ${identifier}.`);
-            return createReportAndLeave(chat_id, false, 0, "Не вдалося отримати історію чату.", this._client, {
-                message: "error-smtn-went-wrong-call-admin",
-                variables: {},
-            });
+            return createReportAndLeave(
+                chat_id,
+                false,
+                0,
+                "Не вдалося отримати історію чату.",
+                this._client,
+                {
+                    message: "error-smtn-went-wrong-call-admin",
+                    variables: {},
+                },
+            );
         }
 
         if (formattedDate.dateToYYYYMMDD(endDate) === "2023-12-31") {
@@ -168,7 +196,9 @@ class HistoryScanner extends MTProtoClient {
                     // }
 
                     if (this._isAfter(currentMsgDate, endDate)) {
-                        console.log(`Reached beginning scan time point.\nCurrent: ${currentMsgDate} End: ${endDate}`);
+                        console.log(
+                            `Reached beginning scan time point.\nCurrent: ${currentMsgDate} End: ${endDate}`,
+                        );
                         break main_loop;
                     }
 
@@ -184,7 +214,9 @@ class HistoryScanner extends MTProtoClient {
                 break main_loop;
             } catch (error: any) {
                 if ("seconds" in error) {
-                    console.info(`HistoryScanner: Sleeping for ${error.seconds} seconds. Target: ${identifier}`);
+                    console.info(
+                        `HistoryScanner: Sleeping for ${error.seconds} seconds. Target: ${identifier}`,
+                    );
                     await new Promise((resolve) => setTimeout(resolve, error.seconds * 1000));
                     iterator = this._client.iterHistory(identifier, {
                         reverse: true,
@@ -192,10 +224,17 @@ class HistoryScanner extends MTProtoClient {
                     });
                 } else {
                     console.error(`HistoryScanner: Error while scanning ${identifier}:`, error);
-                    return createReportAndLeave(chat_id, false, totalCount, "Unknown error.", this._client, {
-                        message: "error-smtn-went-wrong-call-admin",
-                        variables: {},
-                    });
+                    return createReportAndLeave(
+                        chat_id,
+                        false,
+                        totalCount,
+                        "Unknown error.",
+                        this._client,
+                        {
+                            message: "error-smtn-went-wrong-call-admin",
+                            variables: {},
+                        },
+                    );
                 }
             }
         }
@@ -221,8 +260,9 @@ class HistoryScanner extends MTProtoClient {
     }
 
     private async _getFirstMessageDate(identifier: string | number) {
-        const date = (await this._client.getHistory(identifier, { reverse: true, limit: 1 }).catch((e) => {}))?.[0]
-            ?.date;
+        const date = (
+            await this._client.getHistory(identifier, { reverse: true, limit: 1 }).catch((e) => {})
+        )?.[0]?.date;
         console.info(`HistoryScanner: _getFirstMessageDate: ${date}, ${identifier}`);
         return date;
     }
@@ -284,7 +324,7 @@ function createReportAndLeave(
     count: number,
     error: string,
     client: TelegramClient,
-    localeError: { message: string; variables: { [key: string]: string } }
+    localeError: { message: string; variables: { [key: string]: string } },
 ) {
     bot.api
         .sendMessage(cfg.ANALYTICS_CHAT, `Successfully scanned ${count} msg in ${identifier}`, {
@@ -301,7 +341,7 @@ class ScanReport {
         public status: boolean,
         public count: number,
         public error: string,
-        public localeError: { message: string; variables: { [key: string]: string } }
+        public localeError: { message: string; variables: { [key: string]: string } },
     ) {}
 }
 

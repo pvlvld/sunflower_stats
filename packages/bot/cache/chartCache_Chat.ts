@@ -9,7 +9,11 @@ class ChartCache_Chat {
 
     constructor() {
         this._chartCache = new Map();
-        this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered", chartFormat: "image" });
+        this._unrenderedChart = Object.freeze({
+            file_id: "",
+            status: "unrendered",
+            chartFormat: "image",
+        });
         this._skipChart = Object.freeze({ file_id: "", status: "skip", chartFormat: "image" });
     }
 

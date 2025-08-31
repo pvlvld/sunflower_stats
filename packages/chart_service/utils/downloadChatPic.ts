@@ -19,12 +19,17 @@ interface IFileResponse {
 
 async function downloadChatPic(chat_id: number) {
     // TODO: Replace with Moment.js and check last modified date.
-    if (new Date().getDate() % 7 !== 0 && fs.existsSync(`${config.PATHS.BASE_AVATAR_PATH}/${chat_id}.jpg`)) {
+    if (
+        new Date().getDate() % 7 !== 0 &&
+        fs.existsSync(`${config.PATHS.BASE_AVATAR_PATH}/${chat_id}.jpg`)
+    ) {
         console.log(`Avatar for chat ${chat_id} already exists, skipping download.`);
         return true;
     }
 
-    const chatResponse = await fetch(`https://api.telegram.org/bot${config.BOT_TOKEN}/getChat?chat_id=${chat_id}`)
+    const chatResponse = await fetch(
+        `https://api.telegram.org/bot${config.BOT_TOKEN}/getChat?chat_id=${chat_id}`,
+    )
         .then((response) => response.json() as Promise<IChatResponse>)
         .catch((e) => {
             console.error(e);
@@ -36,7 +41,7 @@ async function downloadChatPic(chat_id: number) {
     }
 
     const fileResponse = await fetch(
-        `https://api.telegram.org/bot${config.BOT_TOKEN}/getFile?file_id=${chatResponse.result.photo.small_file_id}`
+        `https://api.telegram.org/bot${config.BOT_TOKEN}/getFile?file_id=${chatResponse.result.photo.small_file_id}`,
     )
         .then((response) => response.json() as Promise<IFileResponse>)
         .catch((e) => {

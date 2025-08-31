@@ -1,7 +1,11 @@
 import type { IContext } from "../../types/context.js";
 import { Menu } from "@grammyjs/menu";
 import isChatOwner from "../../utils/isChatOwner.js";
-import { HIDDEN_LOCALES, ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../../consts/localeLanguageMap.js";
+import {
+    HIDDEN_LOCALES,
+    ILocaleLanguageMap,
+    LOCALE_LANGUAGE_MAP,
+} from "../../consts/localeLanguageMap.js";
 import { LocaleService } from "../../cache/localeService.js";
 import { getChatSettingsMessageText } from "../../utils/chatSettingsUtils.js";
 import { SettingsService } from "../../utils/settingsService.js";
@@ -61,7 +65,7 @@ const changeLocale_menu = new Menu<IContext>("changeLocale-menu", {
                 } else {
                     ctx.editMessageText(await getChatSettingsMessageText(ctx));
                 }
-            }
+            },
         );
     }
     return range;

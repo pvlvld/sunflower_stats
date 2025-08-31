@@ -25,12 +25,12 @@ async function isPremium(id: number) {
     if (id > 0) {
         //@ts-expect-error
         queryResult = await pool.query<IQueryResult>(
-            `SELECT status_premium as isPremium FROM users_son WHERE user_id = ${id}`
+            `SELECT status_premium as isPremium FROM users_son WHERE user_id = ${id}`,
         );
     } else {
         // @ts-expect-error
         queryResult = await pool.query<IQueryResult>(
-            `SELECT state as isPremium FROM chats_premium WHERE chat_id = ${id}`
+            `SELECT state as isPremium FROM chats_premium WHERE chat_id = ${id}`,
         );
     }
 

@@ -24,7 +24,9 @@ const HIDDEN_LOCALES = Object.freeze(["ks"]);
 type ILocaleCode = keyof typeof LOCALE_LANGUAGE_MAP;
 
 const LOCALE_LANGUAGE_MAP_REVERSED = Object.freeze(
-    Object.fromEntries(Object.entries(LOCALE_LANGUAGE_MAP).map(([locale, language]) => [language, locale]))
+    Object.fromEntries(
+        Object.entries(LOCALE_LANGUAGE_MAP).map(([locale, language]) => [language, locale]),
+    ),
 );
 
 type _ILocaleLanguageMap = typeof LOCALE_LANGUAGE_MAP;
@@ -32,4 +34,10 @@ type ILocaleLanguageMap = {
     [K in keyof _ILocaleLanguageMap | (string & {})]: string;
 };
 
-export { LOCALE_LANGUAGE_MAP, ILocaleLanguageMap, LOCALE_LANGUAGE_MAP_REVERSED, ILocaleCode, HIDDEN_LOCALES };
+export {
+    LOCALE_LANGUAGE_MAP,
+    ILocaleLanguageMap,
+    LOCALE_LANGUAGE_MAP_REVERSED,
+    ILocaleCode,
+    HIDDEN_LOCALES,
+};

@@ -31,12 +31,15 @@ async function del_user_active(ctx: IGroupHearsContext) {
 
 async function determineTargetUserId(ctx: IGroupHearsContext): Promise<number> {
     const chatMember = await ctx.getChatMember(ctx.from?.id || -1).catch(() => {});
-    const isCanDelOthers = chatMember?.status === "creator" || cfg.ADMINS.includes(ctx.from?.id || -1);
+    const isCanDelOthers =
+        chatMember?.status === "creator" || cfg.ADMINS.includes(ctx.from?.id || -1);
     const rawTarget = (ctx.msg.text ?? ctx.msg.caption).split(" ").at(-1)!;
 
     return isCanDelOthers
         ? ctx.msg.reply_to_message?.from?.id ||
-              (["вступ", "!ссприховати"].includes(rawTarget) ? undefined : await getUserId(rawTarget, ctx.chat.id)) ||
+              (["вступ", "!ссприховати"].includes(rawTarget)
+                  ? undefined
+                  : await getUserId(rawTarget, ctx.chat.id)) ||
               ctx.from.id
         : ctx.from.id;
 }

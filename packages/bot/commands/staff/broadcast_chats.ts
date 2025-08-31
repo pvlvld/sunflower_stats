@@ -29,7 +29,7 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     ctx.reply(
         `Розрочато розсилку.${ignorePremium ? "\n- Ігнорування преміум чатів." : ""}${
             skipMafia ? "\n- Ігнорування чатів мафії." : ""
-        }${skipNew ? "\n- Ігнорування нових чатів." : ""}`
+        }${skipNew ? "\n- Ігнорування нових чатів." : ""}`,
     ).catch((e) => {});
     await cacheManager.PremiumStatusCache.seed_chats();
     const chats = await active.getAllChatIds();
@@ -51,7 +51,8 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
                 if (ignorePremium && cacheManager.PremiumStatusCache.get(chat).status) break;
 
                 if (skipNew) {
-                    const firstRecordDate = (await Database.stats.chat.firstRecordDate(chat)) || new Date();
+                    const firstRecordDate =
+                        (await Database.stats.chat.firstRecordDate(chat)) || new Date();
                     // Skip if the first record date is less than 5 days ago
                     if (firstRecordDate > moment().subtract(5, "days").toDate()) break;
                 }
@@ -61,17 +62,24 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
                     if (chatMembersCount > 149) break;
 
                     // TODO: make this prettier. preserve monomorphic type if possible
-                    const isMafiaBotIn = await ctx.api.getChatMember(chat, 5837576145).catch((e) => {
-                        return { status: "error" };
-                    });
+                    const isMafiaBotIn = await ctx.api
+                        .getChatMember(chat, 5837576145)
+                        .catch((e) => {
+                            return { status: "error" };
+                        });
                     // Mafia bot works only with admin rights
                     if (["administrator"].includes(isMafiaBotIn?.status)) break;
                 }
                 try {
                     totalAttemptsSent++;
-                    void (await ctx.api.forwardMessage(chat, ctx.chat.id, ctx.msg.reply_to_message.message_id, {
-                        disable_notification: true,
-                    }));
+                    void (await ctx.api.forwardMessage(
+                        chat,
+                        ctx.chat.id,
+                        ctx.msg.reply_to_message.message_id,
+                        {
+                            disable_notification: true,
+                        },
+                    ));
                     successfullySent++;
                 } catch (e) {
                     console.error(e);
@@ -95,11 +103,11 @@ async function broadcast_chats_cmd(ctx: IGroupHearsContext): Promise<void> {
     void (await ctx.api
         .sendMessage(
             cfg.ANALYTICS_CHAT ?? -1,
-            `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${chats.length}`
+            `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${chats.length}`,
         )
         .catch((e) => {}));
     console.info(
-        `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${chats.length}`
+        `Розсилку закінчено.\nУспішно надіслано ${successfullySent} повідомлень.\nСпроб надіслати: ${totalAttemptsSent}\nЧатів в списку: ${chats.length}`,
     );
 }
 

@@ -16,7 +16,7 @@ class DbChatSettingWrapper {
         try {
             settings_db = (
                 await this._poolManager.getPoolRead.query(
-                    `SELECT charts, statsadminsonly, usechatbgforall, selfdestructstats, userstatslink, line_color, font_color, locale FROM chats WHERE chat_id = ${chat_id};`
+                    `SELECT charts, statsadminsonly, usechatbgforall, selfdestructstats, userstatslink, line_color, font_color, locale FROM chats WHERE chat_id = ${chat_id};`,
                 )
             ).rows[0] as IChatSettings | undefined;
         } catch (e) {
@@ -49,7 +49,9 @@ class DbChatSettingWrapper {
         return settings_db;
     }
 
-    public async getChatsLocaleWithActiveUsersSinceNDays(nDays: number): Promise<Array<[number, string]>> {
+    public async getChatsLocaleWithActiveUsersSinceNDays(
+        nDays: number,
+    ): Promise<Array<[number, string]>> {
         try {
             const result = await this._poolManager.getPoolRead.query({
                 text: `SELECT c.chat_id, c.locale

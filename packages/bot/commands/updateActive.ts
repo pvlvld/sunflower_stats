@@ -24,7 +24,10 @@ async function updateActive_command(ctx: IGroupHearsCommandContext) {
 
     ctx.api.config.use(autoRetry());
 
-    const [activeMembers, memberCount] = await Promise.all([active.getChatUsers(ctx.chat.id), ctx.getChatMemberCount()]);
+    const [activeMembers, memberCount] = await Promise.all([
+        active.getChatUsers(ctx.chat.id),
+        ctx.getChatMemberCount(),
+    ]);
 
     // Convert to array and inject user_id into each member object
     const members = Object.entries(activeMembers)
@@ -43,9 +46,11 @@ async function updateActive_command(ctx: IGroupHearsCommandContext) {
             continue;
         }
 
-        apiChatMember = await ctx.api.getChatMember(ctx.chat.id, parseInt(user.user_id)).catch((e) => {
-            return { status: "left" } as Awaited<ReturnType<IContext["api"]["getChatMember"]>>;
-        });
+        apiChatMember = await ctx.api
+            .getChatMember(ctx.chat.id, parseInt(user.user_id))
+            .catch((e) => {
+                return { status: "left" } as Awaited<ReturnType<IContext["api"]["getChatMember"]>>;
+            });
 
         // Skip bots
         if (apiChatMember.user.is_bot) {
@@ -63,7 +68,7 @@ async function updateActive_command(ctx: IGroupHearsCommandContext) {
 
     await ctx
         .reply(
-            `Successfully updated active members list.\n\nTotal members: ${memberCount}\nRemoved members: ${membersRemoved}`
+            `Successfully updated active members list.\n\nTotal members: ${memberCount}\nRemoved members: ${membersRemoved}`,
         )
         .catch((e) => {});
 }

@@ -10,8 +10,8 @@ const DefaultChatSettings = Object.freeze(
             selfdestructstats: false,
             userstatslink: true,
         },
-        DefaultUserSettings
-    )
+        DefaultUserSettings,
+    ),
 );
 
 type IChatSettings = FixBooleanProperties<typeof DefaultChatSettings>;

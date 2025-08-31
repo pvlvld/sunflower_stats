@@ -50,7 +50,13 @@ async function main() {
     let server: http.Server | ReturnType<typeof createServer>;
     let runner: ReturnType<typeof run> = undefined as any;
 
-    const allowed_updates = ["message", "chat_member", "my_chat_member", "callback_query", "edited_message"] as const;
+    const allowed_updates = [
+        "message",
+        "chat_member",
+        "my_chat_member",
+        "callback_query",
+        "edited_message",
+    ] as const;
 
     regHandlers();
     bot.use(ActiveCollectorWrapper());
@@ -59,7 +65,7 @@ async function main() {
         limit({
             timeFrame: 1500,
             limit: 1,
-        })
+        }),
     );
     bot.use(autoQuote({ allowSendingWithoutReply: true }));
     bot.use(autoThread());

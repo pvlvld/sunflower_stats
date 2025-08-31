@@ -76,7 +76,7 @@ async function getUserData(task: IChartStatsTask) {
             `SELECT to_char(date, 'YYYY-MM-DD') AS x, count AS y
       FROM stats_daily
       WHERE user_id = ${task.user_id} AND chat_id = ${task.chat_id}
-      ORDER BY date;`
+      ORDER BY date;`,
         )
     ).rows;
 }
@@ -90,7 +90,7 @@ async function getUserDataGlobal(task: IChartStatsTask) {
                                 WHERE user_id = $1 AND date >= NOW() - INTERVAL '1 year'
                                 GROUP BY date
                                 ORDER by date`,
-            [task.user_id]
+            [task.user_id],
         )
     ).rows as { x: string; y: number }[];
 }
@@ -104,14 +104,15 @@ async function getBotData() {
                     WHERE date > CURRENT_DATE - INTERVAL '1 year' 
                       AND date < CURRENT_DATE
                     GROUP BY date
-                    ORDER BY date;`
+                    ORDER BY date;`,
         )
     ).rows;
 }
 
 async function getChatsTopMonthlyData() {
     await DBPoolManager.ensureConnection();
-    return (await DBPoolManager.getPool.query(queries.stats.global.topChats.monthlyRankAndTotal)).rows as {
+    return (await DBPoolManager.getPool.query(queries.stats.global.topChats.monthlyRankAndTotal))
+        .rows as {
         month: string;
         chat_id: number;
         title: string;

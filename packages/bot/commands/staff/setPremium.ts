@@ -53,14 +53,15 @@ async function setPremium_command(ctx: IGroupHearsCommandContext) {
 
             if (args[1] === "1" && info[0].status_premium === 1) {
                 ctx.reply(
-                    `User ${args[0]} is already premium. New date: ${newDate}. Use /prem ${args[0]} 0 to remove premium.`
+                    `User ${args[0]} is already premium. New date: ${newDate}. Use /prem ${args[0]} 0 to remove premium.`,
                 ).catch((e) => {});
             }
         } else {
             newDate = targetDate;
         }
 
-        const update_query = "UPDATE users_son SET status_premium = ?, date_ended_premium = ? WHERE user_id = ?;";
+        const update_query =
+            "UPDATE users_son SET status_premium = ?, date_ended_premium = ? WHERE user_id = ?;";
         cacheManager.PremiumStatusCache.set(+args[0], true);
         await db.query(update_query, [args[1], args[1] === "1" ? newDate : null, args[0]]);
     } else {
@@ -72,7 +73,8 @@ async function setPremium_command(ctx: IGroupHearsCommandContext) {
             ? moment(new Date(args[2])).format("YYYY-MM-DD")
             : moment().add(1, "month").format("YYYY-MM-DD");
 
-        const insert_query = "INSERT INTO users_son (user_id, status_premium, date_ended_premium) VALUES (?, ?, ?);";
+        const insert_query =
+            "INSERT INTO users_son (user_id, status_premium, date_ended_premium) VALUES (?, ?, ?);";
         cacheManager.PremiumStatusCache.set(+args[0], true);
         await db.query(insert_query, [args[0], args[1], args[1] === "1" ? targetDate : null]);
     }

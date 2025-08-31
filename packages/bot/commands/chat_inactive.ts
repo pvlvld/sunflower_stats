@@ -31,7 +31,10 @@ async function getInactivePageMessage(chat_id: number, page: number) {
     return {
         status: true,
         message: inactiveUsers
-            .map((target, i) => `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(users, target)}`)
+            .map(
+                (target, i) =>
+                    `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(users, target)}`,
+            )
             .join("\n"),
     };
 }
@@ -40,12 +43,15 @@ function genUserPageRecord(users: Awaited<ReturnType<typeof active.getChatUsers>
     return `<b>${getUserNameLink.html(
         users[target]?.nickname || users[target]?.name || "🌻",
         users[target]?.username,
-        target
+        target,
     )}</b> — ${users[target]?.active_last || "🌻"}`;
 }
 
 function getInactivePage(users: Awaited<ReturnType<typeof active.getChatUsers>>, page: number) {
-    return getSortedInactive(users).slice(PAGE_LENGTH * (page - 1), PAGE_LENGTH * (page - 1) + PAGE_LENGTH);
+    return getSortedInactive(users).slice(
+        PAGE_LENGTH * (page - 1),
+        PAGE_LENGTH * (page - 1) + PAGE_LENGTH,
+    );
 }
 
 function getSortedInactive(users: Awaited<ReturnType<typeof active.getChatUsers>>) {

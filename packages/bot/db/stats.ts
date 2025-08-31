@@ -254,7 +254,9 @@ class DBUserStats {
         const query = `SELECT min(date) FROM stats_daily WHERE chat_id = ${chat_id} AND user_id = ${user_id}`;
 
         try {
-            return new Date((await this._dbPooolManager.getPoolRead.query(query)).rows[0] as string);
+            return new Date(
+                (await this._dbPooolManager.getPoolRead.query(query)).rows[0] as string,
+            );
         } catch (error) {
             return undefined;
         }
@@ -397,7 +399,11 @@ class DBChatStats {
         }
     }
 
-    async usersBelowTargetMessagesLastXDays(chat_id: number, targetMessagesCount: string, targetDaysCount: string) {
+    async usersBelowTargetMessagesLastXDays(
+        chat_id: number,
+        targetMessagesCount: string,
+        targetDaysCount: string,
+    ) {
         try {
             return (
                 await this._dbPoolManager.getPoolRead.query({
@@ -421,8 +427,11 @@ class DBBotStats {
 
     public async topChatsMonthlyRating() {
         try {
-            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.monthlyRankAndTotal))
-                .rows as {
+            return (
+                await this._dbPoolManager.getPoolRead.query(
+                    queries.stats.global.topChats.monthlyRankAndTotal,
+                )
+            ).rows as {
                 month: string;
                 chat_id: number;
                 title: string;
@@ -431,13 +440,21 @@ class DBBotStats {
             }[];
         } catch (error) {
             console.error(error);
-            return [] as { month: string; chat_id: number; title: string; total_messages: number; rank: number }[];
+            return [] as {
+                month: string;
+                chat_id: number;
+                title: string;
+                total_messages: number;
+                rank: number;
+            }[];
         }
     }
 
     public async topChatsPastMonthRating() {
         try {
-            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.month)).rows as {
+            return (
+                await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.month)
+            ).rows as {
                 month: string;
                 chat_id: number;
                 title: string;
@@ -446,14 +463,23 @@ class DBBotStats {
             }[];
         } catch (error) {
             console.error(error);
-            return [] as { month: string; chat_id: number; title: string; total_messages: number; rank: number }[];
+            return [] as {
+                month: string;
+                chat_id: number;
+                title: string;
+                total_messages: number;
+                rank: number;
+            }[];
         }
     }
 
     public async topChatsWeeklyRating() {
         try {
-            return (await this._dbPoolManager.getPoolRead.query(queries.stats.global.topChats.weeklyRankAndTotal))
-                .rows as {
+            return (
+                await this._dbPoolManager.getPoolRead.query(
+                    queries.stats.global.topChats.weeklyRankAndTotal,
+                )
+            ).rows as {
                 chat_id: number;
                 title: string;
                 total_messages: number;

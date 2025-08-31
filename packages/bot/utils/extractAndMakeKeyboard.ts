@@ -5,7 +5,7 @@ type IKeyboard = InlineKeyboard | undefined;
 
 function extractAndMakeKeyboard(
     ctx: IGroupHearsContext,
-    text: string
+    text: string,
 ): { isKeyboard: boolean; keyboard: IKeyboard; text: string } | undefined {
     let isKeyboard = false;
     let keyboard: IKeyboard = undefined;

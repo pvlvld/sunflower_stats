@@ -12,7 +12,7 @@ function createScheduler() {
         },
         {
             timezone: "Europe/Kiev",
-        }
+        },
     );
 }
 

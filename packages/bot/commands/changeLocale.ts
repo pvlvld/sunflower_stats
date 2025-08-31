@@ -7,9 +7,15 @@ import isChatOwner from "../utils/isChatOwner.js";
 import { localeNegotiator } from "../utils/localeNegotiator.js";
 import { SettingsService } from "../utils/settingsService.js";
 
-async function changeLocaleCommand(ctx: IHearsCommandContext | IGroupMyChatMemberContext, isForced = false) {
+async function changeLocaleCommand(
+    ctx: IHearsCommandContext | IGroupMyChatMemberContext,
+    isForced = false,
+) {
     if (!isForced) {
-        if (ctx.chat?.type !== "private" && !(ctx.from && ctx.chat && (await isChatOwner(ctx.chat.id, ctx.from.id)))) {
+        if (
+            ctx.chat?.type !== "private" &&
+            !(ctx.from && ctx.chat && (await isChatOwner(ctx.chat.id, ctx.from.id)))
+        ) {
             return;
         }
     }

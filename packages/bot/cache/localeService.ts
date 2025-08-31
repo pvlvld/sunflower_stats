@@ -1,7 +1,11 @@
 import { LRUCache } from "lru-cache";
 import { Database } from "../db/db.js";
 import cfg from "../config.js";
-import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP, LOCALE_LANGUAGE_MAP_REVERSED } from "../consts/localeLanguageMap.js";
+import {
+    ILocaleLanguageMap,
+    LOCALE_LANGUAGE_MAP,
+    LOCALE_LANGUAGE_MAP_REVERSED,
+} from "../consts/localeLanguageMap.js";
 
 class LocaleService {
     private static readonly cache = new LRUCache<number, string>({ max: 3000, allowStale: true });
@@ -28,7 +32,8 @@ class LocaleService {
     }
 
     public static async fetch(id: number) {
-        const settings = id > 0 ? await Database.user.settings.get(id) : await Database.chat.settings.get(id);
+        const settings =
+            id > 0 ? await Database.user.settings.get(id) : await Database.chat.settings.get(id);
         return settings.locale || this._defaultLocale;
     }
 
@@ -40,7 +45,9 @@ class LocaleService {
     public static isLocale = this.isValid;
 
     public static resolveFromLocaleName(localeName: string): string | undefined {
-        return LOCALE_LANGUAGE_MAP_REVERSED[localeName as keyof typeof LOCALE_LANGUAGE_MAP_REVERSED];
+        return LOCALE_LANGUAGE_MAP_REVERSED[
+            localeName as keyof typeof LOCALE_LANGUAGE_MAP_REVERSED
+        ];
     }
 
     public static async seed() {

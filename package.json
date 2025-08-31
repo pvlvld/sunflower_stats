@@ -20,6 +20,7 @@
         "start-node-i": "export NODE_ENV='production' && pm2 start build/index.js --node-args=\"--expose-gc --inspect --no-compilation-cache --optimize_for_size\" --name stats --kill-timeout 60000 --log-date-format 'MM-DD HH:mm:ss'",
         "compile": "tsc",
         "dev": "DEV=true bun --watch src/index.ts",
+        "format": "prettier --write \"packages/**/*.ts\"",
         "prepare": "husky"
     },
     "author": {
@@ -66,6 +67,7 @@
         "@types/node": "^24.0.3",
         "@types/node-cron": "^3.0.11",
         "@types/pg": "^8.15.4",
+        "prettier": "^3.6.2",
         "typescript": "^5.9.0-beta"
     },
     "overrides": {

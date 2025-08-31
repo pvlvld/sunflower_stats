@@ -15,7 +15,7 @@ async function removeChatData(chat_id: string | number): Promise<number> {
                   WHERE chat_id = ${chat_id}
                   RETURNING *
                   )
-              SELECT count(*) FROM deleted_rows;`
+              SELECT count(*) FROM deleted_rows;`,
         );
     } catch (error) {
         console.error(error);

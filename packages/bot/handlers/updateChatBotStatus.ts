@@ -61,19 +61,21 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
 
                 await ctx.api.sendMessage(
                     cfg.ANALYTICS_CHAT,
-                    `✅📈 #Join ${Escape.html(ctx.chat.title)}\nMembers count: <b>${membersCount}</b>\nID: ${
-                        ctx.chat.id
-                    }\nusername: @${ctx.chat.username}\ninvite:${invite}\nInvited by: ${getUserNameLink.html(
+                    `✅📈 #Join ${Escape.html(
+                        ctx.chat.title,
+                    )}\nMembers count: <b>${membersCount}</b>\nID: ${ctx.chat.id}\nusername: @${
+                        ctx.chat.username
+                    }\ninvite:${invite}\nInvited by: ${getUserNameLink.html(
                         ctx.from.first_name,
                         ctx.from.username,
-                        ctx.from.id
+                        ctx.from.id,
                     )} (id: ${ctx.from.id})`,
                     {
                         reply_parameters: { message_id: -1, allow_sending_without_reply: true },
                         link_preview_options: { is_disabled: true },
                         disable_notification: true,
                         message_thread_id: 3984,
-                    }
+                    },
                 );
             } catch (e) {}
         }
@@ -87,9 +89,9 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
         let admins_text = "";
 
         admins.forEach((a) => {
-            admins_text += `<a href="tg://user?id=${a.user_id}">${users?.[a.user_id]?.name || a.status}</a>: ${
-                a.status
-            }\n`;
+            admins_text += `<a href="tg://user?id=${a.user_id}">${
+                users?.[a.user_id]?.name || a.status
+            }</a>: ${a.status}\n`;
         });
 
         if (admins_text.length) {
@@ -101,16 +103,18 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
                 cfg.ANALYTICS_CHAT,
                 `❌📉 #Left ${Escape.html(ctx.chat.title)}\nID: ${ctx.chat.id}\nusername: @${
                     ctx.chat.username
-                }\nKicked by: ${getUserNameLink.html(ctx.from.first_name, ctx.from.username, ctx.from.id)} (id: ${
-                    ctx.from.id
-                })\n${admins_text}`,
+                }\nKicked by: ${getUserNameLink.html(
+                    ctx.from.first_name,
+                    ctx.from.username,
+                    ctx.from.id,
+                )} (id: ${ctx.from.id})\n${admins_text}`,
                 {
                     // reply_markup: leftGroup_menu,
                     reply_parameters: { message_id: -1, allow_sending_without_reply: true },
                     link_preview_options: { is_disabled: true },
                     disable_notification: true,
                     message_thread_id: 3984,
-                }
+                },
             )
             .catch((e) => {});
     }
@@ -125,7 +129,7 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
                 VALUES (${ctx.chat.id}, '$1')
                 ON CONFLICT (chat_id)
                 DO UPDATE SET title = EXCLUDED.title;`,
-            [ctx.chat.title]
+            [ctx.chat.title],
         )
         .catch((e) => {});
 }

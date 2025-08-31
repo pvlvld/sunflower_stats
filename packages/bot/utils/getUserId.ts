@@ -1,7 +1,10 @@
 import { active } from "../redis/active.js";
 
 /** Returns user_id or -1 on fail*/
-async function getUserId(wantedUser: string | undefined, chat_id: number | string): Promise<number> {
+async function getUserId(
+    wantedUser: string | undefined,
+    chat_id: number | string,
+): Promise<number> {
     if (wantedUser === undefined) return -1;
     const users = await active.getChatUsers(+chat_id);
     if (wantedUser.startsWith("@")) {

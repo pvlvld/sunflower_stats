@@ -43,7 +43,7 @@ function getTaskId(chat_id: number, target_id: number | string, date_range: IDat
 async function getChartSettings(
     chat_id: number,
     user_id: number,
-    type: IChartType
+    type: IChartType,
 ): Promise<IChartSettings & Pick<IChatSettings, "usechatbgforall">> {
     // Turned out that this logic is correct, and old one was with a bug. lol
     // TODO: Check non premium user / chat behavior
@@ -146,21 +146,21 @@ export class StatsTextService {
 
     public async prepareUserTopChatsText(
         ctx: IGroupHearsCommandContext | ChatTypeContext<IHearsCommandContext, "private">,
-        data: Awaited<ReturnType<typeof Database.stats.user.topChats>>
+        data: Awaited<ReturnType<typeof Database.stats.user.topChats>>,
     ) {
         const top: string[] = [];
         for (let i = 0; i < data.length; i++) {
             top.push(
                 `${i === 0 ? "" : "\n"}${1 + i}. «${Escape.html(data[i].title)}» - ${(
                     data[i].chat_count as number
-                ).toLocaleString("fr-FR")}`
+                ).toLocaleString("fr-FR")}`,
             );
         }
         const text = ctx.t("stats-user-top-chats", {
             name: `${await getPremiumMarkSpaced(ctx.from.id)}${getUserNameLink.html(
                 ctx.from.first_name,
                 ctx.from.username,
-                ctx.from.id
+                ctx.from.id,
             )}`,
             top: top.join(""),
             totalMessages: (+data[0]?.total_count || 0).toLocaleString("fr-FR"),
@@ -176,9 +176,16 @@ export class StatsTextService {
         chatSettings: IChatSettings,
         stats: IDBChatUserStatsAndTotal[],
         activeUsers: Record<string, IActiveUser>,
-        date_range: [string, string, IDateRange]
+        date_range: [string, string, IDateRange],
     ) {
-        const text = await this.getChatStatsMessage(chat_id, chat_title, chatSettings, stats, activeUsers, date_range);
+        const text = await this.getChatStatsMessage(
+            chat_id,
+            chat_title,
+            chatSettings,
+            stats,
+            activeUsers,
+            date_range,
+        );
         this.cache.statsText.set(getTaskId(chat_id, chat_id, date_range[2]), text);
         return text;
     }
@@ -208,9 +215,9 @@ export class StatsTextService {
         for (let i = 0; i < data.length; i++) {
             chat = data[i];
             top.push(
-                `${i === 0 ? "" : "\n"}${1 + i}.${await getPremiumMarkSpaced(chat.chat_id)}«${Escape.html(
-                    chat.title
-                )}» - ${chat.total_messages.toLocaleString("fr-FR")}`
+                `${i === 0 ? "" : "\n"}${1 + i}.${await getPremiumMarkSpaced(
+                    chat.chat_id,
+                )}«${Escape.html(chat.title)}» - ${chat.total_messages.toLocaleString("fr-FR")}`,
             );
         }
         const text = top.join("");
@@ -222,7 +229,7 @@ export class StatsTextService {
         chat_id: number,
         user_id: number,
         stats: IDBChatUserStatsAll,
-        active: IActiveUser
+        active: IActiveUser,
     ): Promise<string> {
         const text = await getUserStatsMessage(chat_id, user_id, stats, active);
         this.cache.statsText.set(getTaskId(chat_id, user_id, "all"), text);
@@ -235,7 +242,7 @@ export class StatsTextService {
         chatSettings: IChatSettings,
         stats: IDBChatUserStatsAndTotal[],
         activeUsers: Record<string, IActiveUser>,
-        date_range: [string, string, IDateRange]
+        date_range: [string, string, IDateRange],
     ) {
         if (stats.length === 0) {
             return i18n.t(await LocaleService.get(chat_id), "stats-empty-date");
@@ -257,7 +264,7 @@ export class StatsTextService {
                         chatSettings,
                         1,
                         "date",
-                        "text"
+                        "text",
                     )}`,
                 });
             } else {
@@ -274,7 +281,7 @@ export class StatsTextService {
                         chatSettings,
                         1,
                         "date",
-                        "text"
+                        "text",
                     )}`,
                 });
             }
@@ -291,7 +298,7 @@ export class StatsTextService {
                 1,
                 date_range[2],
                 // chart ? "caption" : "text"
-                "caption"
+                "caption",
             )}`;
         }
     }
@@ -335,7 +342,10 @@ export class StatsService {
         }
         let text =
             cacheManager.TextCache.get(`${ctx.from.id}_top_chats`) ||
-            (await this.statsTextService.prepareUserTopChatsText(ctx, await Database.stats.user.topChats(target_id)));
+            (await this.statsTextService.prepareUserTopChatsText(
+                ctx,
+                await Database.stats.user.topChats(target_id),
+            ));
 
         if (chart_cached.status === "ok") {
             if (chart_cached.chartFormat === "video") {
@@ -364,7 +374,10 @@ export class StatsService {
 
         const chat_id = ctx.chat.id;
         // TODO: implement correct logic
-        let target_id = isPersonal && ctx.msg.reply_to_message?.from ? ctx.msg.reply_to_message.from.id : ctx.from.id;
+        let target_id =
+            isPersonal && ctx.msg.reply_to_message?.from
+                ? ctx.msg.reply_to_message.from.id
+                : ctx.from.id;
         const original_target = target_id;
         let userStatsPromise = Database.stats.user.all(chat_id, target_id);
 
@@ -394,7 +407,7 @@ export class StatsService {
                 chat_id,
                 target_id,
                 await userStatsPromise,
-                users[target_id]
+                users[target_id],
             );
             this.removeCachedStatsText(chat_id, target_id, "all");
             await sendSelfdestructMessage(
@@ -404,7 +417,7 @@ export class StatsService {
                     text: statsText,
                     chart: undefined,
                 },
-                chatSettings.selfdestructstats
+                chatSettings.selfdestructstats,
             );
             return;
         }
@@ -416,7 +429,7 @@ export class StatsService {
                 chat_id,
                 target_id,
                 await userStatsPromise,
-                users[target_id]
+                users[target_id],
             );
             this.removeCachedStatsText(chat_id, target_id, "all");
             await sendSelfdestructMessage(
@@ -427,13 +440,18 @@ export class StatsService {
                     chart: cachedChart.file_id,
                     chartFormat: cachedChart.chartFormat,
                 },
-                chatSettings.selfdestructstats
+                chatSettings.selfdestructstats,
             );
             return;
         }
 
         this.statsChartService.requestStatsChart(ctx, target_id, "user", "all");
-        await this.prepareUserStatsText(chat_id, target_id, await userStatsPromise, users[target_id]);
+        await this.prepareUserStatsText(
+            chat_id,
+            target_id,
+            await userStatsPromise,
+            users[target_id],
+        );
     }
 
     public async chatStatsCallback(ctx: IGroupHearsCommandContext) {
@@ -462,7 +480,7 @@ export class StatsService {
                 chatSettings,
                 stats,
                 activeUsers,
-                date_range
+                date_range,
             );
             this.removeCachedStatsText(chat_id, chat_id, date_range[2]);
             await sendSelfdestructMessage(
@@ -472,7 +490,7 @@ export class StatsService {
                     text: statsText,
                     chart: undefined,
                 },
-                chatSettings.selfdestructstats
+                chatSettings.selfdestructstats,
             );
             return;
         }
@@ -486,7 +504,7 @@ export class StatsService {
                 chatSettings,
                 stats,
                 activeUsers,
-                date_range
+                date_range,
             );
             this.removeCachedStatsText(chat_id, chat_id, date_range[2]);
             await sendSelfdestructMessage(
@@ -497,7 +515,7 @@ export class StatsService {
                     chart: cachedChart.file_id,
                     chartFormat: cachedChart.chartFormat,
                 },
-                chatSettings.selfdestructstats
+                chatSettings.selfdestructstats,
             );
             return;
         }
@@ -509,7 +527,7 @@ export class StatsService {
             chatSettings,
             stats,
             activeUsers,
-            date_range
+            date_range,
         );
     }
 
@@ -549,7 +567,7 @@ export class StatsService {
         chat_id: number,
         user_id: number,
         stats: IDBChatUserStatsAll,
-        active: IActiveUser
+        active: IActiveUser,
     ): Promise<string> {
         const text = await getUserStatsMessage(chat_id, user_id, stats, active);
         this.cache.statsText.set(getTaskId(chat_id, user_id, "all"), text);
@@ -559,13 +577,16 @@ export class StatsService {
     private isPaginationNeeded(
         stats: IDBChatUserStatsAndTotal[],
         chatSettings: IChatSettings,
-        users: Record<string, IActiveUser>
+        users: Record<string, IActiveUser>,
     ) {
         const statsUsersCount = this.getStatsUsersCount(stats, users);
         return chatSettings.charts ? statsUsersCount > 25 : statsUsersCount > 50;
     }
 
-    private getStatsUsersCount(stats: IDBChatUserStatsAndTotal[], users: Record<string, IActiveUser>): number {
+    private getStatsUsersCount(
+        stats: IDBChatUserStatsAndTotal[],
+        users: Record<string, IActiveUser>,
+    ): number {
         let user: IDBChatUserStatsAndTotal;
         let counter = 0;
         for (user of stats) {
@@ -589,7 +610,9 @@ export class StatsService {
             return [from, to || from, "custom"];
         }
 
-        const rawCmdDateRange = (splittedCommand[1] ?? "today").toLowerCase() as keyof typeof cmdToDateRangeMap;
+        const rawCmdDateRange = (
+            splittedCommand[1] ?? "today"
+        ).toLowerCase() as keyof typeof cmdToDateRangeMap;
 
         return formattedDate[cmdToDateRangeMap[rawCmdDateRange]];
     }
@@ -608,14 +631,16 @@ export class StatsService {
         chat_id: number,
         user_id: number,
         type: IChartType,
-        rawDateRange: IAllowedChartStatsRanges = "all"
+        rawDateRange: IAllowedChartStatsRanges = "all",
     ): IChartCache {
-        return type === "chat" ? this.cache.chat.get(chat_id, rawDateRange) : this.cache.user.get(chat_id, user_id);
+        return type === "chat"
+            ? this.cache.chat.get(chat_id, rawDateRange)
+            : this.cache.user.get(chat_id, user_id);
     }
 
     private resolveTargetUser(
         ctx: IGroupHearsCommandContext,
-        users: Awaited<ReturnType<(typeof active)["getChatUsers"]>>
+        users: Awaited<ReturnType<(typeof active)["getChatUsers"]>>,
     ): number {
         if (ctx.msg.reply_to_message?.from?.is_bot) {
             ctx.reply(ctx.t("robot-sounds")).catch((e) => {});
@@ -660,8 +685,11 @@ export class StatsChartService {
     private statsTextService = StatsTextService.getInstance();
     private getChartSettings = getChartSettings;
     private constructor(
-        private rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(cfg.RABBITMQ_USER, cfg.RABBITMQ_PASSWORD),
-        private cache = CACHE
+        private rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(
+            cfg.RABBITMQ_USER,
+            cfg.RABBITMQ_PASSWORD,
+        ),
+        private cache = CACHE,
     ) {}
 
     public async init() {
@@ -711,10 +739,13 @@ export class StatsChartService {
     }
 
     private initChartConsumers() {
-        this.rabbitMQClient.consume<"chart_stats_results">("chart_stats_results", this.chartConsumer.bind(this));
+        this.rabbitMQClient.consume<"chart_stats_results">(
+            "chart_stats_results",
+            this.chartConsumer.bind(this),
+        );
         this.rabbitMQClient.consume<"bump_chart_rating_results">(
             "bump_chart_rating_results",
-            this.bumpChartRatingConsumer.bind(this)
+            this.bumpChartRatingConsumer.bind(this),
         );
 
         console.log("Chart consumers initialized");
@@ -724,7 +755,7 @@ export class StatsChartService {
         ctx: IGroupHearsCommandContext | ChatTypeContext<IHearsCommandContext, "private">,
         target_id: number,
         type: IChartType,
-        rawDateRange: IAllowedChartStatsRanges = "all"
+        rawDateRange: IAllowedChartStatsRanges = "all",
     ) {
         if (!this.isInitialized) {
             throw new Error("StatsChartService is not initialized");
@@ -767,7 +798,7 @@ export class StatsChartService {
                 },
                 {
                     priority: +(chat_premium || user_premium),
-                }
+                },
             );
         } catch (error) {
             console.error("Error requesting stats chart:", error);
@@ -798,7 +829,7 @@ export class StatsChartService {
                 reply_to_message_id: ctx.msg.message_id,
                 thread_id: ctx.msg.message_thread_id || 0,
             },
-            {}
+            {},
         );
     }
 
@@ -817,7 +848,12 @@ export class StatsChartService {
                     nickname: "",
                     username: "",
                 };
-                text = await this.statsTextService.prepareUserStatsText(task.chat_id, task.target_id, stats, userActive);
+                text = await this.statsTextService.prepareUserStatsText(
+                    task.chat_id,
+                    task.target_id,
+                    stats,
+                    userActive,
+                );
             } else {
                 const [stats, chatSettings, activeUsers] = await Promise.all([
                     DBStats.chat.inRage(task.chat_id, task.date_range),
@@ -830,7 +866,7 @@ export class StatsChartService {
                     chatSettings,
                     stats,
                     activeUsers,
-                    task.date_range
+                    task.date_range,
                 );
             }
         }
@@ -870,7 +906,10 @@ export class StatsChartService {
         this.cache.pendingCharts.delete(task.task_id);
     }
 
-    private async bumpChartRatingConsumer(task: IBumpChartRatingResult, msg: ConsumeMessage | null) {
+    private async bumpChartRatingConsumer(
+        task: IBumpChartRatingResult,
+        msg: ConsumeMessage | null,
+    ) {
         if (!task.raw) {
             console.error("Bump chart rating task has no raw data");
             return;
@@ -886,7 +925,7 @@ export class StatsChartService {
                 cacheManager.ChartCache_Global.set(
                     task.task_id,
                     m.photo[m.photo.length - 1].file_id,
-                    getLastDayOfMonth()
+                    getLastDayOfMonth(),
                 );
             })
             .catch((e) => {
@@ -894,9 +933,13 @@ export class StatsChartService {
             });
     }
 
-    private cacheChart(msg: Message.AnimationMessage | Message.PhotoMessage | undefined, task: IChartResult) {
+    private cacheChart(
+        msg: Message.AnimationMessage | Message.PhotoMessage | undefined,
+        task: IChartResult,
+    ) {
         if (!msg) return;
-        const file_id = "animation" in msg ? msg.animation?.file_id : msg.photo[msg.photo.length - 1].file_id;
+        const file_id =
+            "animation" in msg ? msg.animation?.file_id : msg.photo[msg.photo.length - 1].file_id;
         if (task.target_id > 0) {
             cacheManager.ChartCache_User.set(msg.chat.id, task.target_id, file_id, task.format);
         } else {

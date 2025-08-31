@@ -18,12 +18,14 @@ async function oldUsers(ctx: IGroupHearsCommandContext) {
         const user = oldUsers[index];
         console.log(user[1].active_first);
         if (chatSettings.userstatslink) {
-            userList += `${index + 1}. ${getUserNameLink.html(user[1].name, user[1].username, user[0])} - ${
-                user[1].active_first
-            } (${moment(user[1].active_first).fromNow()})\n`;
+            userList += `${index + 1}. ${getUserNameLink.html(
+                user[1].name,
+                user[1].username,
+                user[0],
+            )} - ${user[1].active_first} (${moment(user[1].active_first).fromNow()})\n`;
         } else {
             userList += `${index + 1}. ${user[1].name} - ${user[1].active_first} (${moment(
-                user[1].active_first
+                user[1].active_first,
             ).fromNow()})\n`;
         }
     }
@@ -34,7 +36,7 @@ async function oldUsers(ctx: IGroupHearsCommandContext) {
 
 async function getChatUsersOrderByFirstActive(ctx: IGroupHearsCommandContext) {
     return Object.entries(await active.getChatUsers(ctx.chat.id)).sort((a, b) =>
-        moment(a[1].active_first).diff(moment(b[1].active_first))
+        moment(a[1].active_first).diff(moment(b[1].active_first)),
     );
 }
 

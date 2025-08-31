@@ -18,7 +18,11 @@ function hexToRGB(hex: string | undefined) {
 }
 
 class RGB {
-    constructor(public r: number, public g: number, public b: number) {}
+    constructor(
+        public r: number,
+        public g: number,
+        public b: number,
+    ) {}
 }
 
 function hexToGgbString(hex: string) {

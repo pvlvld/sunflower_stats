@@ -46,7 +46,7 @@ const changeBgMessages = {
 
 async function setChartBg(
     ctx: IGroupHearsCommandContext | IGroupPhotoCaptionContext | IGroupAnimationCaptionContext,
-    type: "chat" | "user"
+    type: "chat" | "user",
 ) {
     if (
         !ctx.has([":photo", "edited_message:photo"]) &&
@@ -93,7 +93,10 @@ async function setChartBg(
     void (await ctx.reply(ctx.t(donwloadRes.message)).catch((e) => {}));
 }
 
-async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptionContext, type: "user" | "chat") {
+async function downloadBg(
+    ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptionContext,
+    type: "user" | "chat",
+) {
     let bgFormat: "photo" | "animation" = "photo";
     if (ctx.msg.animation || ctx.msg.reply_to_message?.animation) {
         bgFormat = "animation";
@@ -101,7 +104,8 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
 
     let file = (ctx.msg.animation ||
         ctx.msg.photo?.[ctx.msg.photo?.length - 1] ||
-        (ctx.msg.reply_to_message?.photo && ctx.msg.reply_to_message.photo[ctx.msg.reply_to_message.photo.length - 1]) ||
+        (ctx.msg.reply_to_message?.photo &&
+            ctx.msg.reply_to_message.photo[ctx.msg.reply_to_message.photo.length - 1]) ||
         ctx.msg.reply_to_message?.animation) as Animation | PhotoSize | (PhotoSize & string);
 
     let path = baseBgPath;
@@ -110,7 +114,9 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
     target_id = type === "chat" ? ctx.chat.id : ctx.from.id;
     path += `${target_id}.${bgFormat === "photo" ? "jpg" : "mp4"}`;
 
-    const isDownloaded = await (await ctx.api.getFile(file.file_id).catch((e) => {}))?.download(path);
+    const isDownloaded = await (
+        await ctx.api.getFile(file.file_id).catch((e) => {})
+    )?.download(path);
 
     if (isDownloaded === undefined) {
         return changeBgMessages.cantSaveImage;
@@ -148,7 +154,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
                 caption: `${getUserNameLink.html(
                     ctx.from.first_name,
                     ctx.from.username,
-                    target_id
+                    target_id,
                 )} set new <b>${type}</b> chart bg.\nGroup: ${Escape.html(ctx.chat.title)}  | @${ctx.chat.username} | ${
                     ctx.chat.id
                 }\nUser id: ${target_id}\nTarget id: ${target_id}\nFormat: ${bgFormat}`,
@@ -164,7 +170,7 @@ async function downloadBg(ctx: IGroupPhotoCaptionContext | IGroupAnimationCaptio
                 caption: `${getUserNameLink.html(
                     ctx.from.first_name,
                     ctx.from.username,
-                    target_id
+                    target_id,
                 )} set new <b>${type}</b> chart bg.\nGroup: ${Escape.html(ctx.chat.title)}  | @${ctx.chat.username} | ${
                     ctx.chat.id
                 }\nUser id: ${target_id}\nTarget id: ${target_id}\nFormat: ${bgFormat}`,

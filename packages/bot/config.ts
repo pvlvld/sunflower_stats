@@ -25,7 +25,8 @@ const ANIMATIONS = Object.freeze({
 });
 
 const IMG = Object.freeze({
-    stats_example: "AgACAgIAAx0Cf9MvPQABAbrmZ4vE9d5ytVv4VxcEGhHjVd4XLJ0AAnrtMRsYGGBISBtqUoD-kZ0BAAMCAAN5AAM2BA",
+    stats_example:
+        "AgACAgIAAx0Cf9MvPQABAbrmZ4vE9d5ytVv4VxcEGhHjVd4XLJ0AAnrtMRsYGGBISBtqUoD-kZ0BAAMCAAN5AAM2BA",
 });
 
 const MEDIA = Object.freeze({

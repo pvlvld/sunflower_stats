@@ -17,7 +17,8 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
     let targetMembers = cacheManager.TTLCache.get(cacheKey) as { user_id: number }[] | undefined;
 
     let targetId =
-        ctx.msg.reply_to_message?.from?.id || (await getUserId((ctx.msg.text ?? ctx.msg.caption).slice(6), chat_id));
+        ctx.msg.reply_to_message?.from?.id ||
+        (await getUserId((ctx.msg.text ?? ctx.msg.caption).slice(6), chat_id));
     if (targetId === -1) {
         if (targetMembers) {
             cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
@@ -38,11 +39,15 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
 
             case "not enough rights edit admin":
                 if (!user) return;
-                return void (await ctx.reply(ctx.t("chat-cleanup-user-protected-admin", { name: user.name })));
+                return void (await ctx.reply(
+                    ctx.t("chat-cleanup-user-protected-admin", { name: user.name }),
+                ));
 
             case "success":
                 if (!user) return;
-                return void (await ctx.reply(ctx.t("chat-cleanup-user-marked-rest", { name: user.name })));
+                return void (await ctx.reply(
+                    ctx.t("chat-cleanup-user-marked-rest", { name: user.name }),
+                ));
 
             default:
                 console.error("Unexpected setRestStatus output!");
@@ -57,7 +62,9 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
         const user = await active.getUser(chat_id, targetId);
         if (!user) return void (await ctx.reply(ctx.t("user-not-found")).catch((e) => {}));
         cacheManager.TTLCache.set(cacheKey, targetMembers, 5 * 60);
-        return void (await ctx.reply(ctx.t("chat-cleanup-user-marked-rest", { name: user.name })).catch((e) => {}));
+        return void (await ctx
+            .reply(ctx.t("chat-cleanup-user-marked-rest", { name: user.name }))
+            .catch((e) => {}));
     }
 
     cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
@@ -66,7 +73,7 @@ async function removeFromChatCleanup(ctx: IGroupTextContext): Promise<void> {
 
 async function setRestStatus(
     ctx: IGroupTextContext,
-    targetId: number
+    targetId: number,
 ): Promise<"not enough rights set admin" | "not enough rights edit admin" | "success"> {
     try {
         await ctx.promoteChatMember(targetId, { can_manage_chat: true });

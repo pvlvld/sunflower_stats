@@ -27,7 +27,7 @@ interface BumpChartSeries {
 
 /**Rerutns @Buffer success @undefined stats contain less than 7 records*/
 export async function getStatsChart(
-    task: IChartStatsTask
+    task: IChartStatsTask,
 ): Promise<{ chart: Buffer; chartFormat: IChartFormat } | undefined> {
     const targetId = task.target_id;
     const type = targetId === config.BOT_ID ? "bot-all" : targetId > 0 ? "user" : "chat";
@@ -85,8 +85,8 @@ export async function getChartTopChatsMonthly(positions: number = 10) {
         createProfileImagesPlugin(
             await preloadChatImages([
                 ...new Set(config.data.datasets.map((dataset: any) => dataset.chat_id)),
-            ] as number[])
-        )
+            ] as number[]),
+        ),
     );
     return await renderToBufferX2(config);
 }
@@ -96,7 +96,10 @@ function renderToBuffer(configuration: IChartConfiguration): Promise<Buffer> {
     const chart = new chartJs(canvas, configuration); // 50-70ms
     let buffer;
     if (configuration.custom?.transparent) {
-        buffer = chart.canvas.toBuffer("image/png", { compressionLevel: 0, filters: Canvas.PNG_NO_FILTERS }); // 15ms
+        buffer = chart.canvas.toBuffer("image/png", {
+            compressionLevel: 0,
+            filters: Canvas.PNG_NO_FILTERS,
+        }); // 15ms
     } else {
         buffer = chart.canvas.toBuffer("image/jpeg", { quality: 0.9, chromaSubsampling: true }); // 3ms
     }

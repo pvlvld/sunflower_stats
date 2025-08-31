@@ -29,12 +29,16 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     const [targetDaysCount, targetMessagesCount] = args as string[];
 
     let [targetMembers, users] = await Promise.all([
-        Database.stats.chat.usersBelowTargetMessagesLastXDays(chat_id, targetMessagesCount, targetDaysCount),
+        Database.stats.chat.usersBelowTargetMessagesLastXDays(
+            chat_id,
+            targetMessagesCount,
+            targetDaysCount,
+        ),
         active.getChatUsers(chat_id),
     ]);
 
     const cutoffDate = moment().subtract(targetDaysCount, "days");
-    
+
     // Filter out users who are not in the chat anymore or are active in the last targetDaysCount days
     targetMembers = targetMembers.filter((m) => {
         const user = users?.[m.user_id];
@@ -49,12 +53,12 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
         if (targetMembers.some((m) => m.user_id === Number(userId))) {
             return; // Skip if already in targetMembers
         }
-        
+
         // Add user if they haven't been active in the last targetDaysCount days
         if (moment(user.active_last).isBefore(cutoffDate)) {
             targetMembers.push({
                 user_id: Number(userId),
-                messages: 0
+                messages: 0,
             });
         }
     });
@@ -64,16 +68,19 @@ export async function chatCleanup(ctx: IGroupTextContext): Promise<void> {
     }
 
     cacheManager.TTLCache.set(`cleanup_${chat_id}`, targetMembers, 60 * 5);
-    void (await ctx.reply(getChatCleanupText(ctx, String(targetMembers.length), targetDaysCount, targetMessagesCount), {
-        reply_markup: chatCleanup_menu,
-    }));
+    void (await ctx.reply(
+        getChatCleanupText(ctx, String(targetMembers.length), targetDaysCount, targetMessagesCount),
+        {
+            reply_markup: chatCleanup_menu,
+        },
+    ));
 }
 
 export function getChatCleanupText(
     ctx: IGroupTextContext,
     targetMembersCount: string,
     targetDaysCount: string,
-    targetMessagesCount: string
+    targetMessagesCount: string,
 ) {
     return ctx.t("chat-cleanup-text", {
         targetMembersCount,

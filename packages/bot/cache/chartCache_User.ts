@@ -2,7 +2,11 @@ import { IChartFormat } from "@sunflower-stats/shared";
 import cfg from "../config.js";
 
 export type IChartStatuses = "ok" | "skip" | "unrendered";
-export type IChartCache = Readonly<{ file_id: string; status: IChartStatuses; chartFormat: IChartFormat }>;
+export type IChartCache = Readonly<{
+    file_id: string;
+    status: IChartStatuses;
+    chartFormat: IChartFormat;
+}>;
 
 class ChartCache_User {
     private _chartCache: Map<number, Map<number, IChartCache>>;
@@ -14,7 +18,11 @@ class ChartCache_User {
         this._chartCache = new Map();
         this._userChats = new Map();
         this._skipChart = Object.freeze({ file_id: "", status: "skip", chartFormat: "image" });
-        this._unrenderedChart = Object.freeze({ file_id: "", status: "unrendered", chartFormat: "image" });
+        this._unrenderedChart = Object.freeze({
+            file_id: "",
+            status: "unrendered",
+            chartFormat: "image",
+        });
     }
 
     public get(chat_id: number, user_id: number): IChartCache {

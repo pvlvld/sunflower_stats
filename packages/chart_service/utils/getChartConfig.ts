@@ -11,7 +11,10 @@ export type IChartConfiguration = ChartConfiguration & {
     };
 };
 
-async function getDefaultChartConfig(task: IChartStatsTask, type: IChartType): Promise<IChartConfiguration> {
+async function getDefaultChartConfig(
+    task: IChartStatsTask,
+    type: IChartType,
+): Promise<IChartConfiguration> {
     // TODO: Debug. Refactor. Why rgb? There is no alpha channel in hexToGgbString.
     const line_rgbValuesString = hexToGgbString(task.line_color);
     const fontColor = task.font_color;
@@ -32,7 +35,12 @@ async function getDefaultChartConfig(task: IChartStatsTask, type: IChartType): P
                             return;
                         }
                         const { ctx, chartArea } = context.chart;
-                        const gradient = ctx.createLinearGradient(0, chartArea.top, 0, chartArea.bottom);
+                        const gradient = ctx.createLinearGradient(
+                            0,
+                            chartArea.top,
+                            0,
+                            chartArea.bottom,
+                        );
                         gradient.addColorStop(1, `rgba(${line_rgbValuesString}, 0)`);
                         gradient.addColorStop(0.6, `rgba(${line_rgbValuesString}, 0.4)`);
                         gradient.addColorStop(0, `rgba(${line_rgbValuesString}, 0.9)`);
@@ -133,7 +141,9 @@ function getTopChatsMonthlyChartConfig(positions: number): IChartConfiguration {
                     min: 0.6,
                     max: positions + 0.4,
                     afterBuildTicks: (scale) => {
-                        scale.ticks = Array.from({ length: positions }, (_, i) => ({ value: 1 + i }));
+                        scale.ticks = Array.from({ length: positions }, (_, i) => ({
+                            value: 1 + i,
+                        }));
                     },
                     ticks: {
                         padding: 50,

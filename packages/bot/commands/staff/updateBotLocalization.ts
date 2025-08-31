@@ -31,11 +31,14 @@ async function updateBotLocalization(ctx: IGroupTextContext) {
             }),
             {
                 language_code: locale as LanguageCode,
-            }
+            },
         );
-        await ctx.api.setMyShortDescription(ctx.t("bot-description", { defaultValue: "Your favorite stats bot! 😉" }), {
-            language_code: locale as LanguageCode,
-        });
+        await ctx.api.setMyShortDescription(
+            ctx.t("bot-description", { defaultValue: "Your favorite stats bot! 😉" }),
+            {
+                language_code: locale as LanguageCode,
+            },
+        );
     }
 
     LocaleService.set(ctx.chat.id, startLocale);

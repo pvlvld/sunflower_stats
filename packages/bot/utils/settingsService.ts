@@ -3,14 +3,17 @@ import { DefaultChatSettings } from "../consts/defaultChatSettings.js";
 import { DefaultUserSettings } from "../consts/defaultUserSettings.js";
 import { Database } from "../db/db.js";
 
-class SettingsService {
+export class SettingsService {
     private static instance: SettingsService;
 
-    private constructor(private cache: typeof cacheManager, private db: typeof Database) {}
+    private constructor(
+        private cache: typeof cacheManager,
+        private db: typeof Database,
+    ) {}
 
-    public static getInstance(cache = cacheManager, db = Database): SettingsService {
+    public static getInstance(): SettingsService {
         if (!SettingsService.instance) {
-            SettingsService.instance = new SettingsService(cache, db);
+            SettingsService.instance = new SettingsService(cacheManager, Database);
         }
         return SettingsService.instance;
     }
@@ -25,7 +28,7 @@ class SettingsService {
                 chatSettings = { ...DefaultChatSettings };
             }
 
-            void cacheManager.ChatSettingsCache.set(chat_id, chatSettings);
+            void this.cache.ChatSettingsCache.set(chat_id, chatSettings);
         }
 
         return chatSettings;
@@ -41,7 +44,7 @@ class SettingsService {
                 userSettings = { ...DefaultUserSettings };
             }
 
-            void cacheManager.UserSettingsCache.set(user_id, userSettings);
+            void this.cache.UserSettingsCache.set(user_id, userSettings);
         }
 
         return userSettings;
@@ -61,5 +64,3 @@ class SettingsService {
         }
     }
 }
-
-export const settingsService = SettingsService.getInstance();

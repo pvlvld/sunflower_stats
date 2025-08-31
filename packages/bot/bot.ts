@@ -48,7 +48,9 @@ export const i18n = new I18n<IContext>({
 // API TRANSFORMERS
 
 bot.api.config.use(async function autoRetry(prev, method, payload, signal) {
-    if (["getChat", "getChatMemberCount", "deleteMessage", "answerCallbackQuery"].includes(method)) {
+    if (
+        ["getChat", "getChatMemberCount", "deleteMessage", "answerCallbackQuery"].includes(method)
+    ) {
         return autoRetryTransformer(prev, method, payload, signal);
     }
 

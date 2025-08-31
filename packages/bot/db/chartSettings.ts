@@ -6,7 +6,10 @@ const DefaultChartSettings = DefaultUserSettings;
 type IChartSettings = Omit<typeof DefaultUserSettings, "locale">;
 
 class ChartSettings {
-    constructor(public line_color: RGB, public font_color: RGB) {}
+    constructor(
+        public line_color: RGB,
+        public font_color: RGB,
+    ) {}
 }
 
 export default ChartSettings;

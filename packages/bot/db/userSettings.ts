@@ -14,7 +14,7 @@ class DbUserSettingWrapper {
         try {
             settings_db = (
                 await this._poolManager.getPoolRead.query(
-                    `SELECT line_color, font_color, locale FROM users WHERE user_id = ${user_id};`
+                    `SELECT line_color, font_color, locale FROM users WHERE user_id = ${user_id};`,
                 )
             ).rows[0] as any;
         } catch (e) {
@@ -64,7 +64,7 @@ class DbUserSettingWrapper {
                 SET ${fields.join(", ")}
                 WHERE user_id = $1
                 `,
-                [user_id, ...values]
+                [user_id, ...values],
             );
         } catch (error) {
             console.error(error);

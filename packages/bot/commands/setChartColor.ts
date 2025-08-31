@@ -29,7 +29,7 @@ async function setChartColor(ctx: IGroupHearsContext) {
     if (!target) {
         void ctx
             .reply(
-                'Некоректно вказано ціль. Доступні: графік та шрифт.\nПриклад: стата колір <u>графік</u> я <a href="https://g.co/kgs/5UEQqFv">#066666</a>'
+                'Некоректно вказано ціль. Доступні: графік та шрифт.\nПриклад: стата колір <u>графік</u> я <a href="https://g.co/kgs/5UEQqFv">#066666</a>',
             )
             .catch((e) => {});
         return;
@@ -38,7 +38,7 @@ async function setChartColor(ctx: IGroupHearsContext) {
     if (!type) {
         void ctx
             .reply(
-                'Некоректно вказано тип. Доступні: чат / я.\nПриклад: стата колір графік <u>я</u> <a href="https://g.co/kgs/5UEQqFv">#066666</a>'
+                'Некоректно вказано тип. Доступні: чат / я.\nПриклад: стата колір графік <u>я</u> <a href="https://g.co/kgs/5UEQqFv">#066666</a>',
             )
             .catch((e) => {});
         return;
@@ -47,7 +47,7 @@ async function setChartColor(ctx: IGroupHearsContext) {
     if (!rgb || !hex) {
         void ctx
             .reply(
-                'Колір має бути в форматі <a href="https://g.co/kgs/5UEQqFv">HEX</a>\nПриклад: стата колір <u>графік</u> я <u>#066666</u>'
+                'Колір має бути в форматі <a href="https://g.co/kgs/5UEQqFv">HEX</a>\nПриклад: стата колір <u>графік</u> я <u>#066666</u>',
             )
             .catch((e) => {});
         return;
@@ -56,15 +56,15 @@ async function setChartColor(ctx: IGroupHearsContext) {
     // Donate status check
     if (type === "chat") {
         if (!(await isPremium(ctx.chat.id))) {
-            ctx.reply("Ця функція доступна лише донат чатам.\nСкористайтесь командою /donate в потрібному чаті.").catch(
-                (e) => {}
-            );
+            ctx.reply(
+                "Ця функція доступна лише донат чатам.\nСкористайтесь командою /donate в потрібному чаті.",
+            ).catch((e) => {});
             return;
         }
     } else {
         if (!(await isPremium(ctx.from.id))) {
             ctx.reply(
-                "Ця функція доступна лише донат користувачам.\nСкористайтесь командою /donate в діалозі з ботом."
+                "Ця функція доступна лише донат користувачам.\nСкористайтесь командою /donate в діалозі з ботом.",
             ).catch((e) => {});
 
             return;

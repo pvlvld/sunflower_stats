@@ -3,9 +3,13 @@ import cacheManager from "../cache/cache.js";
 import cfg from "../config.js";
 import type { IGroupContext } from "../types/context.js";
 
-async function adminUpdateHandler(ctx: Filter<IGroupContext, "chat_member" | ":left_chat_member">): Promise<void> {
+async function adminUpdateHandler(
+    ctx: Filter<IGroupContext, "chat_member" | ":left_chat_member">,
+): Promise<void> {
     const chat_id = ctx.chat.id;
-    const user_id = ctx.chatMember ? ctx.chatMember.new_chat_member.user.id : ctx.msg.left_chat_member.id;
+    const user_id = ctx.chatMember
+        ? ctx.chatMember.new_chat_member.user.id
+        : ctx.msg.left_chat_member.id;
     const new_status = ctx.chatMember?.new_chat_member.status;
     const old_status = ctx.chatMember?.old_chat_member.status;
 

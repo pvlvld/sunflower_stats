@@ -8,16 +8,18 @@ import { active } from "../../redis/active.js";
 async function updateDbChatsInfo(ctx: IGroupHearsContext) {
     // TEMPORARY
     const chats_active = await active.getAllChatIds();
-    let chats = (await Database.poolManager.getPool.query("SELECT chat_id FROM chats WHERE title IS NULL")).rows.map(
-        (r) => <number>r.chat_id
-    );
+    let chats = (
+        await Database.poolManager.getPool.query("SELECT chat_id FROM chats WHERE title IS NULL")
+    ).rows.map((r) => <number>r.chat_id);
     chats = chats.filter((c) => chats_active.indexOf(c) != -1);
     // TEMPORARY
 
     const total_count = chats.length;
     let count = 0;
     ctx.api.config.use(autoRetry());
-    const statusMessage = await ctx.reply(`Оновлення інформації про чати...\n\n0/${total_count}`).catch((e) => {});
+    const statusMessage = await ctx
+        .reply(`Оновлення інформації про чати...\n\n0/${total_count}`)
+        .catch((e) => {});
     for (const chat of chats) {
         console.log(`Updating chat info for ${chat}`);
         count++;
@@ -39,7 +41,7 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
             VALUES ($1, $2)
             ON CONFLICT (chat_id)
             DO UPDATE SET title = EXCLUDED.title`,
-            [chatInfo.id, chatInfo.title || ""]
+            [chatInfo.id, chatInfo.title || ""],
         );
 
         if (count % 100 !== 0) continue;
@@ -48,7 +50,7 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
                 .editMessageText(
                     statusMessage.chat.id,
                     statusMessage.message_id,
-                    `Оновлення інформації про чати...\n\n${count}/${total_count}`
+                    `Оновлення інформації про чати...\n\n${count}/${total_count}`,
                 )
                 .catch((e) => {});
         }
@@ -59,7 +61,7 @@ async function updateDbChatsInfo(ctx: IGroupHearsContext) {
             .editMessageText(
                 statusMessage.chat.id,
                 statusMessage.message_id,
-                `Оновлення інформації про чати завершено!\n\n${total_count}/${total_count}`
+                `Оновлення інформації про чати завершено!\n\n${total_count}/${total_count}`,
             )
             .catch((e) => {});
     }

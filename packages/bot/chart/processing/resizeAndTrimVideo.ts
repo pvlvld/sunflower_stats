@@ -24,7 +24,10 @@ function resizeAndTrimVideo(id: number): Promise<void> {
                 "-movflags +faststart",
             ])
             .duration(10)
-            .on("start", (cmdline) => cfg.DEBUG && console.log("resizeAndTrimVideo Ffmpeg cmd:\n", cmdline))
+            .on(
+                "start",
+                (cmdline) => cfg.DEBUG && console.log("resizeAndTrimVideo Ffmpeg cmd:\n", cmdline),
+            )
             .on("end", () => {
                 fs.rename(tempPath, outputPath, (err) => {
                     if (err) return reject(err);

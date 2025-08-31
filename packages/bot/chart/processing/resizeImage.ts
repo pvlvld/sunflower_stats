@@ -42,7 +42,7 @@ function resizeImage(buffer: Buffer) {
             0,
             0,
             cfg.CHART.width,
-            cfg.CHART.height
+            cfg.CHART.height,
         );
 
     const result = canvas.toBuffer("image/jpeg");

@@ -10,7 +10,13 @@ interface IActiveUser {
     username: string | null;
 }
 
-const VALID_USER_KEYS: (keyof IActiveUser)[] = ["active_last", "nickname", "name", "username", "active_first"];
+const VALID_USER_KEYS: (keyof IActiveUser)[] = [
+    "active_last",
+    "nickname",
+    "name",
+    "username",
+    "active_first",
+];
 
 class ChatUserStore {
     private redis: Redis.Redis;
@@ -40,7 +46,7 @@ class ChatUserStore {
         active_last: string,
         name: string,
         nickname: string,
-        username: string
+        username: string,
     ): Promise<void> {
         const userKey = this.getUserKey(chatId, userId);
         const chatKey = this.getChatKey(chatId);
@@ -84,7 +90,12 @@ class ChatUserStore {
         await multi.exec();
     }
 
-    async updateUserField(chatId: number, userId: number, key: keyof IActiveUser, value: string | null): Promise<void> {
+    async updateUserField(
+        chatId: number,
+        userId: number,
+        key: keyof IActiveUser,
+        value: string | null,
+    ): Promise<void> {
         const userKey = this.getUserKey(chatId, userId);
 
         if (!VALID_USER_KEYS.includes(key)) throw new Error(`Invalid user field: ${key}`);
@@ -115,9 +126,11 @@ class ChatUserStore {
                 userData.active_first = formattedDate.today[0];
             }
 
-            this.updateUserField(chatId, userId, "active_first", userData.active_first).catch((err) => {
-                console.error("Error updating active_first:", err);
-            });
+            this.updateUserField(chatId, userId, "active_first", userData.active_first).catch(
+                (err) => {
+                    console.error("Error updating active_first:", err);
+                },
+            );
         }
 
         return {
@@ -285,7 +298,8 @@ class ChatUserStore {
 
                 if (userData && !userData.active_first) {
                     userData.active_first =
-                        (await getUserFirstStatsDate(chatId, parseInt(userId, 10))) || userData.active_last;
+                        (await getUserFirstStatsDate(chatId, parseInt(userId, 10))) ||
+                        userData.active_last;
                     await this.redis.hmset(userKey, userData);
                 }
             }

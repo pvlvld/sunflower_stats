@@ -1,6 +1,13 @@
 import moment from "moment";
 
-type DateRangeKey = "today" | "yesterday" | "weekRange" | "monthRange" | "yearRange" | "all" | "global";
+type DateRangeKey =
+    | "today"
+    | "yesterday"
+    | "weekRange"
+    | "monthRange"
+    | "yearRange"
+    | "all"
+    | "global";
 
 export type IFormattedRangeDateGetters = {
     [K in DateRangeKey]: [string, string, K];
@@ -35,7 +42,11 @@ export class FormattedDate {
     }
 
     get yearRange(): IFormattedRangeDateGetters["yearRange"] {
-        return [moment().startOf("year").format("YYYY-MM-DD"), moment().endOf("year").format("YYYY-MM-DD"), "yearRange"];
+        return [
+            moment().startOf("year").format("YYYY-MM-DD"),
+            moment().endOf("year").format("YYYY-MM-DD"),
+            "yearRange",
+        ];
     }
 
     get all(): IFormattedRangeDateGetters["all"] {

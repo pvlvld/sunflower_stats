@@ -30,13 +30,13 @@ const historyScanProposal_menu = new Menu<IContext>("historyScanProposal-menu", 
                 console.error("historyScanProposal_menu: wtf?", ctx);
                 ctx.deleteMessage().catch((e) => {});
             }
-        }
+        },
     )
     .text(
         (ctx) => ctx.t("button-no"),
         async (ctx) => {
             ctx.deleteMessage().catch((e) => {});
-        }
+        },
     );
 
 export { historyScanProposal_menu };

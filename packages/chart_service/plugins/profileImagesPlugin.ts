@@ -28,7 +28,13 @@ export function createProfileImagesPlugin(imageMap: Map<number, Image>) {
                     ctx.arc(x, y, imageSize / 2, 0, Math.PI * 2, true);
                     ctx.closePath();
                     ctx.clip();
-                    ctx.drawImage(chatImage, x - imageSize / 2, y - imageSize / 2, imageSize, imageSize);
+                    ctx.drawImage(
+                        chatImage,
+                        x - imageSize / 2,
+                        y - imageSize / 2,
+                        imageSize,
+                        imageSize,
+                    );
                     ctx.restore();
                 }
             }

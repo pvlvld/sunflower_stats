@@ -15,7 +15,7 @@ export async function getStatsChatRating(
     settings: IChatSettings,
     page: number,
     dateRange: IDateRange | "date",
-    type: "caption" | "text"
+    type: "caption" | "text",
 ) {
     const replyParts: string[] = [];
 
@@ -41,8 +41,8 @@ export async function getStatsChatRating(
                         chat_id,
                         settings,
                         userData,
-                        user.user_id
-                    )} — ${(user.count || 0).toLocaleString("fr-FR")}\n`
+                        user.user_id,
+                    )} — ${(user.count || 0).toLocaleString("fr-FR")}\n`,
                 );
                 statsRowsCount++;
                 displayRank++;
@@ -55,20 +55,27 @@ export async function getStatsChatRating(
             validUsersCount,
             statsRowLimit,
             dateRange,
-            page
-        )}">:</a> ${(+stats[0].total_count).toLocaleString("fr-FR")}`
+            page,
+        )}">:</a> ${(+stats[0].total_count).toLocaleString("fr-FR")}`,
     );
     return replyParts.join("");
 }
 
-async function getUserNameString(chat_id: number, settings: IChatSettings, userData: IActiveUser, user_id: number) {
+async function getUserNameString(
+    chat_id: number,
+    settings: IChatSettings,
+    userData: IActiveUser,
+    user_id: number,
+) {
     let result = "";
 
     if (settings.userstatslink) {
         result = getUserNameLink.html(
-            userData.nickname || userData.name || i18n.t(await LocaleService.get(chat_id), "unknown"),
+            userData.nickname ||
+                userData.name ||
+                i18n.t(await LocaleService.get(chat_id), "unknown"),
             userData.username,
-            user_id
+            user_id,
         );
     } else {
         if (userData.nickname) {
@@ -85,7 +92,7 @@ function encodeStatsMetadata(
     validUsersCount: number,
     statsRowLimit: number,
     dateRange: IDateRange | "date",
-    page: number
+    page: number,
 ) {
     return `t.me/meta?u=${validUsersCount}?l=${statsRowLimit}?r=${dateRange}?p=${page}`;
 }

@@ -29,9 +29,14 @@ async function broadcast_owners_cmd(ctx: IGroupHearsContext): Promise<void> {
                 }
 
                 try {
-                    await ctx.api.forwardMessage(owner.user.id, ctx.chat.id, ctx.msg.reply_to_message.message_id, {
-                        disable_notification: true,
-                    });
+                    await ctx.api.forwardMessage(
+                        owner.user.id,
+                        ctx.chat.id,
+                        ctx.msg.reply_to_message.message_id,
+                        {
+                            disable_notification: true,
+                        },
+                    );
                     counter++;
                 } catch (e) {
                     console.error(e);
@@ -44,7 +49,7 @@ async function broadcast_owners_cmd(ctx: IGroupHearsContext): Promise<void> {
     ctx.api
         .sendMessage(
             process.env.MAIN_CHAT ?? -1,
-            `Розсилку власникам закінчено.\nУспішно надіслано ${counter} повідомлень.`
+            `Розсилку власникам закінчено.\nУспішно надіслано ${counter} повідомлень.`,
         )
         .catch((e) => {});
 }

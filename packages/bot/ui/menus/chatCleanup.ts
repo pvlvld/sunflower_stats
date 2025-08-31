@@ -22,7 +22,10 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
             return;
         }
 
-        const targetMembers = cacheManager.TTLCache.get(`cleanup_${ctx.chat.id}`) as { user_id: number, messages: number }[];
+        const targetMembers = cacheManager.TTLCache.get(`cleanup_${ctx.chat.id}`) as {
+            user_id: number;
+            messages: number;
+        }[];
 
         range.text("Запустити ✅", async (ctx) => {
             ctx.answerCallbackQuery().catch((e) => {});
@@ -32,7 +35,9 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
             }
 
             if (await destroyMenuIfOutdated(ctx, targetMembers)) {
-                return void (await ctx.reply("Ця чистка застаріла. Створіть нову.").catch((e) => {}));
+                return void (await ctx
+                    .reply("Ця чистка застаріла. Створіть нову.")
+                    .catch((e) => {}));
             }
 
             ctx.deleteMessage().catch((e) => {});
@@ -51,7 +56,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
                     .editMessageText(
                         chat_id,
                         statusMessage.message_id,
-                        "⚠️ У бота недостатньо прав. Будь ласка, видайте боту наступні права: \nБлокувати користувачів (Ban users)"
+                        "⚠️ У бота недостатньо прав. Будь ласка, видайте боту наступні права: \nБлокувати користувачів (Ban users)",
                     )
                     .catch((e) => {}));
             }
@@ -60,7 +65,10 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
         range.text("Скасувати ❌", async (ctx) => {
             ctx.answerCallbackQuery().catch((e) => {});
 
-            if (!(await isChatOwner(chat_id, from_id)) || (await destroyMenuIfOutdated(ctx, targetMembers))) {
+            if (
+                !(await isChatOwner(chat_id, from_id)) ||
+                (await destroyMenuIfOutdated(ctx, targetMembers))
+            ) {
                 return;
             }
 
@@ -77,7 +85,9 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
             }
 
             if (await destroyMenuIfOutdated(ctx, targetMembers)) {
-                return void (await ctx.reply("Ця чистка застаріла. Створіть нову.").catch((e) => {}));
+                return void (await ctx
+                    .reply("Ця чистка застаріла. Створіть нову.")
+                    .catch((e) => {}));
             }
             let messageText = ctx.msg?.text;
             if (!messageText) {
@@ -89,7 +99,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
             if (targetMembersListIndex && targetMembersListIndex === -1) {
                 messageText = `${messageText.replace(
                     /\d+/,
-                    String(targetMembers!.length)
+                    String(targetMembers!.length),
                 )}\n\nСписок:\n${await getTargetMembersList(chat_id, targetMembers)}`;
 
                 await ctx.editMessageText(messageText, {
@@ -107,7 +117,7 @@ const chatCleanup_menu = new Menu<IContext>("chatCleanup-menu", {
 
 async function destroyMenuIfOutdated(
     ctx: IContext & MenuFlavor,
-    targetMembers: { user_id: number }[] | undefined
+    targetMembers: { user_id: number }[] | undefined,
 ): Promise<boolean> {
     if (ctx.msg?.text && !targetMembers) {
         try {
@@ -124,14 +134,19 @@ async function destroyMenuIfOutdated(
 
 const targetMembersListMaxSize = 100;
 
-async function getTargetMembersList(chat_id: number, targetMembers: { user_id: number, messages: number }[]): Promise<string> {
+async function getTargetMembersList(
+    chat_id: number,
+    targetMembers: { user_id: number; messages: number }[],
+): Promise<string> {
     const targetMemberNames: string[] = [];
     let user: IActiveUser | undefined;
     const users = await active.getChatUsers(chat_id);
     for (let i = 0; i < Math.min(targetMembersListMaxSize, targetMembers.length); i++) {
         user = users?.[targetMembers[i].user_id];
         if (user) {
-            targetMemberNames.push(`${getUserNameLink.html(user.name, undefined, targetMembers[i].user_id)}: ${targetMembers[i].messages}`);
+            targetMemberNames.push(
+                `${getUserNameLink.html(user.name, undefined, targetMembers[i].user_id)}: ${targetMembers[i].messages}`,
+            );
         }
     }
 
@@ -142,7 +157,11 @@ async function getTargetMembersList(chat_id: number, targetMembers: { user_id: n
     return targetMemberNames.join("\n");
 }
 
-async function chatCleanupWorker(ctx: IContext & MenuFlavor, chat_id: number, targetMembers: { user_id: number }[]) {
+async function chatCleanupWorker(
+    ctx: IContext & MenuFlavor,
+    chat_id: number,
+    targetMembers: { user_id: number }[],
+) {
     ctx.api.config.use(autoRetry());
     ctx.replyWithChatAction("typing").catch((e) => {});
 

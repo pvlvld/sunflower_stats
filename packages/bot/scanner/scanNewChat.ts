@@ -16,9 +16,12 @@ async function scanNewChat(ctx: IGroupContext, automatic = true) {
                 .catch(async (e) => {
                     if (e instanceof GrammyError) {
                         if (e.parameters.migrate_to_chat_id) {
-                            return await ctx.api.createChatInviteLink(e.parameters.migrate_to_chat_id, {
-                                creates_join_request: false,
-                            });
+                            return await ctx.api.createChatInviteLink(
+                                e.parameters.migrate_to_chat_id,
+                                {
+                                    creates_join_request: false,
+                                },
+                            );
                         }
                     }
 
@@ -48,12 +51,16 @@ async function scanNewChat(ctx: IGroupContext, automatic = true) {
     if (!result.status) {
         console.error(result.error);
         if (!automatic) {
-            void (await ctx.reply(ctx.t(result.localeError.message, result.localeError.variables)).catch((e) => {}));
+            void (await ctx
+                .reply(ctx.t(result.localeError.message, result.localeError.variables))
+                .catch((e) => {}));
         }
         return;
     } else {
         if (!automatic) {
-            void (await ctx.reply(ctx.t("history-scan-finished", { count: result.count })).catch((e) => {}));
+            void (await ctx
+                .reply(ctx.t("history-scan-finished", { count: result.count }))
+                .catch((e) => {}));
         }
         return;
     }

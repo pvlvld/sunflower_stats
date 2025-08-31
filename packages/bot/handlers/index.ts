@@ -18,16 +18,23 @@ function regHandlers() {
     group.on(["chat_member", ":left_chat_member"], (ctx) => {
         if (
             ctx.msg?.left_chat_member ||
-            (ctx.chatMember && cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.new_chat_member.status))
+            (ctx.chatMember &&
+                cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.new_chat_member.status))
         ) {
             leaveChatMemberHandler(ctx);
-        } else if (ctx.chatMember && cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.old_chat_member.status)) {
+        } else if (
+            ctx.chatMember &&
+            cfg.STATUSES.LEFT_STATUSES.includes(ctx.chatMember.old_chat_member.status)
+        ) {
             joinChatMember(ctx);
         }
         adminUpdateHandler(ctx);
     });
 
-    bot.on("message:migrate_from_chat_id", async (ctx) => await chatMigrationHandler.handleFromCtx(ctx));
+    bot.on(
+        "message:migrate_from_chat_id",
+        async (ctx) => await chatMigrationHandler.handleFromCtx(ctx),
+    );
 
     bot.on(":new_chat_title", chatTitleUpdateHandler);
 }

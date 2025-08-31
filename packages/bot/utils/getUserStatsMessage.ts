@@ -10,14 +10,16 @@ async function getUserStatsMessage(
     chat_id: number,
     user_id: number,
     userStats: IDBChatUserStatsAll,
-    userActive: IActiveUser | null
+    userActive: IActiveUser | null,
 ) {
     const locale = await LocaleService.get(chat_id);
     const firstSeen = moment(userStats.first_seen).locale(locale);
 
     return i18n.t(locale, "stats-user-message", {
         name: `${await getPremiumMarkSpaced(user_id)}${Escape.html(
-            userActive?.nickname ? `${userActive.nickname} (${userActive?.name})` : `${userActive?.name}`
+            userActive?.nickname
+                ? `${userActive.nickname} (${userActive?.name})`
+                : `${userActive?.name}`,
         )}`,
         today: (userStats.today || 0).toLocaleString("fr-FR"),
         week: (userStats.week || 0).toLocaleString("fr-FR"),

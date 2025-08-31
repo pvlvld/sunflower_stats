@@ -63,7 +63,7 @@ class PremiumStatusCache {
         let queryResult: [IQueryResult, FieldPacket[]];
         //@ts-expect-error TODO: fix types
         queryResult = await pool.query<IQueryResult>(
-            "SELECT chat_id, state as isPremium FROM chats_premium WHERE state = 1;"
+            "SELECT chat_id, state as isPremium FROM chats_premium WHERE state = 1;",
         );
         for (const chat of queryResult[0]) {
             this.set(chat.chat_id as number, true);

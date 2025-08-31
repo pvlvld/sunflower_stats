@@ -30,7 +30,7 @@ function ActiveCollectorWrapper() {
                 formattedDate.today[0],
                 ctx.from.first_name,
                 "",
-                ctx.from.username || ""
+                ctx.from.username || "",
             );
         }
         return await next();

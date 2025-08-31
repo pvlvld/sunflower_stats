@@ -8,7 +8,9 @@ function makeCanvas(width: number = undefined!, height: number = undefined!): Ca
 }
 
 const canvasPool = deePool.create(makeCanvas);
-const canvasPoolX2 = deePool.create(() => makeCanvas(config.CHART.width * 2, config.CHART.height * 2));
+const canvasPoolX2 = deePool.create(() =>
+    makeCanvas(config.CHART.width * 2, config.CHART.height * 2),
+);
 
 class _ChartCanvasManager {
     private _canvasPool: any;

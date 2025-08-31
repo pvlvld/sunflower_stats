@@ -63,7 +63,9 @@ const personalChartBgControl_menu = new Menu<IContext>("personalChartBgControl-m
     })
     .row()
     .text("👌🏻", async (ctx) => {
-        void (await ctx.editMessageReplyMarkup({ reply_markup: { inline_keyboard: [] } }).catch((e) => {}));
+        void (await ctx
+            .editMessageReplyMarkup({ reply_markup: { inline_keyboard: [] } })
+            .catch((e) => {}));
     });
 
 async function parseTargetUserId(ctx: IContext, start_mark = "User id: ") {

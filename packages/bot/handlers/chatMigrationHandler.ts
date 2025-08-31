@@ -98,7 +98,10 @@ class ChatMigrationHandler {
     }
 
     async handleFromCtx(ctx: Filter<IContext, "message:migrate_from_chat_id">): Promise<void> {
-        await this.handle(String(ctx.msg.migrate_from_chat_id), String(ctx.msg.migrate_to_chat_id || ctx.chat.id));
+        await this.handle(
+            String(ctx.msg.migrate_from_chat_id),
+            String(ctx.msg.migrate_to_chat_id || ctx.chat.id),
+        );
     }
 }
 

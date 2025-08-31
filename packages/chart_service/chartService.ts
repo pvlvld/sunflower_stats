@@ -8,8 +8,8 @@ export class ChartService {
     constructor(
         private readonly rabbitMQClient: RabbitMQClient = RabbitMQClient.getInstance(
             config.RABBITMQ_USER,
-            config.RABBITMQ_PASSWORD
-        )
+            config.RABBITMQ_PASSWORD,
+        ),
     ) {}
     private isProcessing: boolean = false;
     private isStopping: boolean = false;
@@ -35,8 +35,14 @@ export class ChartService {
             autoDelete: false,
         });
 
-        await this.rabbitMQClient.consume("chart_stats_tasks", this.handleChartStatsTask.bind(this));
-        await this.rabbitMQClient.consume("bump_chart_rating_tasks", this.handleBumpChartRatingTask.bind(this));
+        await this.rabbitMQClient.consume(
+            "chart_stats_tasks",
+            this.handleChartStatsTask.bind(this),
+        );
+        await this.rabbitMQClient.consume(
+            "bump_chart_rating_tasks",
+            this.handleBumpChartRatingTask.bind(this),
+        );
     }
 
     async stop() {
@@ -53,7 +59,10 @@ export class ChartService {
         await this.rabbitMQClient.close();
     }
 
-    private async handleChartStatsTask(task: IChartStatsTask, message: ConsumeMessage | null): Promise<void> {
+    private async handleChartStatsTask(
+        task: IChartStatsTask,
+        message: ConsumeMessage | null,
+    ): Promise<void> {
         this.isProcessing = true;
         if (this.isStopping) {
             console.warn("ChartService is stopping, skipping task processing.");
@@ -79,7 +88,7 @@ export class ChartService {
                 },
                 {
                     priority: +(task.chat_premium || task.user_premium),
-                }
+                },
             );
         } else {
             await this.rabbitMQClient.produce(
@@ -98,14 +107,17 @@ export class ChartService {
                 },
                 {
                     priority: +(task.chat_premium || task.user_premium),
-                }
+                },
             );
         }
 
         this.isProcessing = false;
     }
 
-    private async handleBumpChartRatingTask(task: IBumpChartRatingTask, message: ConsumeMessage | null): Promise<void> {
+    private async handleBumpChartRatingTask(
+        task: IBumpChartRatingTask,
+        message: ConsumeMessage | null,
+    ): Promise<void> {
         this.isProcessing = true;
         if (this.isStopping) {
             console.warn("ChartService is stopping, skipping task processing.");
@@ -126,7 +138,7 @@ export class ChartService {
                     raw: null,
                     error: "Failed to generate chart",
                 },
-                {}
+                {},
             );
         } else {
             await this.rabbitMQClient.produce(
@@ -140,7 +152,7 @@ export class ChartService {
 
                     error: null,
                 },
-                {}
+                {},
             );
         }
 
