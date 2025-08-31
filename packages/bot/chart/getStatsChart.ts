@@ -296,6 +296,17 @@ export class StatsTextService {
         return text;
     }
 
+    private async prepareUserStatsText(
+        chat_id: number,
+        user_id: number,
+        stats: IDBChatUserStatsAll,
+        active: IActiveUser
+    ): Promise<string> {
+        const text = await getUserStatsMessage(chat_id, user_id, stats, active);
+        this.cache.statsText.set(getTaskId(chat_id, user_id, "all"), text);
+        return text;
+    }
+
     private async getChatStatsMessage(
         chat_id: number,
         chat_title: string,
