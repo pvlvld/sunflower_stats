@@ -183,6 +183,24 @@ export class StatsTextService {
         return text;
     }
 
+    // public async genChatStatsTextFromTask(task: IChartStatsTask) {
+    //     const [stats, settings, activeUsers] = await Promise.all([
+    //         DBStats.chat.inRage(task.chat_id, task.date_range),
+    //         this.getChartSettings(task.chat_id, task.user_id, "chat"),
+    //         active.getChatUsers(task.chat_id),
+    //     ]);
+
+    //     if (stats.length === 0) {
+    //         await bot.api
+    //             .sendMessage(task.chat_id, i18n.t(await LocaleService.get(task.chat_id), "stats-empty-date"), {
+    //                 message_thread_id: task.thread_id,
+    //                 disable_notification: true,
+    //             })
+    //             .catch(() => {});
+    //         return undefined;
+    //     }
+    // }
+
     public async prepareChatsRatingText() {
         const data = await Database.stats.bot.topChatsWeeklyRating();
         let chat = data[0];
