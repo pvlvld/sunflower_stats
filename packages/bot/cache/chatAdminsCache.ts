@@ -1,5 +1,6 @@
+import { GrammyError } from "grammy";
+import bot from "../bot.js";
 import cfg from "../config.js";
-import { cacheChatAdmins } from "../utils/cacheChatAdmins.js";
 
 type IChatAdminStatus = "administrator" | "creator";
 
@@ -29,14 +30,14 @@ class ChatAdminsCache {
 
     public isCreator(chat_id: number, user_id: number): boolean {
         return this.getAdmins(chat_id).some(
-            (admin) => admin.user_id === user_id && admin.status === "creator"
+            (admin) => admin.user_id === user_id && admin.status === "creator",
         );
     }
 
     public removeAdmin(chat_id: number, user_id: number): IChatAdmin[] {
         return this.setAdmins(
             chat_id,
-            this.getAdmins(chat_id).filter((admin) => admin.user_id !== user_id)
+            this.getAdmins(chat_id).filter((admin) => admin.user_id !== user_id),
         );
     }
 
@@ -45,7 +46,7 @@ class ChatAdminsCache {
         if (admins.some((a) => a.status === "creator")) {
             admins.push(admin);
         } else {
-            admins = await cacheChatAdmins(chat_id);
+            admins = await this.updateAdmins(chat_id);
         }
         return this.setAdmins(chat_id, admins);
     }
@@ -56,6 +57,32 @@ class ChatAdminsCache {
 
     public isCached(chat_id: number) {
         return this._adminsCache[chat_id] !== undefined;
+    }
+
+    public async updateAdmins(chat_id: number) {
+        const apiAdmins = await bot.api.getChatAdministrators(chat_id).catch(async (e) => {
+            if (e instanceof GrammyError) {
+                if (e.parameters.migrate_to_chat_id) {
+                    // TODO: migrator
+                    return await bot.api
+                        .getChatAdministrators(e.parameters.migrate_to_chat_id)
+                        .catch((e) => {});
+                }
+            }
+
+            console.error("Error caching chat admins.", e);
+        });
+        const admins: IChatAdmin[] = [];
+
+        if (apiAdmins === undefined) {
+            return admins;
+        }
+
+        for (const admin of apiAdmins) {
+            admins.push({ user_id: admin.user.id, status: admin.status });
+        }
+
+        return this.setAdmins(chat_id, admins);
     }
 
     public get size() {
