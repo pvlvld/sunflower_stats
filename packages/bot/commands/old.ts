@@ -1,13 +1,13 @@
 import moment from "moment";
 import { active } from "../redis/active.js";
 import { IGroupHearsCommandContext } from "../types/context.js";
-import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
+import { settingsService } from "../utils/settingsService.js";
 
 async function oldUsers(ctx: IGroupHearsCommandContext) {
     const [oldUsers, chatSettings] = await Promise.all([
         getChatUsersOrderByFirstActive(ctx),
-        getCachedOrDBChatSettings(ctx.chat.id),
+        settingsService.getChatSettings(ctx.chat.id),
     ]);
     if (oldUsers.length === 0) {
         return ctx.reply("No users found.");

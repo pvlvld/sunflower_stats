@@ -6,11 +6,11 @@ import { Database } from "../db/db.js";
 class SettingsService {
     private static instance: SettingsService;
 
-    private constructor(private cache: typeof cacheManager) {}
+    private constructor(private cache: typeof cacheManager, private db: typeof Database) {}
 
-    public static getInstance(cache = cacheManager): SettingsService {
+    public static getInstance(cache = cacheManager, db = Database): SettingsService {
         if (!SettingsService.instance) {
-            SettingsService.instance = new SettingsService(cache);
+            SettingsService.instance = new SettingsService(cache, db);
         }
         return SettingsService.instance;
     }
@@ -19,7 +19,7 @@ class SettingsService {
         let chatSettings = this.cache.ChatSettingsCache.get(chat_id);
 
         if (chatSettings === undefined) {
-            chatSettings = await Database.chat.settings.get(chat_id);
+            chatSettings = await this.db.chat.settings.get(chat_id);
 
             if (chatSettings === undefined) {
                 chatSettings = { ...DefaultChatSettings };
@@ -35,7 +35,7 @@ class SettingsService {
         let userSettings = this.cache.UserSettingsCache.get(user_id);
 
         if (userSettings === undefined) {
-            userSettings = await Database.user.settings.get(user_id);
+            userSettings = await this.db.user.settings.get(user_id);
 
             if (userSettings === undefined) {
                 userSettings = { ...DefaultUserSettings };

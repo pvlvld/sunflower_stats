@@ -1,9 +1,9 @@
-import { getCachedOrDBChatSettings } from "../utils/chatSettingsUtils.js";
 import { DefaultChartSettings } from "./chartSettings.js";
 import type { Writeable } from "../types/utilityTypes.js";
 import { IDBPoolManager } from "./poolManager.js";
 import { isPremium } from "../utils/isPremium.js";
 import { DefaultChatSettings, IChatSettings } from "../consts/defaultChatSettings.js";
+import { settingsService } from "../utils/settingsService.js";
 
 class DbChatSettingWrapper {
     private _poolManager: IDBPoolManager;
@@ -51,7 +51,7 @@ class DbChatSettingWrapper {
     }
 
     public async set(chat_id: number, new_settings: Partial<IChatSettings>) {
-        const settings = await getCachedOrDBChatSettings(chat_id);
+        const settings = await settingsService.getChatSettings(chat_id);
         Object.assign(settings, new_settings);
         try {
             void (await this._poolManager.getPoolWrite.query(`UPDATE chats

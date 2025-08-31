@@ -5,11 +5,12 @@ import { isPremium } from "../../utils/isPremium.js";
 import isChatOwner from "../../utils/isChatOwner.js";
 import cacheManager from "../../cache/cache.js";
 import { Database } from "../../db/db.js";
-import { getCachedOrDBChatSettings, getChatSettingsMessageText } from "../../utils/chatSettingsUtils.js";
+import { getChatSettingsMessageText } from "../../utils/chatSettingsUtils.js";
 import cfg from "../../config.js";
 import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../../consts/localeLanguageMap.js";
 import { localeNegotiator } from "../../utils/localeNegotiator.js";
 import changeLocale_menu from "./changeLocaleMenu.js";
+import { settingsService } from "../../utils/settingsService.js";
 
 async function toggleSetting(
     ctx: IContext & MenuFlavor,
@@ -31,7 +32,7 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
         return;
     }
 
-    const chatSettings = await getCachedOrDBChatSettings(chat_id);
+    const chatSettings = await settingsService.getChatSettings(chat_id);
 
     range
         .submenu(
