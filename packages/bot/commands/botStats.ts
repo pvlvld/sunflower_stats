@@ -3,7 +3,6 @@ import { DBPoolManager } from "../db/poolManager.js";
 import cacheManager from "../cache/cache.js";
 import cfg from "../config.js";
 import bot from "../bot.js";
-import { getStatsChart } from "../chart/getStatsChart.js";
 import { Database } from "../db/db.js";
 import formattedDate from "../utils/date.js";
 
