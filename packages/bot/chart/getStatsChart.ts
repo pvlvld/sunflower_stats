@@ -9,7 +9,7 @@ import fs from "node:fs";
 import { getChartConfig, IChartConfiguration } from "./utils/getChartConfig.js";
 import { getChartData } from "./utils/getChartData.js";
 import { downloadAvatar } from "./utils/downloadAvatar.js";
-import bot from "../bot.js";
+import bot, { i18n } from "../bot.js";
 import cfg from "../config.js";
 import { overlayChartOnVideo } from "./utils/overlayChartOnVideo.js";
 import { RabbitMQClient } from "@sunflower-stats/shared";
@@ -43,6 +43,7 @@ import { getStatsChatRating } from "../utils/getStatsRating.js";
 import { isValidDateOrDateRange } from "../utils/isValidDateOrDateRange.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import { getLastDayOfMonth } from "../utils/getLastDayOfMonth.js";
+import { LocaleService } from "../cache/localeService.js";
 
 export type IChartType = "user" | "chat";
 export type IChartFormat = "video" | "image";
@@ -468,7 +469,12 @@ export class StatsService {
         }
 
         if (!chatSettings.charts) {
-            const statsText = await this.prepareUserStatsText(ctx, target_id, await userStatsPromise, users[target_id]);
+            const statsText = await this.prepareUserStatsText(
+                chat_id,
+                target_id,
+                await userStatsPromise,
+                users[target_id]
+            );
             this.removeCachedStatsText(chat_id, target_id, "all");
             await sendSelfdestructMessage(
                 ctx,
@@ -485,7 +491,12 @@ export class StatsService {
         const cachedChart = this.getCachedChart(chat_id, target_id, "user", "all");
 
         if (cachedChart.status === "ok") {
-            const statsText = await this.prepareUserStatsText(ctx, target_id, await userStatsPromise, users[target_id]);
+            const statsText = await this.prepareUserStatsText(
+                chat_id,
+                target_id,
+                await userStatsPromise,
+                users[target_id]
+            );
             this.removeCachedStatsText(chat_id, target_id, "all");
             await sendSelfdestructMessage(
                 ctx,
@@ -501,7 +512,7 @@ export class StatsService {
         }
 
         this.statsChartService.requestStatsChart(ctx, target_id, "user", "all");
-        await this.prepareUserStatsText(ctx, target_id, await userStatsPromise, users[target_id]);
+        await this.prepareUserStatsText(chat_id, target_id, await userStatsPromise, users[target_id]);
     }
 
     public async chatStatsCallback(ctx: IGroupHearsCommandContext) {
@@ -614,13 +625,13 @@ export class StatsService {
     }
 
     private async prepareUserStatsText(
-        ctx: IGroupHearsCommandContext,
+        chat_id: number,
         user_id: number,
         stats: IDBChatUserStatsAll,
         active: IActiveUser
     ): Promise<string> {
-        const text = await getUserStatsMessage(ctx, user_id, stats, active);
-        this.cache.statsText.set(getTaskId(ctx.chat.id, user_id, "all"), text);
+        const text = await getUserStatsMessage(chat_id, user_id, stats, active);
+        this.cache.statsText.set(getTaskId(chat_id, user_id, "all"), text);
         return text;
     }
 
@@ -871,7 +882,28 @@ export class StatsChartService {
     private async chartConsumer(task: IChartResult, msg: ConsumeMessage | null) {
         let text = this.cache.statsText.get(task.task_id);
         // TODO: fix possible race condition
-        text ??= "oopsie";
+        if (!text) {
+            if (task.target_id > 0) {
+                const [stats, active] = await Promise.all([
+                    //
+                ]);
+                text = await this.statsTextService.prepareUserStatsText(task.chat_id, task.target_id, stats, active);
+            } else {
+                const [stats, chatSettings, activeUsers] = await Promise.all([
+                    DBStats.chat.inRage(task.chat_id, task.date_range),
+                    getCachedOrDBChatSettings(task.chat_id),
+                    active.getChatUsers(task.chat_id),
+                ]);
+                text = await this.statsTextService.prepareChatStatsText(
+                    task.chat_id,
+                    "chat_title",
+                    chatSettings,
+                    stats,
+                    activeUsers,
+                    task.date_range
+                );
+            }
+        }
 
         let statsMsg: Message.PhotoMessage | Message.AnimationMessage | undefined;
         if (!task.raw) {
