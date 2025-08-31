@@ -703,8 +703,8 @@ export class StatsService {
             return ctx.msg.reply_to_message?.from?.id;
         }
 
-        let userHint = (ctx.msg.text ?? ctx.msg.caption).split(" ")[-1];
-        if (userHint.startsWith("@")) {
+        let userHint = (ctx.msg.text ?? ctx.msg.caption).split(" ").at(-1);
+        if (userHint && userHint.startsWith("@")) {
             userHint = userHint.slice(1);
             for (const user in users) {
                 if (users?.[user]?.username === userHint) {
@@ -723,7 +723,7 @@ export class StatsService {
             return -1;
         }
 
-        if (users?.[userHint]) {
+        if (userHint && users?.[userHint]) {
             return +userHint;
         }
 
