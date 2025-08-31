@@ -59,6 +59,7 @@ function regCommands() {
     const dm = bot.chatType("private");
     const botAdmin = group.filter((ctx) => cfg.ADMINS.includes(ctx.from?.id || -1));
     const settingsService = SettingsService.getInstance();
+    const statsService = StatsService.getInstance();
     const groupStats = group.filter(async (ctx) => {
         if ((await settingsService.getChatSettings(ctx.chat.id)).statsadminsonly) {
             if (ctx.from?.id && (await isChatAdmin(ctx.chat.id, ctx.from.id))) {
@@ -77,22 +78,22 @@ function regCommands() {
     });
 
     dm.command(["me", "i"], async (ctx) => {
-        await StatsService.getInstance().userStatsGlobalCallback(ctx);
+        await statsService.userStatsGlobalCallback(ctx);
     });
 
     bot.command("donate", donate_cmd);
 
     groupStats.command("w", async (ctx) => {
         ctx.msg.text = "стата тиждень";
-        await StatsService.getInstance().chatStatsCallback(ctx);
+        await statsService.chatStatsCallback(ctx);
     });
     groupStats.command("m", async (ctx) => {
         ctx.msg.text = "стата місяць";
-        await StatsService.getInstance().chatStatsCallback(ctx);
+        await statsService.chatStatsCallback(ctx);
     });
     groupStats.command("y", async (ctx) => {
         ctx.msg.text = "стата рік";
-        await StatsService.getInstance().chatStatsCallback(ctx);
+        await statsService.chatStatsCallback(ctx);
     });
 
     bot.command("refreshDonate", refreshDonate_cmd);
@@ -108,30 +109,36 @@ function regCommands() {
         /^(!|\/)?(стата|статистика|stats)(@[a-zA-Z_]+)? ((\d{4}[-.]\d{2}[-.]\d{2})|(\d{2}[-.]\d{2}[-.]\d{4}))( ((\d{4}[-.]\d{2}[-.]\d{2})|(\d{2}[-.]\d{2}[-.]\d{4})))?$/i,
         async (ctx) => {
             botStatsManager.commandUse("стата дата");
-            await StatsService.getInstance().chatStatsCallback(ctx);
-        }
+            await statsService.chatStatsCallback(ctx);
+        },
     );
 
-    groupStats.command("stats", async (ctx) => await StatsService.getInstance().chatStatsCallback(ctx));
-    groupStats.hears(/^(стата|статистика)$/i, async (ctx) => await StatsService.getInstance().chatStatsCallback(ctx));
+    groupStats.command("stats", async (ctx) => await statsService.chatStatsCallback(ctx));
+    groupStats.hears(
+        /^(стата|статистика)$/i,
+        async (ctx) => await statsService.chatStatsCallback(ctx),
+    );
 
     groupStats.command("statsall", async (ctx) => {
         ctx.msg.text = "стата вся";
-        await StatsService.getInstance().chatStatsCallback(ctx);
+        await statsService.chatStatsCallback(ctx);
     });
     groupStats.hears(
         /^(!?)(стата|статистика) (день|сьогодні|вся|тиждень|місяць|вчора|рік)/i,
-        async (ctx) => await StatsService.getInstance().chatStatsCallback(ctx)
+        async (ctx) => await statsService.chatStatsCallback(ctx),
     );
 
-    groupStats.command(["me", "i"], async (ctx) => await StatsService.getInstance().userStatsCallback(ctx, true));
+    groupStats.command(["me", "i"], async (ctx) => await statsService.userStatsCallback(ctx, true));
     groupStats.hears(
         /^(!?)(!я|йа|хто я)$/i,
-        async (ctx) => await StatsService.getInstance().userStatsCallback(ctx, true)
+        async (ctx) => await statsService.userStatsCallback(ctx, true),
     );
 
-    groupStats.command("you", async (ctx) => await StatsService.getInstance().userStatsCallback(ctx, false));
-    groupStats.hears(/^(!?)(ти|хто ти)/i, async (ctx) => await StatsService.getInstance().userStatsCallback(ctx, false));
+    groupStats.command("you", async (ctx) => await statsService.userStatsCallback(ctx, false));
+    groupStats.hears(
+        /^(!?)(ти|хто ти)/i,
+        async (ctx) => await statsService.userStatsCallback(ctx, false),
+    );
 
     group.command("nick", set_nickname);
     group.hears(/^(\+(нік|нікнейм))/i, async (ctx) => {
@@ -204,7 +211,7 @@ function regCommands() {
 
     group.command("settings", chatSettings_cmd);
 
-    bot.command("tchats", async (ctx) => await StatsService.getInstance().chatsRatingCallback(ctx));
+    bot.command("tchats", async (ctx) => await statsService.chatsRatingCallback(ctx));
 
     group.hears("!updatemembers", async (ctx) => {
         updateActive_command(ctx);
@@ -304,15 +311,19 @@ function regCommands() {
         const chatMembers = await active.getChatUsers(+targetChatId);
 
         for (const [userId, userData] of Object.entries(chatMembers)) {
-            membersMsg += `\n${await getUserNameLink.html(userData.name, userData.username, userId)}`;
+            membersMsg += `\n${getUserNameLink.html(userData.name, userData.username, userId)}`;
         }
 
         await ctx.reply(membersMsg).catch((e) => {
             if (e instanceof GrammyError && e.description.includes("too long")) {
-                ctx.reply("The list is too long to send in one message. Check the logs for details.").catch((e) => {});
+                ctx.reply(
+                    "The list is too long to send in one message. Check the logs for details.",
+                ).catch((e) => {});
                 console.log(`Members list for chat ${targetChatId}:`, membersMsg);
             } else {
-                ctx.reply("Failed to send members list. Check the logs for details.").catch((e) => {});
+                ctx.reply("Failed to send members list. Check the logs for details.").catch(
+                    (e) => {},
+                );
                 console.error("Failed to send members list:", e);
             }
         });
