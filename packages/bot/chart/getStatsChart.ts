@@ -664,12 +664,20 @@ export class StatsService {
 
         if (!isNaN(parseInt(splittedCommand[1]))) {
             // First character of the possible second date argument
-            if (!isNaN(parseInt(splittedCommand[2]?.[0]))) {
-                return [splittedCommand[1], splittedCommand[2], "custom"];
-            } else {
-                const date = splittedCommand[1];
-                return [date, date, "custom"];
+            let from = splittedCommand[1];
+            let to = splittedCommand[2];
+            const fromSplit = from.split(/-|\./);
+            const toSplit = to?.split(/-|\./);
+            if (fromSplit.at(0)?.length !== 4) {
+                from = fromSplit.reverse().join(".");
+                if (to) {
+                    to = toSplit.reverse().join(".");
+                }
             }
+            if (!to) {
+                to = from;
+            }
+            return [from, to, "custom"];
         }
 
         const rawCmdDateRange = (splittedCommand[1] ?? "today").toLowerCase() as keyof typeof cmdToDateRangeMap;
