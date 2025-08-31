@@ -138,19 +138,19 @@ async function main() {
 }
 
 main();
-addButtonToThePost(599, -1001898930678, "конкурс закінчився", "https://t.me/+ucM55jyWpK5iY2My");
+// addButtonToThePost(20, -1002188288504, "Приєднатись", "https://t.me/+tjmPNraAWcw5ODYy");
 function addButtonToThePost(messageId: number, chatId: number, text: string, url: string) {
-    bot.api.editMessageReplyMarkup(chatId, messageId, { reply_markup: { inline_keyboard: [] } });
-    // return bot.api.editMessageReplyMarkup(chatId, messageId, {
-    //     reply_markup: {
-    //         inline_keyboard: [
-    //             [
-    //                 {
-    //                     text,
-    //                     url: "t.me/soniashnyk/" + messageId,
-    //                 },
-    //             ],
-    //         ],
-    //     },
-    // });
+    // bot.api.editMessageReplyMarkup(chatId, messageId, { reply_markup: { inline_keyboard: [] } });
+    return bot.api.editMessageReplyMarkup(chatId, messageId, {
+        reply_markup: {
+            inline_keyboard: [
+                [
+                    {
+                        text,
+                        url,
+                    },
+                ],
+            ],
+        },
+    });
 }
