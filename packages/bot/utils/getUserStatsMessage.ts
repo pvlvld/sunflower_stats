@@ -3,17 +3,19 @@ import { IActiveUser } from "../redis/active.js";
 import Escape from "./escape.js";
 import moment from "moment";
 import { getPremiumMarkSpaced } from "./getPremiumMarkSpaced.js";
-import { IGroupContext } from "../types/context.js";
+import { LocaleService } from "../cache/localeService.js";
+import { i18n } from "../bot.js";
 
 async function getUserStatsMessage(
-    ctx: IGroupContext,
+    chat_id: number,
     user_id: number,
     userStats: IDBChatUserStatsAll,
     userActive: IActiveUser | null
 ) {
-    const firstSeen = moment(userStats.first_seen).locale(await ctx.i18n.getLocale());
+    const locale = await LocaleService.get(chat_id);
+    const firstSeen = moment(userStats.first_seen).locale(locale);
 
-    return ctx.t("stats-user-message", {
+    return i18n.t(locale, "stats-user-message", {
         name: `${await getPremiumMarkSpaced(user_id)}${Escape.html(
             userActive?.nickname ? `${userActive.nickname} (${userActive?.name})` : `${userActive?.name}`
         )}`,
