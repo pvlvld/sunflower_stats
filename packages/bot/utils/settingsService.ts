@@ -46,6 +46,20 @@ class SettingsService {
 
         return userSettings;
     }
+
+    public setChatSettings(chat_id: number, settings: Partial<typeof DefaultChatSettings>) {
+        const currentSettings = this.cache.ChatSettingsCache.get(chat_id);
+        if (currentSettings) {
+            this.cache.ChatSettingsCache.set(chat_id, settings);
+        }
+    }
+
+    public setUserSettings(user_id: number, settings: Partial<typeof DefaultUserSettings>) {
+        const currentSettings = this.cache.UserSettingsCache.get(user_id);
+        if (currentSettings) {
+            this.cache.UserSettingsCache.set(user_id, settings);
+        }
+    }
 }
 
 export const settingsService = SettingsService.getInstance();
