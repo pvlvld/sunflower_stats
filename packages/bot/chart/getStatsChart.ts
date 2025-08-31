@@ -837,15 +837,28 @@ export class StatsChartService {
 
         let statsMsg: Message.PhotoMessage | Message.AnimationMessage | undefined;
         if (!task.raw) {
-            void (await bot.api.sendMessage(task.chat_id, text || ""));
+            void (await bot.api.sendMessage(task.chat_id, text || "").catch((e) => {
+                console.error("[chartConsumer]: Error sending text:", e);
+                return undefined;
+            }));
         } else if (task.format === "image") {
-            statsMsg = await bot.api.sendPhoto(task.chat_id, new InputFile(Buffer.from(task.raw)), {
-                caption: text || "",
-            });
+            statsMsg = await bot.api
+                .sendPhoto(task.chat_id, new InputFile(Buffer.from(task.raw)), {
+                    caption: text || "",
+                })
+                .catch((e) => {
+                    console.error("[chartConsumer]: Error sending photo:", e);
+                    return undefined;
+                });
         } else if (task.format === "video") {
-            statsMsg = await bot.api.sendAnimation(task.chat_id, new InputFile(Buffer.from(task.raw)), {
-                caption: text || "",
-            });
+            statsMsg = await bot.api
+                .sendAnimation(task.chat_id, new InputFile(Buffer.from(task.raw)), {
+                    caption: text || "",
+                })
+                .catch((e) => {
+                    console.error("[chartConsumer]: Error sending video:", e);
+                    return undefined;
+                });
         }
 
         if (statsMsg) {
