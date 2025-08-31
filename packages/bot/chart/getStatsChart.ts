@@ -663,26 +663,20 @@ export class StatsService {
         }
 
         if (!isNaN(parseInt(splittedCommand[1]))) {
-            // First character of the possible second date argument
-            let from = splittedCommand[1];
-            let to = splittedCommand[2];
-            const fromSplit = from.split(/-|\./);
-            const toSplit = to?.split(/-|\./);
-            if (fromSplit.at(0)?.length !== 4) {
-                from = fromSplit.reverse().join(".");
-                if (to) {
-                    to = toSplit.reverse().join(".");
-                }
-            }
-            if (!to) {
-                to = from;
-            }
-            return [from, to, "custom"];
+            let from = this.normalizeDate(splittedCommand[1]);
+            let to = this.normalizeDate(splittedCommand?.[2] || "");
+            return [from, to || from, "custom"];
         }
 
         const rawCmdDateRange = (splittedCommand[1] ?? "today").toLowerCase() as keyof typeof cmdToDateRangeMap;
 
         return formattedDate[cmdToDateRangeMap[rawCmdDateRange]];
+    }
+
+    private normalizeDate(dateStr: string) {
+        if (!dateStr) return "";
+        const parts = dateStr.split(/-|\./);
+        return parts[0].length === 4 ? dateStr : parts.reverse().join(".");
     }
 
     private removeCachedStatsText(chat_id: number, user_id: number, date_range: IDateRange) {
