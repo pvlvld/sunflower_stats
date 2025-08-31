@@ -1,26 +1,8 @@
 import type { IContext } from "../types/context.js";
-import cacheManager from "../cache/cache.js";
-import { Database } from "../db/db.js";
-import { DefaultChatSettings, IChatSettings } from "../consts/defaultChatSettings.js";
-
-async function getCachedOrDBChatSettings(chat_id: number): Promise<IChatSettings> {
-    let chatSettings = cacheManager.ChatSettingsCache.get(chat_id);
-
-    if (chatSettings === undefined) {
-        chatSettings = await Database.chat.settings.get(chat_id);
-
-        if (chatSettings === undefined) {
-            chatSettings = { ...DefaultChatSettings };
-        }
-
-        void cacheManager.ChatSettingsCache.set(chat_id, chatSettings);
-    }
-
-    return chatSettings;
-}
+import { settingsService } from "./settingsService.js";
 
 async function getChatSettingsMessageText(ctx: IContext) {
-    const chatSettings = await getCachedOrDBChatSettings(ctx.chat!.id);
+    const chatSettings = await settingsService.getChatSettings(ctx.chat!.id);
 
     return `
 ${ctx.chat!.title}
@@ -34,4 +16,4 @@ ${ctx.t("settings-message", {
 `;
 }
 
-export { getCachedOrDBChatSettings, getChatSettingsMessageText };
+export { getChatSettingsMessageText };
