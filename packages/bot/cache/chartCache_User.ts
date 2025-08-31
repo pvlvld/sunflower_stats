@@ -1,4 +1,4 @@
-import { IChartFormat } from "../chart/getStatsChart.js";
+import { IChartFormat } from "@sunflower-stats/shared";
 import cfg from "../config.js";
 
 export type IChartStatuses = "ok" | "skip" | "unrendered";

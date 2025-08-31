@@ -1,5 +1,4 @@
-import { IDateRange } from "@sunflower-stats/shared";
-import { IChartFormat } from "../chart/getStatsChart.js";
+import { IChartFormat, IDateRange } from "@sunflower-stats/shared";
 import cfg from "../config.js";
 import { IChartCache } from "./chartCache_User.js";
 

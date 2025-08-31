@@ -5,7 +5,7 @@ import { Message } from "@grammyjs/types";
 import { Database } from "../db/db.js";
 import cfg from "../config.js";
 import { Menu } from "@grammyjs/menu";
-import { IChartFormat } from "../chart/getStatsChart.js";
+import { IChartFormat } from "@sunflower-stats/shared";
 
 // TODO: Write our own selfDestruct messsage GrammY plugin (API transformer)
 
