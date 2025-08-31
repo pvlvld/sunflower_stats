@@ -4,7 +4,6 @@ import { Menu, type MenuFlavor } from "@grammyjs/menu";
 import { isPremium } from "../../utils/isPremium.js";
 import isChatOwner from "../../utils/isChatOwner.js";
 import cacheManager from "../../cache/cache.js";
-import { Database } from "../../db/db.js";
 import { getChatSettingsMessageText } from "../../utils/chatSettingsUtils.js";
 import cfg from "../../config.js";
 import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../../consts/localeLanguageMap.js";
@@ -18,11 +17,10 @@ async function toggleSetting(
     chatSettings: IChatSettings,
     parametr: keyof IChatSettings
 ) {
-    void cacheManager.ChatSettingsCache.set(chat_id, {
+    settingsService.setChatSettings(chat_id, {
         [parametr]: !chatSettings[parametr],
     });
     void ctx.editMessageText(await getChatSettingsMessageText(ctx)).catch((e) => {});
-    void Database.chat.settings.set(chat_id, cacheManager.ChatSettingsCache.get(chat_id)!);
 }
 
 const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).dynamic(async (ctx, range) => {

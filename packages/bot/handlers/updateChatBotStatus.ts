@@ -16,6 +16,7 @@ import Escape from "../utils/escape.js";
 import { LocaleService } from "../cache/localeService.js";
 import { start_cmd } from "../commands/start.js";
 import { changeLocaleCommand } from "../commands/changeLocale.js";
+import { settingsService } from "../utils/settingsService.js";
 
 async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
     // Bot join chat
@@ -27,7 +28,7 @@ async function updateChatBotStatus_handler(ctx: IGroupMyChatMemberContext) {
         if (chatLocale && LocaleService.isValid(chatLocale)) {
             LocaleService.set(ctx.chat.id, chatLocale);
             await ctx.i18n.renegotiateLocale();
-            Database.chat.settings.set(ctx.chat.id, {
+            settingsService.setChatSettings(ctx.chat.id, {
                 locale: chatLocale,
             });
         }

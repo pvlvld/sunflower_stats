@@ -4,6 +4,7 @@ import { isPremium } from "../utils/isPremium.js";
 import { hexToRGB } from "../utils/hexToRGB.js";
 import cacheManager from "../cache/cache.js";
 import { Database } from "../db/db.js";
+import { settingsService } from "../utils/settingsService.js";
 
 const targets = {
     line: ["графік", "лінія"],
@@ -88,10 +89,10 @@ async function setChartColor(ctx: IGroupHearsContext) {
     }
 
     if (type === "chat") {
-        await Database.chat.settings.set(ctx.chat.id, settings);
+        settingsService.setChatSettings(ctx.chat.id, settings);
         cacheManager.ChartCache_Chat.removeChat(ctx.chat.id);
     } else {
-        await Database.user.settings.set(ctx.from.id, settings);
+        settingsService.setUserSettings(ctx.from.id, settings);
         cacheManager.ChartCache_User.removeUser(ctx.from.id);
     }
 

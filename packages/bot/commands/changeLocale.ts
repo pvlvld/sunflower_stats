@@ -5,6 +5,7 @@ import type { IGroupMyChatMemberContext, IHearsCommandContext } from "../types/c
 import changeLocale_menu from "../ui/menus/changeLocaleMenu.js";
 import isChatOwner from "../utils/isChatOwner.js";
 import { localeNegotiator } from "../utils/localeNegotiator.js";
+import { settingsService } from "../utils/settingsService.js";
 
 async function changeLocaleCommand(ctx: IHearsCommandContext | IGroupMyChatMemberContext, isForced = false) {
     if (!isForced) {
@@ -29,7 +30,7 @@ async function changeLocaleCommand(ctx: IHearsCommandContext | IGroupMyChatMembe
             if (currentLocale !== localeCode) {
                 LocaleService.set(ctx.chat.id, localeCode);
                 ctx.i18n.renegotiateLocale();
-                Database.chat.settings.set(ctx.chat.id, {
+                settingsService.setChatSettings(ctx.chat.id, {
                     locale: localeCode,
                 });
                 await ctx.reply("✅").catch((e) => {});

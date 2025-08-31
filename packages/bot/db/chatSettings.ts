@@ -3,7 +3,6 @@ import type { Writeable } from "../types/utilityTypes.js";
 import { IDBPoolManager } from "./poolManager.js";
 import { isPremium } from "../utils/isPremium.js";
 import { DefaultChatSettings, IChatSettings } from "../consts/defaultChatSettings.js";
-import { settingsService } from "../utils/settingsService.js";
 
 class DbChatSettingWrapper {
     private _poolManager: IDBPoolManager;
@@ -48,26 +47,6 @@ class DbChatSettingWrapper {
         // }
 
         return settings_db;
-    }
-
-    public async set(chat_id: number, new_settings: Partial<IChatSettings>) {
-        const settings = await settingsService.getChatSettings(chat_id);
-        Object.assign(settings, new_settings);
-        try {
-            void (await this._poolManager.getPoolWrite.query(`UPDATE chats
-      SET charts = ${settings.charts},
-          statsadminsonly = ${settings.statsadminsonly},
-          usechatbgforall = ${settings.usechatbgforall},
-          line_color = '${settings.line_color}',
-          font_color = '${settings.font_color}',
-          userstatslink = '${settings.userstatslink}',
-          selfdestructstats = '${settings.selfdestructstats}',
-          locale = '${settings.locale}'
-      WHERE chat_id = ${chat_id};
-      `));
-        } catch (error) {
-            console.error(error);
-        }
     }
 
     public async getChatsLocaleWithActiveUsersSinceNDays(nDays: number): Promise<Array<[number, string]>> {

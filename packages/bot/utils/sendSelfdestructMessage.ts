@@ -1,11 +1,10 @@
 import type { IGroupContext } from "../types/context.js";
 import { GrammyError, type InputFile } from "grammy";
-import cacheManager from "../cache/cache.js";
 import { Message } from "@grammyjs/types";
-import { Database } from "../db/db.js";
 import cfg from "../config.js";
 import { Menu } from "@grammyjs/menu";
 import { IChartFormat } from "@sunflower-stats/shared";
+import { settingsService } from "./settingsService.js";
 
 // TODO: Write our own selfDestruct messsage GrammY plugin (API transformer)
 
@@ -84,11 +83,9 @@ async function sendSelfdestructMessage<T extends ISelfdestructMsgData>(
     } catch (e) {
         if (e instanceof GrammyError) {
             if (e.description.includes("not enough rights to send photos to the chat")) {
-                void cacheManager.ChatSettingsCache.set(chat_id, {
+                void settingsService.setChatSettings(chat_id, {
                     charts: false,
                 });
-                void Database.chat.settings.set(chat_id, cacheManager.ChatSettingsCache.get(chat_id)!);
-
                 void (await ctx.reply(ctx.t("error-ner-photos")).catch((e) => {}));
                 return undefined;
             }
