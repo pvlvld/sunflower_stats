@@ -6,7 +6,7 @@ import { DBStats } from "../../db/stats.js";
 import { MessageEntity } from "@grammyjs/types";
 import { active } from "../../redis/active.js";
 import { GrammyError } from "grammy";
-import { settingsService } from "../../utils/settingsService.js";
+import { SettingsService } from "../../utils/settingsService.js";
 
 const chatStatsPagination_menu = new Menu<IContext>("chatStatsPagination-menu").dynamic(async (ctx, range) => {
     if (
@@ -73,7 +73,7 @@ function parseMetadata(raw_medatada_text: string) {
 async function getBaseInfo(ctx: IGroupTextContext) {
     const chat_id = ctx.chat.id;
     const metadata = extractMetadata(ctx)!;
-    const settings = await settingsService.getChatSettings(chat_id);
+    const settings = await SettingsService.getInstance().getChatSettings(chat_id);
     const membersCount = +metadata.u;
     const pageSize = +metadata.l;
     const dateRange = metadata.r;

@@ -52,12 +52,13 @@ import { active } from "../redis/active.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import { GrammyError } from "grammy";
 import { StatsService } from "../chart/getStatsChart.js";
-import { settingsService } from "../utils/settingsService.js";
+import { SettingsService } from "../utils/settingsService.js";
 
 function regCommands() {
     const group = bot.chatType(["supergroup", "group"]);
     const dm = bot.chatType("private");
     const botAdmin = group.filter((ctx) => cfg.ADMINS.includes(ctx.from?.id || -1));
+    const settingsService = SettingsService.getInstance();
     const groupStats = group.filter(async (ctx) => {
         if ((await settingsService.getChatSettings(ctx.chat.id)).statsadminsonly) {
             if (ctx.from?.id && (await isChatAdmin(ctx.chat.id, ctx.from.id))) {

@@ -9,7 +9,7 @@ import cfg from "../../config.js";
 import { ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../../consts/localeLanguageMap.js";
 import { localeNegotiator } from "../../utils/localeNegotiator.js";
 import changeLocale_menu from "./changeLocaleMenu.js";
-import { settingsService } from "../../utils/settingsService.js";
+import { SettingsService } from "../../utils/settingsService.js";
 
 async function toggleSetting(
     ctx: IContext & MenuFlavor,
@@ -17,7 +17,7 @@ async function toggleSetting(
     chatSettings: IChatSettings,
     parametr: keyof IChatSettings
 ) {
-    settingsService.setChatSettings(chat_id, {
+    SettingsService.getInstance().setChatSettings(chat_id, {
         [parametr]: !chatSettings[parametr],
     });
     void ctx.editMessageText(await getChatSettingsMessageText(ctx)).catch((e) => {});
@@ -30,7 +30,7 @@ const settings_menu = new Menu<IContext>("settings-menu", { autoAnswer: true }).
         return;
     }
 
-    const chatSettings = await settingsService.getChatSettings(chat_id);
+        const chatSettings = await SettingsService.getInstance().getChatSettings(chat_id);
 
     range
         .submenu(

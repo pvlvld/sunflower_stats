@@ -1,8 +1,8 @@
 import type { IContext } from "../types/context.js";
-import { settingsService } from "./settingsService.js";
+import { SettingsService } from "./settingsService.js";
 
 async function getChatSettingsMessageText(ctx: IContext) {
-    const chatSettings = await settingsService.getChatSettings(ctx.chat!.id);
+    const chatSettings = await SettingsService.getInstance().getChatSettings(ctx.chat!.id);
 
     return `
 ${ctx.chat!.title}

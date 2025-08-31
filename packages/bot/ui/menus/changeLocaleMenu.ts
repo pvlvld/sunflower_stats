@@ -4,7 +4,7 @@ import isChatOwner from "../../utils/isChatOwner.js";
 import { HIDDEN_LOCALES, ILocaleLanguageMap, LOCALE_LANGUAGE_MAP } from "../../consts/localeLanguageMap.js";
 import { LocaleService } from "../../cache/localeService.js";
 import { getChatSettingsMessageText } from "../../utils/chatSettingsUtils.js";
-import { settingsService } from "../../utils/settingsService.js";
+import { SettingsService } from "../../utils/settingsService.js";
 
 const changeLocale_menu = new Menu<IContext>("changeLocale-menu", {
     autoAnswer: false,
@@ -41,7 +41,7 @@ const changeLocale_menu = new Menu<IContext>("changeLocale-menu", {
                             reply_markup: changeLocale_menu,
                         }).catch((e) => {});
                     }
-                    settingsService.setChatSettings(chat_id, {
+                    SettingsService.getInstance().setChatSettings(chat_id, {
                         locale: locale,
                     });
                 }

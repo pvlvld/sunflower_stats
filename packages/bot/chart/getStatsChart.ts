@@ -32,7 +32,7 @@ import { isValidDateOrDateRange } from "../utils/isValidDateOrDateRange.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import { getLastDayOfMonth } from "../utils/getLastDayOfMonth.js";
 import { LocaleService } from "../cache/localeService.js";
-import { settingsService } from "../utils/settingsService.js";
+import { SettingsService } from "../utils/settingsService.js";
 
 export type IChartType = "user" | "chat";
 
@@ -48,8 +48,8 @@ async function getChartSettings(
     // Turned out that this logic is correct, and old one was with a bug. lol
     // TODO: Check non premium user / chat behavior
     const [chatSettings, userSettings] = await Promise.all([
-        settingsService.getChatSettings(chat_id),
-        settingsService.getUserSettings(user_id),
+        SettingsService.getInstance().getChatSettings(chat_id),
+        SettingsService.getInstance().getUserSettings(user_id),
     ]);
 
     const settings = {
@@ -372,7 +372,7 @@ export class StatsService {
         // let userSettingsPromise = Database.user.settings.get(target_id);
         const [users, chatSettings] = await Promise.all([
             active.getChatUsers(chat_id),
-            settingsService.getChatSettings(chat_id),
+            SettingsService.getInstance().getChatSettings(chat_id),
         ]);
 
         if (!isPersonal) {
@@ -446,7 +446,7 @@ export class StatsService {
         const date_range = this.getChatStatsDateRange(ctx);
         const [stats, chatSettings, activeUsers] = await Promise.all([
             DBStats.chat.inRage(chat_id, date_range),
-            settingsService.getChatSettings(chat_id),
+            SettingsService.getInstance().getChatSettings(chat_id),
             active.getChatUsers(chat_id),
         ]);
 
@@ -821,7 +821,7 @@ export class StatsChartService {
             } else {
                 const [stats, chatSettings, activeUsers] = await Promise.all([
                     DBStats.chat.inRage(task.chat_id, task.date_range),
-                    settingsService.getChatSettings(task.chat_id),
+                    SettingsService.getInstance().getChatSettings(task.chat_id),
                     active.getChatUsers(task.chat_id),
                 ]);
                 text = await this.statsTextService.prepareChatStatsText(
