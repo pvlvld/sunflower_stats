@@ -297,7 +297,7 @@ export class StatsTextService {
         return text;
     }
 
-    private async prepareUserStatsText(
+    public async prepareUserStatsText(
         chat_id: number,
         user_id: number,
         stats: IDBChatUserStatsAll,
@@ -884,10 +884,18 @@ export class StatsChartService {
         // TODO: fix possible race condition
         if (!text) {
             if (task.target_id > 0) {
-                const [stats, active] = await Promise.all([
-                    //
+                let [stats, userActive] = await Promise.all([
+                    Database.stats.user.all(task.chat_id, task.target_id),
+                    active.getUser(task.chat_id, task.target_id),
                 ]);
-                text = await this.statsTextService.prepareUserStatsText(task.chat_id, task.target_id, stats, active);
+                userActive ??= {
+                    active_first: "",
+                    active_last: "",
+                    name: "",
+                    nickname: "",
+                    username: "",
+                };
+                text = await this.statsTextService.prepareUserStatsText(task.chat_id, task.target_id, stats, userActive);
             } else {
                 const [stats, chatSettings, activeUsers] = await Promise.all([
                     DBStats.chat.inRage(task.chat_id, task.date_range),
