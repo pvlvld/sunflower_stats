@@ -47,7 +47,7 @@ class DbChatSettingWrapper {
         //   }
         // }
 
-        return { ...settings_db };
+        return settings_db;
     }
 
     public async set(chat_id: number, new_settings: Partial<IChatSettings>) {
