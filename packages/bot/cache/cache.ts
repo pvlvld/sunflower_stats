@@ -8,6 +8,7 @@ import { LRUCache } from "lru-cache";
 import NodeCache from "@cacheable/node-cache";
 import { TextCache } from "./textCache.js";
 import { ChartCache_Global } from "./chartCache_Global.js";
+import { UserSettingsCache } from "./userSettingsCache.js";
 
 class CacheManager {
     public LRUCache: LRUCache<{}, {}, unknown> = new LRUCache({
@@ -23,6 +24,7 @@ class CacheManager {
     /** Flushes at 00:00 */
     public PremiumStatusCache = new PremiumStatusCache();
     public ChatSettingsCache = new ChatSettingsCache();
+    public UserSettingsCache = new UserSettingsCache();
     public ChatAdminsCache = new ChatAdminsCache();
     public RestrictedUsersCache = new RestrictedUsersCache();
     /** Flushes at 00:00 */
