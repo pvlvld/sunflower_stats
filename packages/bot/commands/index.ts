@@ -104,7 +104,7 @@ function regCommands() {
     // STATS
 
     groupStats.hears(
-        /^(!|\/)?(стата|статистика|stats)(@[a-zA-Z_]+)? \d{4}(\.|-)\d{2}(\.|-)\d{2}( \d{4}(\.|-)\d{2}(\.|-)\d{2})?$/i,
+        /^(!|\/)?(стата|статистика|stats)(@[a-zA-Z_]+)? ((\d{4}[-.]\d{2}[-.]\d{2})|(\d{2}[-.]\d{2}[-.]\d{4}))( ((\d{4}[-.]\d{2}[-.]\d{2})|(\d{2}[-.]\d{2}[-.]\d{4})))?$/i,
         async (ctx) => {
             botStatsManager.commandUse("стата дата");
             await StatsService.getInstance().chatStatsCallback(ctx);
