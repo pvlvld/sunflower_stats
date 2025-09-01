@@ -14,7 +14,7 @@ export async function rescanChatHistory_command(ctx: IGroupHearsCommandContext) 
             "Ви впевнені, що хочете повторно просканувати історію чату?\n\nВся поточна статистика буде видалена та перерахована заново.",
             {
                 reply_markup: rescan_menu,
-            }
+            },
         );
     }
 }
@@ -25,16 +25,16 @@ async function rescanChatHistory(ctx: IGroupContext) {
         await ctx.reply(
             ctx.t(
                 `Сканування вже проводилось: ${moment(isRescanned.date).format(
-                    "DD.MM.YYYY"
-                )}\nБудь ласка, зачекайте до наступного тижня.`
-            )
+                    "DD.MM.YYYY",
+                )}\nБудь ласка, зачекайте до наступного тижня.`,
+            ),
         );
         return;
     }
     let chatIdentifier = ctx.chat.username ?? (ctx.chat.id > 0 ? undefined : ctx.chat.id);
     if (!chatIdentifier) {
         console.log(
-            `[RescanChatHistory] Chat identifier is not available for chat: ${ctx.chat.id} / ${ctx.chat.username}`
+            `[RescanChatHistory] Chat identifier is not available for chat: ${ctx.chat.id} / ${ctx.chat.username}`,
         );
         await ctx.reply("Chat identifier is not available.").catch((e) => {});
         return;
@@ -43,7 +43,9 @@ async function rescanChatHistory(ctx: IGroupContext) {
     if (typeof chatIdentifier === "string") {
         const result = await historyScanner.scanChat(chatIdentifier, ctx.chat.id, true);
         if (result.localeError.message) {
-            await ctx.reply(ctx.t(result.localeError.message, result.localeError.variables)).catch((e) => {});
+            await ctx
+                .reply(ctx.t(result.localeError.message, result.localeError.variables))
+                .catch((e) => {});
         }
         return;
     }
@@ -53,11 +55,13 @@ async function rescanChatHistory(ctx: IGroupContext) {
     if (chatFullInfo && chatFullInfo.invite_link) {
         chatIdentifier = chatFullInfo.invite_link;
         console.log(
-            `[RescanChatHistory] Using existing invite link for chat: ${ctx.chat.id} / ${ctx.chat.username} - ${chatIdentifier}`
+            `[RescanChatHistory] Using existing invite link for chat: ${ctx.chat.id} / ${ctx.chat.username} - ${chatIdentifier}`,
         );
         const result = await historyScanner.scanChat(chatIdentifier, ctx.chat.id, true);
         if (result.localeError.message) {
-            await ctx.reply(ctx.t(result.localeError.message, result.localeError.variables)).catch((e) => {});
+            await ctx
+                .reply(ctx.t(result.localeError.message, result.localeError.variables))
+                .catch((e) => {});
         }
         return;
     }
@@ -75,18 +79,22 @@ async function rescanChatHistory(ctx: IGroupContext) {
         });
 
     if (!chatIdentifier) {
-        console.log(`[RescanChatHistory] Failed to create invite link for chat: ${ctx.chat.id} / ${ctx.chat.username}`);
+        console.log(
+            `[RescanChatHistory] Failed to create invite link for chat: ${ctx.chat.id} / ${ctx.chat.username}`,
+        );
         await ctx.reply(ctx.t("history-scan-cant-start")).catch((e) => {});
         return;
     }
 
     const result = await historyScanner.scanChat(chatIdentifier, ctx.chat.id, true);
     if (result.localeError.message) {
-        await ctx.reply(ctx.t(result.localeError.message, result.localeError.variables)).catch((e) => {});
+        await ctx
+            .reply(ctx.t(result.localeError.message, result.localeError.variables))
+            .catch((e) => {});
     }
 }
 
-export const rescan_menu = new Menu<IContext>("rescan-menu", {
+export const rescan_menu = new Menu<IGroupContext>("rescan-menu", {
     autoAnswer: true,
 })
     .text(
@@ -98,11 +106,13 @@ export const rescan_menu = new Menu<IContext>("rescan-menu", {
                 (await isChatOwner(ctx.chat.id, ctx.from.id))
             ) {
                 ctx.deleteMessage().catch((e) => {});
-                await ctx.reply("Чат додано в чергу на сканування. Будь ласка, зачекайте.").catch((e) => {});
-                await rescanChatHistory(ctx as IGroupContext);
+                await ctx
+                    .reply("Чат додано в чергу на сканування. Будь ласка, зачекайте.")
+                    .catch((e) => {});
+                await rescanChatHistory(ctx);
             }
             return;
-        }
+        },
     )
     .text(
         (ctx) => ctx.t("button-no"),
@@ -115,13 +125,14 @@ export const rescan_menu = new Menu<IContext>("rescan-menu", {
                 ctx.deleteMessage().catch((e) => {});
             }
             return;
-        }
+        },
     );
 
 async function isRescannedPastWeek(chat_id: number) {
-    const chat = await Database.poolManager.getPool.query(`SELECT rescanned_at FROM chats WHERE chat_id = $1`, [
-        chat_id,
-    ]);
+    const chat = await Database.poolManager.getPool.query(
+        `SELECT rescanned_at FROM chats WHERE chat_id = $1`,
+        [chat_id],
+    );
     const date = chat?.rows[0]?.rescanned_at;
     const oneWeekAgo = moment().subtract(7, "days").startOf("day");
     const status = date && moment(date).isAfter(oneWeekAgo);
