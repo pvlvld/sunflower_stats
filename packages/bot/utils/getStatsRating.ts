@@ -38,7 +38,6 @@ export async function getStatsChatRating(
             if (validUsersCount > offset) {
                 replyParts.push(
                     `${displayRank}.${await getPremiumMarkSpaced(user.user_id)}${await getUserNameString(
-                        chat_id,
                         settings,
                         userData,
                         user.user_id,
@@ -61,19 +60,12 @@ export async function getStatsChatRating(
     return replyParts.join("");
 }
 
-async function getUserNameString(
-    chat_id: number,
-    settings: IChatSettings,
-    userData: IActiveUser,
-    user_id: number,
-) {
+async function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_id: number) {
     let result = "";
 
     if (settings.userstatslink) {
         result = getUserNameLink.html(
-            userData.nickname ||
-                userData.name ||
-                i18n.t(await LocaleService.get(chat_id), "unknown"),
+            userData.nickname || userData.name || i18n.t(settings.locale, "unknown"),
             userData.username,
             user_id,
         );
