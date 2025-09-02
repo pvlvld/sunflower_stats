@@ -378,8 +378,6 @@ export class StatsService {
         const original_target = target_id;
         let userStatsPromise = Database.stats.user.all(chat_id, target_id);
 
-        // TODO: implement user settings cache
-        // let userSettingsPromise = Database.user.settings.get(target_id);
         const [users, chatSettings] = await Promise.all([
             active.getChatUsers(chat_id),
             SettingsService.getInstance().getChatSettings(chat_id),
