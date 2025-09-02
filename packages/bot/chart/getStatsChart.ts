@@ -898,8 +898,7 @@ export class StatsChartService {
         }
 
         if (statsMsg) {
-            // TODO: fix type
-            this.cacheChart(statsMsg, task as any);
+            this.cacheChart(statsMsg, task);
         }
 
         this.removeCachedStatsText(task.task_id);
