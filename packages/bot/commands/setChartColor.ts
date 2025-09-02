@@ -55,6 +55,9 @@ async function setChartColor(ctx: IGroupHearsContext) {
 
     // Donate status check
     if (type === "chat") {
+        if (!(await isChatOwner(ctx.chat.id, ctx.from.id))) {
+            ctx.reply(ctx.t("error-chat-owner-only")).catch((e) => {});
+        }
         if (!(await isPremium(ctx.chat.id))) {
             ctx.reply(
                 "Ця функція доступна лише донат чатам.\nСкористайтесь командою /donate в потрібному чаті.",
