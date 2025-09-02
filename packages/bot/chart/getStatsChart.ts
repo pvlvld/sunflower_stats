@@ -869,6 +869,7 @@ export class StatsChartService {
         }
 
         let statsMsg: Message.PhotoMessage | Message.AnimationMessage | undefined;
+        // TODO: message selfdestruction
         if (!task.raw) {
             void (await bot.api.sendMessage(task.chat_id, text || "").catch((e) => {
                 console.error("[chartConsumer]: Error sending text:", e);
