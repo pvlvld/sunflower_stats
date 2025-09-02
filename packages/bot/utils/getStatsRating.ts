@@ -37,7 +37,7 @@ export async function getStatsChatRating(
         if (statsRowsCount < statsRowLimit) {
             if (validUsersCount > offset) {
                 replyParts.push(
-                    `${displayRank}.${await getPremiumMarkSpaced(user.user_id)}${await getUserNameString(
+                    `${displayRank}.${await getPremiumMarkSpaced(user.user_id)}${getUserNameString(
                         settings,
                         userData,
                         user.user_id,
@@ -60,7 +60,7 @@ export async function getStatsChatRating(
     return replyParts.join("");
 }
 
-async function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_id: number) {
+function getUserNameString(settings: IChatSettings, userData: IActiveUser, user_id: number) {
     let result = "";
 
     if (settings.userstatslink) {
