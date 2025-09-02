@@ -6,10 +6,8 @@ import Escape from "./escape.js";
 import { IChatSettings } from "../consts/defaultChatSettings.js";
 import { getPremiumMarkSpaced } from "./getPremiumMarkSpaced.js";
 import { i18n } from "../bot.js";
-import { LocaleService } from "../cache/localeService.js";
 
 export async function getStatsChatRating(
-    chat_id: number,
     stats: IDBChatUserStatsAndTotal[],
     activeUsers: Awaited<ReturnType<typeof active.getChatUsers>>,
     settings: IChatSettings,
@@ -27,7 +25,6 @@ export async function getStatsChatRating(
     let user: IDBChatUserStatsAndTotal;
     let userData: IActiveUser | undefined;
     let validUsersCount = 0;
-    const locale = await LocaleService.get(chat_id);
     for (let i = 0; i < stats.length; i++) {
         user = stats[i];
         userData = activeUsers?.[user.user_id];
@@ -50,7 +47,7 @@ export async function getStatsChatRating(
     }
 
     replyParts.push(
-        `\n${i18n.t(locale, "stats-total-amount")}<a href="${encodeStatsMetadata(
+        `\n${i18n.t(settings.locale, "stats-total-amount")}<a href="${encodeStatsMetadata(
             validUsersCount,
             statsRowLimit,
             dateRange,

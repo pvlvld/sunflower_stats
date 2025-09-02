@@ -140,7 +140,6 @@ async function getPage(
     }
 
     const statsMsesage = await getStatsChatRating(
-        baseInfo.chat_id,
         stats,
         activeUsers,
         baseInfo.settings,

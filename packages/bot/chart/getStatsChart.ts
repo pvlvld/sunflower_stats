@@ -258,7 +258,6 @@ export class StatsTextService {
                 return i18n.t(await LocaleService.get(chat_id), "stats-chat-period", {
                     title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(chat_title)}»`,
                     period: `${date_range[0]}\n\n${await getStatsChatRating(
-                        chat_id,
                         stats,
                         activeUsers,
                         chatSettings,
@@ -275,7 +274,6 @@ export class StatsTextService {
                 return i18n.t(await LocaleService.get(chat_id), "stats-chat-period", {
                     title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(chat_title)}»`,
                     period: `${date_range[0]} - ${date_range[1]}\n\n${await getStatsChatRating(
-                        chat_id,
                         stats,
                         activeUsers,
                         chatSettings,
@@ -291,7 +289,6 @@ export class StatsTextService {
                 title: `${await getPremiumMarkSpaced(chat_id)}«${Escape.html(chat_title)}»`,
                 period: i18n.t(await LocaleService.get(chat_id), `stats-period-${date_range[2]}`),
             })}\n\n${await getStatsChatRating(
-                chat_id,
                 stats,
                 activeUsers,
                 chatSettings,
