@@ -1,6 +1,7 @@
 import { GrammyError } from "grammy";
 import bot from "../bot.js";
 import cfg from "../config.js";
+import { chatMigrationHandler } from "../handlers/chatMigrationHandler.js";
 
 type IChatAdminStatus = "administrator" | "creator";
 
@@ -63,7 +64,7 @@ class ChatAdminsCache {
         const apiAdmins = await bot.api.getChatAdministrators(chat_id).catch(async (e) => {
             if (e instanceof GrammyError) {
                 if (e.parameters.migrate_to_chat_id) {
-                    // TODO: migrator
+                    await chatMigrationHandler.handleFromError(e);
                     return await bot.api
                         .getChatAdministrators(e.parameters.migrate_to_chat_id)
                         .catch((e) => {});
