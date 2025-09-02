@@ -24,7 +24,12 @@ export type IGroupHearsCommandContext = IGroupHearsContext | IGroupCommandContex
 
 export type IGroupTextContext = Filter<IGroupContext, ":text" | ":caption">;
 
-export type IGroupCaptionContext = Filter<IGroupContext, ":caption">;
+export type IGroupEditedTextContext = Filter<
+    IGroupContext,
+    "edited_message:text" | "edited_message:caption"
+>;
+
+export type IGroupCaptionContext = Filter<IGroupContext, ":caption" | "edited_message:caption">;
 
 export type IGroupPhotoCaptionContext = Filter<IGroupCaptionContext, ":photo">;
 
