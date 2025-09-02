@@ -2,6 +2,8 @@ import type { IGroupHearsCommandContext } from "../types/context.js";
 import getUserNameLink from "../utils/getUserNameLink.js";
 import parseCmdArgs from "../utils/parseCmdArgs.js";
 import { active } from "../redis/active.js";
+import { i18n } from "../bot.js";
+import { LocaleService } from "../cache/localeService.js";
 
 const PAGE_LENGTH = 25;
 
@@ -12,31 +14,24 @@ async function chatInactive_cmd(ctx: IGroupHearsCommandContext) {
         return;
     }
 
-    await ctx.reply((await getInactivePageMessage(ctx.chat.id, Math.abs(page))).message, {
+    await ctx.reply(await getInactivePageMessage(ctx.chat.id, Math.abs(page)), {
         link_preview_options: { is_disabled: true },
         disable_notification: true,
     });
 }
 
-const EmptyPageError = {
-    status: false,
-    message: "empty-page-error",
-};
-
 async function getInactivePageMessage(chat_id: number, page: number) {
     const users = await active.getChatUsers(chat_id);
     const inactiveUsers = getInactivePage(users, page);
-    if (inactiveUsers.length === 0) return EmptyPageError;
+    if (inactiveUsers.length === 0)
+        return i18n.t(await LocaleService.get(chat_id), "empty-page-error");
 
-    return {
-        status: true,
-        message: inactiveUsers
-            .map(
-                (target, i) =>
-                    `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(users, target)}`,
-            )
-            .join("\n"),
-    };
+    return inactiveUsers
+        .map(
+            (target, i) =>
+                `${i + 1 + (page - 1) * PAGE_LENGTH}. ${genUserPageRecord(users, target)}`,
+        )
+        .join("\n");
 }
 
 function genUserPageRecord(users: Awaited<ReturnType<typeof active.getChatUsers>>, target: string) {
