@@ -9,7 +9,6 @@ type IQueryResult = RowDataPacket & {
     isPremium: number;
 };
 
-//TODO: cache, local db
 async function isPremium(id: number) {
     if (cfg.ADMINS.includes(id)) {
         return true;
