@@ -34,6 +34,7 @@ export async function getStatsChatRating(
         if (statsRowsCount < statsRowLimit) {
             if (validUsersCount > offset) {
                 replyParts.push(
+                    // TODO: Prefetch premium data in async?
                     `${displayRank}.${await getPremiumMarkSpaced(user.user_id)}${getUserNameString(
                         settings,
                         userData,
