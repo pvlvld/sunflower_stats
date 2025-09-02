@@ -7,9 +7,9 @@ async function getOldDbPool() {
     }
     pool = mysql.createPool({
         host: process.env.OLD_DB_HOST || "0.0.0.0",
-        user: "ulii",
-        password: "myuliipassword",
-        database: "soniashnyk_bot",
+        user: process.env.OLD_DB_USER || "ulii",
+        password: process.env.OLD_DB_PASSWORD || "myuliipassword",
+        database: process.env.OLD_DB_NAME || "soniashnyk_bot",
         typeCast: true,
     });
     await pool.query("SELECT 1");
